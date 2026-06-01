@@ -18,5 +18,19 @@ if (!file_exists($tmpStorage)) {
 
 // Bind the storage path to the temporary directory
 putenv('APP_STORAGE=' . $tmpStorage);
+$_ENV['APP_STORAGE'] = $tmpStorage;
+$_SERVER['APP_STORAGE'] = $tmpStorage;
+
+// Redirect caches
+$_ENV['APP_SERVICES_CACHE'] = '/tmp/storage/services.php';
+$_ENV['APP_PACKAGES_CACHE'] = '/tmp/storage/packages.php';
+$_ENV['APP_CONFIG_CACHE'] = '/tmp/storage/config.php';
+$_ENV['APP_ROUTES_CACHE'] = '/tmp/storage/routes.php';
+$_ENV['APP_EVENTS_CACHE'] = '/tmp/storage/events.php';
+putenv('APP_SERVICES_CACHE=/tmp/storage/services.php');
+putenv('APP_PACKAGES_CACHE=/tmp/storage/packages.php');
+putenv('APP_CONFIG_CACHE=/tmp/storage/config.php');
+putenv('APP_ROUTES_CACHE=/tmp/storage/routes.php');
+putenv('APP_EVENTS_CACHE=/tmp/storage/events.php');
 
 require __DIR__ . '/../public/index.php';
