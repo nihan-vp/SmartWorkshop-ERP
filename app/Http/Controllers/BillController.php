@@ -1,0 +1,263 @@
+<?php
+
+namespace App\Http\Controllers;
+
+use App\Models\Bill;
+use App\Models\BillItem;
+use App\Models\Customer;
+use App\Models\Product;
+use App\Models\Service;
+use App\Models\Vehicle;
+use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
+
+class BillController extends Controller
+{
+    public function index(Request $request)
+    {
+        $query = Bill::with('customer', 'vehicle');
+        if ($request->search) {
+            $query->where('bill_number', 'like', "%{$request->search}%")
+                  ->orWhereHas('customer', fn($q) => $q->where('name', 'like', "%{$request->search}%"));
+        }
+        if ($request->payment_method) {
+            $query->where('payment_method', $request->payment_method);
+        }
+        $bills = $query->latest()->paginate(15);
+        return view('bills.index', compact('bills'));
+    }
+
+    public function create()
+    {
+        $customers = Customer::orderBy('name')->get();
+        $vehicles = Vehicle::with('customer')->orderBy('plate_number')->get();
+        $products = Product::where('stock_qty', '>', 0)->orderBy('name')->get();
+        $services = Service::orderBy('name')->get();
+        $billNumber = Bill::generateBillNumber();
+        return view('bills.create', compact('customers', 'vehicles', 'products', 'services', 'billNumber'));
+    }
+
+    public function store(Request $request)
+    {
+        $validated = $request->validate([
+            'customer_id' => 'required|exists:customers,id',
+            'vehicle_id' => 'nullable|exists:vehicles,id',
+            'payment_method' => 'required|in:cash,upi',
+            'payment_status' => 'required|in:paid,pending,partial',
+            'discount' => 'nullable|numeric|min:0',
+            'tax' => 'nullable|numeric|min:0',
+            'notes' => 'nullable|string',
+            'items' => 'required|array|min:1',
+            'items.*.type' => 'required|in:product,service',
+            'items.*.id' => 'required|integer',
+            'items.*.name' => 'required|string',
+            'items.*.quantity' => 'required|integer|min:1',
+            'items.*.price' => 'required|numeric|min:0',
+            'bill_number' => 'nullable|string|unique:bills,bill_number',
+            'bill_date' => 'nullable|date',
+        ]);
+
+        DB::transaction(function () use ($validated) {
+            $subtotal = 0;
+            $itemsData = [];
+
+            foreach ($validated['items'] as $item) {
+                $lineTotal = $item['quantity'] * $item['price'];
+                $subtotal += $lineTotal;
+                $itemsData[] = [
+                    'item_type' => $item['type'],
+                    'item_id' => $item['id'],
+                    'item_name' => $item['name'],
+                    'quantity' => $item['quantity'],
+                    'unit_price' => $item['price'],
+                    'total' => $lineTotal,
+                ];
+
+                // Deduct stock for products
+                if ($item['type'] === 'product') {
+                    $product = Product::findOrFail($item['id']);
+                    $product->deductStock($item['quantity']);
+                }
+            }
+
+            $discount = $validated['discount'] ?? 0;
+            $tax = $validated['tax'] ?? 0;
+            $total = $subtotal - $discount + $tax;
+
+            $bill = Bill::create([
+                'bill_number' => ($validated['bill_number'] ?? null) ?: Bill::generateBillNumber(),
+                'customer_id' => $validated['customer_id'],
+                'vehicle_id' => $validated['vehicle_id'] ?? null,
+                'subtotal' => $subtotal,
+                'tax' => $tax,
+                'discount' => $discount,
+                'total' => $total,
+                'payment_method' => $validated['payment_method'],
+                'payment_status' => $validated['payment_status'],
+                'notes' => $validated['notes'] ?? null,
+                'bill_date' => $validated['bill_date'] ?? now()->toDateString(),
+            ]);
+
+            foreach ($itemsData as $itemData) {
+                $bill->items()->create($itemData);
+            }
+        });
+
+        return redirect()->route('bills.index')->with('success', 'Bill created successfully!');
+    }
+
+    public function show(Bill $bill)
+    {
+        return redirect()->route('bills.edit', $bill);
+    }
+
+    public function edit(Bill $bill)
+    {
+        $bill->load('customer', 'vehicle', 'items');
+        $customers = Customer::orderBy('name')->get();
+        $vehicles = Vehicle::with('customer')->orderBy('plate_number')->get();
+        $products = Product::orderBy('name')->get();
+        $services = Service::orderBy('name')->get();
+        return view('bills.edit', compact('bill', 'customers', 'vehicles', 'products', 'services'));
+    }
+
+    public function update(Request $request, Bill $bill)
+    {
+        $validated = $request->validate([
+            'customer_id' => 'required|exists:customers,id',
+            'vehicle_id' => 'nullable|exists:vehicles,id',
+            'payment_method' => 'required|in:cash,upi',
+            'payment_status' => 'required|in:paid,pending,partial',
+            'discount' => 'nullable|numeric|min:0',
+            'tax' => 'nullable|numeric|min:0',
+            'notes' => 'nullable|string',
+            'items' => 'required|array|min:1',
+            'items.*.type' => 'required|in:product,service',
+            'items.*.id' => 'required|integer',
+            'items.*.name' => 'required|string',
+            'items.*.quantity' => 'required|integer|min:1',
+            'items.*.price' => 'required|numeric|min:0',
+            'bill_number' => 'nullable|string|unique:bills,bill_number,' . $bill->id,
+            'bill_date' => 'nullable|date',
+        ]);
+
+        DB::transaction(function () use ($validated, $bill) {
+            // Revert product stocks for old bill items
+            foreach ($bill->items as $item) {
+                if ($item->item_type === 'product') {
+                    $product = Product::find($item->item_id);
+                    if ($product) {
+                        $product->addStock($item->quantity);
+                    }
+                }
+            }
+
+            // Delete old items
+            $bill->items()->delete();
+
+            $subtotal = 0;
+            $itemsData = [];
+
+            foreach ($validated['items'] as $item) {
+                $lineTotal = $item['quantity'] * $item['price'];
+                $subtotal += $lineTotal;
+                $itemsData[] = [
+                    'item_type' => $item['type'],
+                    'item_id' => $item['id'],
+                    'item_name' => $item['name'],
+                    'quantity' => $item['quantity'],
+                    'unit_price' => $item['price'],
+                    'total' => $lineTotal,
+                ];
+
+                // Deduct stock for products
+                if ($item['type'] === 'product') {
+                    $product = Product::findOrFail($item['id']);
+                    $product->deductStock($item['quantity']);
+                }
+            }
+
+            $discount = $validated['discount'] ?? 0;
+            $tax = $validated['tax'] ?? 0;
+            $total = $subtotal - $discount + $tax;
+
+            $bill->update([
+                'customer_id' => $validated['customer_id'],
+                'vehicle_id' => $validated['vehicle_id'] ?? null,
+                'subtotal' => $subtotal,
+                'tax' => $tax,
+                'discount' => $discount,
+                'total' => $total,
+                'payment_method' => $validated['payment_method'],
+                'payment_status' => $validated['payment_status'],
+                'notes' => $validated['notes'] ?? null,
+                'bill_date' => $validated['bill_date'] ?? $bill->bill_date->toDateString(),
+            ]);
+
+            foreach ($itemsData as $itemData) {
+                $bill->items()->create($itemData);
+            }
+        });
+
+        return redirect()->route('bills.index')->with('success', 'Invoice updated successfully!');
+    }
+
+    public function downloadPDF(Bill $bill)
+    {
+        $bill->load('customer', 'vehicle', 'items', 'workshop');
+
+        // Create new PDF document
+        $pdf = new \TCPDF('P', 'mm', 'A4', true, 'UTF-8', false);
+
+        // Set document information
+        $pdf->SetCreator('Suhaim Soft Workshop');
+        $pdf->SetAuthor($bill->workshop->name ?? 'Suhaim Soft');
+        $pdf->SetTitle('Invoice - ' . $bill->bill_number);
+        
+        // Remove default header/footer
+        $pdf->setPrintHeader(false);
+        $pdf->setPrintFooter(false);
+        
+        // Set default monospaced font
+        $pdf->SetDefaultMonospacedFont(PDF_FONT_MONOSPACED);
+        
+        // Set margins
+        $pdf->SetMargins(15, 15, 15);
+        
+        // Set auto page breaks
+        $pdf->SetAutoPageBreak(TRUE, 15);
+        
+        // Set font
+        $pdf->SetFont('helvetica', '', 10);
+        
+        // Add a page
+        $pdf->AddPage();
+
+        // Render HTML content for the PDF
+        $html = view('bills.pdf', compact('bill'))->render();
+
+        // Write HTML
+        $pdf->writeHTML($html, true, false, true, false, '');
+
+        // Output PDF to browser directly inline (I)
+        return response($pdf->Output($bill->bill_number . '.pdf', 'I'))
+            ->header('Content-Type', 'application/pdf');
+    }
+
+    public function destroy(Bill $bill)
+    {
+        // Restore stock for product items
+        foreach ($bill->items as $item) {
+            if ($item->item_type === 'product') {
+                $product = Product::find($item->item_id);
+                if ($product) {
+                    $product->addStock($item->quantity);
+                }
+            }
+        }
+        $bill->delete();
+        return redirect()->route('bills.index')->with('success', 'Invoice deleted successfully!');
+    }
+}
+
+

@@ -1,0 +1,260 @@
+@extends('layouts.app')
+@section('title', 'Edit Invoice: ' . $bill->bill_number)
+@section('page-title', 'Edit Invoice')
+@section('page-subtitle', $bill->bill_number)
+@section('content')
+<div class="w-full" x-data="billingApp()">
+    <div class="flex items-center justify-between gap-4 mb-6">
+        <a href="{{ route('bills.index') }}" class="btn-secondary !py-2 !px-4 flex items-center gap-2 shadow-sm text-xs font-bold rounded-xl">
+            <svg class="w-4 h-4 text-slate-500" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 19l-7-7m0 0l7-7m-7 7h18"/></svg>
+            Back to Invoices
+        </a>
+    </div>
+
+    <form action="{{ route('bills.update', $bill) }}" method="POST" id="bill-form">
+        @csrf
+        @method('PUT')
+        <div class="grid grid-cols-1 xl:grid-cols-3 gap-6">
+            <div class="xl:col-span-2 space-y-6">
+                <div class="glass-card">
+                    <h3 class="text-sm font-bold text-slate-900 uppercase tracking-wider mb-4 border-b border-slate-100 pb-3">Customer & Vehicle</h3>
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-5">
+                        <div>
+                            <label class="form-label">Customer *</label>
+                            <select name="customer_id" class="form-select" required x-model="customerId" @change="fetchVehicles()">
+                                <option value="">Select Customer</option>
+                                @foreach($customers as $c)
+                                <option value="{{ $c->id }}">{{ $c->name }} ({{ $c->phone }})</option>
+                                @endforeach
+                            </select>
+                        </div>
+                        <div>
+                            <label class="form-label">Vehicle</label>
+                            <select name="vehicle_id" class="form-select" x-model="vehicleId">
+                                <option value="">Select Vehicle (Optional)</option>
+                                <template x-for="v in vehicles" :key="v.id">
+                                    <option :value="v.id" :selected="v.id == vehicleId" x-text="v.make + ' ' + v.model + ' (' + v.plate_number + ')'"></option>
+                                </template>
+                            </select>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="glass-card">
+                    <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-3 mb-4 border-b border-slate-100 pb-3">
+                        <h3 class="text-sm font-bold text-slate-900 uppercase tracking-wider">Bill Items</h3>
+                        <div class="flex flex-wrap items-center gap-2">
+                            <select class="form-select !py-1.5 !text-xs !w-44" @change="loadTemplate($event.target.value); $event.target.value = '';">
+                                <option value="">Load Preset Package...</option>
+                                @foreach(App\Models\BillTemplate::orderBy('name')->get() as $t)
+                                <option value="{{ $t->id }}">{{ $t->name }}</option>
+                                @endforeach
+                            </select>
+                            <button type="button" @click="addItem('product')" class="btn-secondary !py-1.5 !text-xs">+ Product</button>
+                            <button type="button" @click="addItem('service')" class="btn-secondary !py-1.5 !text-xs">+ Service</button>
+                        </div>
+                    </div>
+                    
+                    <div class="space-y-3">
+                        <template x-for="(item, index) in items" :key="index">
+                            <div class="flex flex-wrap lg:flex-nowrap items-start gap-3 p-3 bg-slate-50 border border-slate-200/60 rounded-xl">
+                                <input type="hidden" :name="`items[${index}][type]`" :value="item.type">
+                                
+                                <div class="flex-shrink-0 mt-8 text-slate-400 font-bold text-sm w-5 text-center" x-text="(index + 1) + '.'"></div>
+                                
+                                <div class="flex-1 min-w-[200px]">
+                                    <label class="text-xs font-semibold text-slate-500 mb-1 block capitalize" x-text="item.type"></label>
+                                    
+                                    <select x-show="item.type === 'product'" :name="item.type === 'product' ? `items[${index}][id]` : ''" class="form-select !py-2" x-model="item.id" @change="updateItemDetails(index)" :required="item.type === 'product'">
+                                        <option value="">Select Product</option>
+                                        @foreach($products as $p)
+                                        <option value="{{ $p->id }}" data-price="{{ $p->price }}" data-name="{{ $p->name }}">{{ $p->name }} (₹{{ $p->price }})</option>
+                                        @endforeach
+                                    </select>
+                                    
+                                    <select x-show="item.type === 'service'" :name="item.type === 'service' ? `items[${index}][id]` : ''" class="form-select !py-2" x-model="item.id" @change="updateItemDetails(index)" :required="item.type === 'service'">
+                                        <option value="">Select Service</option>
+                                        @foreach($services as $s)
+                                        <option value="{{ $s->id }}" data-price="{{ $s->price }}" data-name="{{ $s->name }}">{{ $s->name }} (₹{{ $s->price }})</option>
+                                        @endforeach
+                                    </select>
+                                    
+                                    <input type="hidden" :name="`items[${index}][name]`" :value="item.name">
+                                </div>
+                                
+                                <div class="w-24">
+                                    <label class="text-xs font-semibold text-slate-500 mb-1 block">Price</label>
+                                    <input type="number" step="0.01" :name="`items[${index}][price]`" x-model="item.price" class="form-input !py-2" readonly>
+                                </div>
+                                
+                                <div class="w-20">
+                                    <label class="text-xs font-semibold text-slate-500 mb-1 block">Qty</label>
+                                    <input type="number" min="1" :name="`items[${index}][quantity]`" x-model="item.qty" class="form-input !py-2" required>
+                                </div>
+                                
+                                <div class="w-28">
+                                    <label class="text-xs font-semibold text-slate-500 mb-1 block">Total</label>
+                                    <input type="text" :value="(item.price * item.qty).toFixed(2)" class="form-input !py-2 bg-slate-100 border-transparent text-slate-800 font-semibold" readonly>
+                                </div>
+                                
+                                <div class="pt-6">
+                                    <button type="button" @click="removeItem(index)" class="text-red-500 hover:text-red-600 p-2"><svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/></svg></button>
+                                </div>
+                            </div>
+                        </template>
+                        <p x-show="items.length === 0" class="text-sm text-slate-400 text-center py-4 font-medium italic">No items added yet. Click above to add products or services.</p>
+                    </div>
+                </div>
+
+                <div class="glass-card">
+                    <label class="form-label">Notes / Terms</label>
+                    <textarea name="notes" rows="3" class="form-input" placeholder="Additional notes for the invoice...">{{ $bill->notes }}</textarea>
+                </div>
+            </div>
+
+            <div class="space-y-6">
+                <div class="glass-card lg:sticky lg:top-24">
+                    <h3 class="text-sm font-bold text-slate-900 uppercase tracking-wider mb-4">Payment Summary</h3>
+                    <div class="space-y-4 mb-6">
+                        <div class="flex justify-between text-slate-600 font-medium">
+                            <span>Subtotal</span>
+                            <span class="font-bold text-slate-800" x-text="'₹' + subtotal.toFixed(2)"></span>
+                        </div>
+                        <div class="flex justify-between items-center text-slate-600 font-medium">
+                                <span>Discount Amount (₹)</span>
+                                <input type="number" step="0.01" name="discount" x-model.number="discount" class="form-input !py-1 !px-2 w-24 text-right">
+                            </div>
+                        <div class="flex justify-between items-center text-slate-600 font-medium">
+                            <span>Tax (₹)</span>
+                            <input type="number" step="0.01" name="tax" x-model.number="tax" class="form-input !py-1 !px-2 w-24 text-right">
+                        </div>
+                        <div class="pt-4 border-t border-slate-200 flex justify-between text-slate-900 text-lg font-extrabold">
+                            <span>Total</span>
+                            <span x-text="'₹' + total.toFixed(2)"></span>
+                        </div>
+                    </div>
+
+                    <div class="space-y-4 mb-6">
+                        <div>
+                            <label class="form-label !text-xs">Payment Method</label>
+                            <div class="grid grid-cols-2 gap-2">
+                                <label class="flex items-center justify-center p-3 border border-slate-200 rounded-xl cursor-pointer hover:bg-slate-50 transition-all duration-200" :class="{'bg-primary-50 border-primary-500 text-primary-600 font-semibold shadow-sm': paymentMethod === 'cash'}">
+                                    <input type="radio" name="payment_method" value="cash" x-model="paymentMethod" class="sr-only">
+                                    <span class="text-sm font-medium">Cash</span>
+                                </label>
+                                <label class="flex items-center justify-center p-3 border border-slate-200 rounded-xl cursor-pointer hover:bg-slate-50 transition-all duration-200" :class="{'bg-primary-50 border-primary-500 text-primary-600 font-semibold shadow-sm': paymentMethod === 'upi'}">
+                                    <input type="radio" name="payment_method" value="upi" x-model="paymentMethod" class="sr-only">
+                                    <span class="text-sm font-medium">UPI</span>
+                                </label>
+                            </div>
+                        </div>
+                        <div>
+                            <label class="form-label !text-xs">Status</label>
+                            <select name="payment_status" class="form-select">
+                                <option value="paid" {{ $bill->payment_status === 'paid' ? 'selected' : '' }}>Paid</option>
+                                <option value="pending" {{ $bill->payment_status === 'pending' ? 'selected' : '' }}>Pending</option>
+                                <option value="partial" {{ $bill->payment_status === 'partial' ? 'selected' : '' }}>Partial</option>
+                            </select>
+                        </div>
+                    </div>
+
+                    <button type="submit" class="btn-primary w-full justify-center !py-3 !text-base shadow-lg shadow-primary-500/10" :disabled="items.length === 0">
+                        Update Invoice
+                    </button>
+                    <p class="text-xs text-center text-slate-400 font-semibold mt-3">Invoice #: {{ $bill->bill_number }}</p>
+                </div>
+            </div>
+        </div>
+    </form>
+</div>
+
+@php
+    $itemsJson = $bill->items->map(function($item) {
+        return [
+            'type' => $item->item_type,
+            'id' => $item->item_id,
+            'name' => $item->item_name,
+            'price' => floatval($item->unit_price),
+            'qty' => intval($item->quantity)
+        ];
+    });
+@endphp
+
+@push('scripts')
+<script>
+document.addEventListener('alpine:init', () => {
+    Alpine.data('billingApp', () => ({
+        customerId: '{{ $bill->customer_id }}',
+        vehicleId: '{{ $bill->vehicle_id ?? '' }}',
+        vehicles: [],
+        items: @json($itemsJson),
+        discount: {{ floatval($bill->discount) }},
+        tax: {{ floatval($bill->tax) }},
+        paymentMethod: '{{ $bill->payment_method }}',
+
+        async init() {
+            if(this.customerId) {
+                try {
+                    this.vehicles = await window.wsClient.getVehicles(this.customerId);
+                    this.vehicleId = '{{ $bill->vehicle_id ?? '' }}';
+                } catch(e) { console.error(e); }
+            }
+        },
+
+        async fetchVehicles() {
+            if(!this.customerId) { this.vehicles = []; this.vehicleId = ''; return; }
+            try {
+                this.vehicles = await window.wsClient.getVehicles(this.customerId);
+                if(this.vehicles.length === 1) this.vehicleId = this.vehicles[0].id;
+                else this.vehicleId = '';
+            } catch(e) { console.error(e); }
+        },
+
+        async loadTemplate(templateId) {
+            if(!templateId) return;
+            try {
+                let template = await window.wsClient.getBillTemplate(templateId);
+                this.items = template.items.map(item => ({
+                    type: item.item_type,
+                    id: item.item_id,
+                    name: item.item_name,
+                    price: parseFloat(item.unit_price) || 0,
+                    qty: item.quantity
+                }));
+                this.discount = parseFloat(template.discount) || 0;
+                this.tax = parseFloat(template.tax) || 0;
+            } catch(e) { console.error(e); }
+        },
+
+        addItem(type) {
+            this.items.push({ type: type, id: '', name: '', price: 0, qty: 1 });
+        },
+
+        removeItem(index) {
+            this.items.splice(index, 1);
+        },
+
+        updateItemDetails(index) {
+            let item = this.items[index];
+            if(!item.id) { item.price = 0; item.name = ''; return; }
+            let select = document.querySelector(`select[name="items[${index}][id]"]`);
+            let option = select.options[select.selectedIndex];
+            item.price = parseFloat(option.dataset.price) || 0;
+            item.name = option.dataset.name || '';
+        },
+
+        get subtotal() {
+            return this.items.reduce((sum, item) => sum + ((parseFloat(item.price)||0) * (parseInt(item.qty)||1)), 0);
+        },
+
+        get total() {
+            let s = this.subtotal;
+            let d = parseFloat(this.discount) || 0;
+            let t = parseFloat(this.tax) || 0;
+            return Math.max(0, s - d + t);
+        }
+    }))
+})
+</script>
+@endpush
+@endsection

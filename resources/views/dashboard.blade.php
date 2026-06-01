@@ -1,0 +1,283 @@
+@extends('layouts.app')
+
+@section('title', 'Dashboard')
+@section('page-title', 'Overview')
+@section('page-subtitle', 'Workshop Performance & Operations')
+
+@section('content')
+<div class="max-w-7xl mx-auto space-y-8 animate-fade-in-up">
+
+    <!-- Removed redundant banner -->
+
+    <!-- Welcome & Overview Banner -->
+    <div class="relative bg-white border border-slate-200/80 rounded-3xl p-6 lg:p-8 shadow-sm overflow-hidden flex flex-col sm:flex-row items-start sm:items-center justify-between gap-6">
+        <!-- Background decorative blur -->
+        <div class="absolute -right-16 -bottom-16 w-64 h-64 rounded-full bg-primary-100/20 filter blur-[30px] pointer-events-none"></div>
+        
+        <div class="space-y-1.5 z-10">
+            <h3 class="text-xl font-bold font-outfit text-slate-900 flex items-center gap-2">
+                Welcome back, Workshop Manager!
+                <span class="relative flex h-2.5 w-2.5">
+                  <span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-emerald-400 opacity-75"></span>
+                  <span class="relative inline-flex rounded-full h-2.5 w-2.5 bg-emerald-500"></span>
+                </span>
+            </h3>
+            <p class="text-sm text-slate-500 font-medium">Here is a simplified summary of your shop's operations and finances for today.</p>
+        </div>
+        
+        <div class="w-full sm:w-auto flex items-center z-10">
+            <a href="{{ route('bills.create') }}" class="btn-primary shadow-sm !py-2.5 !px-5 text-sm w-full sm:w-auto justify-center text-center">
+                <svg class="w-4 h-4 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"/></svg>
+                Create Invoice
+            </a>
+        </div>
+    </div>
+
+    <!-- Core Metrics (Spacious 4-Card Grid) -->
+    <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
+        
+        <!-- Metric 1: Total Revenue -->
+        <div class="glass-card flex flex-col justify-between border-l-4 border-l-emerald-500 relative overflow-hidden group hover:scale-[1.01] transition-transform duration-300">
+            <div>
+                <div class="flex items-center justify-between mb-4">
+                    <span class="text-xs font-bold text-slate-400 uppercase tracking-widest">Total Income</span>
+                    <span class="badge badge-success">Paid</span>
+                </div>
+                <p class="text-2xl sm:text-3xl font-extrabold text-slate-900 font-outfit truncate animate-count-up" title="₹{{ number_format($totalIncome, 2) }}">₹{{ number_format($totalIncome, 2) }}</p>
+            </div>
+            <div class="mt-4 pt-3 border-t border-slate-100 flex flex-wrap items-center justify-between gap-x-2 gap-y-1 text-xs text-slate-500 font-medium">
+                <span>UPI: ₹{{ number_format($upiPayments, 0) }}</span>
+                <span class="hidden xs:inline text-slate-300">•</span>
+                <span>Cash: ₹{{ number_format($cashPayments, 0) }}</span>
+            </div>
+        </div>
+
+        <!-- Metric 2: Total Expenses -->
+        <div class="glass-card flex flex-col justify-between border-l-4 border-l-rose-500 relative overflow-hidden group hover:scale-[1.01] transition-transform duration-300">
+            <div>
+                <div class="flex items-center justify-between mb-4">
+                    <span class="text-xs font-bold text-slate-400 uppercase tracking-widest">Outflow</span>
+                    <span class="badge badge-danger">Expenses</span>
+                </div>
+                <p class="text-2xl sm:text-3xl font-extrabold text-slate-900 font-outfit truncate animate-count-up" title="₹{{ number_format($totalExpensesAll, 2) }}">₹{{ number_format($totalExpensesAll, 2) }}</p>
+            </div>
+            <div class="mt-4 pt-3 border-t border-slate-100 flex flex-wrap items-center justify-between gap-x-2 gap-y-1 text-xs text-slate-500 font-medium">
+                <span>Shop: ₹{{ number_format($totalExpenses, 0) }}</span>
+                <span class="hidden xs:inline text-slate-300">•</span>
+                <span>Salaries: ₹{{ number_format($totalSalaries, 0) }}</span>
+            </div>
+        </div>
+
+        <!-- Metric 3: Net Margin -->
+        <div class="glass-card flex flex-col justify-between border-l-4 border-l-violet-500 relative overflow-hidden group hover:scale-[1.01] transition-transform duration-300">
+            <div>
+                <div class="flex items-center justify-between mb-4">
+                    <span class="text-xs font-bold text-slate-400 uppercase tracking-widest">Net Profit</span>
+                    <span class="badge badge-purple">Margin</span>
+                </div>
+                <p class="text-2xl sm:text-3xl font-extrabold font-outfit truncate animate-count-up {{ $totalProfit < 0 ? 'text-rose-600' : 'text-slate-900' }}" title="₹{{ number_format($totalProfit, 2) }}">
+                    ₹{{ number_format($totalProfit, 2) }}
+                </p>
+            </div>
+            <div class="mt-4 pt-3 border-t border-slate-100 text-xs text-slate-500 font-medium">
+                <span>Total Shop Balance Margin</span>
+            </div>
+        </div>
+
+        <!-- Metric 4: Work Orders -->
+        <div class="glass-card flex flex-col justify-between border-l-4 border-l-sky-500 relative overflow-hidden group hover:scale-[1.01] transition-transform duration-300">
+            <div>
+                <div class="flex items-center justify-between mb-4">
+                    <span class="text-xs font-bold text-slate-400 uppercase tracking-widest">Job Queue</span>
+                    <span class="badge badge-info">Operations</span>
+                </div>
+                <p class="text-2xl sm:text-3xl font-extrabold text-slate-900 font-outfit truncate animate-count-up">{{ $totalWorkOrders }}</p>
+            </div>
+            <div class="mt-4 pt-3 border-t border-slate-100 flex flex-wrap items-center justify-between gap-x-2 gap-y-1 text-xs text-slate-500 font-medium">
+                <span class="text-amber-600 font-semibold">{{ $pendingWorkOrders }} Pending</span>
+                <span class="hidden xs:inline text-slate-300">•</span>
+                <span>{{ $totalServices }} Services Offered</span>
+            </div>
+        </div>
+
+    </div>
+
+    <!-- Main Content Layout Split (2:1 Column Split) -->
+    <div class="grid grid-cols-1 lg:grid-cols-12 gap-8">
+        
+        <!-- Left Side: Core Lists & Activity (Col-Span-8) -->
+        <div class="lg:col-span-8 space-y-8">
+            
+            <!-- Recent Invoices / Bills Card -->
+            <div class="glass-card !p-0 overflow-hidden">
+                <div class="p-6 border-b border-slate-100 flex items-center justify-between bg-white flex-wrap gap-4">
+                    <h3 class="text-base font-bold text-slate-900 font-outfit">Recent Invoices</h3>
+                    <a href="{{ route('bills.index') }}" class="text-sm font-semibold text-primary-600 hover:text-primary-700 transition-colors">View All Bills →</a>
+                </div>
+                @if($recentBills->count())
+                <div class="overflow-x-auto table-scroll-wrapper">
+                    <table class="data-table">
+                        <thead>
+                            <tr>
+                                <th>Sl No</th>
+                                <th>Invoice No</th>
+                                <th>Customer</th>
+                                <th>Total</th>
+                                <th>Method</th>
+                                <th>Status</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @foreach($recentBills as $index => $bill)
+                            <tr>
+                                <td data-label="Sl No" class="font-semibold text-slate-500">{{ $loop->iteration }}</td>
+                                <td data-label="Invoice No" class="font-mono font-bold text-primary-600">
+                                    {{ $bill->bill_number }}
+                                </td>
+                                <td data-label="Customer" class="font-bold text-slate-800">{{ $bill->customer->name }}</td>
+                                <td data-label="Total" class="font-bold text-slate-900">₹{{ number_format($bill->total, 2) }}</td>
+                                <td data-label="Method">
+                                    <span class="badge {{ $bill->payment_method === 'upi' ? 'badge-info' : 'badge-warning' }}">
+                                        {{ strtoupper($bill->payment_method) }}
+                                    </span>
+                                </td>
+                                <td data-label="Status">
+                                    <span class="badge {{ $bill->payment_status === 'paid' ? 'badge-success' : ($bill->payment_status === 'partial' ? 'badge-warning' : 'badge-danger') }}">
+                                        {{ ucfirst($bill->payment_status) }}
+                                    </span>
+                                </td>
+                            </tr>
+                            @endforeach
+                        </tbody>
+                    </table>
+                </div>
+                @else
+                <div class="text-center py-12 px-6">
+                    <svg class="w-12 h-12 text-slate-300 mx-auto mb-3" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M9 14l6-6m-5.5.5h.01m4.99 5h.01M19 21V5a2 2 0 00-2 2v16l3.5-2 3.5 2 3.5-2 3.5 2z"/></svg>
+                    <p class="text-slate-500 font-semibold">No invoices recorded yet. <a href="{{ route('bills.create') }}" class="text-primary-600 hover:underline">Generate a bill</a></p>
+                </div>
+                @endif
+            </div>
+
+            <!-- Active Work Orders Card -->
+            <div class="glass-card !p-0 overflow-hidden">
+                <div class="p-6 border-b border-slate-100 flex items-center justify-between bg-white flex-wrap gap-4">
+                    <h3 class="text-base font-bold text-slate-900 font-outfit">Active Shop Jobs</h3>
+                    <a href="{{ route('work-orders.index') }}" class="text-sm font-semibold text-primary-600 hover:text-primary-700 transition-colors">View All Jobs →</a>
+                </div>
+                @if($pendingOrders->count())
+                <div class="overflow-x-auto table-scroll-wrapper">
+                    <table class="data-table">
+                        <thead>
+                            <tr>
+                                <th>Order No</th>
+                                <th>Customer & Vehicle</th>
+                                <th>Assigned Mechanic</th>
+                                <th>Status</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @foreach($pendingOrders as $order)
+                            <tr>
+                                <td data-label="Order No" class="font-mono font-bold text-primary-600">
+                                    <a href="{{ route('work-orders.show', $order) }}" class="hover:underline">{{ $order->order_number }}</a>
+                                </td>
+                                <td data-label="Customer & Vehicle">
+                                    <p class="font-bold text-slate-800">{{ $order->customer->name }}</p>
+                                    <p class="text-xs text-slate-400 font-semibold">{{ $order->vehicle ? $order->vehicle->plate_number : '—' }}</p>
+                                </td>
+                                <td data-label="Assigned Mechanic" class="font-semibold text-slate-600">{{ $order->employee ? $order->employee->name : 'Unassigned' }}</td>
+                                <td data-label="Status">
+                                    <span class="badge {{ $order->status === 'pending' ? 'badge-warning' : 'badge-info' }}">
+                                        {{ ucfirst(str_replace('_', ' ', $order->status)) }}
+                                    </span>
+                                </td>
+                            </tr>
+                            @endforeach
+                        </tbody>
+                    </table>
+                </div>
+                @else
+                <div class="text-center py-12 px-6">
+                    <svg class="w-12 h-12 text-slate-300 mx-auto mb-3" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2"/></svg>
+                    <p class="text-slate-500 font-semibold">No active jobs in the queue.</p>
+                </div>
+                @endif
+            </div>
+
+        </div>
+
+        <!-- Right Side: Sidebar & Fast Actions (Col-Span-4) -->
+        <div class="lg:col-span-4 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-1 gap-8 lg:space-y-8 lg:gap-0">
+            
+            <!-- Quick Actions Panel -->
+            <div class="glass-card space-y-4 md:col-span-2 lg:col-span-1">
+                <h3 class="text-sm font-bold text-slate-900 uppercase tracking-wider">Quick Actions</h3>
+                <div class="grid grid-cols-1 sm:grid-cols-3 lg:grid-cols-1 gap-3">
+                    <a href="{{ route('bills.create') }}" class="btn-primary !justify-start !py-3 w-full shadow-sm text-sm">
+                        <svg class="w-4 h-4 mr-2 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"/></svg>
+                        <span class="truncate">Create New Invoice</span>
+                    </a>
+                    <a href="{{ route('work-orders.create') }}" class="btn-secondary !justify-start !py-3 w-full text-sm">
+                        <svg class="w-4 h-4 mr-2 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2"/></svg>
+                        <span class="truncate">Log Repair Order</span>
+                    </a>
+                    <a href="{{ route('customers.create') }}" class="btn-secondary !justify-start !py-3 w-full text-sm">
+                        <svg class="w-4 h-4 mr-2 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M18 9v3m0 0v3m0-3h3m-3 0h-3m-2-5a4 4 0 11-8 0 4 4 0 018 0zM3 20a6 6 0 0112 0v1H3v-1z"/></svg>
+                        <span class="truncate">New Customer</span>
+                    </a>
+                </div>
+            </div>
+
+            <!-- Low Stock Alerts -->
+            <div class="glass-card">
+                <div class="flex items-center justify-between mb-4">
+                    <h3 class="text-sm font-bold text-slate-900 uppercase tracking-wider">Low Stock Alerts</h3>
+                    <span class="badge badge-danger">{{ $lowStockProducts->count() }}</span>
+                </div>
+                @if($lowStockProducts->count())
+                <div class="space-y-3">
+                    @foreach($lowStockProducts->take(5) as $product)
+                    <div class="flex items-center justify-between p-3 bg-red-50 border border-red-100 rounded-xl">
+                        <div class="min-w-0 flex-1 pr-2">
+                            <p class="text-sm font-semibold text-slate-800 truncate" title="{{ $product->name }}">{{ $product->name }}</p>
+                            <p class="text-xs text-slate-500 font-medium">Min: {{ $product->min_stock }} {{ $product->unit }}</p>
+                        </div>
+                        <span class="text-base font-extrabold text-red-600 shrink-0">{{ $product->stock_qty }}</span>
+                    </div>
+                    @endforeach
+                </div>
+                @else
+                <p class="text-sm text-slate-500 text-center py-4 font-semibold">All inventory levels healthy ✓</p>
+                @endif
+            </div>
+
+            <!-- Workshop Statistics -->
+            <div class="glass-card">
+                <h3 class="text-sm font-bold text-slate-900 uppercase tracking-wider mb-4">Shop Statistics</h3>
+                <div class="space-y-3.5">
+                    <div class="flex items-center justify-between text-sm">
+                        <span class="font-semibold text-slate-500">Active Warranties</span>
+                        <span class="font-extrabold text-slate-800">{{ $activeWarranties }}</span>
+                    </div>
+                    <div class="flex items-center justify-between text-sm">
+                        <span class="font-semibold text-slate-500">Total Customers</span>
+                        <span class="font-extrabold text-slate-800">{{ $totalCustomers }}</span>
+                    </div>
+                    <div class="flex items-center justify-between text-sm">
+                        <span class="font-semibold text-slate-500">Registered Vehicles</span>
+                        <span class="font-extrabold text-slate-800">{{ $totalVehicles }}</span>
+                    </div>
+                    <div class="flex items-center justify-between text-sm">
+                        <span class="font-semibold text-slate-500">Active Technicians</span>
+                        <span class="font-extrabold text-slate-800">{{ $totalEmployees }}</span>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+
+    </div>
+
+</div>
+@endsection
