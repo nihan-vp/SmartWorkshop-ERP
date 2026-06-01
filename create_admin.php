@@ -27,7 +27,7 @@ if (!$workshop) {
 }
 
 // 2. Ensure Admin User exists
-$adminEmail = 'infosuhaimsoft@gmail.com';
+$adminEmail = 'alivpsuhaim@gmail.com';
 $adminUser = User::where('email', $adminEmail)->first();
 if (!$adminUser) {
     $adminUser = User::create([
