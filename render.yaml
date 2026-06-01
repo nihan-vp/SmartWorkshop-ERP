@@ -1,10 +1,13 @@
 services:
   - type: web
     name: suhaimsoft-laravel
-    env: docker
+    env: php
     plan: free
-    healthCheckPath: /
+    buildCommand: "composer install --no-dev --optimize-autoloader"
+    preDeployCommand: "php artisan migrate --force"
     envVars:
+      - key: DOCUMENT_ROOT
+        value: public
       - key: APP_ENV
         value: production
       - key: APP_DEBUG
