@@ -101,7 +101,7 @@ until php -r "
         );
         echo 'connected';
     } catch (Exception \$e) {
-        exit(1);
+        // failed
     }
 " 2>/dev/null | grep -q "connected"; do
     RETRY=$((RETRY + 1))
