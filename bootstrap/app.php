@@ -11,7 +11,7 @@ $app = Application::configure(basePath: dirname(__DIR__))
         health: '/up',
     )
     ->withMiddleware(function (Middleware $middleware): void {
-        // Trust all proxies (Vercel, load balancers) so HTTPS is detected correctly
+        // Trust all proxies (Netlify, load balancers) so HTTPS is detected correctly
         $middleware->trustProxies(at: '*');
 
         $middleware->alias([

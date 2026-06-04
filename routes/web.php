@@ -146,7 +146,7 @@ Route::middleware('auth')->group(function () {
 // Secure route to run migrations and reset super admin on serverless environments
 // Usage: /run-migrations?key=YOUR_SECRET_KEY
 Route::get('/run-migrations', function () {
-    // Validate secret key — uses the ADMIN_RESET_KEY env var (set in Vercel dashboard)
+    // Validate secret key — uses the ADMIN_RESET_KEY env var (set in Netlify dashboard)
     // Falls back to a hash of APP_KEY if ADMIN_RESET_KEY is not set
     $secretKey = env('ADMIN_RESET_KEY', hash('sha256', env('APP_KEY', '')));
 

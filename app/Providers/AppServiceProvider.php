@@ -28,8 +28,8 @@ class AppServiceProvider extends ServiceProvider
             return Limit::perMinute(5)->by($request->input('email').$request->ip());
         });
 
-        // Force HTTPS in production (Vercel, etc.)
-        // Trust all proxies so X-Forwarded-Proto is respected behind Vercel's CDN/load balancer
+        // Force HTTPS in production (Netlify, Render, etc.)
+        // Trust all proxies so X-Forwarded-Proto is respected behind Netlify's CDN/load balancer
         if (env('APP_ENV') === 'production') {
             URL::forceScheme('https');
             $this->app['request']->server->set('HTTPS', 'on');
