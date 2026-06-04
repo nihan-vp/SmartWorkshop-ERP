@@ -1,13 +1,19 @@
 {
-  "name": "Suhaim Soft Work Shop",
-  "short_name": "SuhaimSoft",
-  "description": "Complete Workshop Management System",
+  "name": "Workshop Management System",
+  "short_name": "WMS",
+  "description": "Suhaim Soft Workshop Management System",
   "start_url": "/",
   "display": "standalone",
   "background_color": "#ffffff",
   "theme_color": "#1d4ed8",
   "orientation": "portrait-primary",
   "icons": [
+    {
+      "src": "/favicon.svg",
+      "type": "image/svg+xml",
+      "sizes": "any",
+      "purpose": "any maskable"
+    },
     {
       "src": "/icons/icon.svg",
       "type": "image/svg+xml",

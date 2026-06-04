@@ -34,6 +34,7 @@
   </g>
 
   <!-- Wrench handle + jaw (horizontal) -->
+  <!-- Handle bar -->
   <rect x="22" y="45" width="56" height="10" rx="5" fill="url(#wrenchGrad)"/>
   <!-- Open jaw (C-shape on right) -->
   <path d="M72 40 Q88 40 88 50 Q88 60 72 60 L72 55 Q82 55 82 50 Q82 45 72 45 Z" fill="url(#wrenchGrad)"/>
