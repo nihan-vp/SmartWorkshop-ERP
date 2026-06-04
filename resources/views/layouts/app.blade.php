@@ -154,8 +154,13 @@
                 scrollbar-width: thin;
                 scrollbar-color: rgba(37, 99, 235, 0.3) transparent;
             }
-            html, body {
-                @apply bg-white text-blue-950 antialiased overflow-x-hidden;
+            html {
+                @apply bg-white text-blue-950 antialiased;
+                overflow-x: hidden;
+                overflow-y: auto;
+            }
+            body {
+                @apply bg-white text-blue-950 antialiased;
             }
         }
 
@@ -527,7 +532,7 @@
         }
     </style>
 </head>
-<body class="min-h-screen {{ Auth::check() ? 'bg-slate-50' : 'bg-gradient-to-br from-blue-50/50 via-white to-slate-50 relative overflow-x-hidden flex flex-col items-center justify-center py-8 px-4' }}">
+<body class="min-h-screen {{ Auth::check() ? 'bg-slate-50' : 'bg-gradient-to-br from-blue-50/50 via-white to-slate-50 relative flex flex-col items-center justify-center py-8 px-4' }}">
 
     {{-- ══ FULL PAGE LOADING OVERLAY ══ --}}
     <div id="page-loader" role="status" aria-label="Loading page...">
