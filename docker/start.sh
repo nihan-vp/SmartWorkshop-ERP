@@ -48,11 +48,11 @@ LOG_LEVEL=${LOG_LEVEL:-error}
 
 # ── MySQL Database ─────────────────────────────
 DB_CONNECTION=mysql
-DB_HOST=${DB_HOST:-127.0.0.1}
+DB_HOST=${DB_HOST:-216.151.17.91}
 DB_PORT=${DB_PORT:-3306}
-DB_DATABASE=${DB_DATABASE:-laravel}
+DB_DATABASE=${DB_DATABASE:-suhaim_workshop}
 DB_USERNAME=${DB_USERNAME:-root}
-DB_PASSWORD=${DB_PASSWORD:-}
+DB_PASSWORD=${DB_PASSWORD:-your_secure_password_here}
 
 # ── Session & Cache (file-based for Docker) ───
 SESSION_DRIVER=file
