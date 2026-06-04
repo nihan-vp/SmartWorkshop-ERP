@@ -27,7 +27,7 @@ RUN docker-php-ext-install \
     bcmath \
     gd \
     zip \
-    opcache
+    && docker-php-ext-enable opcache
 
 # Configure OPcache for production
 RUN { \
