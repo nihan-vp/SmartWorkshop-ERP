@@ -1175,24 +1175,24 @@
                     <div class="form-row">
                         <div class="form-group">
                             <label>Your Name</label>
-                            <input type="text" placeholder="John Doe" required>
+                            <input type="text" id="contact-name" placeholder="John Doe" required>
                         </div>
                         <div class="form-group">
                             <label>Phone</label>
-                            <input type="tel" placeholder="+91 00000 00000">
+                            <input type="tel" id="contact-phone" placeholder="+91 00000 00000">
                         </div>
                     </div>
                     <div class="form-group">
                         <label>Email</label>
-                        <input type="email" placeholder="you@example.com" required>
+                        <input type="email" id="contact-email" placeholder="you@example.com" required>
                     </div>
                     <div class="form-group">
                         <label>Workshop Name</label>
-                        <input type="text" placeholder="Your workshop name">
+                        <input type="text" id="contact-workshop" placeholder="Your workshop name">
                     </div>
                     <div class="form-group">
                         <label>Message</label>
-                        <textarea placeholder="Tell us about your workshop and what you need…" required></textarea>
+                        <textarea id="contact-message" placeholder="Tell us about your workshop and what you need…" required></textarea>
                     </div>
                     <button type="submit" class="form-submit" id="contact-submit">
                         Send Message →
@@ -1287,6 +1287,25 @@
     // Contact form
     function handleContactSubmit(event) {
         event.preventDefault();
+        
+        // Get form values
+        const name = document.getElementById('contact-name')?.value || '';
+        const phone = document.getElementById('contact-phone')?.value || '';
+        const email = document.getElementById('contact-email')?.value || '';
+        const workshop = document.getElementById('contact-workshop')?.value || '';
+        const message = document.getElementById('contact-message')?.value || '';
+        
+        // Format WhatsApp message
+        let text = `*New Contact Enquiry*%0A`;
+        text += `Name: ${name}%0A`;
+        if(phone) text += `Phone: ${phone}%0A`;
+        text += `Email: ${email}%0A`;
+        if(workshop) text += `Workshop: ${workshop}%0A`;
+        text += `Message: ${message}`;
+        
+        // Open WhatsApp in new tab
+        window.open(`https://wa.me/918891479505?text=${text}`, '_blank');
+        
         const btn = document.getElementById('contact-submit');
         const original = btn.textContent;
         btn.textContent = 'Sending…';
