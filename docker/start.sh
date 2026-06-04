@@ -48,7 +48,7 @@ APP_NAME="${APP_NAME:-Suhaim Soft Work Shop}"
 APP_ENV=${APP_ENV:-production}
 APP_KEY=${APP_KEY}
 APP_DEBUG=${APP_DEBUG:-false}
-APP_URL=${APP_URL:-http://localhost}
+APP_URL=${APP_URL:-https://suhaimsoftwokrhsop.onrender.com}
 APP_LOCALE=en
 
 LOG_CHANNEL=stderr
