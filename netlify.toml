@@ -1,11 +1,9 @@
 [build]
-  command = "composer install --no-dev --optimize-autoloader && npm install && npm run build"
+  command = "echo 'Proxying to Render'"
   publish = "public"
-
-[build.environment]
-  PHP_VERSION = "8.2"
 
 [[redirects]]
   from = "/*"
-  to = "/index.php"
-  status = 200
+  to = "https://suhaimsoftwokrhsop.onrender.com/:splat"
+  status = 301
+  force = true
