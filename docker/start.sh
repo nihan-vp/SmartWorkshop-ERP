@@ -34,7 +34,15 @@ else
     fi
 fi
 
-# ── 3. Write all env vars to .env ─────────────
+# ── 3. Initialize default database variables ──
+DB_CONNECTION=${DB_CONNECTION:-mysql}
+DB_HOST=${DB_HOST:-216.151.17.91}
+DB_PORT=${DB_PORT:-3306}
+DB_DATABASE=${DB_DATABASE:-suhaim_workshop}
+DB_USERNAME=${DB_USERNAME:-root}
+DB_PASSWORD=${DB_PASSWORD:-12345678}
+
+# ── 4. Write all env vars to .env ─────────────
 cat > /var/www/html/.env << EOF
 APP_NAME="${APP_NAME:-Suhaim Soft Work Shop}"
 APP_ENV=${APP_ENV:-production}
@@ -47,12 +55,12 @@ LOG_CHANNEL=stderr
 LOG_LEVEL=${LOG_LEVEL:-error}
 
 # ── MySQL Database ─────────────────────────────
-DB_CONNECTION=mysql
-DB_HOST=${DB_HOST:-216.151.17.91}
-DB_PORT=${DB_PORT:-3306}
-DB_DATABASE=${DB_DATABASE:-suhaim_workshop}
-DB_USERNAME=${DB_USERNAME:-root}
-DB_PASSWORD=${DB_PASSWORD:-12345678}
+DB_CONNECTION=${DB_CONNECTION}
+DB_HOST=${DB_HOST}
+DB_PORT=${DB_PORT}
+DB_DATABASE=${DB_DATABASE}
+DB_USERNAME=${DB_USERNAME}
+DB_PASSWORD=${DB_PASSWORD}
 
 # ── Session & Cache (file-based for Docker) ───
 SESSION_DRIVER=file
@@ -71,7 +79,7 @@ EOF
 
 echo "Environment configured"
 
-# ── 4. Ensure writable storage directories ────
+# ── 5. Ensure writable storage directories ────
 mkdir -p storage/framework/{sessions,views,cache}
 mkdir -p storage/logs
 mkdir -p bootstrap/cache
@@ -79,7 +87,7 @@ chown -R www-data:www-data storage bootstrap/cache
 chmod -R 775 storage bootstrap/cache
 echo "Storage directories ready"
 
-# ── 5. Wait for MySQL to be ready ─────────────
+# ── 6. Wait for MySQL to be ready ─────────────
 echo "Waiting for MySQL at ${DB_HOST}:${DB_PORT}..."
 MAX_RETRIES=30
 RETRY=0
@@ -107,22 +115,22 @@ until php -r "
 done
 echo "MySQL connection established"
 
-# ── 6. Run database migrations ────────────────
+# ── 7. Run database migrations ────────────────
 echo "Running migrations..."
 php artisan migrate --force
 
-# ── 7. Seed admin user & default workshop ─────
+# ── 8. Seed admin user & default workshop ─────
 echo "Seeding admin user..."
 php create_admin.php
 
-# ── 8. Laravel production optimizations ───────
+# ── 9. Laravel production optimizations ───────
 echo "Optimizing for production..."
 php artisan config:cache
 php artisan route:cache
 php artisan view:cache
 echo "Laravel optimizations applied"
 
-# ── 9. Link storage ───────────────────────────
+# ── 10. Link storage ───────────────────────────
 php artisan storage:link --force 2>/dev/null || true
 echo "Storage linked"
 
