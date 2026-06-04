@@ -8,7 +8,7 @@ echo "============================================"
 # ── 1. Create .env if missing ──────────────────
 if [ ! -f /var/www/html/.env ]; then
     touch /var/www/html/.env
-    echo "✓ Created empty .env file"
+    echo "Created empty .env file"
 fi
 
 cd /var/www/html
@@ -16,21 +16,21 @@ cd /var/www/html
 # ── 2. Validate & set APP_KEY ──────────────────
 if [[ "$APP_KEY" == base64:* ]]; then
     echo "APP_KEY=$APP_KEY" > .env
-    echo "✓ APP_KEY is valid (base64 format)"
+    echo "APP_KEY is valid (base64 format)"
 elif [ -n "$APP_KEY" ]; then
     # Key exists but not in base64 format - generate a new one
     echo "APP_KEY=" > .env
     NEW_KEY=$(php artisan key:generate --show --no-ansi 2>/dev/null || echo "")
     if [ -n "$NEW_KEY" ]; then
         export APP_KEY="$NEW_KEY"
-        echo "✓ Generated new APP_KEY"
+        echo "Generated new APP_KEY"
     fi
 else
     echo "APP_KEY=" > .env
     NEW_KEY=$(php artisan key:generate --show --no-ansi 2>/dev/null || echo "")
     if [ -n "$NEW_KEY" ]; then
         export APP_KEY="$NEW_KEY"
-        echo "✓ Generated APP_KEY (was missing)"
+        echo "Generated APP_KEY (was missing)"
     fi
 fi
 
@@ -69,7 +69,7 @@ MAIL_FROM_ADDRESS=${MAIL_FROM_ADDRESS:-noreply@example.com}
 MAIL_FROM_NAME="${APP_NAME:-Suhaim Soft Work Shop}"
 EOF
 
-echo "✓ Environment configured"
+echo "Environment configured"
 
 # ── 4. Ensure writable storage directories ────
 mkdir -p storage/framework/{sessions,views,cache}
@@ -77,7 +77,7 @@ mkdir -p storage/logs
 mkdir -p bootstrap/cache
 chown -R www-data:www-data storage bootstrap/cache
 chmod -R 775 storage bootstrap/cache
-echo "✓ Storage directories ready"
+echo "Storage directories ready"
 
 # ── 5. Wait for MySQL to be ready ─────────────
 echo "Waiting for MySQL at ${DB_HOST}:${DB_PORT}..."
@@ -98,13 +98,14 @@ until php -r "
 " 2>/dev/null | grep -q "connected"; do
     RETRY=$((RETRY + 1))
     if [ $RETRY -ge $MAX_RETRIES ]; then
-        echo "⚠ MySQL not reachable after ${MAX_RETRIES}s — continuing anyway"
-        break
+        echo "ERROR: MySQL at ${DB_HOST}:${DB_PORT} is not reachable after ${MAX_RETRIES} attempts."
+        echo "   Ensure your MySQL server allows remote connections and port 3306 is open."
+        exit 1
     fi
     echo "  MySQL not ready yet (attempt $RETRY/$MAX_RETRIES)..."
     sleep 2
 done
-echo "✓ MySQL connection established"
+echo "MySQL connection established"
 
 # ── 6. Run database migrations ────────────────
 echo "Running migrations..."
@@ -119,11 +120,11 @@ echo "Optimizing for production..."
 php artisan config:cache
 php artisan route:cache
 php artisan view:cache
-echo "✓ Laravel optimizations applied"
+echo "Laravel optimizations applied"
 
 # ── 9. Link storage ───────────────────────────
 php artisan storage:link --force 2>/dev/null || true
-echo "✓ Storage linked"
+echo "Storage linked"
 
 echo ""
 echo "============================================"
