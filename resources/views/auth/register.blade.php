@@ -62,6 +62,13 @@
             {{-- Card Highlight --}}
             <div class="absolute top-0 left-0 w-full h-1 bg-gradient-to-r from-blue-500 via-blue-500 to-blue-500"></div>
 
+            {{-- Back Button --}}
+            <a href="{{ route('login') }}" class="absolute top-6 left-6 p-2.5 rounded-full bg-slate-50 border border-slate-100 text-slate-400 hover:text-blue-600 hover:bg-blue-50 hover:border-blue-100 transition-all duration-300" title="Back to Login">
+                <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 19l-7-7m0 0l7-7m-7 7h18"/>
+                </svg>
+            </a>
+
             <div class="w-20 h-20 mx-auto bg-gradient-to-br from-blue-50 to-blue-50 border border-blue-100 rounded-2xl flex items-center justify-center text-blue-600 shadow-inner mb-6 transform -rotate-3 hover:rotate-0 transition-transform duration-300">
                 <svg class="w-10 h-10" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16l3.5-2 3.5 2 3.5-2 3.5 2z"/>
@@ -95,13 +102,11 @@
                 </div>
             </a>
             
-            {{-- Return to Login Button --}}
+            {{-- Return to Login Link --}}
             <div class="mt-8 pt-6 border-t border-slate-200/60 text-center">
-                <p class="text-sm text-slate-500 font-medium mb-4">Already registered?</p>
-                <a href="{{ route('login') }}" class="w-full flex items-center justify-center gap-2 py-3 px-4 rounded-xl text-blue-700 bg-blue-50 hover:bg-blue-100 font-bold transition-all duration-300">
-                    <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 16l-4-4m0 0l4-4m-4 4h14m-5 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h7a3 3 0 013 3v1"/></svg>
-                    Return to Login
-                </a>
+                <p class="text-sm text-slate-500 font-medium">Already registered? 
+                    <a href="{{ route('login') }}" class="text-blue-600 font-bold hover:text-indigo-600 transition-colors ml-1 hover:underline underline-offset-4">Return to Login</a>
+                </p>
             </div>
         </div>
 
