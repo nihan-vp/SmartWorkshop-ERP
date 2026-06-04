@@ -4,6 +4,7 @@ import dotenv from 'dotenv';
 import crypto from 'crypto';
 import path from 'path';
 import { fileURLToPath } from 'url';
+import express from 'express';
 
 // Load .env
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
@@ -142,4 +143,16 @@ wss.on('connection', (ws, req) => {
             console.log(`🔌 Connection closed for user ID ${currentUser}`);
         }
     });
+});
+
+// Setup Express App
+const app = express();
+const expressPort = process.env.PORT || 4000;
+
+app.get('/', (req, res) => {
+  res.send('Hello World!');
+});
+
+app.listen(expressPort, () => {
+  console.log(`Example app listening on port ${expressPort}`);
 });
