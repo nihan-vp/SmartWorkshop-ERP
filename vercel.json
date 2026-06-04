@@ -29,13 +29,16 @@
         }
     ],
     "env": {
-        "DB_CONNECTION": "mysql",
+        "APP_NAME": "Suhaim Soft Work Shop",
         "APP_KEY": "base64:ejC4SWc4F0xu9OtscryeNpB7Gsjb3rzN5fUHIKNx3gc=",
         "APP_ENV": "production",
-        "APP_DEBUG": "true",
+        "APP_DEBUG": "false",
+        "APP_URL": "https://suhaimsoftwokrhsop.vercel.app",
+        "DB_CONNECTION": "mysql",
         "CACHE_STORE": "array",
         "SESSION_DRIVER": "cookie",
         "QUEUE_CONNECTION": "sync",
-        "VIEW_COMPILED_PATH": "/tmp/storage/framework/views"
+        "VIEW_COMPILED_PATH": "/tmp/storage/framework/views",
+        "LOG_CHANNEL": "stderr"
     }
 }
