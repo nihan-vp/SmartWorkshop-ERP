@@ -95,11 +95,13 @@
                 </div>
             </a>
             
-            {{-- Return to Login Link --}}
+            {{-- Return to Login Button --}}
             <div class="mt-8 pt-6 border-t border-slate-200/60 text-center">
-                <p class="text-sm text-slate-500 font-medium">Already registered? 
-                    <a href="{{ route('login') }}" class="text-blue-600 font-bold hover:text-indigo-600 transition-colors ml-1 hover:underline underline-offset-4">Return to Login</a>
-                </p>
+                <p class="text-sm text-slate-500 font-medium mb-4">Already registered?</p>
+                <a href="{{ route('login') }}" class="w-full flex items-center justify-center gap-2 py-3 px-4 rounded-xl text-blue-700 bg-blue-50 hover:bg-blue-100 font-bold transition-all duration-300">
+                    <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 16l-4-4m0 0l4-4m-4 4h14m-5 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h7a3 3 0 013 3v1"/></svg>
+                    Return to Login
+                </a>
             </div>
         </div>
 
