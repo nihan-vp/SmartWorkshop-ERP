@@ -11,7 +11,7 @@ jobs:
     runs-on: ubuntu-latest
     environment:
       name: Production
-      url: https://suhaimsoftwokrhsop.onrender.com
+      url: https://suhaimsoftworkshop.netlify.app
     steps:
       - name: Checkout Code
         uses: actions/checkout@v4
