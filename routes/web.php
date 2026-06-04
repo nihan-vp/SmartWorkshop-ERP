@@ -84,10 +84,10 @@ Route::middleware('auth')->group(function () {
         Route::resource('warranties', WarrantyController::class);
         Route::resource('work-orders', WorkOrderController::class);
 
-        // File Viewer routes (Admin Only)
-        Route::get('/file-viewer', [\App\Http\Controllers\FileViewerController::class, 'index'])->name('file-viewer.index');
-        Route::get('/file-viewer/download', [\App\Http\Controllers\FileViewerController::class, 'download'])->name('file-viewer.download');
-        Route::delete('/file-viewer/delete', [\App\Http\Controllers\FileViewerController::class, 'destroy'])->name('file-viewer.destroy');
+        // Offline Viewer routes (Admin Only)
+        Route::get('/offline-viewer', [\App\Http\Controllers\OfflineViewerController::class, 'index'])->name('offline-viewer.index');
+        Route::get('/offline-viewer/download', [\App\Http\Controllers\OfflineViewerController::class, 'download'])->name('offline-viewer.download');
+        Route::delete('/offline-viewer/delete', [\App\Http\Controllers\OfflineViewerController::class, 'destroy'])->name('offline-viewer.destroy');
 
         // System Settings routes (Admin Only)
         Route::get('/system', [\App\Http\Controllers\SystemController::class, 'index'])->name('system.index');

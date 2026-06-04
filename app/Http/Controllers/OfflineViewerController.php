@@ -5,7 +5,7 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\File;
 
-class FileViewerController extends Controller
+class OfflineViewerController extends Controller
 {
     /**
      * List backups and logs, and view selected file.
@@ -83,14 +83,14 @@ class FileViewerController extends Controller
                     }
                     $fileLinesCount = substr_count($fileContent, "\n") + 1;
                 } else {
-                    return redirect()->route('file-viewer.index')->with('error', 'Selected file does not exist.');
+                    return redirect()->route('offline-viewer.index')->with('error', 'Selected file does not exist.');
                 }
             } else {
-                return redirect()->route('file-viewer.index')->with('error', 'Invalid file name or type.');
+                return redirect()->route('offline-viewer.index')->with('error', 'Invalid file name or type.');
             }
         }
 
-        return view('file_viewer.index', compact('backups', 'logs', 'activeTab', 'viewFile', 'viewType', 'fileContent', 'fileLinesCount', 'isTruncated'));
+        return view('offline_viewer.index', compact('backups', 'logs', 'activeTab', 'viewFile', 'viewType', 'fileContent', 'fileLinesCount', 'isTruncated'));
     }
 
     /**
@@ -154,12 +154,12 @@ class FileViewerController extends Controller
                 // Instead of deleting, we can clear the file
                 File::put($path, '');
                 \App\Models\ActivityLog::log('file_clear', "Cleared active log file: {$filename}");
-                return redirect()->route('file-viewer.index', ['tab' => 'logs'])->with('success', 'Active log file has been cleared.');
+                return redirect()->route('offline-viewer.index', ['tab' => 'logs'])->with('success', 'Active log file has been cleared.');
             }
 
             File::delete($path);
             \App\Models\ActivityLog::log('file_delete', "Deleted {$type} file: {$filename}");
-            return redirect()->route('file-viewer.index', ['tab' => $type . 's'])->with('success', 'File deleted successfully.');
+            return redirect()->route('offline-viewer.index', ['tab' => $type . 's'])->with('success', 'File deleted successfully.');
         }
 
         return back()->with('error', 'File not found.');

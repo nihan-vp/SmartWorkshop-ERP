@@ -1,7 +1,7 @@
 @extends('layouts.app')
 
-@section('title', 'File Viewer')
-@section('page-title', 'File Viewer')
+@section('title', 'Offline Viewer')
+@section('page-title', 'Offline Viewer')
 @section('page-subtitle', 'Browse and inspect database backups')
 
 @section('content')
@@ -39,7 +39,7 @@
         </div>
 
         {{-- Title --}}
-        <h3 class="text-xl sm:text-2xl lg:text-3xl font-bold text-slate-800 font-outfit mb-3">File Viewer</h3>
+        <h3 class="text-xl sm:text-2xl lg:text-3xl font-bold text-slate-800 font-outfit mb-3">Offline Viewer</h3>
 
         {{-- Description --}}
         <p class="text-sm sm:text-base text-slate-500 max-w-xs sm:max-w-md leading-relaxed">
