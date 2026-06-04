@@ -33,4 +33,28 @@ putenv('APP_CONFIG_CACHE=/tmp/storage/config.php');
 putenv('APP_ROUTES_CACHE=/tmp/storage/routes.php');
 putenv('APP_EVENTS_CACHE=/tmp/storage/events.php');
 
+// Map Vercel Postgres environment variables to Laravel DB environment variables dynamically
+if (getenv('POSTGRES_HOST')) {
+    putenv('DB_CONNECTION=pgsql');
+    putenv('DB_HOST=' . getenv('POSTGRES_HOST'));
+    putenv('DB_PORT=' . (getenv('POSTGRES_PORT') ?: '5432'));
+    putenv('DB_DATABASE=' . getenv('POSTGRES_DATABASE'));
+    putenv('DB_USERNAME=' . getenv('POSTGRES_USER'));
+    putenv('DB_PASSWORD=' . getenv('POSTGRES_PASSWORD'));
+    
+    $_ENV['DB_CONNECTION'] = 'pgsql';
+    $_ENV['DB_HOST'] = getenv('POSTGRES_HOST');
+    $_ENV['DB_PORT'] = getenv('POSTGRES_PORT') ?: '5432';
+    $_ENV['DB_DATABASE'] = getenv('POSTGRES_DATABASE');
+    $_ENV['DB_USERNAME'] = getenv('POSTGRES_USER');
+    $_ENV['DB_PASSWORD'] = getenv('POSTGRES_PASSWORD');
+    
+    $_SERVER['DB_CONNECTION'] = 'pgsql';
+    $_SERVER['DB_HOST'] = getenv('POSTGRES_HOST');
+    $_SERVER['DB_PORT'] = getenv('POSTGRES_PORT') ?: '5432';
+    $_SERVER['DB_DATABASE'] = getenv('POSTGRES_DATABASE');
+    $_SERVER['DB_USERNAME'] = getenv('POSTGRES_USER');
+    $_SERVER['DB_PASSWORD'] = getenv('POSTGRES_PASSWORD');
+}
+
 require __DIR__ . '/../public/index.php';

@@ -142,3 +142,96 @@ Route::middleware('auth')->group(function () {
         });
     });
 });
+
+// Secure route to run migrations and seed database on serverless environments like Vercel
+Route::get('/run-migrations', function () {
+    $expectedKey = env('APP_KEY');
+    if (str_starts_with($expectedKey, 'base64:')) {
+        $expectedKey = substr($expectedKey, 7);
+    }
+    
+    if (request()->get('key') !== $expectedKey) {
+        return response('Unauthorized. Please provide the correct key.', 403);
+    }
+
+    try {
+        $output = "Running migrations...\n";
+        \Illuminate\Support\Facades\Artisan::call('migrate', ['--force' => true]);
+        $output .= \Illuminate\Support\Facades\Artisan::output();
+        
+        $output .= "\nSeeding admin users and default workshop...\n";
+        
+        // Seeding workshop
+        $workshop = \App\Models\Workshop::find(1);
+        if (!$workshop) {
+            $workshop = \App\Models\Workshop::create([
+                'id' => 1,
+                'name' => 'Suhaim Soft Work Shop',
+                'phone' => '+91 9876543210',
+                'email' => 'info@suhaimsoft.com',
+                'address' => '123 Workshop Avenue, City',
+                'gstin' => '29XXXXXXXXXX1Z5',
+                'subscription_status' => 'active',
+            ]);
+            $output .= "✓ Default Workshop ID=1 created.\n";
+        } else {
+            $output .= "✓ Default Workshop ID=1 already exists.\n";
+        }
+        
+        // Seeding admin user
+        $adminEmail = 'alivpsuhaim@gmail.com';
+        $adminUser = \App\Models\User::where('email', $adminEmail)->first();
+        if (!$adminUser) {
+            $adminUser = \App\Models\User::create([
+                'name' => 'Suhaim Admin',
+                'email' => $adminEmail,
+                'password' => \Illuminate\Support\Facades\Hash::make('12345678'),
+                'workshop_id' => $workshop->id,
+                'role' => 'admin',
+            ]);
+            $output .= "✓ Admin User '{$adminEmail}' created.\n";
+        } else {
+            $adminUser->update([
+                'password' => \Illuminate\Support\Facades\Hash::make('12345678'),
+                'workshop_id' => $workshop->id,
+                'role' => 'admin',
+            ]);
+            $output .= "✓ Admin User '{$adminEmail}' already exists (password reset).\n";
+        }
+        
+        // Seeding super admin
+        $superAdminEmail = 'superadmin@suhaimsoft.com';
+        $superAdmin = \App\Models\User::where('email', $superAdminEmail)->first();
+        if (!$superAdmin) {
+            $superAdmin = \App\Models\User::create([
+                'name' => 'Super Admin',
+                'email' => $superAdminEmail,
+                'password' => \Illuminate\Support\Facades\Hash::make('12345678'),
+                'workshop_id' => $workshop->id,
+                'role' => 'super_admin',
+            ]);
+            $output .= "✓ Super Admin User '{$superAdminEmail}' created.\n";
+        } else {
+            $superAdmin->update([
+                'password' => \Illuminate\Support\Facades\Hash::make('12345678'),
+                'workshop_id' => $workshop->id,
+                'role' => 'super_admin',
+            ]);
+            $output .= "✓ Super Admin User '{$superAdminEmail}' already exists.\n";
+        }
+        
+        // Seed default seeders if customer count is 0
+        if (\App\Models\Customer::count() == 0) {
+            $output .= "\nSeeding remaining database tables...\n";
+            $seeder = new \Database\Seeders\DatabaseSeeder();
+            $seeder->run();
+            $output .= "✓ Remaining database tables seeded.\n";
+        }
+        
+        return response($output, 200)->header('Content-Type', 'text/plain');
+    } catch (\Exception $e) {
+        return response('Error: ' . $e->getMessage() . "\n" . $e->getTraceAsString(), 500)
+            ->header('Content-Type', 'text/plain');
+    }
+});
+
