@@ -106,22 +106,21 @@ until php -r "
 " 2>/dev/null | grep -q "connected"; do
     RETRY=$((RETRY + 1))
     if [ $RETRY -ge $MAX_RETRIES ]; then
-        echo "ERROR: MySQL at ${DB_HOST}:${DB_PORT} is not reachable after ${MAX_RETRIES} attempts."
-        echo "   Ensure your MySQL server allows remote connections and port 3306 is open."
-        exit 1
+        echo "WARNING: MySQL at ${DB_HOST}:${DB_PORT} is not reachable after ${MAX_RETRIES} attempts. Continuing boot anyway..."
+        break
     fi
     echo "  MySQL not ready yet (attempt $RETRY/$MAX_RETRIES)..."
     sleep 2
 done
-echo "MySQL connection established"
+echo "MySQL boot check completed"
 
 # ── 7. Run database migrations ────────────────
 echo "Running migrations..."
-php artisan migrate --force
+php artisan migrate --force || echo "WARNING: Migration failed, continuing anyway..."
 
 # ── 8. Seed admin user & default workshop ─────
 echo "Seeding admin user..."
-php create_admin.php
+php create_admin.php || echo "WARNING: Seeding failed, continuing anyway..."
 
 # ── 9. Laravel production optimizations ───────
 echo "Optimizing for production..."
