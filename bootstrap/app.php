@@ -11,9 +11,12 @@ $app = Application::configure(basePath: dirname(__DIR__))
         health: '/up',
     )
     ->withMiddleware(function (Middleware $middleware): void {
+        // Trust all proxies (Vercel, load balancers) so HTTPS is detected correctly
+        $middleware->trustProxies(at: '*');
+
         $middleware->alias([
             'super_admin' => \App\Http\Middleware\EnsureSuperAdmin::class,
-            'workshop' => \App\Http\Middleware\EnsureWorkshopSelected::class,
+            'workshop'    => \App\Http\Middleware\EnsureWorkshopSelected::class,
             'check.trial' => \App\Http\Middleware\CheckWorkshopSubscription::class,
         ]);
     })

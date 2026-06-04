@@ -45,7 +45,7 @@
                     <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none text-slate-400">
                         <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2-2H5v10a2 2 0 002 2z"/></svg>
                     </div>
-                    <input type="email" name="email" required placeholder="infosuhaimsoft@gmail.com" value="{{ old('email', 'infosuhaimsoft@gmail.com') }}"
+                    <input type="email" name="email" required placeholder="your@email.com" value="{{ old('email') }}"
                            class="w-full bg-white border border-slate-200 rounded-xl pl-10 pr-4 py-3 text-slate-900 placeholder-slate-400 text-sm transition-all focus:outline-none focus:ring-2 focus:ring-primary-500/20 focus:border-primary-500">
                 </div>
                 @error('email')<p class="text-[10px] text-red-500 mt-1 font-bold">{{ $message }}</p>@enderror
@@ -57,7 +57,7 @@
                     <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none text-slate-400">
                         <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z"/></svg>
                     </div>
-                    <input :type="show ? 'text' : 'password'" name="password" required placeholder="••••••••" value="12345678"
+                    <input :type="show ? 'text' : 'password'" name="password" required placeholder="••••••••"
                            class="w-full bg-white border border-slate-200 rounded-xl pl-10 pr-12 py-3 text-slate-900 placeholder-slate-400 text-sm transition-all focus:outline-none focus:ring-2 focus:ring-primary-500/20 focus:border-primary-500">
                     <button type="button" @click="show = !show" class="absolute inset-y-0 right-0 pr-4 flex items-center text-slate-400 hover:text-slate-655 transition-colors">
                         <!-- Eye Icon (when hidden) -->
