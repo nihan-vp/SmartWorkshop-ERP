@@ -52,7 +52,7 @@ DB_HOST=${DB_HOST:-216.151.17.91}
 DB_PORT=${DB_PORT:-3306}
 DB_DATABASE=${DB_DATABASE:-suhaim_workshop}
 DB_USERNAME=${DB_USERNAME:-root}
-DB_PASSWORD=${DB_PASSWORD:-your_secure_password_here}
+DB_PASSWORD=${DB_PASSWORD:-12345678}
 
 # ── Session & Cache (file-based for Docker) ───
 SESSION_DRIVER=file
