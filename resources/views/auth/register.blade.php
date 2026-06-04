@@ -46,12 +46,6 @@
         
         {{-- Brand Header --}}
         <div class="flex flex-col items-center mb-8">
-            <div class="relative group cursor-pointer">
-                <div class="absolute -inset-1 bg-gradient-to-r from-blue-600 to-indigo-600 rounded-3xl blur opacity-25 group-hover:opacity-50 transition duration-1000 group-hover:duration-200"></div>
-                <div class="relative w-24 h-24 rounded-3xl bg-white flex items-center justify-center shadow-2xl shadow-blue-900/10 border border-slate-100 overflow-hidden">
-                    <img src="{{ asset('images/logo.png') }}" alt="Suhaim Soft Logo" class="w-full h-full object-cover transition-transform duration-500 group-hover:scale-110">
-                </div>
-            </div>
             <h1 class="text-3xl font-black text-slate-900 tracking-tight mt-6 mb-1">Join Suhaim Soft</h1>
             <p class="text-sm text-blue-600 font-bold tracking-widest uppercase bg-blue-50 px-3 py-1 rounded-full">Premium Workshop Manager</p>
         </div>

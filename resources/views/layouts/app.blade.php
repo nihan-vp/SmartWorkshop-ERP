@@ -16,7 +16,7 @@
         $fullTitle     = $seoTitle . ' — ' . $siteName;
         $seoDesc       = trim(View::yieldContent('seo-description', 'Suhaim Soft Work Shop is a complete cloud-based workshop management system — manage work orders, invoices, customers, vehicles, and employees from one powerful dashboard.'));
         $seoKeywords   = trim(View::yieldContent('seo-keywords', 'workshop management, work order system, auto repair software, garage management, invoice generator, customer vehicles, workshop dashboard, Suhaim Soft'));
-        $seoImage      = trim(View::yieldContent('seo-image', asset('images/logo.png')));
+        $seoImage      = trim(View::yieldContent('seo-image', ''));
         $canonicalUrl  = trim(View::yieldContent('seo-canonical', url()->current()));
         $seoRobots     = trim(View::yieldContent('seo-robots', 'index, follow'));
         $seoType       = trim(View::yieldContent('seo-type', 'website'));
@@ -66,7 +66,7 @@
                 "url": "{{ url('/') }}",
                 "logo": {
                     "@@type": "ImageObject",
-                    "url": "{{ asset('images/logo.png') }}"
+                    "url": ""
                 },
                 "description": "Cloud-based workshop management system for auto repair shops and garages.",
                 "contactPoint": {
@@ -102,9 +102,7 @@
     <meta name="mobile-web-app-capable" content="yes">
     <meta name="apple-mobile-web-app-capable" content="yes">
     <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
-    <link rel="apple-touch-icon" href="{{ asset('images/logo.png') }}">
-    <link rel="shortcut icon" href="{{ asset('images/logo.png') }}" type="image/png">
-    <link rel="icon" href="{{ asset('images/logo.png') }}" type="image/png">
+
 
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -548,16 +546,14 @@
                 <circle class="track" cx="36" cy="36" r="30"/>
                 <circle class="fill" cx="36" cy="36" r="30"/>
             </svg>
-            <div class="loader-logo">
-                <img src="{{ asset('images/logo.png') }}" alt="Suhaim Soft" class="w-full h-full object-cover rounded-full shadow-lg">
-            </div>
+
         </div>
         <div class="loader-dots">
             <span></span>
             <span></span>
             <span></span>
         </div>
-        <p class="loader-text">Suhaim Soft</p>
+        <p class="loader-text">Please wait...</p>
     </div>
     <script>
         // Hide loader when DOM + resources ready
@@ -638,9 +634,7 @@
         {{-- Logo --}}
         <div class="p-6 border-b border-blue-100">
             <div class="flex items-center gap-3">
-                <div class="w-10 h-10 rounded-xl bg-white border border-slate-100 flex items-center justify-center shadow-md shadow-primary-500/10 overflow-hidden">
-                    <img src="{{ asset('images/logo.png') }}" alt="Suhaim Soft Logo" class="w-full h-full object-cover">
-                </div>
+
                 <div>
                     <h1 class="text-lg font-bold text-blue-900 leading-tight">
                         {{ Auth::user()->isSuperAdmin() ? 'System Admin' : (Auth::user()->workshop->name ?? 'Suhaim Soft') }}
