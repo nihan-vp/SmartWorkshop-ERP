@@ -3,23 +3,43 @@ services:
     name: suhaimsoft-laravel
     runtime: docker
     plan: free
-    healthCheckPath: /
+    healthCheckPath: /up
     envVars:
+      - key: APP_NAME
+        value: "Suhaim Soft Work Shop"
       - key: APP_ENV
         value: production
       - key: APP_DEBUG
         value: "true"
       - key: APP_KEY
         generateValue: true
+      - key: APP_URL
+        value: https://suhaimsoftwokrhsop.onrender.com
+
       - key: DB_CONNECTION
         value: mysql
       - key: DB_HOST
         sync: false
       - key: DB_PORT
-        value: 3306
+        value: "3306"
       - key: DB_DATABASE
         sync: false
       - key: DB_USERNAME
         sync: false
       - key: DB_PASSWORD
         sync: false
+
+      - key: SESSION_DRIVER
+        value: file
+      - key: SESSION_LIFETIME
+        value: "120"
+      - key: CACHE_STORE
+        value: file
+      - key: QUEUE_CONNECTION
+        value: sync
+      - key: FILESYSTEM_DISK
+        value: local
+      - key: LOG_CHANNEL
+        value: stderr
+      - key: LOG_LEVEL
+        value: debug
