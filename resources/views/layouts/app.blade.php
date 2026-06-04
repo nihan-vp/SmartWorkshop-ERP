@@ -16,7 +16,7 @@
         $fullTitle     = $seoTitle . ' — ' . $siteName;
         $seoDesc       = trim(View::yieldContent('seo-description', 'Suhaim Soft Work Shop is a complete cloud-based workshop management system — manage work orders, invoices, customers, vehicles, and employees from one powerful dashboard.'));
         $seoKeywords   = trim(View::yieldContent('seo-keywords', 'workshop management, work order system, auto repair software, garage management, invoice generator, customer vehicles, workshop dashboard, Suhaim Soft'));
-        $seoImage      = trim(View::yieldContent('seo-image', asset('icons/icon.svg')));
+        $seoImage      = trim(View::yieldContent('seo-image', asset('images/logo.png')));
         $canonicalUrl  = trim(View::yieldContent('seo-canonical', url()->current()));
         $seoRobots     = trim(View::yieldContent('seo-robots', 'index, follow'));
         $seoType       = trim(View::yieldContent('seo-type', 'website'));
@@ -66,7 +66,7 @@
                 "url": "{{ url('/') }}",
                 "logo": {
                     "@@type": "ImageObject",
-                    "url": "{{ asset('icons/icon.svg') }}"
+                    "url": "{{ asset('images/logo.png') }}"
                 },
                 "description": "Cloud-based workshop management system for auto repair shops and garages.",
                 "contactPoint": {
@@ -102,9 +102,9 @@
     <meta name="mobile-web-app-capable" content="yes">
     <meta name="apple-mobile-web-app-capable" content="yes">
     <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
-    <link rel="apple-touch-icon" href="/favicon.svg">
-    <link rel="shortcut icon" href="/favicon.svg" type="image/svg+xml">
-    <link rel="icon" href="/favicon.svg" type="image/svg+xml">
+    <link rel="apple-touch-icon" href="{{ asset('images/logo.png') }}">
+    <link rel="shortcut icon" href="{{ asset('images/logo.png') }}" type="image/png">
+    <link rel="icon" href="{{ asset('images/logo.png') }}" type="image/png">
 
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -549,10 +549,7 @@
                 <circle class="fill" cx="36" cy="36" r="30"/>
             </svg>
             <div class="loader-logo">
-                <svg width="28" height="28" fill="none" stroke="#2563eb" stroke-width="1.8" viewBox="0 0 24 24">
-                    <path stroke-linecap="round" stroke-linejoin="round" d="M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.066 2.573c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.573 1.066c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 00-1.066-2.573c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31 2.37-2.37.996.608 2.296.07 2.572-1.065z"/>
-                    <path stroke-linecap="round" stroke-linejoin="round" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"/>
-                </svg>
+                <img src="{{ asset('images/logo.png') }}" alt="Suhaim Soft" class="w-full h-full object-cover rounded-full shadow-lg">
             </div>
         </div>
         <div class="loader-dots">
@@ -641,11 +638,8 @@
         {{-- Logo --}}
         <div class="p-6 border-b border-blue-100">
             <div class="flex items-center gap-3">
-                <div class="w-10 h-10 rounded-xl bg-blue-600 flex items-center justify-center shadow-md shadow-blue-500/20">
-                    <svg class="w-6 h-6 text-white animate-spin-slow" fill="none" stroke="currentColor" viewBox="0 0 24 24" style="animation-duration: 8s;">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.066 2.573c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.573 1.066c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 00-1.066-2.573c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31 2.37-2.37.996.608 2.296.07 2.572-1.065z"/>
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"/>
-                    </svg>
+                <div class="w-10 h-10 rounded-xl bg-white border border-slate-100 flex items-center justify-center shadow-md shadow-primary-500/10 overflow-hidden">
+                    <img src="{{ asset('images/logo.png') }}" alt="Suhaim Soft Logo" class="w-full h-full object-cover">
                 </div>
                 <div>
                     <h1 class="text-lg font-bold text-blue-900 leading-tight">

@@ -42,11 +42,11 @@
         
         {{-- Brand Header --}}
         <div class="flex flex-col items-center mb-8">
-            <div class="w-14 h-14 rounded-2xl bg-gradient-to-br from-blue-600 to-blue-500 flex items-center justify-center shadow-lg shadow-blue-500/25 mb-4">
-                <svg class="w-8 h-8 text-white animate-spin-slow" fill="none" stroke="currentColor" viewBox="0 0 24 24" style="animation-duration: 8s;">
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.066 2.573c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.573 1.066c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 00-1.066-2.573c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31 2.37-2.37.996.608 2.296.07 2.572-1.065z"/>
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"/>
-                </svg>
+            <div class="relative group cursor-pointer">
+                <div class="absolute -inset-1 bg-gradient-to-r from-blue-600 to-indigo-600 rounded-3xl blur opacity-25 group-hover:opacity-50 transition duration-1000 group-hover:duration-200"></div>
+                <div class="relative w-24 h-24 rounded-3xl bg-white flex items-center justify-center shadow-2xl shadow-blue-900/10 border border-slate-100 overflow-hidden">
+                    <img src="{{ asset('images/logo.png') }}" alt="Suhaim Soft Logo" class="w-full h-full object-cover transition-transform duration-500 group-hover:scale-110">
+                </div>
             </div>
             <h1 class="text-3xl font-black text-slate-900 tracking-tight mt-6 mb-1">Suhaim Soft</h1>
             <p class="text-sm text-blue-600 font-bold tracking-widest uppercase bg-blue-50 px-3 py-1 rounded-full">Workshop Manager</p>
