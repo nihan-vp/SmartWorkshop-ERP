@@ -133,6 +133,14 @@ echo "Laravel optimizations applied"
 php artisan storage:link --force 2>/dev/null || true
 echo "Storage linked"
 
+# ── 11. Configure Apache Port for Render ────────
+# Render assigns a dynamic port via the PORT environment variable. 
+# Apache must listen on this port to pass the Render health checks.
+APACHE_PORT=${PORT:-80}
+sed -i "s/Listen 80/Listen ${APACHE_PORT}/g" /etc/apache2/ports.conf
+sed -i "s/:80/:${APACHE_PORT}/g" /etc/apache2/sites-available/*.conf
+echo "Apache configured to listen on port ${APACHE_PORT}"
+
 echo ""
 echo "============================================"
 echo "  App Ready! Starting Apache via Supervisor"
