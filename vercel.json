@@ -12,7 +12,7 @@
     ],
     "routes": [
         {
-            "src": "/(favicon.ico|manifest.json|robots.txt|sw.js)",
+            "src": "/(favicon\\.ico|favicon\\.svg|manifest\\.json|robots\\.txt|sw\\.js)",
             "dest": "/public/$1"
         },
         {
@@ -29,12 +29,17 @@
         }
     ],
     "env": {
-        "APP_NAME": "Suhaim Soft Work Shop",
+        "APP_NAME": "Workshop Management System",
         "APP_KEY": "base64:ejC4SWc4F0xu9OtscryeNpB7Gsjb3rzN5fUHIKNx3gc=",
         "APP_ENV": "production",
-        "APP_DEBUG": "false",
+        "APP_DEBUG": "true",
         "APP_URL": "https://suhaimsoftwokrhsop.vercel.app",
         "DB_CONNECTION": "mysql",
+        "DB_HOST": "216.151.17.91",
+        "DB_PORT": "3306",
+        "DB_DATABASE": "suhaim_workshop",
+        "DB_USERNAME": "root",
+        "DB_PASSWORD": "your_secure_password_here",
         "CACHE_STORE": "array",
         "SESSION_DRIVER": "cookie",
         "QUEUE_CONNECTION": "sync",
