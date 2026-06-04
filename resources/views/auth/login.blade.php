@@ -19,7 +19,7 @@
     </div>
 
     {{-- Login Card --}}
-    <div class="bg-white border border-slate-200/80 rounded-3xl p-6 sm:p-8 shadow-xl relative backdrop-blur-md max-w-md w-full mx-4 sm:mx-auto">
+    <div class="bg-white border border-slate-200/80 rounded-3xl p-6 sm:p-8 shadow-xl relative backdrop-blur-md max-w-md w-full mx-auto">
 
         <!-- Back Arrow -->
         <a href="{{ route('landing') }}" class="absolute top-4 left-4 p-2 rounded-xl text-slate-400 hover:text-slate-700 hover:bg-slate-100 transition-all group" title="Back to Home">

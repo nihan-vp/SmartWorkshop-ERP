@@ -19,7 +19,7 @@
     </div>
 
     {{-- Contact Super Admin Card --}}
-    <div class="bg-white border border-slate-200/80 rounded-[32px] p-8 sm:p-10 shadow-2xl relative backdrop-blur-md max-w-lg w-full mx-4 sm:mx-auto animate-fade-in-up" style="animation-delay: 0.1s;">
+    <div class="bg-white border border-slate-200/80 rounded-[32px] p-8 sm:p-10 shadow-2xl relative backdrop-blur-md max-w-lg w-full mx-auto animate-fade-in-up" style="animation-delay: 0.1s;">
         <!-- Back to Login -->
         <a href="{{ route('login') }}" class="absolute top-5 left-5 p-2 rounded-xl text-slate-400 hover:text-slate-900 hover:bg-slate-50 transition-all flex items-center justify-center group" title="Back to Login">
             <svg class="w-5 h-5 transition-transform group-hover:-translate-x-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
