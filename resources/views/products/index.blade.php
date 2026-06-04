@@ -105,7 +105,7 @@
             </table>
         </div>
         @if($products->hasPages())
-        <div class="px-5 py-4 border-t border-slate-200/60">{{ $products->links() }}</div>
+        <div class="px-5 py-4 border-t border-slate-200/60">{{ $products->appends(request()->query())->links() }}</div>
         @endif
     </div>
 

@@ -45,6 +45,6 @@
             </tbody>
         </table>
     </div>
-    @if($employees->hasPages())<div class="px-5 py-4 border-t border-slate-200/60">{{ $employees->links() }}</div>@endif
+    @if($employees->hasPages())<div class="px-5 py-4 border-t border-slate-200/60">{{ $employees->appends(request()->query())->links() }}</div>@endif
 </div>
 @endsection

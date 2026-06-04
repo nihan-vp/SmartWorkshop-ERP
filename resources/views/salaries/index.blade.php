@@ -3,48 +3,84 @@
 @section('page-title', 'Salaries')
 @section('page-subtitle', 'Manage employee salaries')
 @section('content')
-<div class="flex flex-col xl:flex-row items-start xl:items-end justify-between gap-4 mb-6">
-    <form method="GET" class="flex flex-col sm:flex-row flex-wrap items-start sm:items-end gap-3 w-full xl:w-auto">
-        <div class="w-full sm:w-auto">
-            <label class="block text-xs font-bold text-slate-500 mb-1 uppercase tracking-wider">Search</label>
-            <input type="text" name="search" value="{{ request('search') }}" placeholder="Search employee..." class="form-input w-full sm:w-48">
-        </div>
-        <div class="w-full sm:w-auto">
-            <label class="block text-xs font-bold text-slate-500 mb-1 uppercase tracking-wider">Salary Month</label>
-            <select name="month_filter" class="form-input w-full sm:w-40">
-                <option value="">All Months</option>
-                @for($i = 0; $i < 24; $i++)
-                    @php $d = now()->subMonths($i); @endphp
-                    <option value="{{ $d->format('Y-m') }}" {{ request('month_filter') == $d->format('Y-m') ? 'selected' : '' }}>
-                        {{ $d->format('F Y') }}
-                    </option>
-                @endfor
-            </select>
-        </div>
-        <div class="flex items-end gap-2 w-full sm:w-auto">
-            <div class="flex-1 sm:flex-none">
-                <label class="block text-xs font-bold text-slate-500 mb-1 uppercase tracking-wider">Start Date</label>
-                <input type="date" name="start_date" value="{{ request('start_date') }}" class="form-input w-full sm:w-36">
+<div x-data="{ tab: 'salaries' }" class="glass-card !p-0 overflow-hidden">
+
+    {{-- ── Advanced Filter Bar ── --}}
+    <div class="bg-white border-b border-slate-200/60">
+
+        {{-- Top Row: Title + Add Buttons --}}
+        <div class="flex flex-wrap items-center justify-between gap-3 px-5 py-4 border-b border-slate-100">
+            <div class="flex items-center gap-3">
+                <div>
+                    <h2 class="text-sm font-bold text-slate-800">Salary Records</h2>
+                    <p class="text-xs text-slate-400 font-medium">Filter and manage employee salaries</p>
+                </div>
             </div>
-            <span class="text-slate-400 font-medium mb-2.5">to</span>
-            <div class="flex-1 sm:flex-none">
-                <label class="block text-xs font-bold text-slate-500 mb-1 uppercase tracking-wider">End Date</label>
-                <input type="date" name="end_date" value="{{ request('end_date') }}" class="form-input w-full sm:w-36">
+            <div class="flex flex-wrap items-center gap-2">
+                <button type="button" onclick="document.getElementById('paymentModal').style.display='block'" class="btn-secondary px-4 py-2 text-sm">
+                    <svg class="w-3.5 h-3.5 mr-1.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"/></svg>Payment
+                </button>
+                <a href="{{ route('salary-advances.create') }}" class="btn-secondary px-4 py-2 text-sm">
+                    <svg class="w-3.5 h-3.5 mr-1.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"/></svg>Borrow
+                </a>
+                <a href="{{ route('salaries.create') }}" class="btn-primary px-4 py-2 text-sm">
+                    <svg class="w-3.5 h-3.5 mr-1.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"/></svg>Add Salary
+                </a>
             </div>
         </div>
-        <div class="flex sm:items-center gap-2 w-full sm:w-auto mt-2 sm:mt-0">
-            <button type="submit" class="btn-secondary flex-1 sm:flex-none justify-center">Search</button>
-            <a href="{{ route('salaries.index') }}" class="btn-danger flex-1 sm:flex-none justify-center text-center">Reset</a>
-        </div>
-    </form>
-    <div class="flex flex-col sm:flex-row items-stretch sm:items-center gap-3 w-full sm:w-auto mt-4 sm:mt-0">
-        <button type="button" onclick="document.getElementById('paymentModal').style.display='block'" class="btn-secondary w-full sm:w-auto justify-center"><svg class="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"/></svg>Add Payment History</button>
-        <a href="{{ route('salary-advances.create') }}" class="btn-secondary w-full sm:w-auto justify-center"><svg class="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"/></svg>Add Borrow Record</a>
-        <a href="{{ route('salaries.create') }}" class="btn-primary w-full sm:w-auto justify-center"><svg class="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"/></svg>Add Salary Record</a>
+
+        {{-- Filter Row --}}
+        <form method="GET" id="salaryFilter" class="px-5 py-3.5 flex flex-wrap items-end gap-3">
+
+            {{-- Search --}}
+            <div class="flex-1 min-w-[160px]">
+                <label class="block text-[10px] font-bold text-slate-400 uppercase tracking-wider mb-1.5">Search Employee</label>
+                <div class="relative">
+                    <svg class="absolute left-3 top-1/2 -translate-y-1/2 w-3.5 h-3.5 text-slate-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"/></svg>
+                    <input type="text" name="search" value="{{ request('search') }}" placeholder="Search employee..." class="form-input pl-9 py-2 text-sm w-full">
+                </div>
+            </div>
+
+            {{-- Month --}}
+            <div class="min-w-[140px]">
+                <label class="block text-[10px] font-bold text-slate-400 uppercase tracking-wider mb-1.5">Salary Month</label>
+                <input type="month" name="month_filter" value="{{ request('month_filter') }}" class="form-input py-2 text-sm w-full">
+            </div>
+
+            {{-- Date From --}}
+            <div class="min-w-[130px]">
+                <label class="block text-[10px] font-bold text-slate-400 uppercase tracking-wider mb-1.5">From</label>
+                <input type="date" name="start_date" value="{{ request('start_date') }}" class="form-input py-2 text-sm w-full">
+            </div>
+
+            {{-- Date To --}}
+            <div class="min-w-[130px]">
+                <label class="block text-[10px] font-bold text-slate-400 uppercase tracking-wider mb-1.5">To</label>
+                <input type="date" name="end_date" value="{{ request('end_date') }}" class="form-input py-2 text-sm w-full">
+            </div>
+
+            {{-- Buttons --}}
+            <div class="flex items-center gap-2 shrink-0">
+                <button type="submit" class="btn-primary py-2 px-4 text-sm">
+                    <svg class="w-3.5 h-3.5 mr-1.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 4a1 1 0 011-1h16a1 1 0 011 1v2a1 1 0 01-.293.707L13 13.414V19a1 1 0 01-.553.894l-4 2A1 1 0 017 21v-7.586L3.293 6.707A1 1 0 013 6V4z"/></svg>
+                    Filter
+                </button>
+                <a href="{{ route('salaries.index') }}" class="btn-secondary py-2 px-4 text-sm">
+                    <svg class="w-3.5 h-3.5 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/></svg>
+                    Clear
+                </a>
+            </div>
+
+        </form>
     </div>
-</div>
-<div class="glass-card !p-0 overflow-hidden">
-    <div class="overflow-x-auto">
+
+    <div class="flex overflow-x-auto border-b border-blue-100 bg-blue-50/30">
+        <button @click="tab = 'salaries'" :class="tab === 'salaries' ? 'border-primary-500 text-primary-600 bg-white' : 'border-transparent text-slate-500 hover:text-slate-700'" class="px-6 py-3.5 border-b-2 font-bold text-sm whitespace-nowrap transition-colors">Salary Records</button>
+        <button @click="tab = 'payments'" :class="tab === 'payments' ? 'border-primary-500 text-primary-600 bg-white' : 'border-transparent text-slate-500 hover:text-slate-700'" class="px-6 py-3.5 border-b-2 font-bold text-sm whitespace-nowrap transition-colors">Payment History</button>
+        <button @click="tab = 'borrows'" :class="tab === 'borrows' ? 'border-primary-500 text-primary-600 bg-white' : 'border-transparent text-slate-500 hover:text-slate-700'" class="px-6 py-3.5 border-b-2 font-bold text-sm whitespace-nowrap transition-colors">Borrow History</button>
+    </div>
+
+    <div x-show="tab === 'salaries'" class="overflow-x-auto">
         <table class="data-table">
             <thead><tr><th>Sl No</th><th>Employee</th><th>Period</th><th>Amount</th><th>Advance Ded.</th><th>Net Payment</th><th>Payment Date</th><th>Method</th><th>Status</th><th>Actions</th></tr></thead>
             <tbody>
@@ -73,85 +109,64 @@
         </table>
     </div>
     @if($salaries->hasPages())<div class="px-5 py-4 border-t border-slate-200/60">{{ $salaries->appends(request()->query())->links() }}</div>@endif
-</div>
 
-<div class="mt-12 mb-4">
-    <h3 class="text-lg font-bold text-slate-800">Borrow Salary History</h3>
-</div>
-<div class="glass-card !p-0 overflow-hidden">
-    <div class="overflow-x-auto">
+    {{-- Payment History Tab --}}
+    <div x-show="tab === 'payments'" x-cloak class="overflow-x-auto">
         <table class="data-table">
-            <thead><tr><th>Sl No</th><th>Employee</th><th>Date</th><th>Amount</th><th>Reason</th><th>Status</th><th>Actions</th></tr></thead>
-            <tbody>
-                @forelse($salaryAdvances as $advance)
-                <tr>
-                    <td data-label="Sl No" class="text-slate-400 font-semibold">{{ $advance->id }}</td>
-                    <td data-label="Employee" class="font-bold text-slate-800">{{ $advance->employee->name }}</td>
-                    <td data-label="Date" class="font-medium text-slate-600">{{ $advance->date->format('d M Y') }}</td>
-                    <td data-label="Amount" class="font-bold text-slate-800">₹{{ number_format($advance->amount, 2) }}</td>
-                    <td data-label="Reason" class="text-slate-600">{{ $advance->reason ?? '—' }}</td>
-                    <td data-label="Status">
-                        @if($advance->status === 'pending')
-                            <span class="badge badge-warning">Pending</span>
-                        @elseif($advance->status === 'approved')
-                            <span class="badge badge-success">Approved</span>
-                        @else
-                            <span class="badge badge-info">Deducted</span>
-                        @endif
-                    </td>
-                    <td data-label="">
-                        <div class="flex items-center gap-2">
-                            <a href="{{ route('salary-advances.edit', $advance) }}" class="text-amber-600 hover:text-amber-700" title="Edit"><svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z"/></svg></a>
-                            <form action="{{ route('salary-advances.destroy', $advance) }}" method="POST" onsubmit="return confirm('Delete borrow record for {{ $advance->employee->name }}?')">@csrf @method('DELETE')<button class="text-red-500 hover:text-red-600" title="Delete"><svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"/></svg></button></form>
-                        </div>
-                    </td>
-                </tr>
-                @empty
-                <tr><td colspan="7" class="text-center py-8 text-slate-400 font-medium font-semibold">No borrow records found</td></tr>
-                @endforelse
-            </tbody>
-        </table>
-    </div>
-</div>
-
-<div class="mt-12 mb-4">
-    <h3 class="text-lg font-bold text-slate-800">Payment History</h3>
-</div>
-<div class="glass-card !p-0 overflow-hidden">
-    <div class="overflow-x-auto">
-        <table class="data-table">
-            <thead><tr><th>Sl No</th><th>Employee</th><th>Date</th><th>Amount</th><th>Method</th><th>Notes</th><th>Actions</th></tr></thead>
+            <thead><tr><th>Employee</th><th>Date</th><th>Method</th><th>Notes</th><th>Amount</th><th>Actions</th></tr></thead>
             <tbody>
                 @forelse($employeePayments as $payment)
                 <tr>
-                    <td data-label="Sl No" class="text-slate-400 font-semibold">{{ $payment->id }}</td>
                     <td data-label="Employee" class="font-bold text-slate-800">{{ $payment->employee->name }}</td>
-                    <td data-label="Date" class="font-medium text-slate-600">{{ $payment->date->format('d M Y') }}</td>
+                    <td data-label="Date" class="text-slate-600">{{ $payment->date->format('d M Y') }}</td>
+                    <td data-label="Method" class="text-slate-500 uppercase font-semibold">{{ $payment->payment_method }}</td>
+                    <td data-label="Notes" class="text-slate-500">{{ $payment->notes ?? '—' }}</td>
                     <td data-label="Amount" class="font-bold text-green-600">₹{{ number_format($payment->amount, 2) }}</td>
-                    <td data-label="Method" class="text-slate-500 uppercase text-sm font-semibold tracking-wide">{{ $payment->payment_method }}</td>
-                    <td data-label="Notes" class="text-slate-600">{{ $payment->notes ?? '—' }}</td>
-                    <td data-label="">
-                        <div class="flex items-center gap-2">
-                            <a href="{{ route('employee-payments.edit', $payment) }}" class="text-amber-600 hover:text-amber-700" title="Edit"><svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z"/></svg></a>
-                            <form action="{{ route('employee-payments.destroy', $payment) }}" method="POST" onsubmit="return confirm('Delete payment record for {{ $payment->employee->name }}?')">@csrf @method('DELETE')<button class="text-red-500 hover:text-red-600" title="Delete"><svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"/></svg></button></form>
-                        </div>
+                    <td data-label="Actions">
+                        <form action="{{ route('employee-payments.destroy', $payment) }}" method="POST" onsubmit="return confirm('Delete payment?')">@csrf @method('DELETE')
+                            <button class="text-red-500 hover:text-red-600 font-semibold text-sm">Delete</button>
+                        </form>
                     </td>
                 </tr>
                 @empty
-                <tr><td colspan="7" class="text-center py-8 text-slate-400 font-medium font-semibold">No payment records found</td></tr>
+                <tr><td colspan="6" class="text-center py-8 text-slate-400 font-medium">No payment records found</td></tr>
+                @endforelse
+            </tbody>
+        </table>
+    </div>
+
+    {{-- Borrow History Tab --}}
+    <div x-show="tab === 'borrows'" x-cloak class="overflow-x-auto">
+        <table class="data-table">
+            <thead><tr><th>Employee</th><th>Date</th><th>Status</th><th>Amount</th><th>Actions</th></tr></thead>
+            <tbody>
+                @forelse($salaryAdvances as $advance)
+                <tr>
+                    <td data-label="Employee" class="font-bold text-slate-800">{{ $advance->employee->name }}</td>
+                    <td data-label="Date" class="text-slate-600">{{ $advance->date->format('d M Y') }}</td>
+                    <td data-label="Status" class="capitalize text-slate-500">{{ $advance->status }}</td>
+                    <td data-label="Amount" class="font-bold text-amber-600">₹{{ number_format($advance->amount, 2) }}</td>
+                    <td data-label="Actions">
+                        <form action="{{ route('salary-advances.destroy', $advance) }}" method="POST" onsubmit="return confirm('Delete record?')">@csrf @method('DELETE')
+                            <button class="text-red-500 hover:text-red-600 font-semibold text-sm">Delete</button>
+                        </form>
+                    </td>
+                </tr>
+                @empty
+                <tr><td colspan="5" class="text-center py-8 text-slate-400 font-medium">No borrow records found</td></tr>
                 @endforelse
             </tbody>
         </table>
     </div>
 </div>
+
+
 
 {{-- Add Payment History Modal --}}
 <div id="paymentModal" style="display: none;" class="fixed inset-0 z-50 overflow-y-auto" aria-labelledby="modal-title" role="dialog" aria-modal="true">
     <div class="flex items-end justify-center min-h-screen px-4 pt-4 pb-20 text-center sm:block sm:p-0">
         <div class="fixed inset-0 transition-opacity bg-slate-900/50 backdrop-blur-sm" aria-hidden="true" onclick="document.getElementById('paymentModal').style.display='none'"></div>
-
         <span class="hidden sm:inline-block sm:align-middle sm:h-screen" aria-hidden="true">&#8203;</span>
-        
         <div class="inline-block w-full max-w-lg p-6 my-8 overflow-hidden text-left align-middle transition-all transform bg-white shadow-xl rounded-2xl relative z-10">
             <div class="flex items-center justify-between mb-5">
                 <h3 class="text-lg font-bold leading-6 text-slate-900" id="modal-title">Add Payment History</h3>

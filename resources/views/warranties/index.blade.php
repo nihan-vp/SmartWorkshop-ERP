@@ -55,6 +55,6 @@
             </tbody>
         </table>
     </div>
-    @if($warranties->hasPages())<div class="px-5 py-4 border-t border-slate-200/60">{{ $warranties->links() }}</div>@endif
+    @if($warranties->hasPages())<div class="px-5 py-4 border-t border-slate-200/60">{{ $warranties->appends(request()->query())->links() }}</div>@endif
 </div>
 @endsection

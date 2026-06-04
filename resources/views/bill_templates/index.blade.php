@@ -60,7 +60,7 @@
         </table>
     </div>
     @if($templates->hasPages())
-    <div class="px-5 py-4 border-t border-slate-200/60">{{ $templates->links() }}</div>
+    <div class="px-5 py-4 border-t border-slate-200/60">{{ $templates->appends(request()->query())->links() }}</div>
     @endif
 </div>
 @endsection

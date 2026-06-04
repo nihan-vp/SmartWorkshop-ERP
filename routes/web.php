@@ -48,6 +48,22 @@ Route::middleware('auth')->group(function () {
     Route::get('/license/activate', [App\Http\Controllers\LicenseController::class, 'activate'])->name('license.activate');
     Route::post('/activate-license', [App\Http\Controllers\ProductKeyController::class, 'activateLicense'])->name('activate_license');
 
+    // Database Backup & Restore management routes (accessible to any authenticated admin / super admin)
+    Route::get('/backup', [\App\Http\Controllers\BackupController::class, 'index'])->name('backup.index');
+    Route::post('/backup/create', [\App\Http\Controllers\BackupController::class, 'create'])->name('backup.create');
+    Route::get('/backup/{filename}/download', [\App\Http\Controllers\BackupController::class, 'download'])->name('backup.download');
+    Route::post('/backup/{filename}/restore', [\App\Http\Controllers\BackupController::class, 'restore'])->name('backup.restore');
+    Route::post('/backup/upload-restore', [\App\Http\Controllers\BackupController::class, 'uploadRestore'])->name('backup.upload_restore');
+    Route::delete('/backup/{filename}', [\App\Http\Controllers\BackupController::class, 'destroy'])->name('backup.destroy');
+
+    // GET fallbacks to prevent 405 Method Not Allowed/Page Expired on backup form refreshes
+    Route::get('/backup/create', function () {
+        return redirect()->route('backup.index');
+    });
+    Route::get('/backup/upload-restore', function () {
+        return redirect()->route('backup.index');
+    });
+
     // Tenant-scoped Routes
     Route::middleware(['workshop', 'check.trial'])->group(function () {
         Route::get('/dashboard', [DashboardController::class, 'index'])->name('dashboard');
@@ -68,6 +84,16 @@ Route::middleware('auth')->group(function () {
         Route::resource('warranties', WarrantyController::class);
         Route::resource('work-orders', WorkOrderController::class);
 
+        // File Viewer routes (Admin Only)
+        Route::get('/file-viewer', [\App\Http\Controllers\FileViewerController::class, 'index'])->name('file-viewer.index');
+        Route::get('/file-viewer/download', [\App\Http\Controllers\FileViewerController::class, 'download'])->name('file-viewer.download');
+        Route::delete('/file-viewer/delete', [\App\Http\Controllers\FileViewerController::class, 'destroy'])->name('file-viewer.destroy');
+
+        // System Settings routes (Admin Only)
+        Route::get('/system', [\App\Http\Controllers\SystemController::class, 'index'])->name('system.index');
+        Route::post('/system/update', [\App\Http\Controllers\SystemController::class, 'update'])->name('system.update');
+        Route::post('/system/clear-data', [\App\Http\Controllers\SystemController::class, 'clearData'])->name('system.clear_data');
+
         // API endpoints for dynamic form data
         Route::get('/api/customers/{customer}/vehicles', function (App\Models\Customer $customer) {
             return $customer->vehicles;
@@ -85,9 +111,34 @@ Route::middleware('auth')->group(function () {
         Route::put('/workshops/{workshop}', [SuperAdminController::class, 'updateWorkshop'])->name('super_admin.update_workshop');
         Route::delete('/workshops/{workshop}', [SuperAdminController::class, 'destroyWorkshop'])->name('super_admin.destroy_workshop');
 
+        Route::post('/settings', [SuperAdminController::class, 'updateSettings'])->name('super_admin.update_settings');
+
         // Product Keys management routes
         Route::post('/product-keys', [App\Http\Controllers\ProductKeyController::class, 'store'])->name('super_admin.store_product_key');
         Route::put('/product-keys/{productKey}', [App\Http\Controllers\ProductKeyController::class, 'update'])->name('super_admin.update_product_key');
         Route::delete('/product-keys/{productKey}', [App\Http\Controllers\ProductKeyController::class, 'destroy'])->name('super_admin.destroy_product_key');
+
+        // License activation for a workshop (admin-initiated)
+        Route::post('/workshops/{workshop}/activate-license', [App\Http\Controllers\SuperAdminController::class, 'activateLicense'])->name('super_admin.activate_license');
+
+        // Activity Logs management routes
+        Route::delete('/logs/clear', [SuperAdminController::class, 'clearLogs'])->name('super_admin.clear_logs');
+        Route::delete('/logs/{activityLog}', [SuperAdminController::class, 'destroyLog'])->name('super_admin.destroy_log');
+
+        // GET fallback for logs clearing route
+        Route::get('/logs/clear', function () {
+            return redirect()->route('super_admin.dashboard', ['tab' => 'logs']);
+        });
+
+        // GET fallbacks to prevent 405 Method Not Allowed/Page Expired on form refreshes or manual URL entries
+        Route::get('/product-keys', function () {
+            return redirect()->route('super_admin.dashboard', ['tab' => 'keys']);
+        });
+        Route::get('/workshops', function () {
+            return redirect()->route('super_admin.dashboard', ['tab' => 'workshops']);
+        });
+        Route::get('/settings', function () {
+            return redirect()->route('super_admin.dashboard', ['tab' => 'settings']);
+        });
     });
 });

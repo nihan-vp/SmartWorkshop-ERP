@@ -3,7 +3,7 @@
 @section('page-title', 'Invoices')
 @section('page-subtitle', 'Manage customer invoices')
 @section('content')
-<div class="w-full" x-data="{ pdfModalOpen: false, pdfUrl: '', iframeLoading: true }">
+<div class="w-full" x-data="{ pdfModalOpen: false, pdfUrl: '', pdfBaseUrl: '', pdfSize: 'A4', iframeLoading: true }">
 <div class="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 mb-6">
     <form method="GET" class="flex flex-row items-center gap-2 w-full sm:w-auto">
         <input type="text" name="search" value="{{ request('search') }}" placeholder="Search invoice # or customer..." class="form-input flex-1 min-w-[120px] sm:w-72 sm:flex-none">
@@ -38,14 +38,14 @@
                     <td data-label="">
                         <div class="flex items-center gap-2 sm:gap-1 flex-wrap sm:flex-nowrap">
                             {{-- New Invoice Preview Button (Sleek PDF Document Icon) --}}
-                            <button type="button" @click="pdfUrl = '{{ route('bills.pdf', $bill) }}#view=FitH'; pdfModalOpen = true; iframeLoading = true;" class="text-primary-600 hover:text-primary-850 hover:bg-primary-50 p-1.5 rounded-lg transition-all hover:scale-110 flex items-center justify-center" title="Preview Invoice">
+                            <button type="button" @click="pdfBaseUrl = '{{ route('bills.pdf', $bill) }}'; pdfUrl = pdfBaseUrl + '?size=' + pdfSize + '#view=FitH'; pdfModalOpen = true; iframeLoading = true;" class="text-primary-600 hover:text-primary-850 hover:bg-primary-50 p-1.5 rounded-lg transition-all hover:scale-110 flex items-center justify-center" title="Preview Invoice">
                                 <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"/>
                                 </svg>
                             </button>
                             
                             {{-- Direct Download PDF Button --}}
-                            <a href="{{ route('bills.pdf', $bill) }}" 
+                            <a :href="'{{ route('bills.pdf', $bill) }}?size=' + pdfSize" 
                                download 
                                class="text-primary-600 hover:text-primary-850 hover:bg-primary-50 p-1.5 rounded-lg transition-all hover:scale-110 flex items-center justify-center" 
                                title="Download PDF">
@@ -88,7 +88,7 @@
             </tbody>
         </table>
     </div>
-    @if($bills->hasPages())<div class="px-5 py-4 border-t border-slate-200/60">{{ $bills->links() }}</div>@endif
+    @if($bills->hasPages())<div class="px-5 py-4 border-t border-slate-200/60">{{ $bills->appends(request()->query())->links() }}</div>@endif
 </div>
 
 {{-- Responsive PDF Preview Modal --}}
@@ -107,16 +107,27 @@
          x-transition:leave-end="opacity-0 translate-y-4 sm:translate-y-0 sm:scale-95">
          
          {{-- Modal Header --}}
-        <div class="sm:px-6 px-4 sm:py-4 py-3 border-b border-slate-200 bg-white flex items-center justify-between shrink-0">
-            <div class="flex items-center gap-2.5">
-                <span class="p-2 bg-primary-50 text-primary-600 rounded-lg">
-                    <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"/></svg>
-                </span>
-                <h3 class="text-base sm:text-lg font-bold text-slate-805 tracking-tight">Invoice Preview</h3>
+        <div class="sm:px-6 px-4 sm:py-4 py-3 border-b border-slate-200 bg-white flex flex-col sm:flex-row gap-3 sm:gap-0 sm:items-center justify-between shrink-0">
+            <div class="flex items-center justify-between w-full sm:w-auto">
+                <div class="flex items-center gap-2.5">
+                    <span class="p-2 bg-primary-50 text-primary-600 rounded-lg">
+                        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"/></svg>
+                    </span>
+                    <h3 class="text-base sm:text-lg font-bold text-slate-805 tracking-tight">Invoice Preview</h3>
+                </div>
+                <button type="button" @click="pdfModalOpen = false" class="sm:hidden text-slate-400 hover:text-slate-650 hover:bg-slate-50 transition-all p-2 rounded-xl border border-slate-200">
+                    <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/></svg>
+                </button>
             </div>
             
-            <div class="flex items-center gap-2">
-                <button type="button" @click="pdfModalOpen = false" class="text-slate-400 hover:text-slate-650 hover:bg-slate-50 transition-all p-2 rounded-xl border border-slate-200">
+            <div class="flex items-center gap-3 w-full sm:w-auto">
+                <select x-model="pdfSize" @change="pdfUrl = pdfBaseUrl + '?size=' + pdfSize + '#view=FitH'; iframeLoading = true;" class="form-select w-full sm:w-auto py-1.5 pl-3 pr-8 text-sm font-semibold text-slate-700 bg-slate-50 border-slate-200 rounded-lg hover:bg-slate-100 transition-colors focus:ring-2 focus:ring-primary-500/20">
+                    <option value="A4">A4 Size</option>
+                    <option value="A5">A5 Size</option>
+                    <option value="LETTER">Letter</option>
+                    <option value="LEGAL">Legal</option>
+                </select>
+                <button type="button" @click="pdfModalOpen = false" class="hidden sm:block text-slate-400 hover:text-slate-650 hover:bg-slate-50 transition-all p-2 rounded-xl border border-slate-200">
                     <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/></svg>
                 </button>
             </div>

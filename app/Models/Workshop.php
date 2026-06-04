@@ -18,11 +18,16 @@ class Workshop extends Model
         'subscription_status',
         'alert_message',
         'alert_expires_at',
+        'restrict_features_on_expiry',
+        'admin_extend_allowed',
+        'trial_extended_count',
     ];
 
     protected $casts = [
         'trial_ends_at' => 'datetime',
         'alert_expires_at' => 'datetime',
+        'restrict_features_on_expiry' => 'boolean',
+        'admin_extend_allowed' => 'boolean',
     ];
 
     public function isTrial(): bool
@@ -40,7 +45,7 @@ class Workshop extends Model
 
     public function isActive(): bool
     {
-        return !$this->isSuspended() && !$this->isTrialExpired();
+        return !$this->isSuspended() && (!$this->isTrialExpired() || !$this->restrict_features_on_expiry);
     }
 
     public function isSuspended(): bool
@@ -53,7 +58,7 @@ class Workshop extends Model
         if (!$this->trial_ends_at) {
             return 0;
         }
-        return max(0, (int) now()->diffInDays($this->trial_ends_at, false));
+        return max(0, (int) now()->startOfDay()->diffInDays($this->trial_ends_at->startOfDay(), false));
     }
 
     /**

@@ -18,6 +18,14 @@
                     <svg class="w-4 h-4 text-slate-400 absolute left-3 top-3" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"/></svg>
                 </div>
                 <div class="w-full sm:w-40 relative">
+                    <select name="payment_method" x-model="payment_method" class="w-full pl-9 pr-8 py-2 bg-white border border-slate-200/80 rounded-xl text-sm appearance-none focus:border-primary-400 focus:ring focus:ring-primary-100 transition-colors shadow-sm text-slate-700">
+                        <option value="">Any Method</option>
+                        <option value="cash">Cash</option>
+                        <option value="upi">UPI</option>
+                    </select>
+                    <svg class="w-4 h-4 text-slate-400 absolute left-3 top-3" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 10h18M7 15h1m4 0h1m-7 4h12a3 3 0 003-3V8a3 3 0 00-3-3H6a3 3 0 00-3 3v8a3 3 0 003 3z"/></svg>
+                </div>
+                <div class="w-full sm:w-40 relative">
                     <select name="payment_status" x-model="payment_status" class="w-full pl-9 pr-8 py-2 bg-white border border-slate-200/80 rounded-xl text-sm appearance-none focus:border-primary-400 focus:ring focus:ring-primary-100 transition-colors shadow-sm text-slate-700">
                         <option value="">Any Status</option>
                         <option value="paid">Paid</option>
@@ -126,9 +134,11 @@
                 </tbody>
             </table>
         </div>
+        @if($purchases->hasPages())
         <div class="p-4 border-t border-slate-100 bg-slate-50/50">
-            {{ $purchases->links() }}
+            {{ $purchases->appends(request()->query())->links() }}
         </div>
+        @endif
         @endif
     </div>
 </div>

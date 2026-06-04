@@ -202,12 +202,18 @@ class BillController extends Controller
         return redirect()->route('bills.index')->with('success', 'Invoice updated successfully!');
     }
 
-    public function downloadPDF(Bill $bill)
+    public function downloadPDF(Request $request, Bill $bill)
     {
         $bill->load('customer', 'vehicle', 'items', 'workshop');
 
+        $size = strtoupper($request->query('size', 'A4'));
+        $allowedSizes = ['A4', 'A5', 'LETTER', 'LEGAL', 'A3'];
+        if (!in_array($size, $allowedSizes)) {
+            $size = 'A4';
+        }
+
         // Create new PDF document
-        $pdf = new \TCPDF('P', 'mm', 'A4', true, 'UTF-8', false);
+        $pdf = new \TCPDF('P', 'mm', $size, true, 'UTF-8', false);
 
         // Set document information
         $pdf->SetCreator('Suhaim Soft Workshop');
@@ -239,9 +245,12 @@ class BillController extends Controller
         // Write HTML
         $pdf->writeHTML($html, true, false, true, false, '');
 
-        // Output PDF to browser directly inline (I)
-        return response($pdf->Output($bill->bill_number . '.pdf', 'I'))
-            ->header('Content-Type', 'application/pdf');
+        // Output PDF as a string (S) and return as a proper Laravel response
+        $pdfContent = $pdf->Output($bill->bill_number . '.pdf', 'S');
+
+        return response($pdfContent)
+            ->header('Content-Type', 'application/pdf')
+            ->header('Content-Disposition', 'inline; filename="' . $bill->bill_number . '.pdf"');
     }
 
     public function destroy(Bill $bill)

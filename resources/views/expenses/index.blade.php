@@ -3,28 +3,84 @@
 @section('page-title', 'Expenses')
 @section('page-subtitle', 'Manage workshop expenses')
 @section('content')
-<div class="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 mb-6">
-    <form method="GET" class="flex flex-wrap items-center gap-2 w-full sm:w-auto">
-        <input type="text" name="search" value="{{ request('search') }}" placeholder="Search description..." class="form-input sm:w-60">
-        
-        <select name="category" class="form-select w-40">
-            <option value="">All Categories</option>
-            @foreach($categories as $cat)
-            <option value="{{ $cat }}" {{ request('category') === $cat ? 'selected' : '' }}>{{ $cat }}</option>
-            @endforeach
-        </select>
-        
-        <select name="payment_method" class="form-select w-36">
-            <option value="">All Methods</option>
-            <option value="cash" {{ request('payment_method') === 'cash' ? 'selected' : '' }}>Cash</option>
-            <option value="upi" {{ request('payment_method') === 'upi' ? 'selected' : '' }}>UPI</option>
-        </select>
-        
-        <button type="submit" class="btn-secondary">Filter</button>
-    </form>
-    <a href="{{ route('expenses.create') }}" class="btn-primary"><svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"/></svg>Add Expense</a>
-</div>
-<div class="glass-card !p-0 overflow-hidden">
+<div class="glass-card !p-0 overflow-hidden mt-6">
+
+    {{-- ── Advanced Filter Bar ── --}}
+    <div class="bg-white border-b border-slate-200/60">
+
+        {{-- Top Row: Title + Add Button --}}
+        <div class="flex items-center justify-between px-5 py-4 border-b border-slate-100">
+            <div class="flex items-center gap-3">
+                <div>
+                    <h2 class="text-sm font-bold text-slate-800">All Expenses</h2>
+                    <p class="text-xs text-slate-400 font-medium">Filter and manage records</p>
+                </div>
+            </div>
+            <a href="{{ route('expenses.create') }}" class="btn-primary px-4 py-2 text-sm">
+                <svg class="w-4 h-4 mr-1.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"/></svg>
+                Add Expense
+            </a>
+        </div>
+
+        {{-- Filter Row --}}
+        <form method="GET" id="expenseFilter" class="px-5 py-3.5 flex flex-wrap items-end gap-3">
+
+            {{-- Search --}}
+            <div class="flex-1 min-w-[160px]">
+                <label class="block text-[10px] font-bold text-slate-400 uppercase tracking-wider mb-1.5">Search</label>
+                <div class="relative">
+                    <svg class="absolute left-3 top-1/2 -translate-y-1/2 w-3.5 h-3.5 text-slate-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"/></svg>
+                    <input type="text" name="search" value="{{ request('search') }}" placeholder="Search description..." class="form-input pl-9 py-2 text-sm w-full">
+                </div>
+            </div>
+
+            {{-- Category --}}
+            <div class="min-w-[130px]">
+                <label class="block text-[10px] font-bold text-slate-400 uppercase tracking-wider mb-1.5">Category</label>
+                <select name="category" class="form-select py-2 text-sm w-full">
+                    <option value="">All Categories</option>
+                    @foreach($categories as $cat)
+                    <option value="{{ $cat }}" {{ request('category') === $cat ? 'selected' : '' }}>{{ $cat }}</option>
+                    @endforeach
+                </select>
+            </div>
+
+            {{-- Payment Method --}}
+            <div class="min-w-[120px]">
+                <label class="block text-[10px] font-bold text-slate-400 uppercase tracking-wider mb-1.5">Method</label>
+                <select name="payment_method" class="form-select py-2 text-sm w-full">
+                    <option value="">All Methods</option>
+                    <option value="cash" {{ request('payment_method') === 'cash' ? 'selected' : '' }}>Cash</option>
+                    <option value="upi" {{ request('payment_method') === 'upi' ? 'selected' : '' }}>UPI</option>
+                </select>
+            </div>
+
+            {{-- Date Range --}}
+            <div class="min-w-[120px]">
+                <label class="block text-[10px] font-bold text-slate-400 uppercase tracking-wider mb-1.5">From</label>
+                <input type="date" name="start_date" value="{{ request('start_date') }}" class="form-input py-2 text-sm w-full">
+            </div>
+            <div class="min-w-[120px]">
+                <label class="block text-[10px] font-bold text-slate-400 uppercase tracking-wider mb-1.5">To</label>
+                <input type="date" name="end_date" value="{{ request('end_date') }}" class="form-input py-2 text-sm w-full">
+            </div>
+
+            {{-- Buttons --}}
+            <div class="flex items-center gap-2 shrink-0">
+                <button type="submit" class="btn-primary py-2 px-4 text-sm">
+                    <svg class="w-3.5 h-3.5 mr-1.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 4a1 1 0 011-1h16a1 1 0 011 1v2a1 1 0 01-.293.707L13 13.414V19a1 1 0 01-.553.894l-4 2A1 1 0 017 21v-7.586L3.293 6.707A1 1 0 013 6V4z"/></svg>
+                    Filter
+                </button>
+                <a href="{{ route('expenses.index') }}" class="btn-secondary py-2 px-4 text-sm">
+                    <svg class="w-3.5 h-3.5 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/></svg>
+                    Clear
+                </a>
+            </div>
+
+        </form>
+    </div>
+
+    {{-- Table --}}
     <div class="overflow-x-auto">
         <table class="data-table">
             <thead><tr><th>Sl No</th><th>Date</th><th>Category</th><th>Description</th><th>Amount</th><th>Payment Method</th><th>Actions</th></tr></thead>
@@ -45,11 +101,11 @@
                     </td>
                 </tr>
                 @empty
-                <tr><td colspan="7" class="text-center py-8 text-slate-400 font-medium font-semibold">No expenses found</td></tr>
+                <tr><td colspan="7" class="text-center py-12 text-slate-400 font-medium">No expenses found</td></tr>
                 @endforelse
             </tbody>
         </table>
     </div>
-    @if($expenses->hasPages())<div class="px-5 py-4 border-t border-slate-200/60">{{ $expenses->links() }}</div>@endif
+    @if($expenses->hasPages())<div class="px-5 py-4 border-t border-slate-100">{{ $expenses->appends(request()->query())->links() }}</div>@endif
 </div>
 @endsection

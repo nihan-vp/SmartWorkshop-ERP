@@ -54,6 +54,6 @@
             </tbody>
         </table>
     </div>
-    @if($workOrders->hasPages())<div class="px-5 py-4 border-t border-slate-200/60">{{ $workOrders->links() }}</div>@endif
+    @if($workOrders->hasPages())<div class="px-5 py-4 border-t border-slate-200/60">{{ $workOrders->appends(request()->query())->links() }}</div>@endif
 </div>
 @endsection

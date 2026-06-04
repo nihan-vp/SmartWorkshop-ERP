@@ -2,7 +2,7 @@
 <html lang="en" prefix="og: https://ogp.me/ns#">
 <head>
     <meta charset="utf-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=0">
 
     {{-- ══════════════════════════════════════════════
          ADVANCED SEO SYSTEM — Suhaim Soft Work Shop
@@ -152,25 +152,27 @@
                 scrollbar-width: thin;
                 scrollbar-color: rgba(37, 99, 235, 0.3) transparent;
             }
-            body {
-                @apply bg-slate-50 text-slate-800 antialiased;
+            html, body {
+                @apply bg-white text-blue-950 antialiased overflow-x-hidden;
             }
         }
 
         @layer components {
             .sidebar-link {
-                @apply flex items-center gap-3 px-4 py-2.5 rounded-xl text-sm font-medium text-slate-600 
-                       transition-all duration-200 hover:bg-primary-50 hover:text-primary-600;
+                @apply flex items-center gap-3 px-4 py-2.5 rounded-xl text-sm font-medium text-blue-700/70 
+                       transition-all duration-200 hover:bg-blue-50 hover:text-blue-700;
             }
             .sidebar-link.active {
-                @apply bg-primary-50/70 text-primary-600 border-l-4 border-primary-600 font-semibold shadow-sm;
+                @apply bg-blue-600 text-white font-bold shadow-md shadow-blue-600/15;
             }
             .sidebar-link svg {
-                @apply text-slate-400 transition-colors duration-200;
+                @apply text-blue-400/80 transition-colors duration-200;
             }
-            .sidebar-link:hover svg,
+            .sidebar-link:hover svg {
+                @apply text-blue-600;
+            }
             .sidebar-link.active svg {
-                @apply text-primary-600;
+                @apply text-white;
             }
             @keyframes spin-slow {
                 from { transform: rotate(0deg); }
@@ -180,17 +182,17 @@
                 animation: spin-slow 12s linear infinite;
             }
             .glass-card {
-                @apply bg-white border border-slate-200/80 rounded-2xl p-6 shadow-sm 
-                       transition-all duration-300 hover:shadow-md hover:border-slate-300;
+                @apply bg-white border border-blue-100 rounded-2xl p-6 shadow-sm 
+                       transition-all duration-300 hover:shadow-md hover:border-blue-200;
             }
             .stat-card {
-                @apply relative overflow-hidden rounded-2xl p-6 border border-slate-200/60 shadow-sm 
+                @apply relative overflow-hidden rounded-2xl p-6 border border-blue-100 shadow-sm 
                        transition-all duration-300 hover:scale-[1.01] hover:shadow-md;
             }
             .btn-primary {
-                @apply inline-flex items-center gap-2 px-5 py-2.5 bg-gradient-to-r from-primary-600 to-primary-500 
-                       text-white text-sm font-semibold rounded-xl shadow-md shadow-primary-500/10 
-                       transition-all duration-200 hover:shadow-primary-500/20 hover:scale-[1.01] active:scale-95;
+                @apply inline-flex items-center gap-2 px-5 py-2.5 bg-blue-600 
+                       text-white text-sm font-bold rounded-xl shadow-sm 
+                       transition-all duration-200 hover:bg-blue-700 hover:shadow-md active:scale-95;
             }
             .btn-secondary {
                 @apply inline-flex items-center gap-2 px-5 py-2.5 bg-slate-100 text-slate-800 text-sm font-semibold 
@@ -201,17 +203,17 @@
                        rounded-xl border border-red-500/20 transition-all duration-200 hover:bg-red-500/20 active:scale-95;
             }
             .form-input {
-                @apply w-full bg-white border border-slate-200 rounded-xl px-4 py-3 text-slate-900 placeholder-slate-400 
-                       text-sm transition-all duration-200 focus:outline-none focus:ring-2 focus:ring-primary-500/20 
-                       focus:border-primary-500 focus:bg-white;
+                @apply w-full bg-white border border-blue-100 rounded-xl px-4 py-3 text-slate-900 placeholder-slate-400 
+                       text-sm transition-all duration-200 focus:outline-none focus:ring-2 focus:ring-blue-500/20 
+                       focus:border-blue-500 focus:bg-white;
             }
             .form-select {
-                @apply w-full bg-white border border-slate-200 rounded-xl px-4 py-3 text-slate-900 text-sm 
-                       transition-all duration-200 focus:outline-none focus:ring-2 focus:ring-primary-500/20 
-                       focus:border-primary-500 appearance-none;
+                @apply w-full bg-white border border-blue-100 rounded-xl px-4 py-3 text-blue-900 text-sm 
+                       transition-all duration-200 focus:outline-none focus:ring-2 focus:ring-blue-500/20 
+                       focus:border-blue-500 appearance-none;
             }
             .form-label {
-                @apply block text-sm font-semibold text-slate-700 mb-2;
+                @apply block text-sm font-bold text-blue-900 mb-2;
             }
             .data-table {
                 @apply w-full text-left;
@@ -293,7 +295,7 @@
                     content: attr(data-label);
                     font-weight: 700;
                     font-size: 0.6875rem;
-                    color: #64748b;
+                    color: #2563eb;
                     text-transform: uppercase;
                     letter-spacing: 0.05em;
                     flex-shrink: 0;
@@ -627,27 +629,27 @@
     <div id="sidebar-overlay" class="fixed inset-0 bg-black/40 backdrop-blur-sm z-40 hidden lg:hidden" onclick="toggleSidebar()"></div>
 
     {{-- Sidebar --}}
-    <aside id="sidebar" class="fixed top-0 left-0 z-50 h-full w-72 bg-white border-r border-slate-200/80 
+    <aside id="sidebar" class="fixed top-0 left-0 z-50 h-full w-72 bg-white border-r border-blue-100 
                                transform -translate-x-full lg:translate-x-0 transition-transform duration-300 ease-out flex flex-col shadow-sm">
         {{-- Logo --}}
-        <div class="p-6 border-b border-slate-200/60">
+        <div class="p-6 border-b border-blue-100">
             <div class="flex items-center gap-3">
-                <div class="w-10 h-10 rounded-xl bg-gradient-to-br from-primary-600 to-indigo-500 flex items-center justify-center shadow-md shadow-primary-500/25">
+                <div class="w-10 h-10 rounded-xl bg-blue-600 flex items-center justify-center shadow-md shadow-blue-500/20">
                     <svg class="w-6 h-6 text-white animate-spin-slow" fill="none" stroke="currentColor" viewBox="0 0 24 24" style="animation-duration: 8s;">
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.066 2.573c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.573 1.066c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 00-1.066-2.573c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31 2.37-2.37.996.608 2.296.07 2.572-1.065z"/>
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"/>
                     </svg>
                 </div>
                 <div>
-                    <h1 class="text-lg font-bold text-slate-900 leading-tight">
+                    <h1 class="text-lg font-bold text-blue-900 leading-tight">
                         {{ Auth::user()->isSuperAdmin() ? 'System Admin' : (Auth::user()->workshop->name ?? 'Suhaim Soft') }}
                     </h1>
                     @if(!Auth::user()->isSuperAdmin() && Auth::user()->workshop && Auth::user()->workshop->phone)
-                    <p class="text-xs text-slate-500 font-medium">
+                    <p class="text-xs text-blue-500 font-medium">
                         {{ Auth::user()->workshop->phone }}
                     </p>
                     @endif
-                    <p class="text-xs text-primary-600 font-bold tracking-wider uppercase mt-0.5">
+                    <p class="text-xs text-blue-600 font-bold tracking-wider uppercase mt-0.5">
                         {{ Auth::user()->isSuperAdmin() ? 'Control Panel' : 'Work Shop' }}
                     </p>
                 </div>
@@ -658,13 +660,29 @@
         <nav class="flex-1 overflow-y-auto p-4 space-y-1">
 
             @if(Auth::user()->isSuperAdmin())
-            <a href="{{ route('super_admin.dashboard', ['tab' => 'workshops']) }}" class="sidebar-link {{ request()->routeIs('super_admin.dashboard') && request('tab', 'workshops') === 'workshops' ? 'active' : '' }}" id="nav-workshops">
+            <a href="{{ route('super_admin.dashboard', ['tab' => 'dashboard']) }}" class="sidebar-link {{ request()->routeIs('super_admin.dashboard') && request('tab', 'dashboard') === 'dashboard' ? 'active' : '' }}" id="nav-super-dashboard">
+                <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6"/></svg>
+                Dashboard
+            </a>
+            <a href="{{ route('super_admin.dashboard', ['tab' => 'workshops']) }}" class="sidebar-link {{ request()->routeIs('super_admin.dashboard') && request('tab') === 'workshops' ? 'active' : '' }}" id="nav-workshops">
                 <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16l3.5-2 3.5 2 3.5-2 3.5 2z"/></svg>
                 Garages / Workshops
             </a>
             <a href="{{ route('super_admin.dashboard', ['tab' => 'keys']) }}" class="sidebar-link {{ request()->routeIs('super_admin.dashboard') && request('tab') === 'keys' ? 'active' : '' }}" id="nav-keys">
                 <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M15 7a2 2 0 012 2m-9 8a2 2 0 012-2m7-3a6 6 0 11-12 0 6 6 0 0112 0z"/></svg>
                 Product Keys
+            </a>
+            <a href="{{ route('super_admin.dashboard', ['tab' => 'settings']) }}" class="sidebar-link {{ request()->routeIs('super_admin.dashboard') && request('tab') === 'settings' ? 'active' : '' }}" id="nav-settings">
+                <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.066 2.573c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.573 1.066c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 00-1.066-2.573c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31 2.37-2.37.996.608 2.296.07 2.572-1.065z"/><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"/></svg>
+                System Settings
+            </a>
+            <a href="{{ route('super_admin.dashboard', ['tab' => 'logs']) }}" class="sidebar-link {{ request()->routeIs('super_admin.dashboard') && request('tab') === 'logs' ? 'active' : '' }}" id="nav-logs">
+                <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 12h6m-6 4h6"/></svg>
+                Activity Logs
+            </a>
+            <a href="{{ route('backup.index') }}" class="sidebar-link {{ request()->routeIs('backup.*') ? 'active' : '' }}" id="nav-backup">
+                <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M4 7v10c0 2.21 3.582 4 8 4s8-1.79 8-4V7M4 7c0 2.21 3.582 4 8 4s8-1.79 8-4M4 7c0-2.21 3.582-4 8-4s8 1.79 8 4m0 5c0 2.21-3.582 4-8 4s-8-1.79-8-4"/></svg>
+                Backup & Restore
             </a>
             @endif
 
@@ -732,16 +750,34 @@
                 <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z"/></svg>
                 Warranty
             </a>
+            @if(Auth::user()->role === 'admin')
+            <a href="{{ route('file-viewer.index') }}" class="sidebar-link {{ request()->routeIs('file-viewer.*') ? 'active' : '' }}" id="nav-file-viewer">
+                <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"/></svg>
+                File Viewer
+            </a>
+            @endif
+
+            <a href="{{ route('backup.index') }}" class="sidebar-link {{ request()->routeIs('backup.*') ? 'active' : '' }}" id="nav-backup-tenant">
+                <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M4 7v10c0 2.21 3.582 4 8 4s8-1.79 8-4V7M4 7c0 2.21 3.582 4 8 4s8-1.79 8-4M4 7c0-2.21 3.582-4 8-4s8 1.79 8 4m0 5c0 2.21-3.582 4-8 4s-8-1.79-8-4"/></svg>
+                Backup & Restore
+            </a>
+
+            @if(Auth::user()->role === 'admin')
+            <a href="{{ route('system.index') }}" class="sidebar-link {{ request()->routeIs('system.*') ? 'active' : '' }}" id="nav-system-tenant">
+                <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.066 2.573c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.573 1.066c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 00-1.066-2.573c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31 2.37-2.37.996.608 2.296.07 2.572-1.065z"/><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"/></svg>
+                System Settings
+            </a>
+            @endif
             @endif
         </nav>
 
         {{-- Sidebar Footer --}}
-        <div class="p-4 border-t border-slate-200/60 no-print">
-            <div class="glass-card !p-3 !rounded-xl !bg-slate-50 !border-slate-100 shadow-sm">
-                <p class="text-xs text-slate-800 font-semibold">
+        <div class="p-4 border-t border-blue-100 no-print">
+            <div class="glass-card !p-3 !rounded-xl !bg-blue-50/50 !border-blue-100 shadow-sm text-center">
+                <p class="text-xs text-blue-900 font-bold">
                     {{ Auth::user()->isSuperAdmin() ? 'System Super Admin' : (Auth::user()->workshop->name ?? 'Suhaim Soft') }}
                 </p>
-                <p class="text-[10px] text-slate-500 mt-0.5">© {{ date('Y') }} All Rights Reserved</p>
+                <p class="text-[10px] text-blue-400 mt-0.5">© {{ date('Y') }} All Rights Reserved</p>
             </div>
         </div>
     </aside>
@@ -752,40 +788,40 @@
         @auth
         {{-- Top Bar --}}
         <header class="sticky top-0 z-30 bg-white/80 backdrop-blur-md border-b border-slate-200/60 no-print">
-            <div class="flex items-center justify-between px-4 sm:px-6 lg:px-8 py-3 sm:py-0 sm:h-16 flex-wrap gap-4">
-                <div class="flex items-center gap-3">
+            <div class="flex items-center justify-between px-4 sm:px-6 lg:px-8 h-16 gap-4">
+                <div class="flex items-center gap-3 min-w-0">
                     {{-- Mobile Menu Toggle --}}
-                    <button onclick="toggleSidebar()" class="lg:hidden p-2 -ml-2 rounded-xl hover:bg-slate-50 text-slate-500 hover:text-slate-950 transition-colors" id="menu-toggle">
+                    <button onclick="toggleSidebar()" class="lg:hidden p-2 -ml-2 rounded-xl hover:bg-slate-50 text-slate-500 hover:text-slate-950 transition-colors shrink-0" id="menu-toggle">
                         <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"/></svg>
                     </button>
 
                     {{-- Page Title --}}
-                    <div class="flex flex-col justify-center">
-                        <h2 class="text-base sm:text-lg font-bold text-slate-900 leading-tight">@yield('page-title', 'Dashboard')</h2>
-                        <p class="hidden sm:block text-[10px] sm:text-xs text-slate-500 mt-0.5">
+                    <div class="flex flex-col justify-center min-w-0">
+                        <h2 class="text-base sm:text-lg font-bold text-slate-900 leading-tight truncate">@yield('page-title', 'Dashboard')</h2>
+                        <p class="hidden sm:block text-[10px] sm:text-xs text-slate-500 mt-0.5 truncate">
                             Welcome to {{ Auth::user()->isSuperAdmin() ? 'Suhaim Soft Control Panel' : (Auth::user()->workshop->name ?? 'Suhaim Soft Work Shop') }}
                         </p>
                     </div>
                 </div>
 
                 {{-- Right side --}}
-                <div class="flex items-center gap-2 w-full sm:w-auto justify-between sm:justify-end">
-                    <div class="flex items-center gap-1.5 sm:gap-2 px-2.5 py-1.5 sm:px-4 sm:py-2 bg-slate-50 rounded-lg sm:rounded-xl border border-slate-200 overflow-hidden text-ellipsis whitespace-nowrap min-w-0">
-                        <svg class="w-3.5 h-3.5 sm:w-4 sm:h-4 text-slate-400 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"/></svg>
-                        <span id="live-clock" class="text-[10px] sm:text-xs text-slate-600 font-semibold truncate">{{ now()->format('d M Y h:i A') }}</span>
+                <div class="flex items-center gap-2 sm:gap-4 shrink-0">
+                    <div class="flex items-center gap-1 sm:gap-2 px-2 py-1.5 sm:px-4 sm:py-2 bg-slate-50 rounded-lg sm:rounded-xl border border-slate-200 overflow-hidden text-ellipsis whitespace-nowrap min-w-0">
+                        <svg class="hidden sm:block w-3.5 h-3.5 sm:w-4 sm:h-4 text-slate-400 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"/></svg>
+                        <span id="live-clock" class="text-[9px] sm:text-xs text-slate-600 font-semibold truncate tracking-tighter sm:tracking-normal">{{ now()->format('d M Y h:i A') }}</span>
                     </div>
                     
-                    <div class="flex items-center gap-2 shrink-0">
+                    <div class="flex items-center gap-1.5 sm:gap-2 shrink-0">
                         @if(Auth::user()->isSuperAdmin() || Auth::user()->workshop)
-                        <button onclick="window.location.reload()" class="flex items-center gap-1.5 px-2.5 py-1.5 sm:px-4 sm:py-2 bg-slate-50 rounded-lg sm:rounded-xl border border-slate-200 hover:bg-slate-100 transition-all active:scale-95" title="Reload Page">
+                        <button onclick="window.location.reload()" class="hidden sm:flex items-center gap-1.5 px-2.5 py-1.5 sm:px-4 sm:py-2 bg-slate-50 rounded-lg sm:rounded-xl border border-slate-200 hover:bg-slate-100 transition-all active:scale-95" title="Reload Page">
                             <svg class="w-3.5 h-3.5 sm:w-4 sm:h-4 text-slate-500 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15"/></svg>
                             <span class="hidden sm:inline text-xs text-slate-600 font-semibold">Reload</span>
                         </button>
                         @endif
                         <form action="{{ route('logout') }}" method="POST" class="inline m-0">
                             @csrf
-                            <button type="submit" class="inline-flex items-center gap-1.5 px-2.5 py-1.5 sm:px-4 sm:py-2 text-[10px] sm:text-xs font-semibold text-rose-600 bg-rose-50 border border-rose-100 hover:bg-rose-100/60 rounded-lg sm:rounded-xl transition-all active:scale-95">
-                                <svg class="w-3.5 h-3.5 sm:w-4 sm:h-4 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1"/></svg>
+                            <button type="submit" class="inline-flex items-center justify-center gap-1.5 p-2 sm:px-4 sm:py-2 text-[10px] sm:text-xs font-semibold text-rose-600 bg-rose-50 border border-rose-100 hover:bg-rose-100/60 rounded-lg sm:rounded-xl transition-all active:scale-95" title="Sign Out">
+                                <svg class="w-5 h-5 sm:w-4 sm:h-4 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1"/></svg>
                                 <span class="hidden sm:inline">Sign Out</span>
                             </button>
                         </form>
@@ -802,28 +838,21 @@
             $trialEnds = \Carbon\Carbon::parse($workshop->trial_ends_at);
             // Calculate days left, making sure it shows 0 if it expires today
             $daysLeftDisplay = max(0, floor(now()->startOfDay()->diffInDays($trialEnds->startOfDay(), false)));
-            // Get actual day based on creation date
-            $currentDay = $workshop->getSubscriptionDay();
         @endphp
-        <div class="bg-amber-50 border-b border-amber-200 px-4 py-3 sm:px-6 lg:px-8 no-print">
-            <div class="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 w-full">
-                <div class="flex items-start gap-3 flex-1 min-w-0">
-                    <div class="mt-0.5 text-amber-600 shrink-0">
-                        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"/></svg>
-                    </div>
-                    <div class="min-w-0">
-                        <h3 class="text-sm font-bold text-amber-800 truncate">Trial Period Ending Soon</h3>
-                        <p class="text-xs font-medium text-amber-700 mt-1 whitespace-normal break-words">
-                            You are currently on Day {{ max(1, $currentDay) }} of your trial period, which ends on <span class="font-bold">{{ $trialEnds->format('M d, Y h:i A') }} ({{ $trialEnds->diffForHumans() }})</span>. Please activate a license key to ensure continuous access to your invoices, customers, and operations.
-                        </p>
-                    </div>
+        <div class="bg-amber-50 border-b border-amber-200 px-4 py-3 sm:px-6 lg:px-8 no-print shadow-sm">
+            <div class="flex items-center justify-between gap-4">
+                <div class="flex items-center gap-3">
+                    <svg class="w-5 h-5 text-amber-600 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"/></svg>
+                    <p class="text-sm font-semibold text-amber-800">
+                        Trial Status: <span class="font-bold">{{ $daysLeftDisplay == 0 ? 'Expires Today' : $daysLeftDisplay . ' ' . ($daysLeftDisplay === 1 ? 'day' : 'days') . ' remaining' }}</span>
+                        @if($workshop->isTrialExpired() && $workshop->restrict_features_on_expiry)
+                            <span class="ml-2 text-rose-700 bg-rose-100/80 px-2 py-0.5 rounded border border-rose-200 text-xs font-bold whitespace-nowrap">Write actions restricted</span>
+                        @endif
+                    </p>
                 </div>
-                <div class="shrink-0 flex flex-row lg:flex-col items-center lg:items-end justify-between w-full sm:w-auto gap-3 sm:gap-2">
-                    <span class="inline-flex items-center px-2.5 py-1 rounded-md text-xs font-bold {{ $daysLeftDisplay <= 1 ? 'bg-red-100 text-red-800 border-red-200' : 'bg-amber-100 text-amber-800 border-amber-200' }} border">
-                        {{ $daysLeftDisplay }} {{ $daysLeftDisplay === 1 ? 'Day' : 'Days' }} Left
-                    </span>
-                    <a href="{{ route('license.activate') }}" class="text-[11px] font-bold text-blue-600 hover:text-blue-800 underline decoration-blue-300 underline-offset-2">Activate Now</a>
-                </div>
+                <a href="{{ route('license.activate') }}" class="inline-flex items-center justify-center px-4 py-1.5 text-xs font-bold text-amber-900 bg-amber-200/50 hover:bg-amber-300/60 rounded-lg transition-colors border border-amber-300/80 shrink-0">
+                    Activate Subscription
+                </a>
             </div>
         </div>
         @endif

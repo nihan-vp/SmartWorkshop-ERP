@@ -1,6 +1,6 @@
 @extends('layouts.app')
 @section('title', 'Add Vehicle')
-@section('page-title', 'Add New Vehicle')
+@section('page-title', 'Add Vehicle')
 
 @section('content')
 <div class="max-w-2xl mx-auto">
@@ -23,11 +23,7 @@
                     </div>
                 </div>
                 <div class="grid grid-cols-1 sm:grid-cols-2 gap-5">
-                    <div>
-                        <label class="form-label">Make *</label>
-                        <input type="text" name="make" value="{{ old('make') }}" class="form-input" required>
-                    </div>
-                    <div>
+                    <div class="sm:col-span-2">
                         <label class="form-label">Model *</label>
                         <input type="text" name="model" value="{{ old('model') }}" class="form-input" required>
                     </div>

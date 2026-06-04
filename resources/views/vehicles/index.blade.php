@@ -14,14 +14,13 @@
 <div class="glass-card !p-0 overflow-hidden">
     <div class="overflow-x-auto">
         <table class="data-table">
-            <thead><tr><th>Sl No</th><th>Plate Number</th><th>Brand</th><th>Model</th><th>Year</th><th>Color</th><th>Owner</th><th>Actions</th></tr></thead>
+            <thead><tr><th>Sl No</th><th>Plate Number</th><th>Model</th><th>Year</th><th>Color</th><th>Owner</th><th>Actions</th></tr></thead>
             <tbody>
                 @forelse($vehicles as $v)
                 <tr>
                     <td data-label="Sl No" class="text-slate-400 font-semibold">{{ $v->id }}</td>
                     <td data-label="Plate No" class="font-mono font-bold text-primary-600 bg-primary-50 px-2.5 py-1 rounded-lg inline-block my-2">{{ $v->plate_number }}</td>
 
-                    <td data-label="Brand" class="font-bold text-slate-800">{{ $v->make }}</td>
                     <td data-label="Model" class="font-medium text-slate-600">{{ $v->model }}</td>
                     <td data-label="Year" class="font-medium text-slate-600">{{ $v->year ?? '—' }}</td>
                     <td data-label="Color" class="font-medium text-slate-600">{{ $v->color ?? '—' }}</td>
@@ -39,6 +38,6 @@
             </tbody>
         </table>
     </div>
-    @if($vehicles->hasPages())<div class="px-5 py-4 border-t border-slate-200/60">{{ $vehicles->links() }}</div>@endif
+    @if($vehicles->hasPages())<div class="px-5 py-4 border-t border-slate-200/60">{{ $vehicles->appends(request()->query())->links() }}</div>@endif
 </div>
 @endsection

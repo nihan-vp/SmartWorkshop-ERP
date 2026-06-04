@@ -24,11 +24,7 @@
                     </div>
                 </div>
                 <div class="grid grid-cols-1 sm:grid-cols-2 gap-5">
-                    <div>
-                        <label class="form-label">Make *</label>
-                        <input type="text" name="make" value="{{ old('make', $vehicle->make) }}" class="form-input" required>
-                    </div>
-                    <div>
+                    <div class="sm:col-span-2">
                         <label class="form-label">Model *</label>
                         <input type="text" name="model" value="{{ old('model', $vehicle->model) }}" class="form-input" required>
                     </div>

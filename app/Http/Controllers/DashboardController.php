@@ -18,9 +18,10 @@ class DashboardController extends Controller
 {
     public function index()
     {
-        $totalIncome = Bill::where('payment_status', 'paid')->sum('total');
-        $totalExpenses = Expense::sum('amount');
-        $totalSalaries = Salary::where('status', 'paid')->sum('amount');
+        $today = today();
+        $totalIncome = Bill::where('payment_status', 'paid')->whereDate('bill_date', $today)->sum('total');
+        $totalExpenses = Expense::whereDate('expense_date', $today)->sum('amount');
+        $totalSalaries = Salary::where('status', 'paid')->whereDate('payment_date', $today)->sum('amount');
         $totalExpensesAll = $totalExpenses + $totalSalaries;
         $totalProfit = $totalIncome - $totalExpensesAll;
         $totalServices = Service::count();
@@ -29,8 +30,8 @@ class DashboardController extends Controller
         $totalVehicles = Vehicle::count();
         $totalEmployees = Employee::where('status', 'active')->count();
 
-        $upiPayments = Bill::where('payment_method', 'upi')->where('payment_status', 'paid')->sum('total');
-        $cashPayments = Bill::where('payment_method', 'cash')->where('payment_status', 'paid')->sum('total');
+        $upiPayments = Bill::where('payment_method', 'upi')->where('payment_status', 'paid')->whereDate('bill_date', $today)->sum('total');
+        $cashPayments = Bill::where('payment_method', 'cash')->where('payment_status', 'paid')->whereDate('bill_date', $today)->sum('total');
 
         $stockValue = Product::selectRaw('SUM(cost_price * stock_qty) as value')->value('value') ?? 0;
         $totalWorkOrders = WorkOrder::count();

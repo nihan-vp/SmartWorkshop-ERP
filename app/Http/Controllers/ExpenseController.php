@@ -22,6 +22,12 @@ class ExpenseController extends Controller
         if ($request->category) {
             $query->where('category', $request->category);
         }
+        if ($request->start_date) {
+            $query->whereDate('expense_date', '>=', $request->start_date);
+        }
+        if ($request->end_date) {
+            $query->whereDate('expense_date', '<=', $request->end_date);
+        }
         $expenses = $query->latest()->paginate(15);
         $categories = Expense::select('category')->distinct()->pluck('category');
         return view('expenses.index', compact('expenses', 'categories'));

@@ -78,12 +78,17 @@ class AuthController extends Controller
         ]);
 
         \Illuminate\Support\Facades\DB::transaction(function () use ($validated, &$user) {
+            $defaultTrialDays = (int) \App\Models\SystemSetting::getVal('default_trial_duration', 14);
+            $trialEnds = now()->addDays($defaultTrialDays);
+
             $workshop = \App\Models\Workshop::create([
                 'name' => $validated['workshop_name'],
                 'phone' => $validated['workshop_phone'],
                 'email' => $validated['workshop_email'],
                 'address' => $validated['workshop_address'],
                 'gstin' => $validated['workshop_gstin'],
+                'subscription_status' => 'trial',
+                'trial_ends_at' => $trialEnds,
             ]);
 
             $user = User::create([
@@ -93,6 +98,8 @@ class AuthController extends Controller
                 'workshop_id' => $workshop->id,
                 'role' => 'admin',
             ]);
+
+            \App\Models\ActivityLog::log('workshop_register', "Workshop registered successfully with a {$defaultTrialDays}-day trial.", $user->id, $workshop->id);
         });
 
         Auth::login($user);

@@ -106,7 +106,7 @@
             </table>
         </div>
         @if($customers->hasPages())
-        <div class="px-5 py-4 border-t border-slate-200/60">{{ $customers->links() }}</div>
+        <div class="px-5 py-4 border-t border-slate-200/60">{{ $customers->appends(request()->query())->links() }}</div>
         @endif
     </div>
 
@@ -160,9 +160,7 @@
             <!-- Create/Edit Customer Form -->
             <form x-show="actionUrl !== ''" :action="actionUrl" method="POST" class="space-y-4">
                 @csrf
-                <template x-if="methodOverride === 'PUT'">
-                    <input type="hidden" name="_method" value="PUT">
-                </template>
+                <input type="hidden" name="_method" value="PUT" x-bind:disabled="methodOverride !== 'PUT'">
 
                 <div>
                     <label class="form-label">Full Name</label>

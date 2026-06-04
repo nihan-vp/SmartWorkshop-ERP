@@ -1,951 +1,1327 @@
 <!DOCTYPE html>
-<html lang="en" prefix="og: https://ogp.me/ns#" class="scroll-smooth">
+<html lang="en">
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Suhaim Soft Work Shop — Workshop Management System</title>
+    <meta name="description" content="Suhaim Soft Work Shop is a smart workshop management platform. Manage work orders, billing, inventory, and staff with ease.">
+    <meta name="keywords" content="workshop management, garage software, auto repair, invoicing, inventory, Suhaim Soft">
+    <meta name="robots" content="index, follow">
+    <link rel="canonical" href="{{ url('/') }}">
 
-    {{-- ══════════════════════════════════════════════
-         ADVANCED SEO SYSTEM — Suhaim Soft Work Shop Landing Page
-    ══════════════════════════════════════════════ --}}
-    @php
-        $siteName      = 'Suhaim Soft Work Shop';
-        $fullTitle     = 'Suhaim Soft Workshop Manager — Next-Gen Workshop Automation';
-        $seoDesc       = 'Suhaim Soft Work Shop is a next-generation multi-tenant subscription system for workshops. Manage work orders, billing, and staff easily.';
-        $seoKeywords   = 'workshop automation, multi-tenant workshop software, garage management system, auto repair shop software, vehicle service software, Suhaim Soft';
-        $seoImage      = asset('icons/icon.svg');
-        $canonicalUrl  = url()->current();
-        $seoRobots     = 'index, follow';
-        $seoType       = 'website';
-        $seoLocale     = 'en_US';
-    @endphp
+    <!-- Open Graph -->
+    <meta property="og:title" content="Suhaim Soft Work Shop">
+    <meta property="og:description" content="Smart workshop management system for modern garages.">
+    <meta property="og:type" content="website">
+    <meta property="og:url" content="{{ url('/') }}">
 
-    {{-- ── Primary Meta Tags ── --}}
-    <title>{{ $fullTitle }}</title>
-    <meta name="title"           content="{{ $fullTitle }}">
-    <meta name="description"     content="{{ $seoDesc }}">
-    <meta name="keywords"        content="{{ $seoKeywords }}">
-    <meta name="robots"          content="{{ $seoRobots }}">
-    <meta name="author"          content="Suhaim Soft">
-    <meta name="copyright"       content="© {{ date('Y') }} Suhaim Soft Work Shop">
-    <meta name="generator"       content="Suhaim Soft Workshop Manager">
-    <meta name="language"        content="English">
-    <meta name="revisit-after"   content="7 days">
-    <meta name="rating"          content="general">
-    <link rel="canonical"        href="{{ $canonicalUrl }}">
-
-    {{-- ── Open Graph / Facebook / LinkedIn ── --}}
-    <meta property="og:type"         content="{{ $seoType }}">
-    <meta property="og:url"          content="{{ $canonicalUrl }}">
-    <meta property="og:title"        content="{{ $fullTitle }}">
-    <meta property="og:description"  content="{{ $seoDesc }}">
-    <meta property="og:image"        content="{{ $seoImage }}">
-    <meta property="og:image:alt"    content="{{ $siteName }} Logo">
-    <meta property="og:site_name"    content="{{ $siteName }}">
-    <meta property="og:locale"       content="{{ $seoLocale }}">
-
-    {{-- ── Twitter Card ── --}}
-    <meta name="twitter:card"        content="summary">
-    <meta name="twitter:title"       content="{{ $fullTitle }}">
-    <meta name="twitter:description" content="{{ $seoDesc }}">
-    <meta name="twitter:image"       content="{{ $seoImage }}">
-    <meta name="twitter:image:alt"   content="{{ $siteName }}">
-
-    {{-- ── JSON-LD Structured Data ── --}}
-    <script type="application/ld+json">
-    {
-        "@@context": "https://schema.org",
-        "@@graph": [
-            {
-                "@@type": "SoftwareApplication",
-                "@@id": "{{ url('/') }}/#software",
-                "name": "{{ $siteName }}",
-                "url": "{{ url('/') }}",
-                "applicationCategory": "BusinessApplication",
-                "operatingSystem": "Web",
-                "description": "{{ $seoDesc }}",
-                "offers": {
-                    "@@type": "Offer",
-                    "price": "0",
-                    "priceCurrency": "USD"
-                },
-                "publisher": {
-                    "@@type": "Organization",
-                    "name": "Suhaim Soft",
-                    "url": "{{ url('/') }}"
-                }
-            }
-        ]
-    }
-    </script>
-
-    <!-- PWA Config -->
+    <!-- PWA -->
     <link rel="manifest" href="/manifest.json">
     <meta name="theme-color" content="#1d4ed8">
-    <meta name="mobile-web-app-capable" content="yes">
-    <meta name="apple-mobile-web-app-capable" content="yes">
-    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
-    <link rel="apple-touch-icon" href="/icons/icon.svg">
 
     <!-- Google Fonts -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800;900&family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
-    
-    <!-- Tailwind CSS -->
-    <script src="https://cdn.tailwindcss.com"></script>
-    <script>
-        tailwind.config = {
-            theme: {
-                extend: {
-                    fontFamily: {
-                        sans: ['Plus Jakarta Sans', 'sans-serif'],
-                        outfit: ['Outfit', 'sans-serif'],
-                    },
-                    colors: {
-                        brand: {
-                            50: '#eef2ff',
-                            100: '#e0e7ff',
-                            200: '#c7d2fe',
-                            350: '#818cf8',
-                            500: '#6366f1',
-                            600: '#4f46e5',
-                            700: '#4338ca',
-                            800: '#3730a3',
-                            900: '#312e81',
-                        }
-                    },
-                    animation: {
-                        'float': 'float 6s ease-in-out infinite',
-                        'pulse-glow': 'pulseGlow 2.5s ease-in-out infinite',
-                        'spin-slow': 'spin 12s linear infinite',
-                    },
-                    keyframes: {
-                        float: {
-                            '0%, 100%': { transform: 'translateY(0px) rotate(0deg)' },
-                            '50%': { transform: 'translateY(-20px) rotate(2deg)' }
-                        },
-                        pulseGlow: {
-                            '0%, 100%': { opacity: 0.6, transform: 'scale(1)' },
-                            '50%': { opacity: 0.9, transform: 'scale(1.05)' }
-                        }
-                    }
-                }
-            }
-        }
-    </script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
 
-    <style type="text/tailwindcss">
-        @layer base {
-            body {
-                @apply bg-slate-950 text-slate-100 overflow-x-hidden antialiased;
-            }
+    <style>
+        /* ── Reset & Base ── */
+        *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+        html { scroll-behavior: smooth; }
+        body {
+            font-family: 'Inter', sans-serif;
+            background: #f0f7ff;
+            color: #1e293b;
+            overflow-x: hidden;
+            line-height: 1.6;
         }
-        .glass-header {
-            @apply bg-slate-950/40 backdrop-blur-xl border-b border-white/5;
+
+        /* ── Variables ── */
+        :root {
+            --blue-50:  #eff6ff;
+            --blue-100: #dbeafe;
+            --blue-200: #bfdbfe;
+            --blue-300: #93c5fd;
+            --blue-400: #60a5fa;
+            --blue-500: #3b82f6;
+            --blue-600: #2563eb;
+            --blue-700: #1d4ed8;
+            --blue-800: #1e40af;
+            --blue-900: #1e3a8a;
+            --slate-50:  #f8fafc;
+            --slate-100: #f1f5f9;
+            --slate-200: #e2e8f0;
+            --slate-400: #94a3b8;
+            --slate-500: #64748b;
+            --slate-600: #475569;
+            --slate-700: #334155;
+            --slate-800: #1e293b;
+            --slate-900: #0f172a;
         }
-        .glass-card-dark {
-            @apply bg-slate-900/40 backdrop-blur-xl border border-white/5 shadow-2xl rounded-3xl p-6 transition-all duration-300;
+
+        /* ── Utility ── */
+        .container {
+            max-width: 1140px;
+            margin: 0 auto;
+            padding: 0 1.5rem;
         }
-        .glass-card-dark:hover {
-            @apply border-brand-500/30 bg-slate-900/60 shadow-brand-500/5 -translate-y-1.5;
+        .btn-primary {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+            background: var(--blue-600);
+            color: #fff;
+            font-weight: 700;
+            font-size: 0.95rem;
+            padding: 0.75rem 1.75rem;
+            border-radius: 0.625rem;
+            text-decoration: none;
+            transition: background 0.2s, transform 0.15s, box-shadow 0.2s;
+            box-shadow: 0 4px 14px rgba(37,99,235,0.25);
         }
-        .text-glow-purple {
-            text-shadow: 0 0 40px rgba(139, 92, 246, 0.4);
+        .btn-primary:hover {
+            background: var(--blue-700);
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(37,99,235,0.35);
         }
-        .text-glow-emerald {
-            text-shadow: 0 0 40px rgba(16, 185, 129, 0.4);
+        .btn-outline {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+            background: #fff;
+            color: var(--blue-700);
+            font-weight: 700;
+            font-size: 0.95rem;
+            padding: 0.75rem 1.75rem;
+            border-radius: 0.625rem;
+            text-decoration: none;
+            border: 2px solid var(--blue-200);
+            transition: border-color 0.2s, background 0.2s, transform 0.15s;
+        }
+        .btn-outline:hover {
+            border-color: var(--blue-500);
+            background: var(--blue-50);
+            transform: translateY(-2px);
+        }
+        .section-label {
+            display: inline-block;
+            background: var(--blue-100);
+            color: var(--blue-700);
+            font-size: 0.75rem;
+            font-weight: 700;
+            letter-spacing: 0.1em;
+            text-transform: uppercase;
+            padding: 0.35rem 1rem;
+            border-radius: 999px;
+            margin-bottom: 1rem;
+        }
+
+        /* ── Header ── */
+        header {
+            background: #fff;
+            border-bottom: 1px solid var(--slate-200);
+            position: sticky;
+            top: 0;
+            z-index: 100;
+            box-shadow: 0 1px 6px rgba(0,0,0,0.06);
+        }
+        .header-inner {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            height: 68px;
+        }
+        .logo {
+            display: flex;
+            align-items: center;
+            gap: 0.6rem;
+            text-decoration: none;
+        }
+        .logo-icon {
+            width: 38px;
+            height: 38px;
+            background: linear-gradient(135deg, var(--blue-600), var(--blue-400));
+            border-radius: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        .logo-icon svg { color: #fff; }
+        .logo-text {
+            font-size: 1.2rem;
+            font-weight: 800;
+            color: var(--slate-900);
+            letter-spacing: -0.03em;
+        }
+        .logo-text span { color: var(--blue-600); }
+        nav { display: flex; align-items: center; gap: 2rem; }
+        nav a {
+            text-decoration: none;
+            font-size: 0.875rem;
+            font-weight: 600;
+            color: var(--slate-600);
+            transition: color 0.2s;
+        }
+        nav a:hover { color: var(--blue-600); }
+        .nav-desktop { display: flex; align-items: center; gap: 1.5rem; }
+        .header-actions { display: flex; align-items: center; gap: 0.75rem; }
+        .login-link {
+            text-decoration: none;
+            font-size: 0.875rem;
+            font-weight: 600;
+            color: var(--slate-600);
+            transition: color 0.2s;
+        }
+        .login-link:hover { color: var(--blue-600); }
+
+        /* Mobile nav toggle */
+        .hamburger {
+            display: none;
+            flex-direction: column;
+            gap: 5px;
+            background: none;
+            border: none;
+            cursor: pointer;
+            padding: 6px;
+        }
+        .hamburger span {
+            display: block;
+            width: 24px;
+            height: 2px;
+            background: var(--slate-700);
+            border-radius: 2px;
+            transition: all 0.3s;
+        }
+        .mobile-nav {
+            display: none;
+            background: #fff;
+            border-top: 1px solid var(--slate-200);
+            padding: 1rem 1.5rem 1.25rem;
+            flex-direction: column;
+            gap: 0.75rem;
+        }
+        .mobile-nav.open { display: flex; }
+        .mobile-nav a {
+            text-decoration: none;
+            font-size: 0.9rem;
+            font-weight: 600;
+            color: var(--slate-700);
+            padding: 0.5rem 0;
+            border-bottom: 1px solid var(--slate-100);
+        }
+        .mobile-nav a:last-child { border-bottom: none; }
+
+        /* ── Hero ── */
+        .hero {
+            background: linear-gradient(160deg, #eff6ff 0%, #dbeafe 35%, #eff6ff 70%, #f8fafc 100%);
+            padding: 5rem 0 4.5rem;
+            position: relative;
+            overflow: hidden;
+        }
+        .hero::before {
+            content: '';
+            position: absolute;
+            top: -120px;
+            right: -120px;
+            width: 520px;
+            height: 520px;
+            background: radial-gradient(circle, rgba(59,130,246,0.12) 0%, transparent 70%);
+            border-radius: 50%;
+        }
+        .hero::after {
+            content: '';
+            position: absolute;
+            bottom: -80px;
+            left: -80px;
+            width: 380px;
+            height: 380px;
+            background: radial-gradient(circle, rgba(96,165,250,0.10) 0%, transparent 70%);
+            border-radius: 50%;
+        }
+        .hero-inner {
+            position: relative;
+            z-index: 1;
+            text-align: center;
+            max-width: 780px;
+            margin: 0 auto;
+        }
+        .hero-badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+            background: #fff;
+            border: 1px solid var(--blue-200);
+            color: var(--blue-700);
+            font-size: 0.8rem;
+            font-weight: 700;
+            padding: 0.4rem 1rem;
+            border-radius: 999px;
+            margin-bottom: 1.5rem;
+            box-shadow: 0 2px 8px rgba(37,99,235,0.1);
+        }
+        .hero-badge .dot {
+            width: 7px;
+            height: 7px;
+            border-radius: 50%;
+            background: var(--blue-500);
+            animation: pulse-dot 2s ease-in-out infinite;
+        }
+        @keyframes pulse-dot {
+            0%, 100% { opacity: 1; transform: scale(1); }
+            50% { opacity: 0.6; transform: scale(1.3); }
+        }
+        h1 {
+            font-size: clamp(2.2rem, 5.5vw, 3.6rem);
+            font-weight: 900;
+            line-height: 1.12;
+            color: var(--slate-900);
+            letter-spacing: -0.03em;
+            margin-bottom: 1.25rem;
+        }
+        h1 .highlight {
+            color: var(--blue-600);
+        }
+        .hero-desc {
+            font-size: clamp(1rem, 2vw, 1.15rem);
+            color: var(--slate-500);
+            max-width: 580px;
+            margin: 0 auto 2.25rem;
+            font-weight: 500;
+        }
+        .hero-actions {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 1rem;
+            flex-wrap: wrap;
+        }
+        .hero-stats {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 2.5rem;
+            margin-top: 3.5rem;
+            padding-top: 2.5rem;
+            border-top: 1px solid var(--blue-200);
+            flex-wrap: wrap;
+        }
+        .hero-stat { text-align: center; }
+        .hero-stat strong {
+            display: block;
+            font-size: 1.75rem;
+            font-weight: 900;
+            color: var(--blue-700);
+            letter-spacing: -0.03em;
+        }
+        .hero-stat span {
+            font-size: 0.75rem;
+            font-weight: 700;
+            color: var(--slate-500);
+            text-transform: uppercase;
+            letter-spacing: 0.08em;
+        }
+
+        /* ── Section Common ── */
+        section { padding: 5rem 0; }
+        .section-header { text-align: center; margin-bottom: 3rem; }
+        h2 {
+            font-size: clamp(1.6rem, 3.5vw, 2.5rem);
+            font-weight: 800;
+            color: var(--slate-900);
+            letter-spacing: -0.025em;
+            line-height: 1.2;
+            margin-bottom: 0.75rem;
+        }
+        .section-sub {
+            font-size: 1rem;
+            color: var(--slate-500);
+            font-weight: 500;
+            max-width: 560px;
+            margin: 0 auto;
+        }
+
+        /* ── About ── */
+        .about { background: #fff; }
+        .about-inner {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 3.5rem;
+            align-items: center;
+        }
+        .about-content h2 { text-align: left; }
+        .about-content p {
+            color: var(--slate-500);
+            font-size: 0.975rem;
+            font-weight: 500;
+            line-height: 1.8;
+            margin-bottom: 1rem;
+        }
+        .about-highlights {
+            display: flex;
+            flex-direction: column;
+            gap: 0.75rem;
+            margin-top: 1.5rem;
+        }
+        .about-highlights li {
+            list-style: none;
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+            font-size: 0.9rem;
+            font-weight: 600;
+            color: var(--slate-700);
+        }
+        .about-highlights li::before {
+            content: '';
+            width: 8px;
+            height: 8px;
+            border-radius: 50%;
+            background: var(--blue-500);
+            flex-shrink: 0;
+        }
+        .about-visual {
+            background: linear-gradient(135deg, var(--blue-600), var(--blue-400));
+            border-radius: 1.25rem;
+            padding: 3rem 2.5rem;
+            color: #fff;
+            display: flex;
+            flex-direction: column;
+            gap: 1.25rem;
+        }
+        .about-visual h3 {
+            font-size: 1.4rem;
+            font-weight: 800;
+            margin-bottom: 0.25rem;
+        }
+        .about-visual p { font-size: 0.9rem; opacity: 0.85; font-weight: 500; }
+        .visual-stat {
+            background: rgba(255,255,255,0.15);
+            border-radius: 0.75rem;
+            padding: 1rem 1.25rem;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+        .visual-stat .val {
+            font-size: 1.6rem;
+            font-weight: 900;
+        }
+        .visual-stat .lbl {
+            font-size: 0.8rem;
+            opacity: 0.8;
+            font-weight: 600;
+        }
+
+        /* ── How it Works ── */
+        .how { background: var(--blue-50); }
+        .steps-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 1.75rem;
+        }
+        .step-card {
+            background: #fff;
+            border: 1px solid var(--blue-100);
+            border-radius: 1rem;
+            padding: 2rem 1.75rem;
+            transition: transform 0.2s, box-shadow 0.2s, border-color 0.2s;
+            position: relative;
+        }
+        .step-card:hover {
+            transform: translateY(-4px);
+            box-shadow: 0 12px 32px rgba(37,99,235,0.1);
+            border-color: var(--blue-300);
+        }
+        .step-num {
+            width: 42px;
+            height: 42px;
+            border-radius: 0.625rem;
+            background: var(--blue-100);
+            color: var(--blue-700);
+            font-weight: 900;
+            font-size: 1.1rem;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-bottom: 1.25rem;
+        }
+        .step-card h3 {
+            font-size: 1.05rem;
+            font-weight: 700;
+            color: var(--slate-800);
+            margin-bottom: 0.5rem;
+        }
+        .step-card p {
+            font-size: 0.875rem;
+            color: var(--slate-500);
+            line-height: 1.7;
+            font-weight: 500;
+        }
+
+        /* ── Features ── */
+        .features { background: #fff; }
+        .features-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 1.5rem;
+        }
+        @media (min-width: 1200px) {
+            .features-grid { grid-template-columns: repeat(4, 1fr); }
+        }
+        .feature-card {
+            background: var(--blue-50);
+            border: 1px solid var(--blue-100);
+            border-radius: 1rem;
+            padding: 1.75rem;
+            transition: transform 0.2s, box-shadow 0.2s, border-color 0.2s, background 0.2s;
+        }
+        .feature-card:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 8px 24px rgba(37,99,235,0.1);
+            border-color: var(--blue-300);
+            background: #fff;
+        }
+        .feature-icon {
+            width: 44px;
+            height: 44px;
+            border-radius: 0.75rem;
+            background: var(--blue-600);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-bottom: 1rem;
+        }
+        .feature-icon svg { color: #fff; width: 22px; height: 22px; }
+        .feature-card h3 {
+            font-size: 0.975rem;
+            font-weight: 700;
+            color: var(--slate-800);
+            margin-bottom: 0.4rem;
+        }
+        .feature-card p {
+            font-size: 0.85rem;
+            color: var(--slate-500);
+            line-height: 1.65;
+            font-weight: 500;
+        }
+
+        /* ── Results ── */
+        .results { background: var(--blue-700); }
+        .results .section-label { background: rgba(255,255,255,0.15); color: #fff; }
+        .results h2 { color: #fff; }
+        .results .section-sub { color: rgba(255,255,255,0.75); }
+        .results-grid {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 1.5rem;
+        }
+        .result-card {
+            background: rgba(255,255,255,0.1);
+            border: 1px solid rgba(255,255,255,0.15);
+            border-radius: 1rem;
+            padding: 1.75rem;
+            text-align: center;
+            transition: background 0.2s, transform 0.2s;
+        }
+        .result-card:hover {
+            background: rgba(255,255,255,0.18);
+            transform: translateY(-3px);
+        }
+        .result-card .num {
+            font-size: 2.5rem;
+            font-weight: 900;
+            color: #fff;
+            letter-spacing: -0.03em;
+            line-height: 1;
+            margin-bottom: 0.5rem;
+        }
+        .result-card h3 {
+            font-size: 0.95rem;
+            font-weight: 700;
+            color: #fff;
+            margin-bottom: 0.4rem;
+        }
+        .result-card p {
+            font-size: 0.8rem;
+            color: rgba(255,255,255,0.7);
+            font-weight: 500;
+            line-height: 1.6;
+        }
+
+        /* ── Contact ── */
+        .contact { background: #fff; }
+        .contact-inner {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 3.5rem;
+            align-items: start;
+        }
+        .contact-info h2 { text-align: left; }
+        .contact-info p {
+            color: var(--slate-500);
+            font-size: 0.975rem;
+            font-weight: 500;
+            margin-bottom: 2rem;
+        }
+        .contact-items { display: flex; flex-direction: column; gap: 1.25rem; }
+        .contact-item {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+        }
+        .contact-item-icon {
+            width: 42px;
+            height: 42px;
+            border-radius: 0.625rem;
+            background: var(--blue-100);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            flex-shrink: 0;
+        }
+        .contact-item-icon svg { color: var(--blue-600); width: 20px; height: 20px; }
+        .contact-item-text span {
+            display: block;
+            font-size: 0.7rem;
+            font-weight: 700;
+            color: var(--slate-400);
+            text-transform: uppercase;
+            letter-spacing: 0.08em;
+        }
+        .contact-item-text a, .contact-item-text p {
+            font-size: 0.9rem;
+            font-weight: 600;
+            color: var(--slate-800);
+            text-decoration: none;
+            margin: 0;
+        }
+        .contact-item-text a:hover { color: var(--blue-600); }
+        .contact-form {
+            background: var(--blue-50);
+            border: 1px solid var(--blue-100);
+            border-radius: 1.25rem;
+            padding: 2rem;
+        }
+        .form-group { margin-bottom: 1.1rem; }
+        .form-group label {
+            display: block;
+            font-size: 0.8rem;
+            font-weight: 700;
+            color: var(--slate-600);
+            text-transform: uppercase;
+            letter-spacing: 0.06em;
+            margin-bottom: 0.4rem;
+        }
+        .form-group input, .form-group textarea, .form-group select {
+            width: 100%;
+            background: #fff;
+            border: 1.5px solid var(--blue-200);
+            border-radius: 0.625rem;
+            padding: 0.7rem 0.9rem;
+            font-size: 0.9rem;
+            font-family: 'Inter', sans-serif;
+            font-weight: 500;
+            color: var(--slate-800);
+            outline: none;
+            transition: border-color 0.2s, box-shadow 0.2s;
+        }
+        .form-group input:focus, .form-group textarea:focus, .form-group select:focus {
+            border-color: var(--blue-500);
+            box-shadow: 0 0 0 3px rgba(59,130,246,0.12);
+        }
+        .form-group textarea { resize: vertical; min-height: 100px; }
+        .form-row { display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; }
+        .form-submit {
+            width: 100%;
+            padding: 0.85rem;
+            background: var(--blue-600);
+            color: #fff;
+            font-weight: 700;
+            font-size: 0.95rem;
+            border: none;
+            border-radius: 0.625rem;
+            cursor: pointer;
+            transition: background 0.2s, transform 0.15s;
+            font-family: 'Inter', sans-serif;
+        }
+        .form-submit:hover { background: var(--blue-700); transform: translateY(-1px); }
+        .form-success {
+            display: none;
+            background: #dcfce7;
+            border: 1px solid #86efac;
+            color: #166534;
+            padding: 0.75rem 1rem;
+            border-radius: 0.5rem;
+            font-size: 0.875rem;
+            font-weight: 600;
+            margin-top: 1rem;
+        }
+
+        /* ── Footer ── */
+        footer {
+            background: var(--slate-900);
+            color: rgba(255,255,255,0.7);
+            padding: 4rem 0 2rem;
+            position: relative;
+        }
+        footer .footer-top {
+            display: grid;
+            grid-template-columns: 1.5fr 1fr 1fr 1fr;
+            gap: 3rem;
+            margin-bottom: 3rem;
+        }
+        footer .brand {
+            display: flex;
+            align-items: center;
+            gap: 0.6rem;
+            text-decoration: none;
+            margin-bottom: 1rem;
+        }
+        footer .brand svg { color: var(--blue-500); }
+        footer .brand-text {
+            font-size: 1.4rem;
+            font-weight: 800;
+            color: #fff;
+            letter-spacing: -0.03em;
+        }
+        footer .brand-text span { color: var(--blue-500); }
+        footer .brand-desc {
+            font-size: 0.9rem;
+            line-height: 1.6;
+            margin-bottom: 1.5rem;
+            max-width: 300px;
+        }
+        footer .socials {
+            display: flex;
+            gap: 0.75rem;
+        }
+        footer .socials a {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            width: 36px;
+            height: 36px;
+            border-radius: 0.5rem;
+            background: rgba(255,255,255,0.05);
+            color: #fff;
+            transition: background 0.2s;
+        }
+        footer .socials a:hover { background: var(--blue-600); }
+        footer h4 {
+            color: #fff;
+            font-size: 1.05rem;
+            font-weight: 700;
+            margin-bottom: 1.25rem;
+        }
+        footer ul { list-style: none; display: flex; flex-direction: column; gap: 0.75rem; }
+        footer ul a {
+            color: rgba(255,255,255,0.6);
+            text-decoration: none;
+            font-size: 0.9rem;
+            font-weight: 500;
+            transition: color 0.2s;
+        }
+        footer ul a:hover { color: #fff; }
+        footer .footer-bottom {
+            border-top: 1px solid rgba(255,255,255,0.1);
+            padding-top: 2rem;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            font-size: 0.85rem;
+        }
+        footer .footer-bottom p { font-weight: 500; }
+        footer .footer-bottom-links { display: flex; gap: 1.5rem; }
+        footer .footer-bottom-links a {
+            color: rgba(255,255,255,0.6);
+            text-decoration: none;
+        }
+        footer .footer-bottom-links a:hover { color: #fff; }
+
+        /* ── Responsive ── */
+        @media (max-width: 1024px) {
+            .results-grid { grid-template-columns: repeat(2, 1fr); }
+        }
+        @media (max-width: 768px) {
+            .nav-desktop { display: none; }
+            .header-actions .login-link, .header-actions .btn-primary { display: none; }
+            .hamburger { display: flex; }
+            .about-inner,
+            .contact-inner { grid-template-columns: 1fr; gap: 2rem; }
+            .steps-grid,
+            .features-grid { grid-template-columns: 1fr 1fr; }
+            .results-grid { grid-template-columns: repeat(2, 1fr); }
+            .hero { padding: 3.5rem 0 3rem; }
+            section { padding: 3.5rem 0; }
+            .form-row { grid-template-columns: 1fr; }
+            footer .footer-top { grid-template-columns: 1fr 1fr; gap: 2.5rem; }
+            footer .brand-desc { max-width: 100%; }
+            footer .footer-bottom { flex-direction: column; gap: 1rem; text-align: center; }
+        }
+        @media (max-width: 540px) {
+            .steps-grid,
+            .features-grid,
+            .results-grid { grid-template-columns: 1fr; }
+            footer .footer-top { grid-template-columns: 1fr; gap: 2rem; }
+            .hero-stats { gap: 1.5rem; }
+            .hero-actions { flex-direction: column; width: 100%; }
+            .btn-primary, .btn-outline { width: 100%; justify-content: center; }
         }
     </style>
 </head>
-<body class="font-sans">
+<body>
 
-    <!-- 3D Interactive WebGL/Particle Canvas Background -->
-    <div class="fixed inset-0 z-0 bg-[radial-gradient(ellipse_at_top_right,_var(--tw-gradient-stops))] from-indigo-950/60 via-slate-950 to-slate-950">
-        <canvas id="webgl-particles" class="absolute inset-0 block"></canvas>
+<!-- ══════════════════════════════ HEADER ══════════════════════════════ -->
+<header>
+    <div class="container header-inner">
+        <!-- Logo -->
+        <a href="#" class="logo">
+            <div class="logo-icon">
+                <svg width="20" height="20" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5"
+                          d="M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.065 2.572c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.572 1.065c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 00-1.065-2.572c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31 2.37-2.37.996.608 2.296.07 2.572-1.065z"/>
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"/>
+                </svg>
+            </div>
+            <span class="logo-text">SUHAIM<span>SOFT</span></span>
+        </a>
+
+        <!-- Desktop Nav -->
+        <div class="nav-desktop">
+            <nav>
+                <a href="#">Home</a>
+                <a href="#about">About</a>
+                <a href="#how">How It Works</a>
+                <a href="#features">Features</a>
+                <a href="#contact">Contact</a>
+            </nav>
+        </div>
+
+        <!-- Actions -->
+        <div class="header-actions">
+            <a href="{{ route('login') }}" class="login-link">Login</a>
+            <a href="{{ route('register') }}" class="btn-primary" style="padding: 0.55rem 1.25rem; font-size: 0.85rem;">
+                Get Started
+            </a>
+            <button class="hamburger" id="hamburger" aria-label="Menu">
+                <span></span><span></span><span></span>
+            </button>
+        </div>
     </div>
 
-    <!-- Glowing Vector Spheres (Pure CSS 3D Depth) -->
-    <div class="fixed top-[-10%] right-[-10%] w-[50vw] h-[50vw] bg-brand-500/10 rounded-full blur-[140px] pointer-events-none z-0"></div>
-    <div class="fixed bottom-[-10%] left-[-10%] w-[50vw] h-[50vw] bg-emerald-500/5 rounded-full blur-[140px] pointer-events-none z-0"></div>
-    <div class="fixed top-[40%] left-[30%] w-[35vw] h-[35vw] bg-violet-600/5 rounded-full blur-[120px] pointer-events-none z-0"></div>
+    <!-- Mobile Nav -->
+    <div class="mobile-nav" id="mobile-nav">
+        <a href="#">Home</a>
+        <a href="#about">About</a>
+        <a href="#how">How It Works</a>
+        <a href="#features">Features</a>
+        <a href="#contact">Contact</a>
+        <a href="{{ route('login') }}">Login</a>
+        <a href="{{ route('register') }}" style="color: #2563eb;">Get Started →</a>
+    </div>
+</header>
 
-    <div class="relative z-10 min-h-screen flex flex-col justify-between">
-        
-        <!-- Navigation Header -->
-        <header class="glass-header sticky top-0 z-50">
-            <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-20 flex items-center justify-between">
-                <!-- Logo -->
-                <a href="#" class="flex items-center gap-2.5 group">
-                    <div class="w-10 h-10 rounded-xl bg-gradient-to-tr from-brand-500 to-emerald-400 flex items-center justify-center shadow-lg shadow-brand-500/20 group-hover:scale-105 transition-transform">
-                        <svg class="w-5 h-5 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.065 2.572c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.572 1.065c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 00-1.065-2.572c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31 2.37-2.37.996.608 2.296.07 2.572-1.065z"/>
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"/>
-                        </svg>
-                    </div>
-                    <span class="font-outfit text-lg sm:text-xl font-black tracking-tight text-white group-hover:text-emerald-300 transition-colors">
-                        SUHAIM<span class="text-brand-400">SOFT</span>
-                    </span>
+<!-- ══════════════════════════════ HERO ══════════════════════════════ -->
+<section class="hero">
+    <div class="container">
+        <div class="hero-inner">
+            <div class="hero-badge">
+                <span class="dot"></span>
+                Smart Workshop Management Platform
+            </div>
+
+            <h1>
+                The Modern Way to<br>
+                Run Your <span class="highlight">Workshop</span>
+            </h1>
+
+            <p class="hero-desc">
+                Suhaim Soft simplifies billing, inventory, work orders, and team management — so you can focus on what matters: quality service.
+            </p>
+
+            <div class="hero-actions">
+                <a href="{{ route('register') }}" class="btn-primary">
+                    Start Free Trial
+                    <svg width="16" height="16" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M14 5l7 7m0 0l-7 7m7-7H3"/>
+                    </svg>
                 </a>
+                <a href="#features" class="btn-outline">Explore Features</a>
+            </div>
 
-                <!-- Nav Links -->
-                <nav class="hidden md:flex items-center gap-8 text-sm font-semibold text-slate-300">
-                    <a href="#" class="hover:text-white transition-colors">Home</a>
-                    <a href="#about" class="hover:text-white transition-colors">Welcome</a>
-                    <a href="#onboarding" class="hover:text-white transition-colors">Process</a>
-                    <a href="#features" class="hover:text-white transition-colors">Features</a>
-                    <a href="#results" class="hover:text-white transition-colors">Benefits</a>
-                </nav>
-
-                <!-- Actions -->
-                <div class="flex items-center gap-3">
-                    <a href="{{ route('register') }}" class="px-5 py-2.5 text-sm font-bold text-white bg-gradient-to-r from-brand-600 to-brand-500 rounded-xl shadow-lg shadow-brand-500/20 hover:shadow-brand-500/35 hover:-translate-y-0.5 active:scale-95 transition-all">
-                        Enroll Now
-                    </a>
-                    <a href="{{ route('login') }}" class="px-5 py-2.5 text-sm font-bold text-slate-200 hover:text-white transition-colors rounded-xl hover:bg-white/5">
-                        Login
-                    </a>
+            <div class="hero-stats">
+                <div class="hero-stat">
+                    <strong>100+</strong>
+                    <span>Workshops</span>
+                </div>
+                <div class="hero-stat">
+                    <strong>1-Click</strong>
+                    <span>Invoicing</span>
+                </div>
+                <div class="hero-stat">
+                    <strong>Zero</strong>
+                    <span>Downtime</span>
                 </div>
             </div>
-        </header>
-
-        <!-- Hero Section -->
-        <main class="flex-grow">
-            <section class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pt-12 pb-24 lg:pt-20">
-                <div class="grid grid-cols-1 lg:grid-cols-12 gap-12 lg:gap-8 items-center">
-                    
-                    <!-- Centered Hero Content -->
-                    <div class="lg:col-span-12 max-w-4xl mx-auto space-y-10 text-center relative z-10">
-                        
-                        <!-- Animated background glow behind text -->
-                        <div class="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-full h-full max-w-3xl bg-gradient-to-r from-brand-600/20 via-emerald-500/10 to-indigo-500/20 blur-[100px] rounded-full pointer-events-none z-[-1] animate-pulse-glow"></div>
-
-                        <div class="inline-flex items-center gap-3 px-4 py-2 rounded-full bg-slate-900/50 border border-brand-500/30 text-xs sm:text-sm font-bold text-brand-350 tracking-wide uppercase select-none backdrop-blur-sm animate-float">
-                            <span class="flex h-2 w-2 relative">
-                                <span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-brand-400 opacity-75"></span>
-                                <span class="relative inline-flex rounded-full h-2 w-2 bg-brand-500"></span>
-                            </span>
-                            Next-Generation Workshop SaaS
-                        </div>
-                        
-                        <h1 class="font-outfit text-5xl sm:text-6xl lg:text-8xl font-black tracking-tighter leading-[1.05] text-white">
-                            Command Your <br>
-                            <span class="bg-clip-text text-transparent bg-gradient-to-r from-brand-400 via-emerald-300 to-amber-300 text-glow-purple inline-block animate-float" style="animation-duration: 8s;">
-                                Workshop Empire
-                            </span>
-                        </h1>
-                        
-                        <p class="text-lg sm:text-2xl text-slate-400 font-medium max-w-3xl mx-auto leading-relaxed">
-                            <span class="text-white font-bold">SUHAIM SOFT</span> delivers a smart, secure, and fully automated <span class="text-brand-350 font-bold">Workshop Management Platform</span>. From rapid invoicing to intelligent inventory tracking, we empower workshop professionals to dominate their market.
-                        </p>
-
-                        <!-- Call to Actions -->
-                        <div class="flex flex-col sm:flex-row items-center justify-center gap-5 pt-4">
-                            <a href="{{ route('register') }}" class="w-full sm:w-auto px-8 py-4 text-base font-extrabold text-white bg-gradient-to-r from-brand-600 to-emerald-500 rounded-2xl shadow-xl shadow-brand-500/20 hover:shadow-brand-500/40 hover:-translate-y-1 active:scale-95 transition-all flex items-center justify-center gap-2 group">
-                                Start Your Journey
-                                <svg class="w-5 h-5 group-hover:translate-x-1 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M14 5l7 7m0 0l-7 7m7-7H3"/></svg>
-                            </a>
-                            <a href="#features" class="w-full sm:w-auto px-8 py-4 text-base font-extrabold text-slate-200 bg-slate-900/50 border border-white/10 hover:bg-white/10 hover:border-white/20 rounded-2xl transition-all flex items-center justify-center gap-2 group backdrop-blur-sm">
-                                <svg class="w-5 h-5 text-slate-400 group-hover:text-emerald-400 transition-colors animate-pulse" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M14.752 11.168l-3.197-2.132A1 1 0 0010 9.87v4.263a1 1 0 001.555.832l3.197-2.132a1 1 0 000-1.664z"/><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
-                                Explore Features
-                            </a>
-                        </div>
-
-                        <!-- Mini Stats Grid -->
-                        <div class="grid grid-cols-2 md:grid-cols-4 gap-6 max-w-4xl mx-auto pt-12 border-t border-white/10">
-                            <div class="p-4 rounded-2xl bg-white/5 border border-white/5 hover:bg-white/10 hover:-translate-y-1 transition-all">
-                                <span class="block font-outfit text-3xl font-extrabold text-white mb-1">99.9%</span>
-                                <span class="text-xs font-bold text-slate-500 uppercase tracking-widest">System Uptime</span>
-                            </div>
-                            <div class="p-4 rounded-2xl bg-white/5 border border-white/5 hover:bg-white/10 hover:-translate-y-1 transition-all">
-                                <span class="block font-outfit text-3xl font-extrabold text-emerald-400 mb-1">100+</span>
-                                <span class="text-xs font-bold text-slate-500 uppercase tracking-widest">Workshops</span>
-                            </div>
-                            <div class="p-4 rounded-2xl bg-white/5 border border-white/5 hover:bg-white/10 hover:-translate-y-1 transition-all">
-                                <span class="block font-outfit text-3xl font-extrabold text-brand-400 mb-1">1-Sec</span>
-                                <span class="text-xs font-bold text-slate-500 uppercase tracking-widest">Invoicing</span>
-                            </div>
-                            <div class="p-4 rounded-2xl bg-white/5 border border-white/5 hover:bg-white/10 hover:-translate-y-1 transition-all">
-                                <span class="block font-outfit text-3xl font-extrabold text-amber-400 mb-1">24/7</span>
-                                <span class="text-xs font-bold text-slate-500 uppercase tracking-widest">Support</span>
-                            </div>
-                        </div>
-                    </div>
-
-
-                </div>
-            </section>
-
-            <!-- About Us / Our Mission Section -->
-            <section id="about" class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-20 relative">
-                <div class="glass-card-dark bg-gradient-to-br from-slate-900/40 via-indigo-950/20 to-slate-950/40 border-white/10 !p-8 sm:!p-12 max-w-4xl mx-auto relative overflow-hidden">
-                    
-                    <!-- Glow mesh effect -->
-                    <div class="absolute -top-[30%] -right-[30%] w-[60%] h-[60%] bg-brand-500/10 rounded-full blur-[100px] pointer-events-none"></div>
-                    <div class="absolute -bottom-[30%] -left-[30%] w-[60%] h-[60%] bg-emerald-500/5 rounded-full blur-[100px] pointer-events-none"></div>
-
-                    <div class="relative z-10 space-y-8">
-                        <div class="space-y-3 text-center sm:text-left">
-                            <span class="px-3.5 py-1.5 rounded-xl bg-brand-500/10 border border-brand-500/25 text-xs font-bold text-brand-350 tracking-wider uppercase inline-block">
-                                OUR VISION
-                            </span>
-                            <h2 class="font-outfit text-3xl sm:text-4xl font-black text-white leading-tight">
-                                WELCOME TO SUHAIM SOFT
-                                <span class="block text-sm sm:text-base font-semibold text-slate-400 mt-2 font-sans tracking-wide">
-                                    Your Partner in Digital Workshop Transformation.
-                                </span>
-                            </h2>
-                        </div>
-
-                        <div class="space-y-6 text-slate-300 text-sm sm:text-base leading-relaxed font-medium">
-                            <p>
-                                In today's fast-paced automotive environment, the most valuable resource is <span class="text-white font-bold">time</span>. Administrative tasks, manual inventory tracking, and cumbersome paperwork can divert focus from what truly matters: <span class="text-emerald-400 font-bold">superior vehicle care</span>. <span class="text-white font-bold">SUHAIM SOFT</span> was founded on a simple principle: to give that time back to automotive professionals.
-                            </p>
-                            <p>
-                                Our intelligent <span class="text-brand-350 font-bold">Workshop Management System</span> is more than just a digital filing cabinet. It is a powerful, integrated platform designed to streamline your entire workflow, from customer vehicle check-in to 1-click preset package invoicing.
-                            </p>
-                            <p>
-                                By automating repetitive inventory tasks, providing actionable insights from workshop analytics, and ensuring rock-solid subscription security, we empower you to operate your garage more efficiently and effectively. Join us in building a smarter, more connected future for automotive workshop management.
-                            </p>
-                        </div>
-                    </div>
-                </div>
-            </section>
-
-            <!-- Onboarding Process Section -->
-            <section id="onboarding" class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-20 border-t border-white/5 relative">
-                <div class="text-center max-w-3xl mx-auto mb-16">
-                    <span class="px-3.5 py-1.5 rounded-xl bg-brand-500/10 border border-brand-500/25 text-xs font-bold text-brand-350 tracking-wider uppercase inline-block mb-3">
-                        HOW IT WORKS
-                    </span>
-                    <h2 class="font-outfit text-3xl sm:text-5xl font-black tracking-tight text-white mb-4">
-                        Our Simple Onboarding Process
-                    </h2>
-                    <p class="text-slate-400 font-semibold text-base sm:text-lg">
-                        Get started with <span class="text-white font-bold">SUHAIM SOFT</span> in three easy steps. Streamline your workshop with our intuitive platform.
-                    </p>
-                </div>
-
-                <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
-                    <!-- Step 1 -->
-                    <div class="glass-card-dark relative group overflow-hidden">
-                        <!-- Step Number Overlay Background -->
-                        <div class="absolute -top-6 -right-6 font-outfit text-8xl font-black text-white/5 select-none transition-all group-hover:text-white/10 group-hover:-translate-y-2">1</div>
-                        
-                        <div class="w-12 h-12 rounded-2xl bg-brand-500/10 border border-brand-500/20 flex items-center justify-center mb-6 text-brand-400 font-outfit text-xl font-black">
-                            01
-                        </div>
-                        <h3 class="text-xl font-bold text-white mb-3">Consult & Demo</h3>
-                        <p class="text-slate-400 text-sm leading-relaxed font-semibold">
-                            Request a demo, and our specialists will showcase the platform's power, tailored to your workshop's unique operating needs.
-                        </p>
-                    </div>
-
-                    <!-- Step 2 -->
-                    <div class="glass-card-dark relative group overflow-hidden">
-                        <!-- Step Number Overlay Background -->
-                        <div class="absolute -top-6 -right-6 font-outfit text-8xl font-black text-white/5 select-none transition-all group-hover:text-white/10 group-hover:-translate-y-2">2</div>
-                        
-                        <div class="w-12 h-12 rounded-2xl bg-emerald-500/10 border border-emerald-500/20 flex items-center justify-center mb-6 text-emerald-400 font-outfit text-xl font-black">
-                            02
-                        </div>
-                        <h3 class="text-xl font-bold text-white mb-3">Seamless Integration</h3>
-                        <p class="text-slate-400 text-sm leading-relaxed font-semibold">
-                            Our team handles the heavy lifting, migrating your existing customer/inventory records and integrating our system seamlessly into your daily workflow.
-                        </p>
-                    </div>
-
-                    <!-- Step 3 -->
-                    <div class="glass-card-dark relative group overflow-hidden">
-                        <!-- Step Number Overlay Background -->
-                        <div class="absolute -top-6 -right-6 font-outfit text-8xl font-black text-white/5 select-none transition-all group-hover:text-white/10 group-hover:-translate-y-2">3</div>
-                        
-                        <div class="w-12 h-12 rounded-2xl bg-amber-500/10 border border-amber-500/20 flex items-center justify-center mb-6 text-amber-400 font-outfit text-xl font-black">
-                            03
-                        </div>
-                        <h3 class="text-xl font-bold text-white mb-3">Training & Support</h3>
-                        <p class="text-slate-400 text-sm leading-relaxed font-semibold">
-                            We provide comprehensive training and dedicated helpline support to ensure your workshop team is fully confident and successful.
-                        </p>
-                    </div>
-                </div>
-            </section>
-
-            <!-- Features Grid Section -->
-            <section id="features" class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-20 border-t border-white/5 relative">
-                <div class="text-center max-w-3xl mx-auto mb-16">
-                    <h2 class="font-outfit text-3xl sm:text-5xl font-black tracking-tight text-white mb-4">
-                        Everything You Need to Scale
-                    </h2>
-                    <p class="text-slate-400 font-semibold text-base sm:text-lg">
-                        We equip you with comprehensive automated tools to optimize, trace, and expand garage workflow logic.
-                    </p>
-                </div>
-
-                <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-                    <!-- Feature 1: Invoices -->
-                    <div class="glass-card-dark">
-                        <div class="w-12 h-12 rounded-2xl bg-brand-500/10 border border-brand-500/20 flex items-center justify-center mb-6 text-brand-400">
-                            <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"/></svg>
-                        </div>
-                        <h3 class="text-lg font-bold text-white mb-2">Smart Invoicing</h3>
-                        <p class="text-slate-400 text-sm leading-relaxed">
-                            Generate beautiful PDF bills and instantly share custom WhatsApp messages with customers, featuring auto-calculations of tax, discounts, and payment methods (Cash/UPI).
-                        </p>
-                    </div>
-
-                    <!-- Feature 2: Bill Templates -->
-                    <div class="glass-card-dark">
-                        <div class="w-12 h-12 rounded-2xl bg-violet-500/10 border border-violet-500/20 flex items-center justify-center mb-6 text-violet-400">
-                            <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 11H5m14 0a2 2 0 012 2v6a2 2 0 01-2 2H5a2 2 0 01-2-2v-6a2 2 0 012-2m14 0V9a2 2 0 00-2-2M5 11V9a2 2 0 012-2m0 0V5a2 2 0 012-2h6a2 2 0 012 2v2M7 7h10"/></svg>
-                        </div>
-                        <h3 class="text-lg font-bold text-white mb-2">Preset Invoice Packages</h3>
-                        <p class="text-slate-400 text-sm leading-relaxed">
-                            Bundle common services and fluid/parts replacements into reusable presets. Create standard templates to generate complete bills in a single click.
-                        </p>
-                    </div>
-
-                    <!-- Feature 3: Customers -->
-                    <div class="glass-card-dark">
-                        <div class="w-12 h-12 rounded-2xl bg-sky-500/10 border border-sky-500/20 flex items-center justify-center mb-6 text-sky-400">
-                            <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4.354a4 4 0 110 5.292M15 21H3v-1a6 6 0 0112 0v1zm0 0h6v-1a6 6 0 00-9-5.197M13 7a3 3 0 11-6 0 3 3 0 016 0z"/></svg>
-                        </div>
-                        <h3 class="text-lg font-bold text-white mb-2">Customer Management</h3>
-                        <p class="text-slate-400 text-sm leading-relaxed">
-                            Store profiles with full contact detail history, vehicle logs, and total billing statistics to provide a personalized service experience.
-                        </p>
-                    </div>
-
-                    <!-- Feature 4: Vehicles -->
-                    <div class="glass-card-dark">
-                        <div class="w-12 h-12 rounded-2xl bg-teal-500/10 border border-teal-500/20 flex items-center justify-center mb-6 text-teal-400">
-                            <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7m-7-2v3m0 0v3m0-3h3m-3 0H9"/></svg>
-                        </div>
-                        <h3 class="text-lg font-bold text-white mb-2">Vehicle Logs</h3>
-                        <p class="text-slate-400 text-sm leading-relaxed">
-                            Register cars with brand, model, year, color, and plate numbers, mapping them directly to owners for instant invoice association.
-                        </p>
-                    </div>
-
-                    <!-- Feature 5: Services -->
-                    <div class="glass-card-dark">
-                        <div class="w-12 h-12 rounded-2xl bg-rose-500/10 border border-rose-500/20 flex items-center justify-center mb-6 text-rose-400">
-                            <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.065 2.572c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.572 1.065c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 00-1.065-2.572c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31 2.37-2.37.996.608 2.296.07 2.572-1.065z"/></svg>
-                        </div>
-                        <h3 class="text-lg font-bold text-white mb-2">Workshop Services</h3>
-                        <p class="text-slate-400 text-sm leading-relaxed">
-                            Define standard workshop repair jobs, tune-ups, AC servicing, and wheel alignments with custom pricing and duration metrics.
-                        </p>
-                    </div>
-
-                    <!-- Feature 6: Products & Stock -->
-                    <div class="glass-card-dark">
-                        <div class="w-12 h-12 rounded-2xl bg-amber-500/10 border border-amber-500/20 flex items-center justify-center mb-6 text-amber-400">
-                            <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20 7l-8-4-8 4m16 0l-8 4m8-4v10l-8 4m0-10L4 7m8 4v10M4 7v10l8 4"/></svg>
-                        </div>
-                        <h3 class="text-lg font-bold text-white mb-2">Automated Inventory Stock</h3>
-                        <p class="text-slate-400 text-sm leading-relaxed">
-                            Complete tracing of spare parts and fluids. Auto-deduct products on bill creation, trigger warnings for low stock levels, and protect margins.
-                        </p>
-                    </div>
-
-                    <!-- Feature 7: Expenses -->
-                    <div class="glass-card-dark">
-                        <div class="w-12 h-12 rounded-2xl bg-fuchsia-500/10 border border-fuchsia-500/20 flex items-center justify-center mb-6 text-fuchsia-400">
-                            <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
-                        </div>
-                        <h3 class="text-lg font-bold text-white mb-2">Expense Management</h3>
-                        <p class="text-slate-400 text-sm leading-relaxed">
-                            Log overheads, utilities, spare tools purchase, and workshop rent to maintain an accurate, healthy real-time cash flow ledger.
-                        </p>
-                    </div>
-
-                    <!-- Feature 8: Salaries -->
-                    <div class="glass-card-dark">
-                        <div class="w-12 h-12 rounded-2xl bg-cyan-500/10 border border-cyan-500/20 flex items-center justify-center mb-6 text-cyan-400">
-                            <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 9V7a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2m2 4h10a2 2 0 002-2v-6a2 2 0 00-2-2H9a2 2 0 00-2 2v6a2 2 0 002 2zm7-5a2 2 0 11-4 0 2 2 0 014 0z"/></svg>
-                        </div>
-                        <h3 class="text-lg font-bold text-white mb-2">Salaries and Payroll</h3>
-                        <p class="text-slate-400 text-sm leading-relaxed">
-                            Manage employee payroll releases. Track monthly compensation disbursements with payment status, period, and payment method logs.
-                        </p>
-                    </div>
-
-                    <!-- Feature 9: Employees -->
-                    <div class="glass-card-dark">
-                        <div class="w-12 h-12 rounded-2xl bg-emerald-500/10 border border-emerald-500/20 flex items-center justify-center mb-6 text-emerald-400">
-                            <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z"/></svg>
-                        </div>
-                        <h3 class="text-lg font-bold text-white mb-2">Team Management</h3>
-                        <p class="text-slate-400 text-sm leading-relaxed">
-                            Maintain your team roster, assign senior mechanics or helpers to specific jobs, and view total active completed work order allocations.
-                        </p>
-                    </div>
-
-                    <!-- Feature 10: Work Orders -->
-                    <div class="glass-card-dark">
-                        <div class="w-12 h-12 rounded-2xl bg-indigo-500/10 border border-indigo-500/20 flex items-center justify-center mb-6 text-indigo-400">
-                            <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.065 2.572c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.572 1.065c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 00-1.065-2.572c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31 2.37-2.37.996.608 2.296.07 2.572-1.065z"/></svg>
-                        </div>
-                        <h3 class="text-lg font-bold text-white mb-2">Work Orders</h3>
-                        <p class="text-slate-400 text-sm leading-relaxed">
-                            Assign ongoing repair jobs, set priority levels (Urgent/High/Normal), estimated costs, and track actual mechanic completion times.
-                        </p>
-                    </div>
-
-                    <!-- Feature 11: Warranties -->
-                    <div class="glass-card-dark">
-                        <div class="w-12 h-12 rounded-2xl bg-emerald-500/10 border border-emerald-500/20 flex items-center justify-center mb-6 text-emerald-400">
-                            <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z"/></svg>
-                        </div>
-                        <h3 class="text-lg font-bold text-white mb-2">Warranty Tracking</h3>
-                        <p class="text-slate-400 text-sm leading-relaxed">
-                            Issue valid warranties on products and service packages with automatic expiration tracking, status indicators, and claim logs.
-                        </p>
-                    </div>
-                </div>
-            </section>
-
-            <!-- Tangible Results Section -->
-            <section id="results" class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-20 border-t border-white/5 relative">
-                <!-- Glowing Accent behind Stats -->
-                <div class="absolute top-[20%] left-[10%] w-[30vw] h-[30vw] bg-emerald-500/5 rounded-full blur-[120px] pointer-events-none z-0"></div>
-                <div class="absolute bottom-[20%] right-[10%] w-[30vw] h-[30vw] bg-brand-500/5 rounded-full blur-[120px] pointer-events-none z-0"></div>
-
-                <div class="relative z-10">
-                    <div class="text-center max-w-3xl mx-auto mb-16">
-                        <span class="px-3.5 py-1.5 rounded-xl bg-emerald-500/10 border border-emerald-500/25 text-xs font-bold text-emerald-400 tracking-wider uppercase inline-block mb-3">
-                            TANGIBLE RESULTS
-                        </span>
-                        <h2 class="font-outfit text-3xl sm:text-5xl font-black tracking-tight text-white mb-4">
-                            Tangible Results
-                        </h2>
-                        <p class="text-slate-400 font-semibold text-base sm:text-lg">
-                            Our platform isn't just about features; it's about delivering real-world benefits that impact your bottom line and customer satisfaction.
-                        </p>
-                    </div>
-
-                    <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-8">
-                        <!-- Result 1 -->
-                        <div class="glass-card-dark relative group overflow-hidden border border-brand-500/10 hover:border-brand-500/30 transition-all duration-300">
-                            <div class="absolute -bottom-[30%] -left-[30%] w-[60%] h-[60%] bg-brand-500/5 rounded-full blur-[50px] pointer-events-none transition-all group-hover:bg-brand-500/10"></div>
-                            <div class="text-4xl sm:text-5xl font-black font-outfit text-brand-350 mb-3 flex items-baseline gap-0.5">
-                                <span class="stat-counter font-outfit font-black" data-target="100">0</span>%
-                            </div>
-                            <h3 class="text-lg font-bold text-white mb-2 font-outfit">Time Savings</h3>
-                            <p class="text-slate-400 text-xs sm:text-sm leading-relaxed font-semibold">
-                                Reduce administrative overhead, allowing more time for what matters most: vehicle repairs and customer service.
-                            </p>
-                        </div>
-
-                        <!-- Result 2 -->
-                        <div class="glass-card-dark relative group overflow-hidden border border-emerald-500/10 hover:border-emerald-500/30 transition-all duration-300">
-                            <div class="absolute -bottom-[30%] -left-[30%] w-[60%] h-[60%] bg-emerald-500/5 rounded-full blur-[50px] pointer-events-none transition-all group-hover:bg-emerald-500/10"></div>
-                            <div class="text-4xl sm:text-5xl font-black font-outfit text-emerald-400 mb-3 flex items-baseline gap-0.5">
-                                <span class="stat-counter font-outfit font-black" data-target="100">0</span>%
-                            </div>
-                            <h3 class="text-lg font-bold text-white mb-2 font-outfit">Data Accuracy</h3>
-                            <p class="text-slate-400 text-xs sm:text-sm leading-relaxed font-semibold">
-                                Our system minimizes manual data entry errors, ensuring highly accurate and reliable vehicle and customer records.
-                            </p>
-                        </div>
-
-                        <!-- Result 3 -->
-                        <div class="glass-card-dark relative group overflow-hidden border border-amber-500/10 hover:border-amber-500/30 transition-all duration-300">
-                            <div class="absolute -bottom-[30%] -left-[30%] w-[60%] h-[60%] bg-amber-500/5 rounded-full blur-[50px] pointer-events-none transition-all group-hover:bg-amber-500/10"></div>
-                            <div class="text-4xl sm:text-5xl font-black font-outfit text-amber-400 mb-3 flex items-baseline gap-0.5">
-                                <span class="stat-counter font-outfit font-black" data-target="100">0</span>%
-                            </div>
-                            <h3 class="text-lg font-bold text-white mb-2 font-outfit">Revenue Boost</h3>
-                            <p class="text-slate-400 text-xs sm:text-sm leading-relaxed font-semibold">
-                                Streamline invoicing and preset packages to increase revenue collection by an average of 100%.
-                            </p>
-                        </div>
-
-                        <!-- Result 4 -->
-                        <div class="glass-card-dark relative group overflow-hidden border border-purple-500/10 hover:border-purple-500/30 transition-all duration-300">
-                            <div class="absolute -bottom-[30%] -left-[30%] w-[60%] h-[60%] bg-purple-500/5 rounded-full blur-[50px] pointer-events-none transition-all group-hover:bg-purple-500/10"></div>
-                            <div class="text-4xl sm:text-5xl font-black font-outfit text-purple-400 mb-3 flex items-baseline gap-0.5">
-                                <span class="stat-counter font-outfit font-black" data-target="100">0</span>%
-                            </div>
-                            <h3 class="text-lg font-bold text-white mb-2 font-outfit">Customer Satisfaction</h3>
-                            <p class="text-slate-400 text-xs sm:text-sm leading-relaxed font-semibold">
-                                Faster service check-ins and better records access lead to a significant increase in customer satisfaction.
-                            </p>
-                        </div>
-                    </div>
-                </div>
-            </section>
-
-
-            <!-- Contact / Enquiry Form -->
-            <section id="contact" class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-20 border-t border-white/5">
-                <div class="grid grid-cols-1 lg:grid-cols-2 gap-12 items-start">
-
-                    <!-- Left: Info -->
-                    <div>
-                        <span class="px-3 py-1 rounded-lg bg-brand-500/10 border border-brand-500/25 text-xs font-bold text-brand-350 uppercase tracking-widest inline-block mb-5">Get in Touch</span>
-                        <h2 class="font-outfit text-3xl sm:text-4xl font-black tracking-tight text-white mb-4">Contact &amp; Enquiries</h2>
-                        <p class="text-slate-400 font-semibold text-sm sm:text-base leading-relaxed mb-8">
-                            Have questions about the platform, need a custom demo, or want to discuss licensing? Our team is ready to help.
-                        </p>
-                        <div class="space-y-5">
-                            <div class="flex items-start gap-4">
-                                <div class="w-10 h-10 rounded-xl bg-brand-500/10 border border-brand-500/20 flex items-center justify-center shrink-0">
-                                    <svg class="w-5 h-5 text-brand-350" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 5a2 2 0 012-2h3.28a1 1 0 01.948.684l1.498 4.493a1 1 0 01-.502 1.21l-2.257 1.13a11.042 11.042 0 005.516 5.516l1.13-2.257a1 1 0 011.21-.502l4.493 1.498a1 1 0 01.684.949V19a2 2 0 01-2 2h-1C9.716 21 3 14.284 3 6V5z"/></svg>
-                                </div>
-                                <div>
-                                    <p class="text-xs font-bold text-slate-500 uppercase tracking-widest mb-0.5">Support Helpline</p>
-                                    <a href="tel:+918891479505" class="text-white font-bold hover:text-brand-350 transition-colors">+91 88914 79505</a>
-                                </div>
-                            </div>
-                            <div class="flex items-start gap-4">
-                                <div class="w-10 h-10 rounded-xl bg-emerald-500/10 border border-emerald-500/20 flex items-center justify-center shrink-0">
-                                    <svg class="w-5 h-5 text-emerald-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"/></svg>
-                                </div>
-                                <div>
-                                    <p class="text-xs font-bold text-slate-500 uppercase tracking-widest mb-0.5">Email</p>
-                                    <a href="mailto:info@suhaimsoft.com" class="text-white font-bold hover:text-brand-350 transition-colors">info@suhaimsoft.com</a>
-                                </div>
-                            </div>
-
-                        </div>
-                    </div>
-
-                    <!-- Right: Form -->
-                    <div class="glass-card-dark border border-white/10">
-                        <form id="contact-form" class="space-y-5" onsubmit="handleContactSubmit(event)">
-                            <div class="grid grid-cols-1 sm:grid-cols-2 gap-5">
-                                <div>
-                                    <label class="block text-xs font-bold text-slate-400 uppercase tracking-widest mb-2" for="contact-name">Full Name</label>
-                                    <input id="contact-name" type="text" required placeholder="Your name"
-                                        class="w-full bg-white/5 border border-white/10 rounded-xl px-4 py-3 text-sm text-white placeholder-slate-500 focus:outline-none focus:border-brand-500/50 transition-all">
-                                </div>
-                                <div>
-                                    <label class="block text-xs font-bold text-slate-400 uppercase tracking-widest mb-2" for="contact-phone">Phone</label>
-                                    <input id="contact-phone" type="tel" placeholder="+91 XXXXX XXXXX"
-                                        class="w-full bg-white/5 border border-white/10 rounded-xl px-4 py-3 text-sm text-white placeholder-slate-500 focus:outline-none focus:border-brand-500/50 transition-all">
-                                </div>
-                            </div>
-                            <div>
-                                <label class="block text-xs font-bold text-slate-400 uppercase tracking-widest mb-2" for="contact-email">Email Address</label>
-                                <input id="contact-email" type="email" required placeholder="you@example.com"
-                                    class="w-full bg-white/5 border border-white/10 rounded-xl px-4 py-3 text-sm text-white placeholder-slate-500 focus:outline-none focus:border-brand-500/50 transition-all">
-                            </div>
-
-                            <div>
-                                <label class="block text-xs font-bold text-slate-400 uppercase tracking-widest mb-2" for="contact-message">Message</label>
-                                <textarea id="contact-message" rows="4" placeholder="Tell us about your workshop&hellip;"
-                                    class="w-full bg-white/5 border border-white/10 rounded-xl px-4 py-3 text-sm text-white placeholder-slate-500 focus:outline-none focus:border-brand-500/50 transition-all resize-none"></textarea>
-                            </div>
-                            <button type="submit"
-                                class="w-full py-3.5 text-sm font-bold bg-gradient-to-r from-brand-500 to-indigo-500 hover:opacity-90 text-white rounded-2xl transition-all shadow-lg shadow-brand-500/20 flex items-center justify-center gap-2">
-                                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 19l9 2-9-18-9 18 9-2zm0 0v-8"/></svg>
-                                Send Enquiry
-                            </button>
-                            <p id="contact-success" class="hidden text-center text-sm font-bold text-emerald-400">
-                                &check; Message sent! We&rsquo;ll get back to you shortly.
-                            </p>
-                        </form>
-                    </div>
-
-                </div>
-            </section>
-        </main>
-
-
-
-        <!-- Footer — Responsive Multi-column -->
-        <footer class="border-t border-white/5 bg-slate-950/80">
-            <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
-                <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-10">
-
-                    <!-- Brand -->
-                    <div class="sm:col-span-2 lg:col-span-1">
-                        <div class="flex items-center gap-2 mb-4">
-                            <div class="w-8 h-8 rounded-lg bg-gradient-to-br from-brand-500 to-indigo-600 flex items-center justify-center">
-                                <svg class="w-4 h-4 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.065 2.572c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.572 1.065c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 00-1.065-2.572c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31 2.37-2.37.996.608 2.296.07 2.572-1.065z"/><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"/></svg>
-                            </div>
-                            <span class="font-outfit font-black text-white text-base">Suhaim Soft</span>
-                        </div>
-                        <p class="text-slate-400 text-xs font-semibold leading-relaxed mb-4">
-                            Next-generation workshop management platform. Smart billing, inventory, and customer management for auto workshops.
-                        </p>
-                        <a href="tel:+918891479505" class="text-brand-350 text-xs font-bold hover:text-white transition-colors block mb-6">+91 88914 79505</a>
-                        
-                        <!-- Social Icons -->
-                        <div class="flex items-center gap-3">
-                            <a href="#" class="w-8 h-8 rounded-full bg-white/5 border border-white/10 flex items-center justify-center text-slate-400 hover:text-white hover:bg-white/10 transition-all">
-                                <svg class="w-4 h-4" fill="currentColor" viewBox="0 0 24 24"><path d="M24 4.557c-.883.392-1.832.656-2.828.775 1.017-.609 1.798-1.574 2.165-2.724-.951.564-2.005.974-3.127 1.195-.897-.957-2.178-1.555-3.594-1.555-3.179 0-5.515 2.966-4.797 6.045-4.091-.205-7.719-2.165-10.148-5.144-1.29 2.213-.669 5.108 1.523 6.574-.806-.026-1.566-.247-2.229-.616-.054 2.281 1.581 4.415 3.949 4.89-.693.188-1.452.232-2.224.084.626 1.956 2.444 3.379 4.6 3.419-2.07 1.623-4.678 2.348-7.29 2.04 2.179 1.397 4.768 2.212 7.548 2.212 9.142 0 14.307-7.721 13.995-14.646.962-.695 1.797-1.562 2.457-2.549z"/></svg>
-                            </a>
-                            <a href="#" class="w-8 h-8 rounded-full bg-white/5 border border-white/10 flex items-center justify-center text-slate-400 hover:text-white hover:bg-white/10 transition-all">
-                                <svg class="w-4 h-4" fill="currentColor" viewBox="0 0 24 24"><path d="M19 0h-14c-2.761 0-5 2.239-5 5v14c0 2.761 2.239 5 5 5h14c2.762 0 5-2.239 5-5v-14c0-2.761-2.238-5-5-5zm-11 19h-3v-11h3v11zm-1.5-12.268c-.966 0-1.75-.79-1.75-1.764s.784-1.764 1.75-1.764 1.75.79 1.75 1.764-.783 1.764-1.75 1.764zm13.5 12.268h-3v-5.604c0-3.368-4-3.113-4 0v5.604h-3v-11h3v1.765c1.396-2.586 7-2.777 7 2.476v6.759z"/></svg>
-                            </a>
-                            <a href="#" class="w-8 h-8 rounded-full bg-white/5 border border-white/10 flex items-center justify-center text-slate-400 hover:text-white hover:bg-white/10 transition-all">
-                                <svg class="w-4 h-4" fill="currentColor" viewBox="0 0 24 24"><path d="M22.675 0h-21.35c-.732 0-1.325.593-1.325 1.325v21.351c0 .731.593 1.324 1.325 1.324h11.495v-9.294h-3.128v-3.622h3.128v-2.671c0-3.1 1.893-4.788 4.659-4.788 1.325 0 2.463.099 2.795.143v3.24l-1.918.001c-1.504 0-1.795.715-1.795 1.763v2.313h3.587l-.467 3.622h-3.12v9.293h6.116c.73 0 1.323-.593 1.323-1.325v-21.35c0-.732-.593-1.325-1.325-1.325z"/></svg>
-                            </a>
-                            <a href="#" class="w-8 h-8 rounded-full bg-white/5 border border-white/10 flex items-center justify-center text-slate-400 hover:text-white hover:bg-white/10 transition-all">
-                                <svg class="w-4 h-4" fill="currentColor" viewBox="0 0 24 24"><path d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zm0-2.163c-3.259 0-3.667.014-4.947.072-4.358.2-6.78 2.618-6.98 6.98-.059 1.281-.073 1.689-.073 4.948 0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98 1.281.058 1.689.072 4.948.072 3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98-1.281-.059-1.69-.073-4.949-.073zm0 5.838c-3.403 0-6.162 2.759-6.162 6.162s2.759 6.163 6.162 6.163 6.162-2.759 6.162-6.163c0-3.403-2.759-6.162-6.162-6.162zm0 10.162c-2.209 0-4-1.79-4-4 0-2.209 1.791-4 4-4s4 1.791 4 4c0 2.21-1.791 4-4 4zm6.406-11.845c-.796 0-1.441.645-1.441 1.44s.645 1.44 1.441 1.44c.795 0 1.439-.645 1.439-1.44s-.644-1.44-1.439-1.44z"/></svg>
-                            </a>
-                        </div>
-                    </div>
-
-                    <!-- Quick Links -->
-                    <div>
-                        <h4 class="text-xs font-black text-slate-300 uppercase tracking-widest mb-4">Quick Links</h4>
-                        <ul class="space-y-2.5">
-                            <li><a href="#features" class="text-slate-400 text-sm font-semibold hover:text-white transition-colors">Features</a></li>
-                            <li><a href="#enroll-now" class="text-slate-400 text-sm font-semibold hover:text-white transition-colors">Enroll Now</a></li>
-                            <li><a href="#contact" class="text-slate-400 text-sm font-semibold hover:text-white transition-colors">Contact</a></li>
-                            <li><a href="{{ route('login') }}" class="text-slate-400 text-sm font-semibold hover:text-white transition-colors">Login</a></li>
-                            <li><a href="{{ route('register') }}" class="text-slate-400 text-sm font-semibold hover:text-white transition-colors">Register</a></li>
-                        </ul>
-                    </div>
-
-                    <!-- Platform Features -->
-                    <div>
-                        <h4 class="text-xs font-black text-slate-300 uppercase tracking-widest mb-4">Platform</h4>
-                        <ul class="space-y-2.5">
-                            <li class="text-slate-400 text-sm font-semibold">Invoice &amp; Billing</li>
-                            <li class="text-slate-400 text-sm font-semibold">Work Orders</li>
-                            <li class="text-slate-400 text-sm font-semibold">Vehicle Tracking</li>
-                            <li class="text-slate-400 text-sm font-semibold">Spare Parts</li>
-                            <li class="text-slate-400 text-sm font-semibold">Employee Salaries</li>
-                            <li class="text-slate-400 text-sm font-semibold">Warranty Manager</li>
-                        </ul>
-                    </div>
-
-                    <!-- Support -->
-                    <div>
-                        <h4 class="text-xs font-black text-slate-300 uppercase tracking-widest mb-4">Support</h4>
-                        <ul class="space-y-3">
-                            <li class="flex items-start gap-2 text-sm font-semibold text-slate-400">
-                                <svg class="w-4 h-4 text-brand-350 mt-0.5 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 5a2 2 0 012-2h3.28a1 1 0 01.948.684l1.498 4.493a1 1 0 01-.502 1.21l-2.257 1.13a11.042 11.042 0 005.516 5.516l1.13-2.257a1 1 0 011.21-.502l4.493 1.498a1 1 0 01.684.949V19a2 2 0 01-2 2h-1C9.716 21 3 14.284 3 6V5z"/></svg>
-                                <a href="tel:+918891479505" class="hover:text-white transition-colors">+91 88914 79505</a>
-                            </li>
-                            <li class="flex items-start gap-2 text-sm font-semibold text-slate-400">
-                                <svg class="w-4 h-4 text-emerald-400 mt-0.5 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"/></svg>
-                                <a href="mailto:info@suhaimsoft.com" class="hover:text-white transition-colors">info@suhaimsoft.com</a>
-                            </li>
-
-                        </ul>
-                    </div>
-
-                </div>
-
-                <!-- Bottom bar -->
-                <div class="mt-10 pt-6 border-t border-white/5 flex flex-col sm:flex-row items-center justify-between gap-3">
-                    <p class="text-xs text-slate-500 font-semibold text-center sm:text-left">
-                        &copy; {{ date('Y') }} Suhaim Soft Workshop Manager. All rights reserved.
-                </div>
-            </div>
-        </footer>
-
+        </div>
     </div>
+</section>
 
-    <!-- Three.js (Lightweight interactive particle rendering) -->
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
-    <script>
-        // Custom 3D Interactive WebGL Particles Wave animation
-        (function() {
-            const canvas = document.getElementById('webgl-particles');
-            if(!canvas) return;
+<!-- ══════════════════════════════ ABOUT ══════════════════════════════ -->
+<section class="about" id="about" style="padding: 6rem 0; background: #f8fafc;">
+    <div class="container">
+        <div class="section-header text-center" style="text-align: center;">
+            <span class="section-label">Our Vision</span>
+            <h2>Built for Workshop Professionals</h2>
+            <p class="section-sub" style="max-width: 700px; margin: 0 auto;">In today's fast-paced automotive environment, your most valuable resource is time. Suhaim Soft was built on a simple principle — give that time back through intelligent automation and a seamless digital workflow.</p>
+        </div>
 
-            let scene, camera, renderer, particles, particleSystem;
-            const particleCount = 1200;
-            const positions = new Float32Array(particleCount * 3);
-            const initialY = new Float32Array(particleCount);
-            const speeds = new Float32Array(particleCount);
+        <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 2rem; margin-top: 3rem;">
+            <div style="background: #fff; padding: 2.5rem 2rem; border-radius: 1rem; box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05); text-align: center; border: 1px solid #e2e8f0; transition: transform 0.2s;">
+                <div style="width: 56px; height: 56px; border-radius: 1rem; background: #eff6ff; display: flex; align-items: center; justify-content: center; margin: 0 auto 1.5rem; color: #3b82f6;">
+                    <svg width="28" height="28" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20 7l-8-4-8 4m16 0l-8 4m8-4v10l-8 4m0-10L4 7m8 4v10M4 7v10l8 4"/></svg>
+                </div>
+                <h3 style="font-size: 1.25rem; font-weight: 700; color: #0f172a; margin-bottom: 0.75rem;">Smart Inventory</h3>
+                <p style="color: #64748b; line-height: 1.6; font-size: 0.95rem;">Auto-deduct parts on billing. Get low-stock alerts before you run out.</p>
+            </div>
 
-            function init() {
-                scene = new THREE.Scene();
-                
-                // Camera setup
-                camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 1, 1000);
-                camera.position.z = 180;
-                camera.position.y = 80;
-                camera.rotation.x = -0.4;
+            <div style="background: #fff; padding: 2.5rem 2rem; border-radius: 1rem; box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05); text-align: center; border: 1px solid #e2e8f0; transition: transform 0.2s;">
+                <div style="width: 56px; height: 56px; border-radius: 1rem; background: #eff6ff; display: flex; align-items: center; justify-content: center; margin: 0 auto 1.5rem; color: #3b82f6;">
+                    <svg width="28" height="28" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"/></svg>
+                </div>
+                <h3 style="font-size: 1.25rem; font-weight: 700; color: #0f172a; margin-bottom: 0.75rem;">Instant Invoicing</h3>
+                <p style="color: #64748b; line-height: 1.6; font-size: 0.95rem;">Generate PDF bills in one click and share via WhatsApp instantly.</p>
+            </div>
 
-                // Create Particle Geometry
-                const geometry = new THREE.BufferGeometry();
-                
-                for(let i = 0; i < particleCount; i++) {
-                    // Spread points in 3D Space (particle grid/wave)
-                    const x = (Math.random() - 0.5) * 800;
-                    const y = (Math.random() - 0.5) * 200 - 40;
-                    const z = (Math.random() - 0.5) * 800;
+            <div style="background: #fff; padding: 2.5rem 2rem; border-radius: 1rem; box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05); text-align: center; border: 1px solid #e2e8f0; transition: transform 0.2s;">
+                <div style="width: 56px; height: 56px; border-radius: 1rem; background: #eff6ff; display: flex; align-items: center; justify-content: center; margin: 0 auto 1.5rem; color: #3b82f6;">
+                    <svg width="28" height="28" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z"/></svg>
+                </div>
+                <h3 style="font-size: 1.25rem; font-weight: 700; color: #0f172a; margin-bottom: 0.75rem;">Live Analytics</h3>
+                <p style="color: #64748b; line-height: 1.6; font-size: 0.95rem;">Real-time dashboard with revenue metrics and performance tracking.</p>
+            </div>
 
-                    positions[i * 3] = x;
-                    positions[i * 3 + 1] = y;
-                    positions[i * 3 + 2] = z;
+            <div style="background: #fff; padding: 2.5rem 2rem; border-radius: 1rem; box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05); text-align: center; border: 1px solid #e2e8f0; transition: transform 0.2s;">
+                <div style="width: 56px; height: 56px; border-radius: 1rem; background: #eff6ff; display: flex; align-items: center; justify-content: center; margin: 0 auto 1.5rem; color: #3b82f6;">
+                    <svg width="28" height="28" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0z"/></svg>
+                </div>
+                <h3 style="font-size: 1.25rem; font-weight: 700; color: #0f172a; margin-bottom: 0.75rem;">Team Access</h3>
+                <p style="color: #64748b; line-height: 1.6; font-size: 0.95rem;">Multi-user roles for mechanics, managers, and administrators.</p>
+            </div>
 
-                    initialY[i] = y;
-                    speeds[i] = 0.5 + Math.random() * 1.5;
-                }
+            <div style="background: #fff; padding: 2.5rem 2rem; border-radius: 1rem; box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05); text-align: center; border: 1px solid #e2e8f0; transition: transform 0.2s;">
+                <div style="width: 56px; height: 56px; border-radius: 1rem; background: #eff6ff; display: flex; align-items: center; justify-content: center; margin: 0 auto 1.5rem; color: #3b82f6;">
+                    <svg width="28" height="28" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z"/></svg>
+                </div>
+                <h3 style="font-size: 1.25rem; font-weight: 700; color: #0f172a; margin-bottom: 0.75rem;">Warranty Tracking</h3>
+                <p style="color: #64748b; line-height: 1.6; font-size: 0.95rem;">Auto-expiry alerts and full claim history for parts and services.</p>
+            </div>
 
-                geometry.setAttribute('position', new THREE.BufferAttribute(positions, 3));
+            <div style="background: #fff; padding: 2.5rem 2rem; border-radius: 1rem; box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05); text-align: center; border: 1px solid #e2e8f0; transition: transform 0.2s;">
+                <div style="width: 56px; height: 56px; border-radius: 1rem; background: #eff6ff; display: flex; align-items: center; justify-content: center; margin: 0 auto 1.5rem; color: #3b82f6;">
+                    <svg width="28" height="28" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 15a4 4 0 004 4h9a5 5 0 10-.1-9.999 5.002 5.002 0 10-9.78 2.096A4.001 4.001 0 003 15z"/></svg>
+                </div>
+                <h3 style="font-size: 1.25rem; font-weight: 700; color: #0f172a; margin-bottom: 0.75rem;">Cloud Secure</h3>
+                <p style="color: #64748b; line-height: 1.6; font-size: 0.95rem;">All your data encrypted and backed up securely in the cloud.</p>
+            </div>
+        </div>
+    </div>
+</section>
 
-                // Circle texture for smooth particles
-                const particleTexture = createCircleTexture();
+<!-- ══════════════════════════════ HOW IT WORKS ══════════════════════════════ -->
+<section class="how" id="how">
+    <div class="container">
+        <div class="section-header">
+            <span class="section-label">How It Works</span>
+            <h2>Simple Onboarding, Instant Results</h2>
+            <p class="section-sub">Get started with Suhaim Soft in three easy steps and transform your workshop operations.</p>
+        </div>
+        <div class="steps-grid">
+            <div class="step-card">
+                <div class="step-num">01</div>
+                <h3>Consult & Demo</h3>
+                <p>Request a demo and our specialists will showcase the platform's full power, tailored specifically to your workshop's unique needs and workflow.</p>
+            </div>
+            <div class="step-card">
+                <div class="step-num">02</div>
+                <h3>Seamless Setup</h3>
+                <p>Our team handles the complete setup — migrating your customer and inventory records and integrating the system seamlessly into your daily operations.</p>
+            </div>
+            <div class="step-card">
+                <div class="step-num">03</div>
+                <h3>Training & Go Live</h3>
+                <p>We provide comprehensive staff training and dedicated helpline support to ensure your team is fully confident and your workshop runs at full efficiency.</p>
+            </div>
+        </div>
+    </div>
+</section>
 
-                // Material styling
-                const material = new THREE.PointsMaterial({
-                    size: 2.2,
-                    map: particleTexture,
-                    transparent: true,
-                    opacity: 0.7,
-                    depthWrite: false,
-                    blending: THREE.AdditiveBlending,
-                    color: 0x818cf8 // indigo-400 glow
-                });
+<!-- ══════════════════════════════ FEATURES ══════════════════════════════ -->
+<section class="features" id="features">
+    <div class="container">
+        <div class="section-header">
+            <span class="section-label">Features</span>
+            <h2>Everything You Need to Scale</h2>
+            <p class="section-sub">A comprehensive set of tools to manage every aspect of your workshop — from billing to team payroll.</p>
+        </div>
+        <div class="features-grid">
 
-                particleSystem = new THREE.Points(geometry, material);
-                scene.add(particleSystem);
+            <!-- Dashboard -->
+            <div class="feature-card">
+                <div class="feature-icon">
+                    <svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6"/></svg>
+                </div>
+                <h3>Dashboard</h3>
+                <p>A central hub providing real-time insights, quick actions, revenue metrics, and at-a-glance performance tracking.</p>
+            </div>
 
-                // Renderer setup
-                renderer = new THREE.WebGLRenderer({ canvas: canvas, alpha: true, antialias: true });
-                renderer.setSize(window.innerWidth, window.innerHeight);
-                renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
+            <!-- Invoices -->
+            <div class="feature-card">
+                <div class="feature-icon">
+                    <svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"/></svg>
+                </div>
+                <h3>Invoices</h3>
+                <p>Generate beautiful PDF bills instantly. Share invoices via WhatsApp with auto-calculated tax, discounts, and multiple payment methods.</p>
+            </div>
 
-                // Interaction
-                window.addEventListener('resize', onWindowResize);
-                document.addEventListener('mousemove', onMouseMove);
-            }
+            <!-- Bill Templates -->
+            <div class="feature-card">
+                <div class="feature-icon">
+                    <svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 11H5m14 0a2 2 0 012 2v6a2 2 0 01-2 2H5a2 2 0 01-2-2v-6a2 2 0 012-2m14 0V9a2 2 0 00-2-2M5 11V9a2 2 0 012-2m0 0V5a2 2 0 012-2h6a2 2 0 012 2v2M7 7h10"/></svg>
+                </div>
+                <h3>Bill Templates</h3>
+                <p>Bundle common services and parts into reusable templates. Generate a complete bill in a single click for repeat jobs.</p>
+            </div>
 
-            function createCircleTexture() {
-                const canvas = document.createElement('canvas');
-                canvas.width = 16;
-                canvas.height = 16;
-                const ctx = canvas.getContext('2d');
-                const gradient = ctx.createRadialGradient(8, 8, 0, 8, 8, 8);
-                gradient.addColorStop(0, 'rgba(255, 255, 255, 1)');
-                gradient.addColorStop(1, 'rgba(255, 255, 255, 0)');
-                ctx.fillStyle = gradient;
-                ctx.fillRect(0, 0, 16, 16);
-                return new THREE.CanvasTexture(canvas);
-            }
+            <!-- Customers -->
+            <div class="feature-card">
+                <div class="feature-icon">
+                    <svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4.354a4 4 0 110 5.292M15 21H3v-1a6 6 0 0112 0v1zm0 0h6v-1a6 6 0 00-9-5.197M13 7a3 3 0 11-6 0 3 3 0 016 0z"/></svg>
+                </div>
+                <h3>Customers</h3>
+                <p>Store full customer profiles with contact history, vehicle logs, and total billing statistics for personalized service.</p>
+            </div>
 
-            let mouseX = 0, mouseY = 0;
-            function onMouseMove(event) {
-                mouseX = (event.clientX - window.innerWidth / 2) * 0.05;
-                mouseY = (event.clientY - window.innerHeight / 2) * 0.05;
-            }
+            <!-- Vehicles -->
+            <div class="feature-card">
+                <div class="feature-icon">
+                    <svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 17h8M8 17v4H6v-4m2 0H4.5A1.5 1.5 0 013 15.5v-3.194a1.5 1.5 0 01.138-.632L5 8h14l1.862 3.674c.09.2.138.416.138.632V15.5a1.5 1.5 0 01-1.5 1.5H16m0 0v4h-2v-4m0 0H8M7 11h.01M17 11h.01"/></svg>
+                </div>
+                <h3>Vehicles</h3>
+                <p>Register vehicles with brand, model, year, color, and plate number — mapped directly to owners for instant bill association.</p>
+            </div>
 
-            function onWindowResize() {
-                camera.aspect = window.innerWidth / window.innerHeight;
-                camera.updateProjectionMatrix();
-                renderer.setSize(window.innerWidth, window.innerHeight);
-            }
+            <!-- Services -->
+            <div class="feature-card">
+                <div class="feature-icon">
+                    <svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.066 2.573c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.573 1.066c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 00-1.066-2.573c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31 2.37-2.37.996.608 2.296.07 2.572-1.065z"/><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"/></svg>
+                </div>
+                <h3>Services</h3>
+                <p>Catalog all repair, diagnostic, and maintenance services. Standardize pricing and labor costs across all your operations.</p>
+            </div>
 
-            let clock = 0;
-            function animate() {
-                requestAnimationFrame(animate);
-                clock += 0.008;
+            <!-- Products / Stock -->
+            <div class="feature-card">
+                <div class="feature-icon">
+                    <svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20 7l-8-4-8 4m16 0l-8 4m8-4v10l-8 4m0-10L4 7m8 4v10M4 7v10l8 4"/></svg>
+                </div>
+                <h3>Products / Stock</h3>
+                <p>Auto-deduct parts on bill creation, track fluids and spares, and receive low-stock alerts to protect your margins.</p>
+            </div>
 
-                // Move camera gently with mouse interaction
-                camera.position.x += (mouseX - camera.position.x) * 0.05;
-                camera.position.y += (-mouseY + 80 - camera.position.y) * 0.05;
-                camera.lookAt(new THREE.Vector3(0, -40, 0));
+            <!-- Expenses -->
+            <div class="feature-card">
+                <div class="feature-icon">
+                    <svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
+                </div>
+                <h3>Expenses</h3>
+                <p>Log overheads, utilities, and tool purchases to maintain an accurate, real-time cash flow ledger for your workshop.</p>
+            </div>
 
-                const positionsAttr = particleSystem.geometry.attributes.position;
-                
-                for(let i = 0; i < particleCount; i++) {
-                    const x = positionsAttr.array[i * 3];
-                    const z = positionsAttr.array[i * 3 + 2];
-                    
-                    // Wave motion function
-                    positionsAttr.array[i * 3 + 1] = initialY[i] + Math.sin(x * 0.01 + clock + speeds[i]) * 15 + Math.cos(z * 0.01 + clock) * 15;
-                }
-                
-                particleSystem.geometry.attributes.position.needsUpdate = true;
-                
-                // Slow rotation
-                particleSystem.rotation.y = clock * 0.05;
+            <!-- Purchases -->
+            <div class="feature-card">
+                <div class="feature-icon">
+                    <svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 3h2l.4 2M7 13h10l4-8H5.4M7 13L5.4 5M7 13l-2.293 2.293c-.63.63-.184 1.707.707 1.707H17m0 0a2 2 0 100 4 2 2 0 000-4zm-8 2a2 2 0 11-4 0 2 2 0 014 0z"/></svg>
+                </div>
+                <h3>Purchases</h3>
+                <p>Record inbound part purchases from suppliers. Keep detailed track of wholesale costs versus retail pricing for accurate P&L.</p>
+            </div>
 
-                renderer.render(scene, camera);
-            }
+            <!-- Salaries -->
+            <div class="feature-card">
+                <div class="feature-icon">
+                    <svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 9V7a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2m2 4h10a2 2 0 002-2v-6a2 2 0 00-2-2H9a2 2 0 00-2 2v6a2 2 0 002 2zm7-5a2 2 0 11-4 0 2 2 0 014 0z"/></svg>
+                </div>
+                <h3>Salaries</h3>
+                <p>Manage employee payroll, track compensation disbursements by period, and log payment method and status effortlessly.</p>
+            </div>
 
-            init();
-            animate();
-        })();
+            <!-- Employees -->
+            <div class="feature-card">
+                <div class="feature-icon">
+                    <svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"/></svg>
+                </div>
+                <h3>Employees</h3>
+                <p>Maintain your mechanics and staff database, mapping roles and permissions to streamline assignments and accountability.</p>
+            </div>
 
-        // Counter Animation for Tangible Results
-        document.addEventListener('DOMContentLoaded', () => {
-            const statsSection = document.getElementById('results');
-            const counters = document.querySelectorAll('.stat-counter');
+            <!-- Work Orders -->
+            <div class="feature-card">
+                <div class="feature-icon">
+                    <svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2m-6 9l2 2 4-4"/></svg>
+                </div>
+                <h3>Work Orders</h3>
+                <p>Assign repair jobs with priority levels (Urgent/High/Normal), track mechanic progress, and monitor estimated vs. actual times.</p>
+            </div>
+
+            <!-- Warranty -->
+            <div class="feature-card">
+                <div class="feature-icon">
+                    <svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z"/></svg>
+                </div>
+                <h3>Warranty</h3>
+                <p>Issue warranties on parts and services with automatic expiration tracking, status indicators, and full claim history.</p>
+            </div>
+
+        </div>
+    </div>
+</section>
+
+<!-- ══════════════════════════════ RESULTS ══════════════════════════════ -->
+<section class="results" id="results">
+    <div class="container">
+        <div class="section-header">
+            <span class="section-label">Tangible Results</span>
+            <h2>Real-World Impact</h2>
+            <p class="section-sub">Our platform delivers measurable results that impact your bottom line and customer satisfaction.</p>
+        </div>
+        <div class="results-grid">
+            <div class="result-card">
+                <div class="num">100%</div>
+                <h3>Time Savings</h3>
+                <p>Eliminate administrative overhead and redirect time to vehicle repairs and customer care.</p>
+            </div>
+            <div class="result-card">
+                <div class="num">100%</div>
+                <h3>Data Accuracy</h3>
+                <p>Minimize manual entry errors with highly accurate customer, vehicle, and inventory records.</p>
+            </div>
+            <div class="result-card">
+                <div class="num">2×</div>
+                <h3>Revenue Boost</h3>
+                <p>Streamlined invoicing and preset packages significantly increase revenue collection speed.</p>
+            </div>
+            <div class="result-card">
+                <div class="num">↑</div>
+                <h3>Customer Satisfaction</h3>
+                <p>Faster check-ins and better record access lead to a significantly improved customer experience.</p>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- ══════════════════════════════ CONTACT ══════════════════════════════ -->
+<section class="contact" id="contact">
+    <div class="container">
+        <div class="contact-inner">
+            <!-- Info -->
+            <div class="contact-info">
+                <span class="section-label">Get in Touch</span>
+                <h2>Contact & Enquiries</h2>
+                <p>Have questions, need a custom demo, or want to discuss pricing? Our team is ready to help you get started.</p>
+                <div class="contact-items">
+                    <div class="contact-item">
+                        <div class="contact-item-icon">
+                            <svg fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 5a2 2 0 012-2h3.28a1 1 0 01.948.684l1.498 4.493a1 1 0 01-.502 1.21l-2.257 1.13a11.042 11.042 0 005.516 5.516l1.13-2.257a1 1 0 011.21-.502l4.493 1.498a1 1 0 01.684.949V19a2 2 0 01-2 2h-1C9.716 21 3 14.284 3 6V5z"/>
+                            </svg>
+                        </div>
+                        <div class="contact-item-text">
+                            <span>Support Helpline</span>
+                            <a href="tel:+918891479505">+91 88914 79505</a>
+                        </div>
+                    </div>
+                    <div class="contact-item">
+                        <div class="contact-item-icon">
+                            <svg fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"/>
+                            </svg>
+                        </div>
+                        <div class="contact-item-text">
+                            <span>Email</span>
+                            <a href="mailto:info@suhaimsoft.com">info@suhaimsoft.com</a>
+                        </div>
+                    </div>
+                    <div class="contact-item">
+                        <div class="contact-item-icon">
+                            <svg fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z"/>
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 11a3 3 0 11-6 0 3 3 0 016 0z"/>
+                            </svg>
+                        </div>
+                        <div class="contact-item-text">
+                            <span>Location</span>
+                            <p>Kerala, India</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Form -->
+            <div class="contact-form">
+                <form id="contact-form" onsubmit="handleContactSubmit(event)">
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label>Your Name</label>
+                            <input type="text" placeholder="John Doe" required>
+                        </div>
+                        <div class="form-group">
+                            <label>Phone</label>
+                            <input type="tel" placeholder="+91 00000 00000">
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label>Email</label>
+                        <input type="email" placeholder="you@example.com" required>
+                    </div>
+                    <div class="form-group">
+                        <label>Workshop Name</label>
+                        <input type="text" placeholder="Your workshop name">
+                    </div>
+                    <div class="form-group">
+                        <label>Message</label>
+                        <textarea placeholder="Tell us about your workshop and what you need…" required></textarea>
+                    </div>
+                    <button type="submit" class="form-submit" id="contact-submit">
+                        Send Message →
+                    </button>
+                    <div class="form-success" id="contact-success">
+                        ✓ Message sent! We'll get back to you within 24 hours.
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- ══════════════════════════════ FOOTER ══════════════════════════════ -->
+<footer>
+    <div class="container">
+        <div class="footer-top">
+            <div>
+                <a href="#" class="brand">
+                    <svg width="24" height="24" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5"
+                              d="M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.065 2.572c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.572 1.065c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 00-1.065-2.572c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31 2.37-2.37.996.608 2.296.07 2.572-1.065z"/>
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"/>
+                    </svg>
+                    <span class="brand-text">SUHAIM<span>SOFT</span></span>
+                </a>
+                <p class="brand-desc">The smart, modern workshop management platform designed to save you time and maximize your revenue.</p>
+                <div class="socials">
+                    <a href="#" aria-label="Facebook"><svg width="18" height="18" fill="currentColor" viewBox="0 0 24 24"><path d="M18 2h-3a5 5 0 0 0-5 5v3H7v4h3v8h4v-8h3l1-4h-4V7a1 1 0 0 1 1-1h3z"></path></svg></a>
+                    <a href="#" aria-label="Twitter"><svg width="18" height="18" fill="currentColor" viewBox="0 0 24 24"><path d="M23 3a10.9 10.9 0 0 1-3.14 1.53 4.48 4.48 0 0 0-7.86 3v1A10.66 10.66 0 0 1 3 4s-4 9 5 13a11.64 11.64 0 0 1-7 2c9 5 20 0 20-11.5a4.5 4.5 0 0 0-.08-.83A7.72 7.72 0 0 0 23 3z"></path></svg></a>
+                    <a href="#" aria-label="Instagram"><svg width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" viewBox="0 0 24 24"><rect x="2" y="2" width="20" height="20" rx="5" ry="5"></rect><path d="M16 11.37A4 4 0 1 1 12.63 8 4 4 0 0 1 16 11.37z"></path><line x1="17.5" y1="6.5" x2="17.51" y2="6.5"></line></svg></a>
+                </div>
+            </div>
             
-            const countTo = (counter) => {
-                const target = parseInt(counter.getAttribute('data-target') || '100');
-                const duration = 2000; // 2 seconds
-                const startTime = performance.now();
-                
-                const animateCount = (currentTime) => {
-                    const elapsed = currentTime - startTime;
-                    const progress = Math.min(elapsed / duration, 1);
-                    
-                    // Ease out quad
-                    const easeProgress = progress * (2 - progress);
-                    const currentValue = Math.floor(easeProgress * target);
-                    
-                    counter.textContent = currentValue;
-                    
-                    if (progress < 1) {
-                        requestAnimationFrame(animateCount);
-                    } else {
-                        counter.textContent = target;
-                    }
-                };
-                
-                requestAnimationFrame(animateCount);
-            };
+            <div>
+                <h4>Features</h4>
+                <ul>
+                    <li><a href="#features">Smart Invoicing</a></li>
+                    <li><a href="#features">Inventory Control</a></li>
+                    <li><a href="#features">Customer Management</a></li>
+                    <li><a href="#features">Work Orders</a></li>
+                    <li><a href="#features">Expense Tracking</a></li>
+                </ul>
+            </div>
+            
+            <div>
+                <h4>Company</h4>
+                <ul>
+                    <li><a href="#about">About Us</a></li>
+                    <li><a href="#how">How It Works</a></li>
+                    <li><a href="#results">Success Stories</a></li>
+                    <li><a href="#contact">Contact</a></li>
+                </ul>
+            </div>
+            
+            <div>
+                <h4>Get Started</h4>
+                <ul>
+                    <li><a href="{{ route('login') }}">Member Login</a></li>
+                    <li><a href="{{ route('register') }}">Start Free Trial</a></li>
+                    <li><a href="#contact">Book a Demo</a></li>
+                </ul>
+            </div>
+        </div>
+        
+        <div class="footer-bottom">
+            <p>© {{ date('Y') }} Suhaim Soft Work Shop. All rights reserved.</p>
+        </div>
+    </div>
+</footer>
 
-            const observer = new IntersectionObserver((entries) => {
-                entries.forEach(entry => {
-                    if (entry.isIntersecting) {
-                        counters.forEach(counter => countTo(counter));
-                        observer.unobserve(entry.target);
-                    }
-                });
-            }, { threshold: 0.15 });
-
-            if (statsSection) {
-                observer.observe(statsSection);
-            }
+<!-- ══════════════════════════════ SCRIPTS ══════════════════════════════ -->
+<script>
+    // Mobile hamburger toggle
+    const hamburger = document.getElementById('hamburger');
+    const mobileNav = document.getElementById('mobile-nav');
+    if (hamburger && mobileNav) {
+        hamburger.addEventListener('click', () => {
+            mobileNav.classList.toggle('open');
         });
+        // Close on link click
+        mobileNav.querySelectorAll('a').forEach(a => {
+            a.addEventListener('click', () => mobileNav.classList.remove('open'));
+        });
+    }
 
+    // Smooth close mobile nav on resize
+    window.addEventListener('resize', () => {
+        if (window.innerWidth > 768) mobileNav?.classList.remove('open');
+    });
 
-        // Contact Form Logic
-        function handleContactSubmit(event) {
-            event.preventDefault();
-            const btn = document.querySelector('#contact-form button[type="submit"]');
-            const originalText = btn.innerHTML;
-            btn.innerHTML = '<svg class="animate-spin h-4 w-4 text-white" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24"><circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle><path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path></svg> Sending...';
-            btn.disabled = true;
+    // Contact form
+    function handleContactSubmit(event) {
+        event.preventDefault();
+        const btn = document.getElementById('contact-submit');
+        const original = btn.textContent;
+        btn.textContent = 'Sending…';
+        btn.disabled = true;
+        btn.style.opacity = '0.7';
+        setTimeout(() => {
+            document.getElementById('contact-form').reset();
+            btn.textContent = original;
+            btn.disabled = false;
+            btn.style.opacity = '1';
+            const msg = document.getElementById('contact-success');
+            msg.style.display = 'block';
+            setTimeout(() => msg.style.display = 'none', 4500);
+        }, 1100);
+    }
 
-            // Simulate form submission delay
-            setTimeout(() => {
-                document.getElementById('contact-form').reset();
-                btn.innerHTML = originalText;
-                btn.disabled = false;
-                
-                const successMsg = document.getElementById('contact-success');
-                successMsg.classList.remove('hidden');
-                
-                setTimeout(() => {
-                    successMsg.classList.add('hidden');
-                }, 4000);
-            }, 1000);
+    // Scroll-based header shadow enhancement
+    window.addEventListener('scroll', () => {
+        const header = document.querySelector('header');
+        if (window.scrollY > 20) {
+            header.style.boxShadow = '0 2px 16px rgba(0,0,0,0.1)';
+        } else {
+            header.style.boxShadow = '0 1px 6px rgba(0,0,0,0.06)';
         }
-    </script>
-    
-    <!-- PWA Service Worker Registration -->
-    <script>
-        if ('serviceWorker' in navigator) {
-            window.addEventListener('load', () => {
-                navigator.serviceWorker.register('/sw.js')
-                    .then(reg => console.log('SW registered:', reg.scope))
-                    .catch(err => console.error('SW registration failed:', err));
-            });
-        }
-    </script>
+    });
+</script>
+
+<!-- PWA Service Worker -->
+<script>
+    if ('serviceWorker' in navigator) {
+        window.addEventListener('load', () => {
+            navigator.serviceWorker.register('/sw.js')
+                .then(reg => console.log('SW registered'))
+                .catch(err => console.error('SW failed:', err));
+        });
+    }
+</script>
+
 </body>
 </html>

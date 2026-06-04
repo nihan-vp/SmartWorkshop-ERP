@@ -275,6 +275,35 @@
                 </div>
             </div>
 
+            <div class="glass-card">
+                <h3 class="text-sm font-bold text-slate-900 uppercase tracking-wider mb-4">Subscription & Trial</h3>
+                <div class="space-y-3">
+                    @if(auth()->user()->workshop)
+                        @php
+                            $workshop = auth()->user()->workshop;
+                        @endphp
+                        <div class="flex justify-between items-center text-xs pb-2 border-b border-slate-100">
+                            <span class="text-slate-500 font-semibold">Account Type</span>
+                            <span class="font-bold uppercase tracking-wider {{ $workshop->subscription_status === 'active' ? 'text-emerald-600' : 'text-amber-600' }}">{{ $workshop->subscription_status }}</span>
+                        </div>
+                        @if($workshop->trial_ends_at)
+                        <div class="flex justify-between items-center text-xs pb-2 border-b border-slate-100">
+                            <span class="text-slate-500 font-semibold">Expiration Date</span>
+                            <span class="font-bold text-slate-700">{{ $workshop->trial_ends_at->format('d M Y') }}</span>
+                        </div>
+                        <div class="flex justify-between items-center text-xs pb-2 border-b border-slate-100">
+                            <span class="text-slate-500 font-semibold">Status Details</span>
+                            @if($workshop->isTrialExpired())
+                                <span class="text-rose-600 font-bold bg-rose-50 px-2 py-0.5 rounded border border-rose-100">Expired</span>
+                            @else
+                                <span class="text-slate-700 font-bold">{{ $workshop->getTrialDaysRemaining() }} days left</span>
+                            @endif
+                        </div>
+                        @endif
+                    @endif
+                </div>
+            </div>
+
         </div>
 
     </div>
