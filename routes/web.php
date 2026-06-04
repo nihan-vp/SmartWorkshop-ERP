@@ -143,7 +143,7 @@ Route::middleware('auth')->group(function () {
     });
 });
 
-// Secure route to run migrations and reset super admin on serverless environments (Vercel)
+// Secure route to run migrations and reset super admin on serverless environments
 // Usage: /run-migrations?key=YOUR_SECRET_KEY
 Route::get('/run-migrations', function () {
     // Validate secret key — uses the ADMIN_RESET_KEY env var (set in Vercel dashboard)
