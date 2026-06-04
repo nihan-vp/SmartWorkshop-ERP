@@ -74,7 +74,8 @@ COPY . .
 RUN npm run build
 
 # Run post-install scripts
-RUN composer dump-autoload --optimize
+RUN composer dump-autoload --optimize \
+    && php artisan package:discover --ansi
 
 # Set proper permissions
 RUN chown -R www-data:www-data /var/www/html \
