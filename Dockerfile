@@ -1,9 +1,14 @@
 FROM php:8.3-apache
 
-# Install system dependencies including Node.js (for Vite)
-RUN apt-get update && apt-get install -y \
+# Suppress interactive apt prompts during build
+ENV DEBIAN_FRONTEND=noninteractive
+
+# Install system dependencies
+RUN apt-get update && apt-get install -y --no-install-recommends \
     git \
     curl \
+    ca-certificates \
+    gnupg \
     libpng-dev \
     libonig-dev \
     libxml2-dev \
@@ -12,10 +17,19 @@ RUN apt-get update && apt-get install -y \
     unzip \
     cron \
     supervisor \
-    && curl -fsSL https://deb.nodesource.com/setup_20.x | bash - \
-    && apt-get install -y nodejs \
     && apt-get clean \
-    && rm -rf /var/lib/apt/lists/*
+    && rm -rf /var/lib/apt/lists/* /tmp/* /var/tmp/*
+
+# Install Node.js 20 via official NodeSource repository (no apt-script warnings)
+RUN mkdir -p /etc/apt/keyrings \
+    && curl -fsSL https://deb.nodesource.com/gpgkey/nodesource-repo.gpg.key \
+       | gpg --dearmor -o /etc/apt/keyrings/nodesource.gpg \
+    && echo "deb [signed-by=/etc/apt/keyrings/nodesource.gpg] https://deb.nodesource.com/node_20.x nodistro main" \
+       > /etc/apt/sources.list.d/nodesource.list \
+    && apt-get update \
+    && apt-get install -y --no-install-recommends nodejs \
+    && apt-get clean \
+    && rm -rf /var/lib/apt/lists/* /tmp/* /var/tmp/*
 
 # Install PHP extensions (MySQL only - no pgsql)
 RUN docker-php-ext-install \
@@ -45,7 +59,7 @@ RUN { \
 RUN a2enmod rewrite headers
 
 # Set Apache document root to Laravel public/
-ENV APACHE_DOCUMENT_ROOT /var/www/html/public
+ENV APACHE_DOCUMENT_ROOT=/var/www/html/public
 RUN sed -ri -e 's!/var/www/html!${APACHE_DOCUMENT_ROOT}!g' \
     /etc/apache2/sites-available/*.conf \
     && sed -ri -e 's!/var/www/!${APACHE_DOCUMENT_ROOT}!g' \
@@ -65,7 +79,7 @@ COPY package.json package-lock.json ./
 
 # Install PHP & Node dependencies
 RUN composer install --no-dev --optimize-autoloader --no-interaction --no-scripts
-RUN npm ci
+RUN npm ci --prefer-offline
 
 # Copy application files
 COPY . .
