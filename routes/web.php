@@ -143,97 +143,80 @@ Route::middleware('auth')->group(function () {
     });
 });
 
-// Secure route to run migrations and seed database on serverless environments like Vercel
+// Secure route to run migrations and reset super admin on serverless environments (Vercel)
+// Usage: /run-migrations?key=YOUR_SECRET_KEY
 Route::get('/run-migrations', function () {
-    $expectedKey = env('APP_KEY');
-    if (str_starts_with($expectedKey, 'base64:')) {
-        $expectedKey = substr($expectedKey, 7);
-    }
-    
-    if (request()->get('key') !== $expectedKey) {
-        return response('Unauthorized. Please provide the correct key.', 403);
+    // Validate secret key — uses the ADMIN_RESET_KEY env var (set in Vercel dashboard)
+    // Falls back to a hash of APP_KEY if ADMIN_RESET_KEY is not set
+    $secretKey = env('ADMIN_RESET_KEY', hash('sha256', env('APP_KEY', '')));
+
+    if (request()->get('key') !== $secretKey) {
+        return response('Unauthorized. Provide the correct ?key= value.', 403)
+            ->header('Content-Type', 'text/plain');
     }
 
+    $output = [];
+
     try {
-        $output = "Running migrations...\n";
+        // 1. Run migrations
+        $output[] = '=== Running Migrations ===';
         \Illuminate\Support\Facades\Artisan::call('migrate', ['--force' => true]);
-        $output .= \Illuminate\Support\Facades\Artisan::output();
-        
-        $output .= "\nSeeding admin users and default workshop...\n";
-        
-        // Seeding workshop
-        $workshop = \App\Models\Workshop::find(1);
-        if (!$workshop) {
-            $workshop = \App\Models\Workshop::create([
-                'id' => 1,
-                'name' => 'Suhaim Soft Work Shop',
-                'phone' => '+91 9876543210',
-                'email' => 'info@suhaimsoft.com',
-                'address' => '123 Workshop Avenue, City',
-                'gstin' => '29XXXXXXXXXX1Z5',
-                'subscription_status' => 'active',
+        $output[] = trim(\Illuminate\Support\Facades\Artisan::output()) ?: 'Migrations already up to date.';
+
+        // 2. Reset super admin (ID=1, infosuhaimsoft@gmail.com)
+        $output[] = '';
+        $output[] = '=== Resetting Super Admin ===';
+
+        $adminEmail = 'infosuhaimsoft@gmail.com';
+        $adminPass  = '12345678';
+
+        $existing = \App\Models\User::find(1) ?? \App\Models\User::where('email', $adminEmail)->first();
+
+        if ($existing) {
+            $existing->update([
+                'id'          => 1,
+                'name'        => 'Suhaim Soft Workshop',
+                'email'       => $adminEmail,
+                'password'    => \Illuminate\Support\Facades\Hash::make($adminPass),
+                'role'        => 'super_admin',
+                'workshop_id' => null,
             ]);
-            $output .= "✓ Default Workshop ID=1 created.\n";
+            $output[] = "✓ Super admin '{$adminEmail}' updated (password reset to '{$adminPass}').";
         } else {
-            $output .= "✓ Default Workshop ID=1 already exists.\n";
-        }
-        
-        // Seeding admin user
-        $adminEmail = 'alivpsuhaim@gmail.com';
-        $adminUser = \App\Models\User::where('email', $adminEmail)->first();
-        if (!$adminUser) {
-            $adminUser = \App\Models\User::create([
-                'name' => 'Suhaim Admin',
-                'email' => $adminEmail,
-                'password' => \Illuminate\Support\Facades\Hash::make('12345678'),
-                'workshop_id' => $workshop->id,
-                'role' => 'admin',
+            \App\Models\User::create([
+                'id'          => 1,
+                'name'        => 'Suhaim Soft Workshop',
+                'email'       => $adminEmail,
+                'password'    => \Illuminate\Support\Facades\Hash::make($adminPass),
+                'role'        => 'super_admin',
+                'workshop_id' => null,
             ]);
-            $output .= "✓ Admin User '{$adminEmail}' created.\n";
-        } else {
-            $adminUser->update([
-                'password' => \Illuminate\Support\Facades\Hash::make('12345678'),
-                'workshop_id' => $workshop->id,
-                'role' => 'admin',
-            ]);
-            $output .= "✓ Admin User '{$adminEmail}' already exists (password reset).\n";
+            $output[] = "✓ Super admin '{$adminEmail}' created with password '{$adminPass}'.";
         }
-        
-        // Seeding super admin
-        $superAdminEmail = 'superadmin@suhaimsoft.com';
-        $superAdmin = \App\Models\User::where('email', $superAdminEmail)->first();
-        if (!$superAdmin) {
-            $superAdmin = \App\Models\User::create([
-                'name' => 'Super Admin',
-                'email' => $superAdminEmail,
-                'password' => \Illuminate\Support\Facades\Hash::make('12345678'),
-                'workshop_id' => $workshop->id,
-                'role' => 'super_admin',
-            ]);
-            $output .= "✓ Super Admin User '{$superAdminEmail}' created.\n";
-        } else {
-            $superAdmin->update([
-                'password' => \Illuminate\Support\Facades\Hash::make('12345678'),
-                'workshop_id' => $workshop->id,
-                'role' => 'super_admin',
-            ]);
-            $output .= "✓ Super Admin User '{$superAdminEmail}' already exists.\n";
+
+        // 3. Remove any stale/old super admin accounts
+        $deleted = \App\Models\User::where('id', '!=', 1)
+            ->where('role', 'super_admin')
+            ->delete();
+        if ($deleted > 0) {
+            $output[] = "✓ Removed {$deleted} old duplicate super_admin account(s).";
         }
-        
-        // Seed default seeders if customer count is 0
-        if (\App\Models\Customer::count() == 0) {
-            $output .= "\nSeeding remaining database tables...\n";
-            $seeder = new \Database\Seeders\DatabaseSeeder();
-            $seeder->run();
-            $output .= "✓ Remaining database tables seeded.\n";
-        }
-        
-        return response($output, 200)->header('Content-Type', 'text/plain');
+
+        $output[] = '';
+        $output[] = '=== Done! ===';
+        $output[] = "Login at: " . config('app.url') . "/login";
+        $output[] = "Email:    {$adminEmail}";
+        $output[] = "Password: {$adminPass}";
+
+        return response(implode("\n", $output), 200)
+            ->header('Content-Type', 'text/plain');
+
     } catch (\Exception $e) {
-        return response('Error: ' . $e->getMessage() . "\n" . $e->getTraceAsString(), 500)
+        return response('Error: ' . $e->getMessage() . "\n\n" . $e->getTraceAsString(), 500)
             ->header('Content-Type', 'text/plain');
     }
 });
+
 
 // Secure route to import the local MySQL database dump directly to the online database
 Route::get('/import-local-db', function () {
