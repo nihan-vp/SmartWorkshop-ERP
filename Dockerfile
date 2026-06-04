@@ -79,7 +79,7 @@ COPY package.json package-lock.json ./
 
 # Install PHP & Node dependencies
 RUN composer install --no-dev --optimize-autoloader --no-interaction --no-scripts
-RUN npm ci --prefer-offline
+RUN npm install --no-audit --no-fund --prefer-offline
 
 # Copy application files
 COPY . .
