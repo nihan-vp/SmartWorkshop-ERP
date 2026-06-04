@@ -1,0 +1,10 @@
+[build]
+  publish = "public"
+  command = "npm run build"
+
+# Proxy all traffic to your Render backend
+[[redirects]]
+  from = "/*"
+  to = "https://suhaimsoftwokrhsop.onrender.com/:splat"
+  status = 200
+  force = true
