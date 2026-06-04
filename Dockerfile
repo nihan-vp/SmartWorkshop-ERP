@@ -1,6 +1,6 @@
 FROM php:8.3-apache
 
-# Install system dependencies
+# Install system dependencies including Node.js (for Vite)
 RUN apt-get update && apt-get install -y \
     git \
     curl \
@@ -12,6 +12,8 @@ RUN apt-get update && apt-get install -y \
     unzip \
     cron \
     supervisor \
+    && curl -fsSL https://deb.nodesource.com/setup_20.x | bash - \
+    && apt-get install -y nodejs \
     && apt-get clean \
     && rm -rf /var/lib/apt/lists/*
 
@@ -59,12 +61,17 @@ WORKDIR /var/www/html
 
 # Copy composer files first (layer caching)
 COPY composer.json composer.lock ./
+COPY package.json package-lock.json ./
 
-# Install PHP dependencies (production only)
+# Install PHP & Node dependencies
 RUN composer install --no-dev --optimize-autoloader --no-interaction --no-scripts
+RUN npm ci
 
 # Copy application files
 COPY . .
+
+# Build Vite assets
+RUN npm run build
 
 # Run post-install scripts
 RUN composer dump-autoload --optimize
