@@ -35,12 +35,7 @@ else
 fi
 
 # ── 3. Initialize default database variables ──
-DB_CONNECTION=${DB_CONNECTION:-mysql}
-DB_HOST=${DB_HOST:-216.151.17.91}
-DB_PORT=${DB_PORT:-3306}
-DB_DATABASE=${DB_DATABASE:-suhaim_workshop}
-DB_USERNAME=${DB_USERNAME:-root}
-DB_PASSWORD=${DB_PASSWORD:-12345678}
+DB_CONNECTION=sqlite
 
 # ── 4. Write all env vars to .env ─────────────
 cat > /var/www/html/.env << EOF
@@ -54,13 +49,9 @@ APP_LOCALE=en
 LOG_CHANNEL=stderr
 LOG_LEVEL=${LOG_LEVEL:-error}
 
-# ── MySQL Database ─────────────────────────────
-DB_CONNECTION=${DB_CONNECTION}
-DB_HOST=${DB_HOST}
-DB_PORT=${DB_PORT}
-DB_DATABASE=${DB_DATABASE}
-DB_USERNAME=${DB_USERNAME}
-DB_PASSWORD=${DB_PASSWORD}
+# ── Database ─────────────────────────────
+DB_CONNECTION=sqlite
+DB_DATABASE=/var/www/html/database/database.sqlite
 
 # ── Session & Cache (file-based for Docker) ───
 SESSION_DRIVER=file
@@ -87,35 +78,13 @@ chown -R www-data:www-data storage bootstrap/cache
 chmod -R 775 storage bootstrap/cache
 echo "Storage directories ready"
 
-# ── 6. Wait for MySQL to be ready ─────────────
-echo "Waiting for MySQL at ${DB_HOST}:${DB_PORT}..."
-MAX_RETRIES=10
-RETRY=0
-until php -r "
-    try {
-        \$pdo = new PDO(
-            'mysql:host=${DB_HOST};port=${DB_PORT}',
-            '${DB_USERNAME}',
-            '${DB_PASSWORD}',
-            [
-                PDO::ATTR_ERRMODE => PDO::ERRMODE_EXCEPTION,
-                PDO::ATTR_TIMEOUT => 2
-            ]
-        );
-        echo 'connected';
-    } catch (Exception \$e) {
-        // failed
-    }
-" 2>/dev/null | grep -q "connected"; do
-    RETRY=$((RETRY + 1))
-    if [ $RETRY -ge $MAX_RETRIES ]; then
-        echo "WARNING: MySQL at ${DB_HOST}:${DB_PORT} is not reachable after ${MAX_RETRIES} attempts. Continuing boot anyway..."
-        break
-    fi
-    echo "  MySQL not ready yet (attempt $RETRY/$MAX_RETRIES)..."
-    sleep 2
-done
-echo "MySQL boot check completed"
+# ── 6. Ensure SQLite DB exists ─────────────
+echo "Creating SQLite database..."
+mkdir -p /var/www/html/database
+touch /var/www/html/database/database.sqlite
+chown www-data:www-data /var/www/html/database/database.sqlite
+chmod 664 /var/www/html/database/database.sqlite
+echo "SQLite DB ready"
 
 # ── 7. Run database migrations ────────────────
 echo "Running migrations..."
