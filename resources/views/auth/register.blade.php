@@ -46,7 +46,12 @@
         
         {{-- Brand Header --}}
         <div class="flex flex-col items-center mb-8">
-            <h1 class="text-3xl font-black text-slate-900 tracking-tight mt-6 mb-1">Join Suhaim Soft</h1>
+            <div class="w-16 h-16 rounded-2xl bg-gradient-to-br from-blue-600 to-blue-500 flex items-center justify-center shadow-lg shadow-blue-500/30 mb-4">
+                <svg width="36" height="36" viewBox="0 0 512 512" fill="currentColor" class="text-white">
+                    <path d="M 334 165 C 334 165 298 140 256 140 C 214 140 178 165 178 210 C 178 260 230 275 270 285 C 300 292 342 308 342 355 C 342 410 290 432 256 432 C 210 432 170 410 170 410 L 182 355 C 182 355 220 380 256 380 C 300 380 342 360 342 315 C 342 265 285 245 242 235 C 208 227 170 205 170 160 C 170 100 226 80 256 80 C 306 80 342 105 342 105 Z" />
+                </svg>
+            </div>
+            <h1 class="text-3xl font-black text-slate-900 tracking-tight mb-1">Join Suhaim Soft</h1>
             <p class="text-sm text-blue-600 font-bold tracking-widest uppercase bg-blue-50 px-3 py-1 rounded-full">Premium Workshop Manager</p>
         </div>
 
