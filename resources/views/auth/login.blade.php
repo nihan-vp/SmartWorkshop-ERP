@@ -56,7 +56,14 @@
         <div class="glass-card rounded-[2rem] p-8 sm:p-10 relative overflow-hidden">
             
             {{-- Card Highlight --}}
-            <div class="absolute top-0 left-0 w-full h-1 bg-gradient-to-r from-blue-500 via-indigo-500 to-purple-500"></div>
+            <div class="absolute top-0 left-0 w-full h-1 bg-gradient-to-r from-blue-500 via-blue-500 to-blue-500"></div>
+
+            {{-- Back Button --}}
+            <a href="{{ url('/') }}" class="absolute top-6 left-6 p-2.5 rounded-full bg-slate-50 border border-slate-100 text-slate-400 hover:text-blue-600 hover:bg-blue-50 hover:border-blue-100 transition-all duration-300" title="Back to Home">
+                <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 19l-7-7m0 0l7-7m-7 7h18"/>
+                </svg>
+            </a>
 
             <div class="mb-8 text-center">
                 <h2 class="text-2xl font-bold text-slate-800">Welcome Back</h2>
@@ -122,7 +129,7 @@
             {{-- Register Link --}}
             <div class="mt-8 pt-6 border-t border-slate-200/60 text-center">
                 <p class="text-sm text-slate-500 font-medium">New to Suhaim Soft? 
-                    <a href="{{ route('register') }}" class="text-blue-600 font-bold hover:text-indigo-700 transition-colors ml-1 hover:underline underline-offset-4">Register Workshop</a>
+                    <a href="{{ route('register') }}" class="text-blue-600 font-bold hover:text-blue-800 transition-colors ml-1 hover:underline underline-offset-4">Register Workshop</a>
                 </p>
             </div>
         </div>
