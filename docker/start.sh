@@ -108,11 +108,11 @@ echo "✓ MySQL connection established"
 
 # ── 6. Run database migrations ────────────────
 echo "Running migrations..."
-php artisan migrate --force && echo "✓ Migrations complete" || echo "⚠ Migration warning (may already be up to date)"
+php artisan migrate --force
 
 # ── 7. Seed admin user & default workshop ─────
 echo "Seeding admin user..."
-php create_admin.php && echo "✓ Admin seeded" || echo "⚠ Admin seed warning"
+php create_admin.php
 
 # ── 8. Laravel production optimizations ───────
 echo "Optimizing for production..."
