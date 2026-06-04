@@ -235,3 +235,40 @@ Route::get('/run-migrations', function () {
     }
 });
 
+// Secure route to import the local MySQL database dump directly to the online database
+Route::get('/import-local-db', function () {
+    $expectedKey = env('APP_KEY');
+    if (str_starts_with($expectedKey, 'base64:')) {
+        $expectedKey = substr($expectedKey, 7);
+    }
+    
+    if (request()->get('key') !== $expectedKey) {
+        return response('Unauthorized. Please provide the correct key.', 403);
+    }
+
+    $sqlPath = base_path('suhaim_workshop.sql');
+    if (!file_exists($sqlPath)) {
+        return response('Error: suhaim_workshop.sql file not found in repository root.', 404);
+    }
+
+    try {
+        $sql = file_get_contents($sqlPath);
+        
+        // Disable foreign key checks temporarily to avoid constraint issues during table drops/creates
+        \Illuminate\Support\Facades\DB::statement('SET FOREIGN_KEY_CHECKS=0;');
+        
+        // Execute the database dump queries
+        \Illuminate\Support\Facades\DB::unprepared($sql);
+        
+        // Re-enable foreign key checks
+        \Illuminate\Support\Facades\DB::statement('SET FOREIGN_KEY_CHECKS=1;');
+
+        return response("Database successfully imported to online server!\nAll tables and local data have been synchronized.", 200)
+            ->header('Content-Type', 'text/plain');
+    } catch (\Exception $e) {
+        return response("Error importing database: " . $e->getMessage() . "\n\n" . $e->getTraceAsString(), 500)
+            ->header('Content-Type', 'text/plain');
+    }
+});
+
+
