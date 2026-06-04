@@ -33,7 +33,15 @@ $app = Application::configure(basePath: dirname(__DIR__))
     })->create();
 
 if (env('APP_STORAGE')) {
-    $app->useStoragePath(env('APP_STORAGE'));
+    $storage = env('APP_STORAGE');
+    $app->useStoragePath($storage);
+    
+    // Ensure all required subdirectories exist to prevent intermittent 500 errors on PaaS
+    foreach (['framework/cache', 'framework/sessions', 'framework/views', 'logs'] as $dir) {
+        if (!is_dir($storage . '/' . $dir)) {
+            @mkdir($storage . '/' . $dir, 0777, true);
+        }
+    }
 }
 
 return $app;
