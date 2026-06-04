@@ -2,72 +2,124 @@
 
 @section('title', 'Register Workshop')
 @section('seo-title', 'Register Your Workshop')
-@section('seo-description', 'Contact Suhaim Soft to register your auto repair shop or garage and get your administrator login.')
-@section('seo-keywords', 'workshop registration, sign up garage, register auto repair shop, Suhaim Soft registration, workshop software signup')
+@section('seo-description', 'Contact Suhaim Soft to register your auto repair shop or garage.')
 
 @section('content')
-    {{-- Brand Header --}}
-    <div class="flex flex-col items-center mb-8 animate-fade-in-up">
-        <div class="w-14 h-14 rounded-2xl bg-gradient-to-br from-primary-600 to-indigo-500 flex items-center justify-center shadow-lg shadow-primary-500/25 mb-4">
-            <svg class="w-8 h-8 text-white animate-spin-slow" fill="none" stroke="currentColor" viewBox="0 0 24 24" style="animation-duration: 8s;">
-                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.066 2.573c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.573 1.066c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 00-1.066-2.573c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31 2.37-2.37.996.608 2.296.07 2.572-1.065z"/>
-                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"/>
-            </svg>
-        </div>
-        <h1 class="text-2xl font-extrabold text-slate-900 tracking-tight leading-none">Suhaim Soft</h1>
-        <p class="text-xs text-primary-600 font-bold tracking-wider uppercase mt-1">Workshop Manager</p>
-    </div>
+    <style>
+        .glass-card {
+            background: rgba(255, 255, 255, 0.65);
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
+            border: 1px solid rgba(255, 255, 255, 0.8);
+            box-shadow: 0 25px 50px -12px rgba(15, 23, 42, 0.15), 0 0 0 1px rgba(255,255,255,0.5) inset;
+        }
+        .floating-shape {
+            animation: float 6s ease-in-out infinite;
+        }
+        .floating-shape-2 {
+            animation: float 8s ease-in-out infinite reverse;
+        }
+        @keyframes float {
+            0% { transform: translateY(0) rotate(0deg); }
+            50% { transform: translateY(-20px) rotate(5deg); }
+            100% { transform: translateY(0) rotate(0deg); }
+        }
+        .fade-in-up {
+            animation: fadeInUp 0.8s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+            opacity: 0;
+            transform: translateY(20px);
+        }
+        @keyframes fadeInUp {
+            to { opacity: 1; transform: translateY(0); }
+        }
+        .pulse-glow {
+            animation: pulseGlow 2s infinite;
+        }
+        @keyframes pulseGlow {
+            0% { box-shadow: 0 0 0 0 rgba(124, 58, 237, 0.4); }
+            70% { box-shadow: 0 0 0 15px rgba(124, 58, 237, 0); }
+            100% { box-shadow: 0 0 0 0 rgba(124, 58, 237, 0); }
+        }
+    </style>
 
-    {{-- Contact Super Admin Card --}}
-    <div class="bg-white border border-slate-200/80 rounded-[32px] p-8 sm:p-10 shadow-2xl relative backdrop-blur-md max-w-lg w-full mx-auto animate-fade-in-up" style="animation-delay: 0.1s;">
-        <!-- Back to Login -->
-        <a href="{{ route('login') }}" class="absolute top-5 left-5 p-2 rounded-xl text-slate-400 hover:text-slate-900 hover:bg-slate-50 transition-all flex items-center justify-center group" title="Back to Login">
-            <svg class="w-5 h-5 transition-transform group-hover:-translate-x-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7"/>
-            </svg>
-        </a>
+    <div class="relative w-full max-w-5xl mx-auto flex items-center justify-center min-h-[80vh]">
         
-        <div class="text-center space-y-6 pt-6">
-            <!-- Icon -->
-            <div class="w-16 h-16 rounded-[22px] bg-violet-50 border border-violet-100 flex items-center justify-center text-violet-600 mx-auto shadow-sm">
-                <svg class="w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16l3.5-2 3.5 2 3.5-2 3.5 2z"/>
-                </svg>
-            </div>
+        {{-- Background Decorative Elements --}}
+        <div class="absolute inset-0 z-0 overflow-hidden pointer-events-none flex items-center justify-center">
+            <div class="absolute top-[10%] right-[15%] w-72 h-72 bg-violet-400/30 rounded-full mix-blend-multiply filter blur-[80px] animate-pulse"></div>
+            <div class="absolute bottom-[10%] left-[15%] w-72 h-72 bg-blue-400/30 rounded-full mix-blend-multiply filter blur-[80px] animate-pulse" style="animation-delay: 2s;"></div>
+            
+            {{-- Floating Geometric Shapes --}}
+            <div class="absolute top-20 right-10 w-24 h-24 bg-gradient-to-br from-violet-400 to-fuchsia-500 rounded-3xl opacity-20 floating-shape blur-[2px] rotate-12"></div>
+            <div class="absolute bottom-20 left-10 w-32 h-32 bg-gradient-to-tr from-blue-400 to-indigo-500 rounded-full opacity-20 floating-shape-2 blur-[3px]"></div>
+        </div>
 
-            <!-- Headers -->
-            <div class="space-y-2">
-                <h2 class="text-2xl font-bold text-slate-900 tracking-tight">Register Your Workshop</h2>
-                <p class="text-sm text-slate-500 font-semibold leading-relaxed">
-                    To register your workshop profile and administrator login, please connect to Super Admin Suhaim Soft.
-                </p>
-            </div>
-
-            <!-- Premium Call Box -->
-            <a href="tel:8891479505" class="bg-violet-50/80 hover:bg-violet-100/60 border border-violet-100/50 rounded-2xl p-4 flex items-center justify-between gap-3 text-left transition-all duration-300 hover:scale-[1.01] group">
-                <div class="flex items-center gap-3">
-                    <div class="w-10 h-10 rounded-xl bg-violet-600 flex items-center justify-center text-white shrink-0 shadow-sm animate-pulse">
-                        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 5a2 2 0 012-2h3.28a1 1 0 01.94.725l.548 2.2a1 1 0 01-.321.988l-1.305.98a10.582 10.582 0 004.872 4.872l.98-1.305a1 1 0 01.988-.321l2.2.548a1 1 0 01.725.94V19a2 2 0 01-2 2h-1C9.716 21 3 14.284 3 6V5z"/></svg>
-                    </div>
-                    <div>
-                        <p class="text-[10px] text-violet-500 font-bold uppercase tracking-wider">Super Admin Support</p>
-                        <p class="text-sm font-extrabold text-violet-950">+91 8891479505</p>
+        {{-- Main Register Container --}}
+        <div class="relative z-10 w-full max-w-md mx-auto fade-in-up">
+            
+            {{-- Brand Header --}}
+            <div class="flex flex-col items-center mb-8">
+                <div class="relative group cursor-pointer">
+                    <div class="absolute -inset-1 bg-gradient-to-r from-violet-600 to-fuchsia-600 rounded-3xl blur opacity-25 group-hover:opacity-50 transition duration-1000 group-hover:duration-200"></div>
+                    <div class="relative w-24 h-24 rounded-3xl bg-white flex items-center justify-center shadow-2xl shadow-violet-900/10 border border-slate-100 overflow-hidden">
+                        <img src="{{ asset('images/logo.png') }}" alt="Suhaim Soft Logo" class="w-full h-full object-cover transition-transform duration-500 group-hover:scale-110">
                     </div>
                 </div>
-                <span class="bg-violet-600 hover:bg-violet-700 text-white font-extrabold text-xs py-2.5 px-4 rounded-xl transition-all shadow-sm active:scale-95 whitespace-nowrap">
-                    Call 8891479505
-                </span>
-            </a>
+                <h1 class="text-3xl font-black text-slate-900 tracking-tight mt-6 mb-1">Join Suhaim Soft</h1>
+                <p class="text-sm text-violet-600 font-bold tracking-widest uppercase bg-violet-50 px-3 py-1 rounded-full">Premium Workshop Manager</p>
+            </div>
 
-            <!-- Footer Return Link -->
-            <div class="pt-4 border-t border-slate-100 flex justify-center">
-                <a href="{{ route('login') }}" class="text-xs font-bold text-slate-400 hover:text-primary-600 transition-colors">
-                    Return to Sign In
+            {{-- Register Card --}}
+            <div class="glass-card rounded-[2rem] p-8 sm:p-10 relative overflow-hidden text-center">
+                
+                {{-- Card Highlight --}}
+                <div class="absolute top-0 left-0 w-full h-1 bg-gradient-to-r from-violet-500 via-fuchsia-500 to-pink-500"></div>
+
+                <div class="w-20 h-20 mx-auto bg-gradient-to-br from-violet-50 to-indigo-50 border border-violet-100 rounded-2xl flex items-center justify-center text-violet-600 shadow-inner mb-6 transform -rotate-3 hover:rotate-0 transition-transform duration-300">
+                    <svg class="w-10 h-10" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16l3.5-2 3.5 2 3.5-2 3.5 2z"/>
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M9 7h6M9 11h6M9 15h4"/>
+                    </svg>
+                </div>
+
+                <div class="mb-8">
+                    <h2 class="text-2xl font-bold text-slate-800 tracking-tight">Register Your Garage</h2>
+                    <p class="text-sm text-slate-500 mt-3 font-medium leading-relaxed px-4">
+                        To maintain a highly secure ecosystem, new workshop registrations and product keys are provided directly by our Super Admin.
+                    </p>
+                </div>
+
+                {{-- Premium Call Box --}}
+                <a href="tel:8891479505" class="block relative w-full p-1 rounded-2xl bg-gradient-to-r from-violet-600 to-fuchsia-600 group hover:shadow-xl hover:shadow-violet-500/30 transition-all duration-300 hover:-translate-y-1">
+                    <div class="absolute inset-0 bg-white/20 rounded-2xl blur-sm group-hover:bg-white/30 transition-colors"></div>
+                    <div class="relative bg-white rounded-xl p-5 flex items-center justify-between gap-4">
+                        <div class="flex items-center gap-4">
+                            <div class="w-12 h-12 rounded-full bg-violet-100 flex items-center justify-center text-violet-600 shrink-0 pulse-glow">
+                                <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 5a2 2 0 012-2h3.28a1 1 0 01.94.725l.548 2.2a1 1 0 01-.321.988l-1.305.98a10.582 10.582 0 004.872 4.872l.98-1.305a1 1 0 01.988-.321l2.2.548a1 1 0 01.725.94V19a2 2 0 01-2 2h-1C9.716 21 3 14.284 3 6V5z"/></svg>
+                            </div>
+                            <div class="text-left">
+                                <p class="text-[10px] text-violet-500 font-extrabold uppercase tracking-wider mb-0.5">Direct Setup Line</p>
+                                <p class="text-lg font-black text-slate-800">+91 8891479505</p>
+                            </div>
+                        </div>
+                        <div class="w-10 h-10 rounded-full bg-violet-50 flex items-center justify-center text-violet-600 group-hover:bg-violet-600 group-hover:text-white transition-colors">
+                            <svg class="w-5 h-5 transition-transform group-hover:translate-x-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14 5l7 7m0 0l-7 7m7-7H3"/></svg>
+                        </div>
+                    </div>
                 </a>
+                
+                {{-- Return to Login Link --}}
+                <div class="mt-8 pt-6 border-t border-slate-200/60 text-center">
+                    <p class="text-sm text-slate-500 font-medium">Already registered? 
+                        <a href="{{ route('login') }}" class="text-violet-600 font-bold hover:text-fuchsia-600 transition-colors ml-1 hover:underline underline-offset-4">Return to Login</a>
+                    </p>
+                </div>
+            </div>
+
+            {{-- Footer --}}
+            <div class="text-center mt-10 fade-in-up" style="animation-delay: 0.2s;">
+                <p class="text-xs font-bold text-slate-400 uppercase tracking-widest">© {{ date('Y') }} Suhaim Soft. Premium Ecosystem.</p>
             </div>
         </div>
     </div>
-
-    {{-- Footer --}}
-    <p class="text-center text-xs text-slate-400 mt-8">© {{ date('Y') }} Suhaim Soft. Secure Garage Ecosystem.</p>
 @endsection
