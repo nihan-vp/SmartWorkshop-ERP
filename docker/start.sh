@@ -89,7 +89,7 @@ echo "Storage directories ready"
 
 # ── 6. Wait for MySQL to be ready ─────────────
 echo "Waiting for MySQL at ${DB_HOST}:${DB_PORT}..."
-MAX_RETRIES=30
+MAX_RETRIES=10
 RETRY=0
 until php -r "
     try {
@@ -97,7 +97,10 @@ until php -r "
             'mysql:host=${DB_HOST};port=${DB_PORT}',
             '${DB_USERNAME}',
             '${DB_PASSWORD}',
-            [PDO::ATTR_ERRMODE => PDO::ERRMODE_EXCEPTION]
+            [
+                PDO::ATTR_ERRMODE => PDO::ERRMODE_EXCEPTION,
+                PDO::ATTR_TIMEOUT => 2
+            ]
         );
         echo 'connected';
     } catch (Exception \$e) {
