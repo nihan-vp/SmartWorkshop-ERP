@@ -89,7 +89,7 @@
                 <div x-data="{ show: false }">
                     <div class="flex items-center justify-between mb-2 ml-1">
                         <label class="block text-xs font-bold text-slate-600 uppercase tracking-wider">Password</label>
-                        <a href="#" class="text-xs font-bold text-blue-600 hover:text-blue-800 transition-colors">Forgot?</a>
+                        <a href="tel:+918891479505" class="text-xs font-bold text-blue-600 hover:text-blue-800 transition-colors" title="Contact Suhaim Soft: +91 88914 79505">Forgot?</a>
                     </div>
                     <div class="relative input-glowing rounded-xl transition-all duration-300 bg-white/60 backdrop-blur-sm border border-slate-200/80">
                         <div class="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none text-blue-500">
@@ -130,6 +130,7 @@
                 <p class="text-sm text-slate-500 font-medium">New to Suhaim Soft? 
                     <a href="{{ route('register') }}" class="text-blue-600 font-bold hover:text-blue-800 transition-colors ml-1 hover:underline underline-offset-4">Register Workshop</a>
                 </p>
+                <p class="text-xs text-slate-400 font-semibold mt-3">Forgot password? Support: <a href="tel:+918891479505" class="text-blue-600 hover:text-blue-800 transition-colors hover:underline">+91 88914 79505</a></p>
             </div>
         </div>
 
