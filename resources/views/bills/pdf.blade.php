@@ -140,8 +140,12 @@
             @if($bill->vehicle)
                 <strong>Vehicle Details</strong><br>
                 Plate: {{ $bill->vehicle->plate_number ?? '' }}<br>
-                Make: {{ $bill->vehicle->make ?? '' }}<br>
-                Model: {{ $bill->vehicle->model ?? '' }}
+                @if(!empty($bill->vehicle->make) && strtolower($bill->vehicle->make) !== 'unknown')
+                    Make: {{ $bill->vehicle->make }}<br>
+                @endif
+                @if(!empty($bill->vehicle->model) && strtolower($bill->vehicle->model) !== 'unknown')
+                    Model: {{ $bill->vehicle->model }}<br>
+                @endif
             @endif
         </td>
     </tr>
@@ -150,8 +154,8 @@
 <table class="items-table">
     <thead>
         <tr>
-            <th width="5%" class="text-center">#</th>
-            <th width="45%">Description</th>
+            <th width="8%" class="text-center">Sl. No.</th>
+            <th width="42%">Description</th>
             <th width="10%" class="text-center">Qty</th>
             <th width="20%" class="text-right">Rate</th>
             <th width="20%" class="text-right">Amount</th>
