@@ -18,7 +18,7 @@
             <tbody>
                 @forelse($vehicles as $v)
                 <tr>
-                    <td data-label="Sl No" class="text-slate-400 font-semibold">{{ $v->id }}</td>
+                    <td data-label="Sl No" class="text-slate-400 font-semibold">{{ ($vehicles->currentPage() - 1) * $vehicles->perPage() + $loop->iteration }}</td>
                     <td data-label="Plate No" class="font-mono font-bold text-primary-600 bg-primary-50 px-2.5 py-1 rounded-lg inline-block my-2">{{ $v->plate_number }}</td>
 
                     <td data-label="Model" class="font-medium text-slate-600">{{ $v->model }}</td>

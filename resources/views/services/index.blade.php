@@ -17,7 +17,7 @@
             <tbody>
                 @forelse($services as $s)
                 <tr>
-                    <td data-label="Sl No" class="text-slate-400 font-semibold">{{ $s->id }}</td>
+                    <td data-label="Sl No" class="text-slate-400 font-semibold">{{ ($services->currentPage() - 1) * $services->perPage() + $loop->iteration }}</td>
                     <td data-label="Name" class="font-bold text-slate-800">{{ $s->name }}</td>
                     <td data-label="Category" class="font-medium text-slate-600">{{ $s->category ?? '—' }}</td>
                     <td data-label="Price" class="text-emerald-600 font-bold">₹{{ number_format($s->price, 2) }}</td>

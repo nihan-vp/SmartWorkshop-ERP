@@ -55,7 +55,7 @@
             <table class="data-table" id="suppliers-table">
                 <thead>
                     <tr>
-                        <th>#</th>
+                        <th>Sl No</th>
                         <th>Company Name</th>
                         <th>Contact Person</th>
                         <th>Phone</th>
@@ -66,7 +66,7 @@
                 <tbody>
                     @forelse($suppliers as $supplier)
                     <tr>
-                        <td data-label="#" class="text-slate-400 font-semibold">{{ $supplier->id }}</td>
+                        <td data-label="Sl No" class="text-slate-400 font-semibold">{{ ($suppliers->currentPage() - 1) * $suppliers->perPage() + $loop->iteration }}</td>
                         <td data-label="Company Name" class="font-bold text-slate-800">{{ $supplier->name }}</td>
                         <td data-label="Contact Person" class="font-medium text-slate-600">{{ $supplier->contact_person ?? '—' }}</td>
                         <td data-label="Phone" class="font-medium text-slate-600">{{ $supplier->phone ?? '—' }}</td>

@@ -24,7 +24,7 @@
             <tbody>
                 @forelse($employees as $e)
                 <tr>
-                    <td data-label="Sl No" class="text-slate-400 font-semibold">{{ $e->id }}</td>
+                    <td data-label="Sl No" class="text-slate-400 font-semibold">{{ ($employees->currentPage() - 1) * $employees->perPage() + $loop->iteration }}</td>
                     <td data-label="Name" class="font-bold text-slate-800">{{ $e->name }}</td>
                     <td data-label="Phone" class="font-medium text-slate-600">{{ $e->phone ?? '—' }}</td>
                     <td data-label="Role"><span class="badge badge-purple">{{ $e->role }}</span></td>

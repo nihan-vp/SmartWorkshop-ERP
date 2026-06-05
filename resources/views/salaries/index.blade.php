@@ -86,7 +86,7 @@
             <tbody>
                 @forelse($salaries as $salary)
                 <tr>
-                    <td data-label="Sl No" class="text-slate-400 font-semibold">{{ $salary->id }}</td>
+                    <td data-label="Sl No" class="text-slate-400 font-semibold">{{ ($salaries->currentPage() - 1) * $salaries->perPage() + $loop->iteration }}</td>
                     <td data-label="Employee" class="font-bold text-slate-800">{{ $salary->employee->name }}</td>
                     <td data-label="Period" class="text-slate-600">{{ $salary->month }} {{ $salary->year }}</td>
                     <td data-label="Amount" class="font-bold text-slate-800">₹{{ number_format($salary->amount, 2) }}</td>

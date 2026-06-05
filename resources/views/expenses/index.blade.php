@@ -87,7 +87,7 @@
             <tbody>
                 @forelse($expenses as $expense)
                 <tr>
-                    <td data-label="Sl No" class="text-slate-400 font-semibold">{{ $expense->id }}</td>
+                    <td data-label="Sl No" class="text-slate-400 font-semibold">{{ ($expenses->currentPage() - 1) * $expenses->perPage() + $loop->iteration }}</td>
                     <td data-label="Date" class="font-medium text-slate-600">{{ $expense->expense_date->format('d M Y') }}</td>
                     <td data-label="Category" class="font-bold text-slate-800">{{ $expense->category }}</td>
                     <td data-label="Description" class="text-slate-600 font-medium">{{ Str::limit($expense->description ?? '—', 30) }}</td>

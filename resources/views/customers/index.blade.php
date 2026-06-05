@@ -62,7 +62,7 @@
                 <tbody>
                     @forelse($customers as $customer)
                     <tr>
-                        <td data-label="Sl No" class="text-slate-400 font-semibold">{{ $customer->id }}</td>
+                        <td data-label="Sl No" class="text-slate-400 font-semibold">{{ ($customers->currentPage() - 1) * $customers->perPage() + $loop->iteration }}</td>
                         <td data-label="Name" class="font-bold text-slate-800">{{ $customer->name }}</td>
                         <td data-label="Phone" class="font-medium text-slate-600">{{ $customer->phone ?? '—' }}</td>
                         <td data-label="Email" class="font-medium text-slate-600">{{ $customer->email ?? '—' }}</td>

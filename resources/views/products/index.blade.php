@@ -59,7 +59,7 @@
                 <tbody>
                     @forelse($products as $p)
                     <tr>
-                        <td data-label="Sl No" class="text-slate-400 font-semibold">{{ $p->id }}</td>
+                        <td data-label="Sl No" class="text-slate-400 font-semibold">{{ ($products->currentPage() - 1) * $products->perPage() + $loop->iteration }}</td>
                         <td data-label="Name" class="font-bold text-slate-800">{{ $p->name }}</td>
                         <td data-label="Barcode" class="font-mono text-xs font-semibold text-slate-500">{{ $p->barcode ?? '—' }}</td>
                         <td data-label="Category" class="font-medium text-slate-600">{{ $p->category ?? '—' }}</td>

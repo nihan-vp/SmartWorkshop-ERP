@@ -23,7 +23,7 @@
             <tbody>
                 @forelse($warranties as $w)
                 <tr>
-                    <td data-label="Sl No" class="text-slate-400 font-semibold">{{ $w->id }}</td>
+                    <td data-label="Sl No" class="text-slate-400 font-semibold">{{ ($warranties->currentPage() - 1) * $warranties->perPage() + $loop->iteration }}</td>
                     <td data-label="Customer" class="font-bold text-slate-800">{{ $w->customer->name }}</td>
                     <td data-label="Vehicle" class="font-medium text-slate-600">{{ $w->vehicle ? $w->vehicle->plate_number : '—' }}</td>
                     <td data-label="Invoice No">
