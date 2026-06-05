@@ -189,7 +189,7 @@
             Subtotal
         </td>
         <td width="20%" class="text-right">
-            ₹{{ number_format($subTotal, 2) }}
+            &#8377;{{ number_format($subTotal, 2) }}
         </td>
     </tr>
 
@@ -199,7 +199,7 @@
             Discount
         </td>
         <td class="text-right">
-            ₹{{ number_format($discount, 2) }}
+            &#8377;{{ number_format($discount, 2) }}
         </td>
     </tr>
 
@@ -209,7 +209,7 @@
             Paid
         </td>
         <td class="text-right">
-            ₹{{ number_format($amountPaid, 2) }}
+            &#8377;{{ number_format($amountPaid, 2) }}
         </td>
     </tr>
 
@@ -219,7 +219,7 @@
             Total
         </td>
         <td class="text-right">
-            ₹{{ number_format($grandTotal, 2) }}
+            &#8377;{{ number_format($grandTotal, 2) }}
         </td>
     </tr>
 
@@ -230,7 +230,7 @@
             Balance
         </td>
         <td class="text-right">
-            ₹{{ number_format($balance, 2) }}
+            &#8377;{{ number_format($balance, 2) }}
         </td>
     </tr>
     @endif
@@ -249,15 +249,20 @@
 
 <table style="width: 100%; margin-top: 50px;">
     <tr>
-        <td style="text-align: left; vertical-align: bottom; width: 60%;">
-            <div style="font-size: 11px; color: #666;">
-                This is a computer generated invoice - no signature required.
-            </div>
+        <td style="text-align: left; vertical-align: bottom; width: 60%; font-size: 11px; color: #666; padding-bottom: 5px;">
+            This is a computer generated invoice - no signature required.
         </td>
         <td style="text-align: right; vertical-align: bottom; width: 40%;">
-            <div style="border-top: 1px solid #000; width: 180px; display: inline-block; margin-bottom: 5px;"></div>
-            <br>
-            <strong>Authorized Signatory</strong>
+            <table style="width: 180px; float: right; border-collapse: collapse;">
+                <tr>
+                    <td style="border-bottom: 1px solid #000; height: 30px;"></td>
+                </tr>
+                <tr>
+                    <td style="text-align: center; padding-top: 5px; font-weight: bold;">
+                        Authorized Signatory
+                    </td>
+                </tr>
+            </table>
         </td>
     </tr>
 </table>
