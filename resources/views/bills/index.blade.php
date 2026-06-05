@@ -145,14 +145,6 @@
             </div>
             
             <div class="flex items-center gap-3 w-full sm:w-auto">
-                <select x-model="pdfSize" @change="pdfUrl = pdfBaseUrl + '?size=' + pdfSize + '#view=FitH'; iframeLoading = true;" class="form-select w-full sm:w-auto py-1.5 pl-3 pr-8 text-sm font-semibold text-slate-700 bg-slate-50 border-slate-200 rounded-lg hover:bg-slate-100 transition-colors focus:ring-2 focus:ring-primary-500/20">
-                    <option value="A5">A5 Size</option>
-                    <option value="A3">A3 Size</option>
-                    <option value="LETTER">Letter</option>
-                    <option value="LEGAL">Legal</option>
-                    <option value="80MM">Thermal 80mm</option>
-                    <option value="58MM">Thermal 58mm</option>
-                </select>
                 <button type="button" @click="pdfModalOpen = false" class="hidden sm:block text-slate-400 hover:text-slate-650 hover:bg-slate-50 transition-all p-2 rounded-xl border border-slate-200">
                     <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/></svg>
                 </button>
