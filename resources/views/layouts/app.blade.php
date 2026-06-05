@@ -575,10 +575,24 @@
                     setTimeout(hideLoader, 200);
                 });
             }
+            
+            // Safety timeout: always hide loader after 3 seconds to prevent getting stuck
+            setTimeout(hideLoader, 3000);
+
             // Show loader on navigation (links, forms)
             document.addEventListener('click', function(e) {
                 var a = e.target.closest('a');
-                if (a && a.href && !a.href.startsWith('javascript') && !a.href.startsWith('#') && !a.href.startsWith('tel:') && !a.href.startsWith('mailto:') && !a.target && a.hostname === location.hostname) {
+                if (a && a.href && 
+                    !a.href.startsWith('javascript') && 
+                    !a.href.startsWith('#') && 
+                    !a.href.startsWith('tel:') && 
+                    !a.href.startsWith('mailto:') && 
+                    !a.target && 
+                    !a.hasAttribute('download') &&
+                    !a.classList.contains('no-loader') &&
+                    !a.href.includes('/pdf') &&
+                    !a.href.includes('/download') &&
+                    a.hostname === location.hostname) {
                     var el = document.getElementById('page-loader');
                     if (el) el.classList.remove('hidden-loader');
                 }
