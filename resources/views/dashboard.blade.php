@@ -32,11 +32,11 @@
                         <svg class="w-4 h-4 text-slate-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"/></svg>
                     </div>
                     <select name="filter" onchange="this.form.submit()" class="block w-full appearance-none bg-slate-50 border border-slate-200 text-slate-700 py-2.5 pl-10 pr-8 rounded-xl text-sm font-semibold shadow-sm hover:bg-slate-100 transition-colors focus:outline-none focus:ring-2 focus:ring-primary-500 focus:border-primary-500 cursor-pointer">
-                        <option value="today" @selected(($filter ?? 'today') === 'today')>Today</option>
-                        <option value="yesterday" @selected(($filter ?? 'today') === 'yesterday')>Yesterday</option>
-                        <option value="week" @selected(($filter ?? 'today') === 'week')>Last 7 Days</option>
-                        <option value="month" @selected(($filter ?? 'today') === 'month')>This Month</option>
-                        <option value="all" @selected(($filter ?? 'today') === 'all')>All Time</option>
+                        <option value="today" @if(($filter ?? 'today') === 'today') selected @endif>Today</option>
+                        <option value="yesterday" @if(($filter ?? 'today') === 'yesterday') selected @endif>Yesterday</option>
+                        <option value="week" @if(($filter ?? 'today') === 'week') selected @endif>Last 7 Days</option>
+                        <option value="month" @if(($filter ?? 'today') === 'month') selected @endif>This Month</option>
+                        <option value="all" @if(($filter ?? 'today') === 'all') selected @endif>All Time</option>
                     </select>
                     <div class="pointer-events-none absolute inset-y-0 right-0 flex items-center pr-3">
                         <svg class="w-4 h-4 text-slate-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"/></svg>
