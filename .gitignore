@@ -21,6 +21,3 @@ Homestead.json
 Homestead.yaml
 Thumbs.db
 render_*.html
-
-# Local Netlify folder
-.netlify
