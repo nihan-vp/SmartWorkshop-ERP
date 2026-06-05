@@ -83,8 +83,8 @@
             </div>
 
             {{-- Premium Call Box --}}
-            <a href="tel:8891479505" class="block relative w-full p-1 rounded-2xl bg-gradient-to-r from-blue-600 to-indigo-600 group hover:shadow-xl hover:shadow-blue-500/30 transition-all duration-300 hover:-translate-y-1">
-                <div class="absolute inset-0 bg-white/20 rounded-2xl blur-sm group-hover:bg-white/30 transition-colors"></div>
+            <div class="block relative w-full p-1 rounded-2xl bg-gradient-to-r from-blue-600 to-indigo-600 group">
+                <div class="absolute inset-0 bg-white/20 rounded-2xl blur-sm transition-colors"></div>
                 <div class="relative bg-white rounded-xl p-5 flex items-center justify-between gap-4">
                     <div class="flex items-center gap-4">
                         <div class="w-12 h-12 rounded-full bg-blue-100 flex items-center justify-center text-blue-600 shrink-0 pulse-glow">
@@ -95,11 +95,8 @@
                             <p class="text-lg font-black text-slate-800">+91 8891479505</p>
                         </div>
                     </div>
-                    <div class="w-10 h-10 rounded-full bg-blue-50 flex items-center justify-center text-blue-600 group-hover:bg-blue-600 group-hover:text-white transition-colors">
-                        <svg class="w-5 h-5 transition-transform group-hover:translate-x-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14 5l7 7m0 0l-7 7m7-7H3"/></svg>
-                    </div>
                 </div>
-            </a>
+            </div>
             
             {{-- Return to Login Link --}}
             <div class="mt-8 pt-6 border-t border-slate-200/60 text-center">

@@ -183,20 +183,20 @@
                     </div>
 
                     <!-- Dynamic Call Box -->
-                    <a href="tel:8891479505" class="w-full bg-blue-50/50 hover:bg-blue-100/50 border border-blue-100 rounded-2xl p-4 flex items-center justify-between gap-3 text-left transition-all duration-300 hover:scale-[1.01] hover:shadow-sm group shrink-0 shadow-sm">
+                    <a href="{{ route('support') }}" class="w-full bg-blue-50/50 hover:bg-blue-100/50 border border-blue-100 rounded-2xl p-4 flex items-center justify-between gap-3 text-left transition-all duration-300 hover:scale-[1.01] hover:shadow-sm group shrink-0 shadow-sm">
                         <div class="flex items-center gap-3">
                             <div class="w-10 h-10 rounded-xl bg-blue-500/10 flex items-center justify-center text-blue-600 shrink-0 group-hover:scale-105 transition-transform">
                                 <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 5a2 2 0 012-2h3.28a1 1 0 01.94.725l.548 2.2a1 1 0 01-.321.988l-1.305.98a10.582 10.582 0 004.872 4.872l.98-1.305a1 1 0 01.988-.321l2.2.548a1 1 0 01.725.94V19a2 2 0 01-2 2h-1C9.716 21 3 14.284 3 6V5z"/>
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M18.364 5.636l-3.536 3.536m0 5.656l3.536 3.536M9.172 9.172L5.636 5.636m3.536 9.192l-3.536 3.536M21 12a9 9 0 11-18 0 9 9 0 0118 0zm-5 0a4 4 0 11-8 0 4 4 0 018 0z"/>
                                 </svg>
                             </div>
                             <div>
-                                <p class="text-[10px] text-blue-500 font-bold uppercase tracking-wider">Contact Suhaim Soft Support</p>
-                                <p class="text-sm font-extrabold text-blue-950">+91 8891479505</p>
+                                <p class="text-[10px] text-blue-500 font-bold uppercase tracking-wider">Developer Support Helpdesk</p>
+                                <p class="text-sm font-extrabold text-blue-950">Suhaim Soft &amp; Shahil T Support</p>
                             </div>
                         </div>
                         <span class="bg-blue-600 hover:bg-blue-700 text-white font-extrabold text-xs py-2 px-3.5 rounded-xl transition-all shadow-sm active:scale-95 whitespace-nowrap">
-                            Call Office
+                            Get Help
                         </span>
                     </a>
 
