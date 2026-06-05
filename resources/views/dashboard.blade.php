@@ -5,7 +5,7 @@
 @section('page-subtitle', 'Workshop Performance & Operations')
 
 @section('content')
-<div class="max-w-7xl mx-auto space-y-8 animate-fade-in-up">
+<div class="max-w-7xl mx-auto space-y-5 animate-fade-in-up">
 
     <!-- Removed redundant banner -->
 
@@ -160,10 +160,10 @@
     </div>
 
     <!-- Main Content Layout Split (2:1 Column Split) -->
-    <div class="grid grid-cols-1 lg:grid-cols-12 gap-8 items-start">
+    <div class="grid grid-cols-1 lg:grid-cols-12 gap-5 items-start">
         
         <!-- Left Side: Core Lists & Activity (Col-Span-8) -->
-        <div class="lg:col-span-8 space-y-8">
+        <div class="lg:col-span-8 space-y-5">
             
             <!-- Recent Invoices / Bills Card -->
             <div class="glass-card !p-0 overflow-hidden">
@@ -209,7 +209,7 @@
                     </table>
                 </div>
                 @else
-                <div class="text-center py-12 px-6">
+                <div class="text-center py-8 px-6">
                     <svg class="w-12 h-12 text-slate-300 mx-auto mb-3" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M9 14l6-6m-5.5.5h.01m4.99 5h.01M19 21V5a2 2 0 00-2 2v16l3.5-2 3.5 2 3.5-2 3.5 2z"/></svg>
                     <p class="text-slate-500 font-semibold">No invoices recorded yet. <a href="{{ route('bills.create') }}" class="text-primary-600 hover:underline">Generate a bill</a></p>
                 </div>
@@ -255,7 +255,7 @@
                     </table>
                 </div>
                 @else
-                <div class="text-center py-12 px-6">
+                <div class="text-center py-8 px-6">
                     <svg class="w-12 h-12 text-slate-300 mx-auto mb-3" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2"/></svg>
                     <p class="text-slate-500 font-semibold">No active jobs in the queue.</p>
                 </div>
@@ -265,7 +265,7 @@
         </div>
 
         <!-- Right Side: Sidebar & Fast Actions (Col-Span-4) -->
-        <div class="lg:col-span-4 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-1 gap-8 lg:space-y-8 lg:gap-0">
+        <div class="lg:col-span-4 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-1 gap-5 lg:space-y-5 lg:gap-0">
             
             <!-- Quick Actions Panel -->
             <div class="glass-card space-y-4 md:col-span-2 lg:col-span-1">
