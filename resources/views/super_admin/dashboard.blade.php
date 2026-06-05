@@ -371,7 +371,6 @@
                         <th class="text-left text-[10px] font-bold text-slate-400 uppercase tracking-wider px-5 py-3">Phone</th>
                         <th class="text-left text-[10px] font-bold text-slate-400 uppercase tracking-wider px-5 py-3">Status</th>
                         <th class="text-left text-[10px] font-bold text-slate-400 uppercase tracking-wider px-5 py-3">Admin Login</th>
-                        <th class="text-center text-[10px] font-bold text-slate-400 uppercase tracking-wider px-5 py-3">Staff</th>
                         <th class="text-right text-[10px] font-bold text-slate-400 uppercase tracking-wider px-5 py-3">Actions</th>
                     </tr>
                 </thead>
@@ -413,7 +412,6 @@
                             <p class="text-[11px] text-indigo-500">{{ $adminUser->email }}</p>
                             @empty<span class="text-slate-400 text-xs">No admin</span>@endforelse
                         </td>
-                        <td class="px-5 py-4 text-center font-bold text-slate-700">{{ $workshop->employees_count }}</td>
                         <td class="px-5 py-4">
                             <div class="flex items-center justify-end gap-1">
                                 <form action="{{ route('super_admin.impersonate', $workshop) }}" method="POST" class="inline">
@@ -465,8 +463,7 @@
                     @endif
                 </div>
                 <div class="grid grid-cols-2 gap-2 bg-slate-50 rounded-xl p-3 text-xs">
-                    <div><p class="text-slate-400 font-semibold uppercase text-[9px] mb-0.5">Email</p><p class="font-bold text-slate-700 break-all">{{ $workshop->email ?: '—' }}</p></div>
-                    <div><p class="text-slate-400 font-semibold uppercase text-[9px] mb-0.5">Staff</p><p class="font-bold text-slate-700">{{ $workshop->employees_count }}</p></div>
+                    <div class="col-span-2"><p class="text-slate-400 font-semibold uppercase text-[9px] mb-0.5">Email</p><p class="font-bold text-slate-700 break-all">{{ $workshop->email ?: '—' }}</p></div>
                     <div class="col-span-2"><p class="text-slate-400 font-semibold uppercase text-[9px] mb-0.5">Admin</p><p class="font-bold text-slate-700">{{ $workshop->users->first()?->name ?? 'No admin' }}</p><p class="text-[10px] text-indigo-500">{{ $workshop->users->first()?->email }}</p></div>
                 </div>
                 <div class="flex gap-2">

@@ -21,7 +21,6 @@ class SuperAdminController extends Controller
         $workshops = Workshop::with([
             'users' => fn ($query) => $query->where('role', 'admin')->orderBy('name'),
         ])->withCount([
-            'employees',
             'bills' => fn ($query) => $query->withoutGlobalScopes(),
         ])->orderBy('name')->get();
 
