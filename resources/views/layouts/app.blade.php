@@ -908,19 +908,20 @@
         @endauth
 
         @auth
-        @if(auth()->user()->workshop && auth()->user()->workshop->subscription_status === 'trial')
+        @if(auth()->user()->workshop && in_array(auth()->user()->workshop->subscription_status, ['trial', 'training']))
         @php
             $workshop = auth()->user()->workshop;
             $trialEnds = \Carbon\Carbon::parse($workshop->trial_ends_at);
             // Calculate days left, making sure it shows 0 if it expires today
             $daysLeftDisplay = max(0, floor(now()->startOfDay()->diffInDays($trialEnds->startOfDay(), false)));
+            $isTraining = $workshop->subscription_status === 'training';
         @endphp
         <div class="bg-amber-50 border-b border-amber-200 px-4 py-3 sm:px-6 lg:px-8 no-print shadow-sm">
             <div class="flex items-center justify-between gap-4">
                 <div class="flex items-center gap-3">
                     <svg class="w-5 h-5 text-amber-600 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"/></svg>
                     <p class="text-sm font-semibold text-amber-800">
-                        Trial Status: <span class="font-bold">{{ $daysLeftDisplay == 0 ? 'Expires Today' : $daysLeftDisplay . ' ' . ($daysLeftDisplay === 1 ? 'day' : 'days') . ' remaining' }}</span>
+                        {{ $isTraining ? 'Training' : 'Trial' }} Status: <span class="font-bold">{{ $daysLeftDisplay == 0 ? 'Expires Today' : $daysLeftDisplay . ' ' . ($daysLeftDisplay === 1 ? 'day' : 'days') . ' remaining' }}</span>
                         @if($workshop->isTrialExpired() && $workshop->restrict_features_on_expiry)
                             <span class="ml-2 text-rose-700 bg-rose-100/80 px-2 py-0.5 rounded border border-rose-200 text-xs font-bold whitespace-nowrap">Write actions restricted</span>
                         @endif

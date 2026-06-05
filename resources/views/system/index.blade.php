@@ -234,12 +234,13 @@
                     </div>
                     
                     @if($workshop->isTrial())
+                        @php $isTraining = $workshop->subscription_status === 'training'; @endphp
                         <div>
-                            <span class="text-[10px] text-slate-400 font-bold uppercase tracking-wider block">Trial Period Time Remaining</span>
+                            <span class="text-[10px] text-slate-400 font-bold uppercase tracking-wider block">{{ $isTraining ? 'Training' : 'Trial' }} Period Time Remaining</span>
                             <span class="text-base font-bold text-slate-900 font-outfit mt-1 block">
                                 {{ $workshop->getTrialDaysRemaining() }} Days Left
                             </span>
-                            <span class="text-[10px] text-slate-400 mt-0.5 block">Trial ends on: {{ $workshop->trial_ends_at ? $workshop->trial_ends_at->format('d M Y') : 'N/A' }}</span>
+                            <span class="text-[10px] text-slate-400 mt-0.5 block">{{ $isTraining ? 'Training' : 'Trial' }} ends on: {{ $workshop->trial_ends_at ? $workshop->trial_ends_at->format('d M Y') : 'N/A' }}</span>
                         </div>
                     @endif
 

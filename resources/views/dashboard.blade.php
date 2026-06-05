@@ -284,9 +284,9 @@
                         @endphp
                         <div class="flex justify-between items-center text-xs pb-2 border-b border-slate-100">
                             <span class="text-slate-500 font-semibold">Account Type</span>
-                            <span class="font-bold uppercase tracking-wider {{ $workshop->subscription_status === 'active' ? 'text-emerald-600' : 'text-amber-600' }}">{{ $workshop->subscription_status }}</span>
+                            <span class="font-bold uppercase tracking-wider {{ in_array($workshop->subscription_status, ['active', 'fix', 'fixed']) ? 'text-emerald-600' : 'text-amber-600' }}">{{ $workshop->subscription_status }}</span>
                         </div>
-                        @if($workshop->trial_ends_at)
+                        @if(in_array($workshop->subscription_status, ['trial', 'training']) && $workshop->trial_ends_at)
                         <div class="flex justify-between items-center text-xs pb-2 border-b border-slate-100">
                             <span class="text-slate-500 font-semibold">Expiration Date</span>
                             <span class="font-bold text-slate-700">{{ $workshop->trial_ends_at->format('d M Y') }}</span>
@@ -298,6 +298,15 @@
                             @else
                                 <span class="text-slate-700 font-bold">{{ $workshop->getTrialDaysRemaining() }} days left</span>
                             @endif
+                        </div>
+                        @else
+                        <div class="flex justify-between items-center text-xs pb-2 border-b border-slate-100">
+                            <span class="text-slate-500 font-semibold">Expiration Date</span>
+                            <span class="font-bold text-emerald-600">Never (Lifetime)</span>
+                        </div>
+                        <div class="flex justify-between items-center text-xs pb-2 border-b border-slate-100">
+                            <span class="text-slate-500 font-semibold">Status Details</span>
+                            <span class="text-emerald-600 font-bold bg-emerald-50 px-2 py-0.5 rounded border border-emerald-100">Active & Unlimited</span>
                         </div>
                         @endif
                     @endif

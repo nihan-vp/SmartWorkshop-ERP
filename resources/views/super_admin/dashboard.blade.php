@@ -104,16 +104,16 @@
 </div>
 
 {{-- Trial Warnings --}}
-@php $expiringWorkshops = $workshops->filter(fn($w) => $w->subscription_status === 'trial'); @endphp
+@php $expiringWorkshops = $workshops->filter(fn($w) => in_array($w->subscription_status, ['trial', 'training'])); @endphp
 @if($expiringWorkshops->count() > 0)
 <div class="flex items-start gap-3 bg-amber-50 border border-amber-200 rounded-2xl px-5 py-4">
     <svg class="w-5 h-5 text-amber-600 shrink-0 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"/></svg>
     <div>
-        <p class="text-sm font-bold text-amber-800 mb-1">Active Trial Periods</p>
+        <p class="text-sm font-bold text-amber-800 mb-1">Active Training / Trial Periods</p>
         @foreach($expiringWorkshops as $ew)
             @php $ewTrialEnds = $ew->trial_ends_at ? \Carbon\Carbon::parse($ew->trial_ends_at) : null; @endphp
             @if($ewTrialEnds)
-            <p class="text-xs text-amber-700"><span class="font-bold">{{ $ew->name }}</span> — Trial ends {{ $ewTrialEnds->format('M d, Y') }} ({{ $ewTrialEnds->diffForHumans() }})</p>
+            <p class="text-xs text-amber-700"><span class="font-bold">{{ $ew->name }}</span> — {{ $ew->subscription_status === 'training' ? 'Training' : 'Trial' }} ends {{ $ewTrialEnds->format('M d, Y') }} ({{ $ewTrialEnds->diffForHumans() }})</p>
             @endif
         @endforeach
     </div>
@@ -391,11 +391,13 @@
                         <td class="px-5 py-4 whitespace-nowrap">
                             @if($workshop->isSuspended())
                             <span class="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full text-xs font-bold bg-rose-50 text-rose-700 border border-rose-200"><span class="w-1.5 h-1.5 rounded-full bg-rose-500 animate-pulse"></span>Suspended</span>
+                            @elseif($workshop->subscription_status === 'fix' || $workshop->subscription_status === 'fixed')
+                            <span class="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full text-xs font-bold bg-teal-50 text-teal-700 border border-teal-200"><span class="w-1.5 h-1.5 rounded-full bg-teal-500"></span>Fix</span>
                             @elseif($workshop->isTrial())
                                 @if($workshop->isTrialExpired())
-                                <span class="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full text-xs font-bold bg-amber-50 text-amber-700 border border-amber-200"><span class="w-1.5 h-1.5 rounded-full bg-amber-500 animate-pulse"></span>Trial Expired</span>
+                                <span class="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full text-xs font-bold bg-amber-50 text-amber-700 border border-amber-200"><span class="w-1.5 h-1.5 rounded-full bg-amber-500 animate-pulse"></span>Training Expired</span>
                                 @else
-                                <span class="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full text-xs font-bold bg-blue-50 text-blue-700 border border-blue-200"><span class="w-1.5 h-1.5 rounded-full bg-blue-500 animate-pulse"></span>Trial · {{ $workshop->getTrialDaysRemaining() }}d</span>
+                                <span class="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full text-xs font-bold bg-blue-50 text-blue-700 border border-blue-200"><span class="w-1.5 h-1.5 rounded-full bg-blue-500 animate-pulse"></span>Training · {{ $workshop->getTrialDaysRemaining() }}d</span>
                                 @endif
                             @else
                                 @if($workshop->isTrialExpired())
@@ -452,8 +454,10 @@
                     </div>
                     @if($workshop->isSuspended())
                     <span class="inline-flex items-center px-2 py-1 rounded-full text-[10px] font-bold bg-rose-50 text-rose-700 border border-rose-200 shrink-0">Suspended</span>
+                    @elseif($workshop->subscription_status === 'fix' || $workshop->subscription_status === 'fixed')
+                    <span class="inline-flex items-center px-2 py-1 rounded-full text-[10px] font-bold bg-teal-50 text-teal-700 border border-teal-200 shrink-0">Fix</span>
                     @elseif($workshop->isTrial() && !$workshop->isTrialExpired())
-                    <span class="inline-flex items-center px-2 py-1 rounded-full text-[10px] font-bold bg-blue-50 text-blue-700 border border-blue-200 shrink-0">Trial</span>
+                    <span class="inline-flex items-center px-2 py-1 rounded-full text-[10px] font-bold bg-blue-50 text-blue-700 border border-blue-200 shrink-0">Training</span>
                     @elseif($workshop->isTrialExpired())
                     <span class="inline-flex items-center px-2 py-1 rounded-full text-[10px] font-bold bg-amber-50 text-amber-700 border border-amber-200 shrink-0">Expired</span>
                     @else
@@ -814,14 +818,15 @@
                     <div>
                         <label for="add_status" class="block text-xs font-bold text-slate-700 mb-1">Subscription Status *</label>
                         <select id="add_status" name="subscription_status" required x-model="newWorkshopStatus" autocomplete="off" class="w-full px-4 py-2.5 bg-slate-50 border border-slate-200 rounded-xl text-sm font-medium focus:outline-none focus:border-indigo-400 focus:bg-white transition-colors">
-                            <option value="trial">Free Trial</option>
+                            <option value="training">Training</option>
                             <option value="active">Active</option>
+                            <option value="fix">Fix</option>
                             <option value="suspended">Suspended</option>
                         </select>
                     </div>
-                    <div x-show="newWorkshopStatus === 'trial' || newWorkshopStatus === 'active'" x-cloak>
-                        <label for="add_trial" class="block text-xs font-bold text-slate-700 mb-1" x-text="newWorkshopStatus === 'trial' ? 'Trial Expiration Date *' : 'Subscription Expiry (Optional)'"></label>
-                        <input id="add_trial" type="datetime-local" name="trial_ends_at" value="{{ old('trial_ends_at', now()->addDays(14)->format('Y-m-d\TH:i')) }}" :required="newWorkshopStatus === 'trial'" autocomplete="off" class="w-full px-4 py-2.5 bg-slate-50 border border-slate-200 rounded-xl text-sm font-medium focus:outline-none focus:border-indigo-400 focus:bg-white transition-colors">
+                    <div x-show="newWorkshopStatus === 'trial' || newWorkshopStatus === 'training' || newWorkshopStatus === 'active'" x-cloak>
+                        <label for="add_trial" class="block text-xs font-bold text-slate-700 mb-1" x-text="(newWorkshopStatus === 'trial' || newWorkshopStatus === 'training') ? 'Training Expiration Date *' : 'Subscription Expiry (Optional)'"></label>
+                        <input id="add_trial" type="datetime-local" name="trial_ends_at" value="{{ old('trial_ends_at', now()->addDays(14)->format('Y-m-d\TH:i')) }}" :required="newWorkshopStatus === 'trial' || newWorkshopStatus === 'training'" autocomplete="off" class="w-full px-4 py-2.5 bg-slate-50 border border-slate-200 rounded-xl text-sm font-medium focus:outline-none focus:border-indigo-400 focus:bg-white transition-colors">
                     </div>
                     <div class="sm:col-span-2">
                         <label for="add_address" class="block text-xs font-bold text-slate-700 mb-1">Address</label>
@@ -927,14 +932,16 @@
                     <div>
                         <label for="edit_status" class="block text-xs font-bold text-slate-700 mb-1">Subscription Status *</label>
                         <select id="edit_status" name="subscription_status" required x-model="activeWorkshop.subscription_status" autocomplete="off" class="w-full px-4 py-2.5 bg-slate-50 border border-slate-200 rounded-xl text-sm font-medium focus:outline-none focus:border-sky-400 focus:bg-white transition-colors">
-                            <option value="trial">Free Trial</option>
+                            <option value="training">Training</option>
                             <option value="active">Active</option>
+                            <option value="fix">Fix</option>
                             <option value="suspended">Suspended</option>
+                            <option value="trial" style="display:none;">Trial</option>
                         </select>
                     </div>
-                    <div x-show="activeWorkshop.subscription_status === 'trial' || activeWorkshop.subscription_status === 'active'" x-cloak>
-                        <label for="edit_trial" class="block text-xs font-bold text-slate-700 mb-1" x-text="activeWorkshop.subscription_status === 'trial' ? 'Trial Expiration Date *' : 'Subscription Expiry (Optional)'"></label>
-                        <input id="edit_trial" type="datetime-local" name="trial_ends_at" x-model="activeWorkshop.trial_ends_at" :required="activeWorkshop.subscription_status === 'trial'" autocomplete="off" class="w-full px-4 py-2.5 bg-slate-50 border border-slate-200 rounded-xl text-sm font-medium focus:outline-none focus:border-sky-400 focus:bg-white transition-colors">
+                    <div x-show="activeWorkshop.subscription_status === 'trial' || activeWorkshop.subscription_status === 'training' || activeWorkshop.subscription_status === 'active'" x-cloak>
+                        <label for="edit_trial" class="block text-xs font-bold text-slate-700 mb-1" x-text="(activeWorkshop.subscription_status === 'trial' || activeWorkshop.subscription_status === 'training') ? 'Training Expiration Date *' : 'Subscription Expiry (Optional)'"></label>
+                        <input id="edit_trial" type="datetime-local" name="trial_ends_at" x-model="activeWorkshop.trial_ends_at" :required="activeWorkshop.subscription_status === 'trial' || activeWorkshop.subscription_status === 'training'" autocomplete="off" class="w-full px-4 py-2.5 bg-slate-50 border border-slate-200 rounded-xl text-sm font-medium focus:outline-none focus:border-sky-400 focus:bg-white transition-colors">
                     </div>
                     <div class="sm:col-span-2">
                         <label for="edit_address" class="block text-xs font-bold text-slate-700 mb-1">Address</label>

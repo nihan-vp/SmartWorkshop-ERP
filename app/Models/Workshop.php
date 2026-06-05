@@ -32,12 +32,12 @@ class Workshop extends Model
 
     public function isTrial(): bool
     {
-        return $this->subscription_status === 'trial';
+        return $this->subscription_status === 'trial' || $this->subscription_status === 'training';
     }
 
     public function isTrialExpired(): bool
     {
-        if ($this->subscription_status === 'suspended') {
+        if (in_array($this->subscription_status, ['suspended', 'fix', 'fixed'])) {
             return false;
         }
         return $this->trial_ends_at && $this->trial_ends_at->isPast();
