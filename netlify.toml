@@ -1,9 +1,0 @@
-[build]
-  command = "echo 'Proxying to Render'"
-  publish = "public"
-
-[[redirects]]
-  from = "/*"
-  to = "https://suhaimsoftwokrhsop.onrender.com/:splat"
-  status = 200
-  force = true

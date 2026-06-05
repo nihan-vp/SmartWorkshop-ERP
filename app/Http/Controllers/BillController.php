@@ -56,6 +56,7 @@ class BillController extends Controller
             'items.*.price' => 'required|numeric|min:0',
             'bill_number' => 'nullable|string|unique:bills,bill_number',
             'bill_date' => 'nullable|date',
+            'should_round' => 'nullable|boolean',
         ]);
 
         DB::transaction(function () use ($validated) {
@@ -84,6 +85,9 @@ class BillController extends Controller
             $discount = $validated['discount'] ?? 0;
             $tax = $validated['tax'] ?? 0;
             $total = $subtotal - $discount + $tax;
+            if ($request->input('should_round')) {
+                $total = round($total);
+            }
 
             $amountPaid = $validated['amount_paid'] ?? 0;
             $paymentStatus = 'pending';
@@ -150,6 +154,7 @@ class BillController extends Controller
             'items.*.price' => 'required|numeric|min:0',
             'bill_number' => 'nullable|string|unique:bills,bill_number,' . $bill->id,
             'bill_date' => 'nullable|date',
+            'should_round' => 'nullable|boolean',
         ]);
 
         DB::transaction(function () use ($validated, $bill) {
