@@ -58,7 +58,7 @@
                             <select name="vehicle_id" class="form-select" x-model="vehicleId">
                                 <option value="">Select Vehicle (Optional)</option>
                                 <template x-for="v in vehicles" :key="v.id">
-                                    <option :value="v.id" :selected="v.id == vehicleId" x-text="(v.make && v.make !== 'Unknown' ? v.make + ' ' : '') + v.model + ' (' + v.plate_number + ')'"></option>
+                                    <option :value="v.id" :selected="v.id == vehicleId" x-text="(v.make && v.make !== 'Unknown' ? v.make + ' ' : '') + v.model + ' (' + v.plate_number + ')' + (v.customer ? ' - Owner: ' + v.customer.name : '')"></option>
                                 </template>
                             </select>
                         </div>

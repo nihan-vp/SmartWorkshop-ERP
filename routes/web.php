@@ -103,7 +103,7 @@ Route::middleware('auth')->group(function () {
 
         // API endpoints for dynamic form data
         Route::get('/api/customers/{customer}/vehicles', function (App\Models\Customer $customer) {
-            return $customer->vehicles;
+            return $customer->vehicles()->with('customer')->get();
         })->name('api.customer.vehicles');
         Route::get('/api/bill-templates/{billTemplate}', [BillTemplateController::class, 'apiShow'])->name('api.bill-templates.show');
         Route::get('/api/bills/{bill}', function (App\Models\Bill $bill) {
