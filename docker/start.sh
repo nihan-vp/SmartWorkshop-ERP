@@ -35,7 +35,7 @@ else
 fi
 
 # ── 3. Initialize default database variables ──
-DB_CONNECTION=${DB_CONNECTION:-mysql}
+DB_CONNECTION=${DB_CONNECTION:-sqlite}
 
 # ── 4. Write all env vars to .env ─────────────
 cat > /var/www/html/.env << EOF
