@@ -258,12 +258,22 @@ class BillController extends Controller
 
         $pdfFormat = $size;
         $margins = [15, 15, 15];
+        $bottomMargin = 15;
+        
         if ($size === '80MM') {
             $pdfFormat = [80, 297];
             $margins = [5, 5, 5];
+            $bottomMargin = 5;
         } elseif ($size === '58MM') {
             $pdfFormat = [58, 297];
             $margins = [3, 5, 3];
+            $bottomMargin = 5;
+        } elseif ($size === 'A5') {
+            $margins = [10, 10, 10];
+            $bottomMargin = 10;
+        } elseif ($size === 'A3') {
+            $margins = [20, 20, 20];
+            $bottomMargin = 20;
         }
 
         // Create new PDF document
@@ -285,7 +295,7 @@ class BillController extends Controller
         $pdf->SetMargins($margins[0], $margins[1], $margins[2]);
         
         // Set auto page breaks
-        $pdf->SetAutoPageBreak(TRUE, 15);
+        $pdf->SetAutoPageBreak(TRUE, $bottomMargin);
         
         // Set font
         $pdf->SetFont('helvetica', '', 10);
