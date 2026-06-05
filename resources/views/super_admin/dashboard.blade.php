@@ -414,6 +414,12 @@
                         <td class="px-5 py-4 text-center font-bold text-slate-700">{{ $workshop->users_count }}</td>
                         <td class="px-5 py-4">
                             <div class="flex items-center justify-end gap-1">
+                                <form action="{{ route('super_admin.impersonate', $workshop) }}" method="POST" class="inline">
+                                    @csrf
+                                    <button type="submit" class="p-2 text-indigo-400 hover:text-indigo-700 hover:bg-indigo-50 rounded-xl transition-all" title="Inspect Workshop">
+                                        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"/><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z"/></svg>
+                                    </button>
+                                </form>
                                 <button type="button" @click="openEdit(@js(['id'=>$workshop->id,'name'=>$workshop->name,'phone'=>$workshop->phone,'email'=>$workshop->email,'gstin'=>$workshop->gstin,'address'=>$workshop->address,'subscription_status'=>$workshop->subscription_status,'trial_ends_at'=>$workshop->trial_ends_at?$workshop->trial_ends_at->format('Y-m-d\TH:i'):'','trial_days'=>'','alert_message'=>$workshop->alert_message,'alert_expires_at'=>$workshop->alert_expires_at?$workshop->alert_expires_at->format('Y-m-d\TH:i'):'','admin_user_id'=>$workshop->users->first()?->id,'admin_name'=>$workshop->users->first()?->name,'admin_email'=>$workshop->users->first()?->email]))"
                                     class="p-2 text-slate-400 hover:text-indigo-600 hover:bg-indigo-50 rounded-xl transition-all" title="Edit">
                                     <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z"/></svg>
@@ -460,8 +466,14 @@
                     <div class="col-span-2"><p class="text-slate-400 font-semibold uppercase text-[9px] mb-0.5">Admin</p><p class="font-bold text-slate-700">{{ $workshop->users->first()?->name ?? 'No admin' }}</p><p class="text-[10px] text-indigo-500">{{ $workshop->users->first()?->email }}</p></div>
                 </div>
                 <div class="flex gap-2">
+                    <form action="{{ route('super_admin.impersonate', $workshop) }}" method="POST" class="flex-1">
+                        @csrf
+                        <button type="submit" class="w-full flex items-center justify-center gap-1.5 py-2 rounded-xl text-xs font-bold border border-indigo-200 bg-indigo-50 text-indigo-700">
+                            <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"/><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z"/></svg> Inspect
+                        </button>
+                    </form>
                     <button type="button" @click="openEdit(@js(['id'=>$workshop->id,'name'=>$workshop->name,'phone'=>$workshop->phone,'email'=>$workshop->email,'gstin'=>$workshop->gstin,'address'=>$workshop->address,'subscription_status'=>$workshop->subscription_status,'trial_ends_at'=>$workshop->trial_ends_at?$workshop->trial_ends_at->format('Y-m-d\TH:i'):'','trial_days'=>'','alert_message'=>$workshop->alert_message,'alert_expires_at'=>$workshop->alert_expires_at?$workshop->alert_expires_at->format('Y-m-d\TH:i'):'','admin_user_id'=>$workshop->users->first()?->id,'admin_name'=>$workshop->users->first()?->name,'admin_email'=>$workshop->users->first()?->email]))"
-                        class="flex-1 flex items-center justify-center gap-1.5 py-2 rounded-xl text-xs font-bold border border-indigo-200 bg-indigo-50 text-indigo-700">
+                        class="flex-1 flex items-center justify-center gap-1.5 py-2 rounded-xl text-xs font-bold border border-slate-200 bg-slate-50 text-slate-700">
                         <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z"/></svg> Edit
                     </button>
                     <form action="{{ route('super_admin.destroy_workshop', $workshop) }}" method="POST" onsubmit="return confirm('Delete this workshop and ALL its data permanently?')" class="flex-1">

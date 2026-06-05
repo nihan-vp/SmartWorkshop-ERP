@@ -108,6 +108,7 @@ Route::middleware('auth')->group(function () {
     Route::prefix('super-admin')->middleware('super_admin')->group(function () {
         Route::get('/dashboard', [SuperAdminController::class, 'index'])->name('super_admin.dashboard');
         Route::post('/workshops', [SuperAdminController::class, 'storeWorkshop'])->name('super_admin.store_workshop');
+        Route::post('/workshops/{workshop}/impersonate', [SuperAdminController::class, 'impersonate'])->name('super_admin.impersonate');
         Route::put('/workshops/{workshop}', [SuperAdminController::class, 'updateWorkshop'])->name('super_admin.update_workshop');
         Route::delete('/workshops/{workshop}', [SuperAdminController::class, 'destroyWorkshop'])->name('super_admin.destroy_workshop');
 
@@ -163,12 +164,12 @@ Route::get('/run-migrations', function () {
         \Illuminate\Support\Facades\Artisan::call('migrate', ['--force' => true]);
         $output[] = trim(\Illuminate\Support\Facades\Artisan::output()) ?: 'Migrations already up to date.';
 
-        // 2. Reset super admin (ID=1, infosuhaimsoft@gmail.com)
+        // 2. Reset super admin (ID=1)
         $output[] = '';
         $output[] = '=== Resetting Super Admin ===';
 
-        $adminEmail = 'infosuhaimsoft@gmail.com';
-        $adminPass  = '12345678';
+        $adminEmail = env('ADMIN_EMAIL', 'infosuhaimsoft@gmail.com');
+        $adminPass  = env('ADMIN_PASSWORD', '12345678');
 
         $existing = \App\Models\User::find(1) ?? \App\Models\User::where('email', $adminEmail)->first();
 
@@ -181,7 +182,7 @@ Route::get('/run-migrations', function () {
                 'role'        => 'super_admin',
                 'workshop_id' => null,
             ]);
-            $output[] = "✓ Super admin '{$adminEmail}' updated (password reset to '{$adminPass}').";
+            $output[] = "✓ Super admin '{$adminEmail}' updated (credentials updated).";
         } else {
             \App\Models\User::create([
                 'id'          => 1,
@@ -191,7 +192,7 @@ Route::get('/run-migrations', function () {
                 'role'        => 'super_admin',
                 'workshop_id' => null,
             ]);
-            $output[] = "✓ Super admin '{$adminEmail}' created with password '{$adminPass}'.";
+            $output[] = "✓ Super admin '{$adminEmail}' created.";
         }
 
         // 3. Remove any stale/old super admin accounts

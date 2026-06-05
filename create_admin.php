@@ -10,7 +10,8 @@ use Illuminate\Support\Facades\Hash;
 echo "=== DATABASE SEEDING & ADMIN CREATION ===\n\n";
 
 // 1. Ensure Default User (User ID 1) exists
-$adminEmail = 'infosuhaimsoft@gmail.com';
+$adminEmail = env('ADMIN_EMAIL', 'infosuhaimsoft@gmail.com');
+$adminPass = env('ADMIN_PASSWORD', '12345678');
 $adminUser = User::find(1);
 
 if (!$adminUser) {
@@ -23,21 +24,21 @@ if (!$adminUser) {
         'id' => 1,
         'name' => 'Suhaim Soft Workshop',
         'email' => $adminEmail,
-        'password' => Hash::make('12345678'),
+        'password' => Hash::make($adminPass),
         'role' => 'super_admin',
         'workshop_id' => null,
     ]);
-    echo "✓ Default Super Admin User '{$adminEmail}' created successfully with password '12345678'.\n";
+    echo "✓ Default Super Admin User '{$adminEmail}' created successfully.\n";
 } else {
     $adminUser->update([
         'id' => 1,
         'name' => 'Suhaim Soft Workshop',
         'email' => $adminEmail,
-        'password' => Hash::make('12345678'),
+        'password' => Hash::make($adminPass),
         'role' => 'super_admin',
         'workshop_id' => null,
     ]);
-    echo "✓ Default Super Admin User '{$adminEmail}' already exists (password reset to '12345678').\n";
+    echo "✓ Default Super Admin User '{$adminEmail}' already exists (credentials updated).\n";
 }
 
 // 2. Remove all other users

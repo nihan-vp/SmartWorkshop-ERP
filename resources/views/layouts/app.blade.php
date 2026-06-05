@@ -652,24 +652,24 @@
 
                 <div>
                     <h1 class="text-lg font-bold text-blue-900 leading-tight">
-                        {{ Auth::user()->isSuperAdmin() ? 'System Admin' : (Auth::user()->workshop->name ?? 'Suhaim Soft') }}
+                        {{ (Auth::user()->isSuperAdmin() && session()->has('active_workshop_id')) ? session('active_workshop_name') : (Auth::user()->isSuperAdmin() ? 'System Admin' : (Auth::user()->workshop->name ?? 'Suhaim Soft')) }}
                     </h1>
-                    @if(!Auth::user()->isSuperAdmin() && Auth::user()->workshop && Auth::user()->workshop->phone)
+                    @if((!Auth::user()->isSuperAdmin() || session()->has('active_workshop_id')) && Auth::user()->workshop && Auth::user()->workshop->phone)
                     <p class="text-xs text-blue-500 font-medium">
                         {{ Auth::user()->workshop->phone }}
                     </p>
                     @endif
                     <p class="text-xs text-blue-600 font-bold tracking-wider uppercase mt-0.5">
-                        {{ Auth::user()->isSuperAdmin() ? 'Control Panel' : 'Work Shop' }}
-                    </p>
-                </div>
-            </div>
-        </div>
-
-        {{-- Navigation --}}
+              {{-- Navigation --}}
         <nav class="flex-1 overflow-y-auto p-4 space-y-1">
+            @if(Auth::user()->isSuperAdmin() && session()->has('active_workshop_id'))
+            <a href="{{ route('super_admin.dashboard') }}" class="sidebar-link !bg-indigo-50 !text-indigo-700 hover:!bg-indigo-100 hover:!text-indigo-900 font-bold border border-indigo-200 rounded-xl mb-4" id="nav-back-to-admin">
+                <svg class="w-5 h-5 text-indigo-600" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 15l-3-3m0 0l3-3m-3 3h8M3 12a9 9 0 1118 0 9 9 0 0118 0z"/></svg>
+                Exit Inspection
+            </a>
+            @endif
 
-            @if(Auth::user()->isSuperAdmin())
+            @if(Auth::user()->isSuperAdmin() && !session()->has('active_workshop_id'))
             <a href="{{ route('super_admin.dashboard', ['tab' => 'dashboard']) }}" class="sidebar-link {{ request()->routeIs('super_admin.dashboard') && request('tab', 'dashboard') === 'dashboard' ? 'active' : '' }}" id="nav-super-dashboard">
                 <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6"/></svg>
                 Dashboard
@@ -683,7 +683,7 @@
                 Product Keys
             </a>
             <a href="{{ route('super_admin.dashboard', ['tab' => 'settings']) }}" class="sidebar-link {{ request()->routeIs('super_admin.dashboard') && request('tab') === 'settings' ? 'active' : '' }}" id="nav-settings">
-                <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.066 2.573c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.573 1.066c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 00-1.066-2.573c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31 2.37-2.37.996.608 2.296.07 2.572-1.065z"/><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"/></svg>
+                <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.066 2.573c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.573 1.066c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 00-1.065-2.572c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31 2.37-2.37.996.608 2.296.07 2.572-1.065z"/><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"/></svg>
                 System Settings
             </a>
             <a href="{{ route('super_admin.dashboard', ['tab' => 'logs']) }}" class="sidebar-link {{ request()->routeIs('super_admin.dashboard') && request('tab') === 'logs' ? 'active' : '' }}" id="nav-logs">
@@ -696,7 +696,7 @@
             </a>
             @endif
 
-            @if(!Auth::user()->isSuperAdmin())
+            @if(!Auth::user()->isSuperAdmin() || session()->has('active_workshop_id'))
             <a href="{{ route('dashboard') }}" class="sidebar-link {{ request()->routeIs('dashboard') ? 'active' : '' }}" id="nav-dashboard">
                 <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6"/></svg>
                 Dashboard
@@ -722,7 +722,7 @@
             </a>
 
             <a href="{{ route('services.index') }}" class="sidebar-link {{ request()->routeIs('services.*') ? 'active' : '' }}" id="nav-services">
-                <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.066 2.573c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.573 1.066c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 00-1.066-2.573c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31 2.37-2.37.996.608 2.296.07 2.572-1.065z"/><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"/></svg>
+                <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.066 2.573c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.573 1.066c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 00-1.065-2.572c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31 2.37-2.37.996.608 2.296.07 2.572-1.065z"/><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"/></svg>
                 Services
             </a>
 
@@ -760,7 +760,7 @@
                 <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z"/></svg>
                 Warranty
             </a>
-            @if(Auth::user()->role === 'admin')
+            @if(Auth::user()->role === 'admin' || session()->has('active_workshop_id'))
             <a href="{{ route('offline-viewer.index') }}" class="sidebar-link {{ request()->routeIs('offline-viewer.*') ? 'active' : '' }}" id="nav-offline-viewer">
                 <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"/></svg>
                 Offline Viewer
@@ -772,7 +772,7 @@
                 Backup & Restore
             </a>
 
-            @if(Auth::user()->role === 'admin')
+            @if(Auth::user()->role === 'admin' || session()->has('active_workshop_id'))
             <a href="{{ route('system.index') }}" class="sidebar-link {{ request()->routeIs('system.*') ? 'active' : '' }}" id="nav-system-tenant">
                 <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.066 2.573c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.573 1.066c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 00-1.066-2.573c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31 2.37-2.37.996.608 2.296.07 2.572-1.065z"/><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"/></svg>
                 System Settings
@@ -785,7 +785,7 @@
         <div class="p-4 border-t border-blue-100 no-print">
             <div class="glass-card !p-3 !rounded-xl !bg-blue-50/50 !border-blue-100 shadow-sm text-center">
                 <p class="text-xs text-blue-900 font-bold">
-                    {{ Auth::user()->isSuperAdmin() ? 'System Super Admin' : (Auth::user()->workshop->name ?? 'Suhaim Soft') }}
+                    {{ (Auth::user()->isSuperAdmin() && session()->has('active_workshop_id')) ? 'Inspecting: ' . session('active_workshop_name') : (Auth::user()->isSuperAdmin() ? 'System Super Admin' : (Auth::user()->workshop->name ?? 'Suhaim Soft')) }}
                 </p>
                 <p class="text-[10px] text-blue-400 mt-0.5">© {{ date('Y') }} All Rights Reserved</p>
             </div>
@@ -809,7 +809,7 @@
                     <div class="flex flex-col justify-center min-w-0">
                         <h2 class="text-base sm:text-lg font-bold text-slate-900 leading-tight truncate">@yield('page-title', 'Dashboard')</h2>
                         <p class="hidden sm:block text-[10px] sm:text-xs text-slate-500 mt-0.5 truncate">
-                            Welcome to {{ Auth::user()->isSuperAdmin() ? 'Suhaim Soft Control Panel' : (Auth::user()->workshop->name ?? 'Suhaim Soft Work Shop') }}
+                            Welcome to {{ (Auth::user()->isSuperAdmin() && session()->has('active_workshop_id')) ? 'Garage Inspection' : (Auth::user()->isSuperAdmin() ? 'Suhaim Soft Control Panel' : (Auth::user()->workshop->name ?? 'Suhaim Soft Work Shop')) }}
                         </p>
                     </div>
                 </div>

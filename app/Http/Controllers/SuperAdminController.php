@@ -234,4 +234,12 @@ class SuperAdminController extends Controller
             ->route('super_admin.dashboard', ['tab' => 'logs'])
             ->with('success', 'All activity logs cleared successfully!');
     }
+
+    public function impersonate(Workshop $workshop)
+    {
+        session(['active_workshop_id' => $workshop->id]);
+        session(['active_workshop_name' => $workshop->name]);
+
+        return redirect()->route('dashboard')->with('success', "Inspecting workshop: {$workshop->name}");
+    }
 }

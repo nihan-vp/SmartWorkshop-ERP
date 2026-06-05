@@ -35,7 +35,7 @@ else
 fi
 
 # ── 3. Initialize default database variables ──
-DB_CONNECTION=${DB_CONNECTION:-sqlite}
+DB_CONNECTION=${DB_CONNECTION:-mysql}
 
 # ── 4. Write all env vars to .env ─────────────
 cat > /var/www/html/.env << EOF
@@ -49,8 +49,13 @@ APP_LOCALE=en
 LOG_CHANNEL=stderr
 LOG_LEVEL=${LOG_LEVEL:-error}
 
-# ── SQLite Database ────────────────────────────
+# ── Database Configuration ─────────────────────
 DB_CONNECTION=${DB_CONNECTION}
+DB_HOST=${DB_HOST:-127.0.0.1}
+DB_PORT=${DB_PORT:-3306}
+DB_DATABASE=${DB_DATABASE:-suhaim_workshop}
+DB_USERNAME=${DB_USERNAME:-root}
+DB_PASSWORD=${DB_PASSWORD}
 
 # ── Session & Cache (file-based for Docker) ───
 SESSION_DRIVER=file
@@ -78,9 +83,11 @@ chmod -R 775 storage bootstrap/cache
 echo "Storage directories ready"
 
 # ── 6. Ensure SQLite Database Exists ──────────
-touch /var/www/html/database/database.sqlite
-chmod 777 /var/www/html/database/database.sqlite
-echo "SQLite database created at database/database.sqlite"
+if [ "$DB_CONNECTION" = "sqlite" ]; then
+    touch /var/www/html/database/database.sqlite
+    chmod 777 /var/www/html/database/database.sqlite
+    echo "SQLite database created at database/database.sqlite"
+fi
 
 # ── 7. Run database migrations ────────────────
 echo "Running migrations..."

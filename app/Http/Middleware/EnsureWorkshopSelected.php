@@ -18,6 +18,9 @@ class EnsureWorkshopSelected
         if (auth()->check()) {
             $user = auth()->user();
             if ($user->isSuperAdmin()) {
+                if ($request->session()->has('active_workshop_id')) {
+                    return $next($request);
+                }
                 return redirect()
                     ->route('super_admin.dashboard')
                     ->with('error', 'Workshop pages are for garage admin users only. Log in with the workshop account to manage bills and customers.');
