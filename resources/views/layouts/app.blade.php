@@ -779,6 +779,12 @@
 
         {{-- Sidebar Footer --}}
         <div class="p-4 border-t border-blue-100 no-print">
+            <div id="pwa-install-container" class="hidden mb-3">
+                <button id="pwa-install-button" class="w-full py-2.5 px-3.5 bg-gradient-to-br from-blue-600 to-blue-500 hover:from-blue-700 hover:to-blue-600 text-white font-bold text-xs rounded-xl shadow-md hover:shadow-lg transition-all flex items-center justify-center gap-2 active:scale-95 cursor-pointer">
+                    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4"/></svg>
+                    <span>Install App</span>
+                </button>
+            </div>
             <div class="glass-card !p-3 !rounded-xl !bg-blue-50/50 !border-blue-100 shadow-sm text-center">
                 <p class="text-xs text-blue-900 font-bold">
                     {{ (Auth::user()->isSuperAdmin() && session()->has('active_workshop_id')) ? 'Inspecting: ' . session('active_workshop_name') : (Auth::user()->isSuperAdmin() ? 'System Super Admin' : (Auth::user()->workshop->name ?? 'Suhaim Soft')) }}
@@ -953,8 +959,12 @@
         }
         setInterval(updateClock, 1000);
     </script>
-    {{-- PWA Service Worker Registration --}}
+    {{-- PWA Service Worker Registration & Custom Install Banner --}}
     <script>
+        let deferredAppPrompt;
+        const installAppContainer = document.getElementById('pwa-install-container');
+        const installAppButton = document.getElementById('pwa-install-button');
+
         if ('serviceWorker' in navigator) {
             window.addEventListener('load', () => {
                 navigator.serviceWorker.register('/sw.js')
@@ -962,6 +972,41 @@
                     .catch(err => console.error('Service Worker registration failed:', err));
             });
         }
+
+        window.addEventListener('beforeinstallprompt', (e) => {
+            // Prevent standard install banner from appearing
+            e.preventDefault();
+            // Stash install prompt event
+            deferredAppPrompt = e;
+            // Show the install button container
+            if (installAppContainer) {
+                installAppContainer.classList.remove('hidden');
+            }
+        });
+
+        if (installAppButton) {
+            installAppButton.addEventListener('click', async () => {
+                if (!deferredAppPrompt) return;
+                // Show prompt
+                deferredAppPrompt.prompt();
+                const { outcome } = await deferredAppPrompt.userChoice;
+                console.log(`PWA installation outcome: ${outcome}`);
+                // Discard prompt
+                deferredAppPrompt = null;
+                // Hide button
+                if (installAppContainer) {
+                    installAppContainer.classList.add('hidden');
+                }
+            });
+        }
+
+        window.addEventListener('appinstalled', (evt) => {
+            console.log('PWA app installed successfully');
+            deferredAppPrompt = null;
+            if (installAppContainer) {
+                installAppContainer.classList.add('hidden');
+            }
+        });
     </script>
     @stack('scripts')
 </body>
