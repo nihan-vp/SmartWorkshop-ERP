@@ -30,6 +30,7 @@ class VehicleController extends Controller
     {
         $validated = $request->validate([
             'customer_id' => 'required|exists:customers,id',
+            'make' => 'nullable|string|max:255',
             'model' => 'required|string|max:255',
             'year' => 'nullable|integer|min:1900|max:2100',
             'plate_number' => 'required|string|max:20|unique:vehicles',
@@ -37,7 +38,9 @@ class VehicleController extends Controller
         ], [], [
         ]);
         
-        $validated['make'] = 'Unknown';
+        if (empty($validated['make'])) {
+            $validated['make'] = 'Unknown';
+        }
         
         Vehicle::create($validated);
         return redirect()->route('vehicles.index')->with('success', 'Vehicle added successfully!');
@@ -53,6 +56,7 @@ class VehicleController extends Controller
     {
         $validated = $request->validate([
             'customer_id' => 'required|exists:customers,id',
+            'make' => 'nullable|string|max:255',
             'model' => 'required|string|max:255',
             'year' => 'nullable|integer|min:1900|max:2100',
             'plate_number' => 'required|string|max:20|unique:vehicles,plate_number,' . $vehicle->id,
@@ -60,7 +64,9 @@ class VehicleController extends Controller
         ], [], [
         ]);
 
-        $validated['make'] = $validated['make'] ?? $vehicle->make ?? 'Unknown';
+        if (empty($validated['make'])) {
+            $validated['make'] = 'Unknown';
+        }
 
         $vehicle->update($validated);
         return redirect()->route('vehicles.index')->with('success', 'Vehicle updated successfully!');
