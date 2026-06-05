@@ -16,7 +16,7 @@
     <meta property="og:url" content="{{ url('/') }}">
 
     <!-- PWA -->
-    <link rel="manifest" href="/manifest.json">
+    <link rel="manifest" href="/manifest.json?v=2">
     <meta name="theme-color" content="#1d4ed8">
     <link rel="shortcut icon" href="/favicon.png" type="image/png">
     <link rel="icon" href="/favicon.png" type="image/png">
