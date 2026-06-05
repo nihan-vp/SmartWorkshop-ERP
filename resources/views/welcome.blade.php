@@ -16,10 +16,10 @@
     <meta property="og:url" content="{{ url('/') }}">
 
     <!-- PWA -->
-    <link rel="manifest" href="/manifest.json?v=2">
+    <link rel="manifest" href="/manifest.json?v=3">
     <meta name="theme-color" content="#1d4ed8">
-    <link rel="shortcut icon" href="/favicon.png" type="image/png">
-    <link rel="icon" href="/favicon.png" type="image/png">
+    <link rel="shortcut icon" href="/images/logo.png" type="image/png">
+    <link rel="icon" href="/images/logo.png" type="image/png">
 
     <!-- Google Fonts -->
     <link rel="preconnect" href="https://fonts.googleapis.com">

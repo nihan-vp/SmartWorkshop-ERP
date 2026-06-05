@@ -1,7 +1,7 @@
-const CACHE_NAME = 'suhaim-soft-workshop-v2';
+const CACHE_NAME = 'suhaim-soft-workshop-v3';
 const ASSETS_TO_CACHE = [
   '/',
-  '/favicon.png',
+  '/images/logo.png',
   '/manifest.json'
 ];
 

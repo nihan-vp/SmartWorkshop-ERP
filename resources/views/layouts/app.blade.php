@@ -97,14 +97,14 @@
     </script>
 
     {{-- ── PWA Config ── --}}
-    <link rel="manifest" href="/manifest.json?v=2">
+    <link rel="manifest" href="/manifest.json?v=3">
     <meta name="theme-color" content="#1d4ed8">
     <meta name="mobile-web-app-capable" content="yes">
     <meta name="apple-mobile-web-app-capable" content="yes">
     <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
 
-    <link rel="icon" href="/favicon.png" type="image/png">
-    <link rel="apple-touch-icon" href="/favicon.png">
+    <link rel="icon" href="/images/logo.png" type="image/png">
+    <link rel="apple-touch-icon" href="/images/logo.png">
 
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -656,7 +656,13 @@
                     </p>
                     @endif
                     <p class="text-xs text-blue-600 font-bold tracking-wider uppercase mt-0.5">
-              {{-- Navigation --}}
+                        {{ Auth::user()->isSuperAdmin() ? 'Super Admin' : (Auth::user()->role === 'admin' ? 'Workshop Owner' : 'Employee') }}
+                    </p>
+                </div>
+            </div>
+        </div>
+
+        {{-- Navigation --}}
         <nav class="flex-1 overflow-y-auto p-4 space-y-1">
             @if(Auth::user()->isSuperAdmin() && session()->has('active_workshop_id'))
             <a href="{{ route('super_admin.dashboard') }}" class="sidebar-link !bg-indigo-50 !text-indigo-700 hover:!bg-indigo-100 hover:!text-indigo-900 font-bold border border-indigo-200 rounded-xl mb-4" id="nav-back-to-admin">
