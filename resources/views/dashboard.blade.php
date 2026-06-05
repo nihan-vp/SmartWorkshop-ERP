@@ -26,27 +26,21 @@
         </div>
         
         <div class="w-full md:w-auto flex flex-col sm:flex-row items-center z-10 gap-3">
-            <form method="GET" action="{{ route('dashboard') }}" class="w-full sm:w-auto relative" x-data="{ open: false }">
-                <button @click="open = !open" @click.away="open = false" type="button" class="w-full sm:w-48 bg-slate-50 border border-slate-200 text-slate-700 py-2.5 px-4 rounded-xl text-sm font-semibold flex items-center justify-between shadow-sm hover:bg-slate-100 transition-colors">
-                    <span class="flex items-center gap-2">
+            <form method="GET" action="{{ route('dashboard') }}" class="w-full sm:w-auto">
+                <div class="relative w-full sm:w-48">
+                    <div class="pointer-events-none absolute inset-y-0 left-0 flex items-center pl-3">
                         <svg class="w-4 h-4 text-slate-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"/></svg>
-                        {{ match($filter) {
-                            'today' => 'Today',
-                            'yesterday' => 'Yesterday',
-                            'week' => 'Last 7 Days',
-                            'month' => 'This Month',
-                            'all' => 'All Time',
-                            default => 'Today'
-                        } }}
-                    </span>
-                    <svg class="w-4 h-4 text-slate-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"/></svg>
-                </button>
-                <div x-show="open" x-transition class="absolute top-full mt-2 w-full sm:w-48 bg-white rounded-xl shadow-lg border border-slate-100 overflow-hidden z-50" style="display: none;">
-                    <a href="?filter=today" class="block px-4 py-2 text-sm font-medium text-slate-700 hover:bg-primary-50 hover:text-primary-700 {{ $filter === 'today' ? 'bg-primary-50 text-primary-700' : '' }}">Today</a>
-                    <a href="?filter=yesterday" class="block px-4 py-2 text-sm font-medium text-slate-700 hover:bg-primary-50 hover:text-primary-700 {{ $filter === 'yesterday' ? 'bg-primary-50 text-primary-700' : '' }}">Yesterday</a>
-                    <a href="?filter=week" class="block px-4 py-2 text-sm font-medium text-slate-700 hover:bg-primary-50 hover:text-primary-700 {{ $filter === 'week' ? 'bg-primary-50 text-primary-700' : '' }}">Last 7 Days</a>
-                    <a href="?filter=month" class="block px-4 py-2 text-sm font-medium text-slate-700 hover:bg-primary-50 hover:text-primary-700 {{ $filter === 'month' ? 'bg-primary-50 text-primary-700' : '' }}">This Month</a>
-                    <a href="?filter=all" class="block px-4 py-2 text-sm font-medium text-slate-700 hover:bg-primary-50 hover:text-primary-700 {{ $filter === 'all' ? 'bg-primary-50 text-primary-700' : '' }}">All Time</a>
+                    </div>
+                    <select name="filter" onchange="this.form.submit()" class="block w-full appearance-none bg-slate-50 border border-slate-200 text-slate-700 py-2.5 pl-10 pr-8 rounded-xl text-sm font-semibold shadow-sm hover:bg-slate-100 transition-colors focus:outline-none focus:ring-2 focus:ring-primary-500 focus:border-primary-500 cursor-pointer">
+                        <option value="today" {{ ($filter ?? 'today') === 'today' ? 'selected' : '' }}>Today</option>
+                        <option value="yesterday" {{ ($filter ?? 'today') === 'yesterday' ? 'selected' : '' }}>Yesterday</option>
+                        <option value="week" {{ ($filter ?? 'today') === 'week' ? 'selected' : '' }}>Last 7 Days</option>
+                        <option value="month" {{ ($filter ?? 'today') === 'month' ? 'selected' : '' }}>This Month</option>
+                        <option value="all" {{ ($filter ?? 'today') === 'all' ? 'selected' : '' }}>All Time</option>
+                    </select>
+                    <div class="pointer-events-none absolute inset-y-0 right-0 flex items-center pr-3">
+                        <svg class="w-4 h-4 text-slate-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"/></svg>
+                    </div>
                 </div>
             </form>
             <a href="{{ route('bills.create') }}" class="btn-primary shadow-sm !py-2.5 !px-5 text-sm w-full sm:w-auto justify-center text-center">
