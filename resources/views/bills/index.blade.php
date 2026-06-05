@@ -51,13 +51,6 @@
                     </td>
                     <td data-label="">
                         <div class="flex items-center gap-2 sm:gap-1 flex-wrap sm:flex-nowrap">
-                            {{-- Direct Download PDF Button --}}
-                            <a href="{{ route('bills.pdf', $bill) }}" 
-                               download 
-                               class="text-primary-600 hover:text-primary-850 hover:bg-primary-50 p-1.5 rounded-lg transition-all hover:scale-110 flex items-center justify-center" 
-                               title="Download PDF">
-                                <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4"/></svg>
-                            </a>
  
                              {{-- Direct Share Button (Standard Share Icon, Smart Recipient & Custom Message) --}}
                             @php
