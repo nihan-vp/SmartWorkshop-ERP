@@ -248,7 +248,7 @@ class BillController extends Controller
 
     public function downloadPDF(Request $request, Bill $bill)
     {
-        $bill->load('customer', 'vehicle', 'items', 'workshop');
+        $bill->load('customer', 'vehicle.customer', 'items', 'workshop');
 
         $size = strtoupper($request->query('size', 'A4'));
         $allowedSizes = ['A4', 'A5', 'LETTER', 'LEGAL', 'A3', '80MM', '58MM'];
