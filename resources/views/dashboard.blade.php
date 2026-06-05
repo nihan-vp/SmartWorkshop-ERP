@@ -142,6 +142,16 @@
         </div>
     </div>
 
+    <!-- Overall Performance Chart -->
+    <div class="glass-card !p-0 overflow-hidden">
+        <div class="p-5 sm:p-6 border-b border-slate-100 flex items-center justify-between bg-white flex-wrap gap-4">
+            <h3 class="text-base font-bold text-slate-900 font-outfit">Performance Overview (7 Days)</h3>
+        </div>
+        <div class="p-4 sm:p-6 w-full">
+            <div id="performance-chart" class="w-full h-72"></div>
+        </div>
+    </div>
+
     <!-- Main Content Layout Split (2:1 Column Split) -->
     <div class="grid grid-cols-1 lg:grid-cols-12 gap-8">
         
@@ -382,4 +392,68 @@
     </div>
 
 </div>
+
+<script src="https://cdn.jsdelivr.net/npm/apexcharts"></script>
+<script>
+document.addEventListener("DOMContentLoaded", function () {
+    var options = {
+        series: [{
+            name: 'Revenue',
+            data: {!! json_encode($chartIncome) !!}
+        }, {
+            name: 'Expenses',
+            data: {!! json_encode($chartExpense) !!}
+        }],
+        chart: {
+            type: 'area',
+            height: 300,
+            fontFamily: "'Inter', sans-serif",
+            toolbar: { show: false },
+            zoom: { enabled: false }
+        },
+        colors: ['#10b981', '#f43f5e'],
+        fill: {
+            type: 'gradient',
+            gradient: {
+                shadeIntensity: 1,
+                opacityFrom: 0.4,
+                opacityTo: 0.05,
+                stops: [0, 90, 100]
+            }
+        },
+        dataLabels: { enabled: false },
+        stroke: { curve: 'smooth', width: 3 },
+        xaxis: {
+            categories: {!! json_encode($chartDates) !!},
+            axisBorder: { show: false },
+            axisTicks: { show: false },
+            labels: {
+                style: { colors: '#64748b', fontSize: '12px', fontWeight: 500 }
+            }
+        },
+        yaxis: {
+            labels: {
+                formatter: function (value) { return '₹' + value.toLocaleString(); },
+                style: { colors: '#64748b', fontSize: '12px', fontWeight: 500 }
+            }
+        },
+        grid: {
+            borderColor: '#f1f5f9',
+            strokeDashArray: 4,
+            yaxis: { lines: { show: true } }
+        },
+        legend: {
+            position: 'top',
+            horizontalAlign: 'right',
+            fontWeight: 600
+        },
+        tooltip: {
+            y: { formatter: function (val) { return "₹" + val.toLocaleString() } }
+        }
+    };
+
+    var chart = new ApexCharts(document.querySelector("#performance-chart"), options);
+    chart.render();
+});
+</script>
 @endsection

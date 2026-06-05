@@ -44,12 +44,25 @@ class DashboardController extends Controller
         $activeWarranties = Warranty::where('status', 'active')->count();
         $totalProducts = Product::count();
 
+        // Chart Data (Last 7 Days Performance)
+        $chartDates = [];
+        $chartIncome = [];
+        $chartExpense = [];
+        for ($i = 6; $i >= 0; $i--) {
+            $date = today()->subDays($i);
+            $chartDates[] = $date->format('M d');
+            $chartIncome[] = Bill::where('payment_status', 'paid')->whereDate('bill_date', $date)->sum('total');
+            $exp = Expense::whereDate('expense_date', $date)->sum('amount');
+            $sal = Salary::where('status', 'paid')->whereDate('payment_date', $date)->sum('amount');
+            $chartExpense[] = $exp + $sal;
+        }
+
         return view('dashboard', compact(
             'totalIncome', 'totalExpenses', 'totalSalaries', 'totalExpensesAll', 'totalProfit',
             'totalServices', 'totalRecords', 'totalCustomers', 'totalVehicles', 'totalEmployees',
             'upiPayments', 'cashPayments', 'stockValue', 'totalWorkOrders', 'pendingWorkOrders',
             'recentBills', 'recentExpenses', 'lowStockProducts', 'pendingOrders',
-            'activeWarranties', 'totalProducts'
+            'activeWarranties', 'totalProducts', 'chartDates', 'chartIncome', 'chartExpense'
         ));
     }
 }
