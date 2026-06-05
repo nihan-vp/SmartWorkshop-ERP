@@ -14,6 +14,8 @@ use App\Http\Controllers\WarrantyController;
 use App\Http\Controllers\WorkOrderController;
 use App\Http\Controllers\BillTemplateController;
 use App\Http\Controllers\PurchaseController;
+use App\Http\Controllers\SupplierController;
+use App\Http\Controllers\BranchController;
 use Illuminate\Support\Facades\Route;
 
 use App\Http\Controllers\SuperAdminController;
@@ -66,14 +68,18 @@ Route::middleware('auth')->group(function () {
 
     // Tenant-scoped Routes
     Route::middleware(['workshop', 'check.trial'])->group(function () {
+        Route::post('/branches/switch', [BranchController::class, 'switchBranch'])->name('branches.switch');
         Route::get('/dashboard', [DashboardController::class, 'index'])->name('dashboard');
 
+        Route::resource('branches', BranchController::class)->except(['show']);
         Route::resource('customers', CustomerController::class);
+        Route::resource('suppliers', SupplierController::class);
         Route::resource('vehicles', VehicleController::class);
         Route::resource('products', ProductController::class);
         Route::resource('services', ServiceController::class);
         Route::resource('employees', EmployeeController::class);
         Route::resource('bills', BillController::class);
+        Route::post('/bills/{bill}/record-payment', [BillController::class, 'recordPayment'])->name('bills.record-payment');
 
         Route::resource('bill-templates', BillTemplateController::class);
         Route::resource('expenses', ExpenseController::class);
@@ -92,6 +98,7 @@ Route::middleware('auth')->group(function () {
         // System Settings routes (Admin Only)
         Route::get('/system', [\App\Http\Controllers\SystemController::class, 'index'])->name('system.index');
         Route::post('/system/update', [\App\Http\Controllers\SystemController::class, 'update'])->name('system.update');
+        Route::post('/system/change-password', [\App\Http\Controllers\SystemController::class, 'changePassword'])->name('system.change_password');
         Route::post('/system/clear-data', [\App\Http\Controllers\SystemController::class, 'clearData'])->name('system.clear_data');
 
         // API endpoints for dynamic form data

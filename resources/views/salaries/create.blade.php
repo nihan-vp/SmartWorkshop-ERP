@@ -20,21 +20,21 @@
                 <div class="grid grid-cols-1 sm:grid-cols-2 gap-5">
                     <div>
                         <label class="form-label">Amount *</label>
-                        <input type="number" step="0.01" name="amount" value="{{ old('amount') }}" class="form-input" required>
+                        <input type="number" step="0.01" name="amount" value="{{ old('amount') }}" class="form-input" required placeholder="Enter amount">
                     </div>
                     <div>
                         <label class="form-label">Advance Deduction</label>
-                        <input type="number" step="0.01" name="advance_deduction" value="{{ old('advance_deduction', 0) }}" class="form-input">
+                        <input type="number" step="0.01" name="advance_deduction" value="{{ old('advance_deduction', 0) }}" class="form-input" placeholder="Enter advance deduction">
                     </div>
                 </div>
                 <div class="grid grid-cols-1 sm:grid-cols-2 gap-5">
                     <div>
                         <label class="form-label">Month *</label>
-                        <input type="text" name="month" value="{{ old('month', date('F')) }}" class="form-input" required>
+                        <input type="text" name="month" value="{{ old('month', date('F')) }}" class="form-input" required placeholder="Enter month">
                     </div>
                     <div>
                         <label class="form-label">Year *</label>
-                        <input type="number" name="year" value="{{ old('year', date('Y')) }}" class="form-input" required>
+                        <input type="number" name="year" value="{{ old('year', date('Y')) }}" class="form-input" required placeholder="Enter year">
                     </div>
                 </div>
                     <div>

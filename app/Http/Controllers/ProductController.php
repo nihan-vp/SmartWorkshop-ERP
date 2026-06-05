@@ -12,7 +12,6 @@ class ProductController extends Controller
         $query = Product::query();
         if ($request->search) {
             $query->where('name', 'like', "%{$request->search}%")
-                  ->orWhere('sku', 'like', "%{$request->search}%")
                   ->orWhere('category', 'like', "%{$request->search}%");
         }
         $products = $query->latest()->paginate(15);
@@ -28,7 +27,7 @@ class ProductController extends Controller
     {
         $validated = $request->validate([
             'name' => 'required|string|max:255',
-            'sku' => 'nullable|string|max:50|unique:products',
+            'barcode' => 'nullable|string|max:100|unique:products',
             'category' => 'nullable|string|max:100',
             'price' => 'required|numeric|min:0',
             'cost_price' => 'required|numeric|min:0',
@@ -36,7 +35,26 @@ class ProductController extends Controller
             'min_stock' => 'required|integer|min:0',
             'unit' => 'required|string|max:20',
         ]);
-        Product::create($validated);
+        
+        $product = Product::create($validated);
+
+        // Manage branch-specific stock if a branch context is available
+        $branchId = null;
+        if (auth()->user()->branch_id) {
+            $branchId = auth()->user()->branch_id;
+        } elseif (session('active_branch_id')) {
+            $branchId = session('active_branch_id');
+        }
+
+        if ($branchId) {
+            \App\Models\ProductStock::create([
+                'product_id' => $product->id,
+                'branch_id' => $branchId,
+                'stock_qty' => $validated['stock_qty'],
+                'min_stock' => $validated['min_stock'],
+            ]);
+        }
+
         return redirect()->route('products.index')->with('success', 'Product added successfully!');
     }
 
@@ -49,7 +67,7 @@ class ProductController extends Controller
     {
         $validated = $request->validate([
             'name' => 'required|string|max:255',
-            'sku' => 'nullable|string|max:50|unique:products,sku,' . $product->id,
+            'barcode' => 'nullable|string|max:100|unique:products,barcode,' . $product->id,
             'category' => 'nullable|string|max:100',
             'price' => 'required|numeric|min:0',
             'cost_price' => 'required|numeric|min:0',
@@ -57,7 +75,27 @@ class ProductController extends Controller
             'min_stock' => 'required|integer|min:0',
             'unit' => 'required|string|max:20',
         ]);
+        
         $product->update($validated);
+
+        // Update branch-specific stock if a branch context is available
+        $branchId = null;
+        if (auth()->user()->branch_id) {
+            $branchId = auth()->user()->branch_id;
+        } elseif (session('active_branch_id')) {
+            $branchId = session('active_branch_id');
+        }
+
+        if ($branchId) {
+            $stock = \App\Models\ProductStock::firstOrNew([
+                'product_id' => $product->id,
+                'branch_id' => $branchId
+            ]);
+            $stock->stock_qty = $validated['stock_qty'];
+            $stock->min_stock = $validated['min_stock'];
+            $stock->save();
+        }
+
         return redirect()->route('products.index')->with('success', 'Product updated successfully!');
     }
 

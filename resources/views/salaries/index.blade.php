@@ -187,7 +187,7 @@
                     <div class="grid grid-cols-2 gap-4">
                         <div>
                             <label class="form-label">Amount *</label>
-                            <input type="number" step="0.01" name="amount" class="form-input" required>
+                            <input type="number" step="0.01" name="amount" class="form-input" required placeholder="Enter amount">
                         </div>
                         <div>
                             <label class="form-label">Date *</label>
@@ -203,7 +203,7 @@
                     </div>
                     <div>
                         <label class="form-label">Notes</label>
-                        <textarea name="notes" rows="2" class="form-input"></textarea>
+                        <textarea name="notes" rows="2" class="form-input" placeholder="Enter notes"></textarea>
                     </div>
                 </div>
                 <div class="mt-6 flex justify-end gap-3">

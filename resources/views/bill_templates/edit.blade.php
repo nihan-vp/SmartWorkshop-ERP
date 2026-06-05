@@ -24,7 +24,7 @@
                     <div class="space-y-4">
                         <div>
                             <label class="form-label">Template Name *</label>
-                            <input type="text" name="name" required value="{{ $billTemplate->name }}" placeholder="e.g. Premium General Servicing Package" class="form-input">
+                            <input type="text" name="name" required value="{{ $billTemplate- placeholder="Enter name">name }}" placeholder="e.g. Premium General Servicing Package" class="form-input">
                         </div>
                         <div>
                             <label class="form-label">Description</label>
@@ -73,12 +73,12 @@
                                 
                                 <div class="w-24">
                                     <label class="text-xs font-semibold text-slate-500 mb-1 block">Price</label>
-                                    <input type="number" step="0.01" :name="`items[${index}][price]`" x-model="item.price" class="form-input !py-2" readonly>
+                                    <input type="number" step="0.01" :name="`items[${index}][price]`" x-model="item.price" class="form-input !py-2" readonly placeholder="Enter `items[${index}][price]`">
                                 </div>
                                 
                                 <div class="w-20">
                                     <label class="text-xs font-semibold text-slate-500 mb-1 block">Qty</label>
-                                    <input type="number" min="1" :name="`items[${index}][quantity]`" x-model="item.qty" class="form-input !py-2" required>
+                                    <input type="number" min="1" :name="`items[${index}][quantity]`" x-model="item.qty" class="form-input !py-2" required placeholder="Enter `items[${index}][quantity]`">
                                 </div>
                                 
                                 <div class="w-28">
@@ -110,11 +110,11 @@
                         </div>
                         <div class="flex justify-between items-center text-slate-600 font-medium">
                             <span>Default Discount Amount (₹)</span>
-                            <input type="number" step="0.01" name="discount" x-model.number="discount" class="form-input !py-1 !px-2 w-24 text-right">
+                            <input type="number" step="0.01" name="discount" x-model.number="discount" class="form-input !py-1 !px-2 w-24 text-right" placeholder="Enter discount">
                         </div>
                         <div class="flex justify-between items-center text-slate-600 font-medium">
                             <span>Default Tax (₹)</span>
-                            <input type="number" step="0.01" name="tax" x-model.number="tax" class="form-input !py-1 !px-2 w-24 text-right">
+                            <input type="number" step="0.01" name="tax" x-model.number="tax" class="form-input !py-1 !px-2 w-24 text-right" placeholder="Enter tax">
                         </div>
                         <div class="pt-4 border-t border-slate-200 flex justify-between text-slate-900 text-lg font-extrabold">
                             <span>Preset Total</span>

@@ -35,7 +35,7 @@
                     @endforeach
                 </select>
             </div>
-            <div><label class="form-label">Description / Terms</label><textarea name="description" rows="3" class="form-input">{{ old('description', $warranty->description) }}</textarea></div>
+            <div><label class="form-label">Description / Terms</label><textarea name="description" rows="3" class="form-input" placeholder="Enter description">{{ old('description', $warranty->description) }}</textarea></div>
             <div class="grid grid-cols-1 sm:grid-cols-3 gap-5">
                 <div><label class="form-label">Start Date *</label><input type="date" name="start_date" value="{{ old('start_date', $warranty->start_date->format('Y-m-d')) }}" class="form-input" required></div>
                 <div><label class="form-label">End Date *</label><input type="date" name="end_date" value="{{ old('end_date', $warranty->end_date->format('Y-m-d')) }}" class="form-input" required></div>

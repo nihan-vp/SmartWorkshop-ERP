@@ -11,11 +11,11 @@
                 <div class="grid grid-cols-1 sm:grid-cols-2 gap-5">
                     <div>
                         <label class="form-label">Category *</label>
-                        <input type="text" name="category" value="{{ old('category') }}" class="form-input" required>
+                        <input type="text" name="category" value="{{ old('category') }}" class="form-input" required placeholder="Enter category">
                     </div>
                     <div>
                         <label class="form-label">Amount *</label>
-                        <input type="number" step="0.01" name="amount" value="{{ old('amount') }}" class="form-input" required>
+                        <input type="number" step="0.01" name="amount" value="{{ old('amount') }}" class="form-input" required placeholder="Enter amount">
                     </div>
                 </div>
                 <div class="grid grid-cols-1 sm:grid-cols-2 gap-5">
@@ -33,7 +33,7 @@
                 </div>
                 <div>
                     <label class="form-label">Description</label>
-                    <textarea name="description" rows="3" class="form-input">{{ old('description') }}</textarea>
+                    <textarea name="description" rows="3" class="form-input" placeholder="Enter description">{{ old('description') }}</textarea>
                 </div>
             </div>
             <div class="flex items-center gap-3 mt-8 pt-6 border-t border-white/10">

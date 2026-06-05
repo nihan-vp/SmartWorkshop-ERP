@@ -8,14 +8,15 @@ use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\Relations\HasOne;
 
 use App\Traits\BelongsToWorkshop;
+use App\Traits\BelongsToBranch;
 
 class Bill extends Model
 {
-    use BelongsToWorkshop;
+    use BelongsToWorkshop, BelongsToBranch;
 
     protected $fillable = [
         'bill_number', 'customer_id', 'vehicle_id', 'subtotal', 'tax',
-        'discount', 'total', 'payment_method', 'payment_status', 'notes', 'bill_date', 'workshop_id'
+        'discount', 'total', 'amount_paid', 'payment_method', 'payment_status', 'notes', 'bill_date', 'workshop_id'
     ];
 
     protected $casts = [
@@ -23,8 +24,14 @@ class Bill extends Model
         'tax' => 'decimal:2',
         'discount' => 'decimal:2',
         'total' => 'decimal:2',
+        'amount_paid' => 'decimal:2',
         'bill_date' => 'date',
     ];
+
+    public function getRemainingBalanceAttribute(): float
+    {
+        return max(0, $this->total - $this->amount_paid);
+    }
 
     public function customer(): BelongsTo
     {

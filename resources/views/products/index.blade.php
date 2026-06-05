@@ -9,12 +9,12 @@
     modalTitle: '', 
     actionUrl: '',
     methodOverride: '',
-    product: { id: null, name: '', sku: '', category: '', price: '', cost_price: '', stock_qty: '', min_stock: '', unit: 'pcs' },
+    product: { id: null, name: '', barcode: '', category: '', price: '', cost_price: '', stock_qty: '', min_stock: '', unit: 'pcs' },
     openCreate() {
         this.modalTitle = 'Add Product';
         this.actionUrl = '{{ route('products.store') }}';
         this.methodOverride = '';
-        this.product = { id: null, name: '', sku: '', category: '', price: '', cost_price: '', stock_qty: '', min_stock: '', unit: 'pcs' };
+        this.product = { id: null, name: '', barcode: '', category: '', price: '', cost_price: '', stock_qty: '', min_stock: '', unit: 'pcs' };
         this.showModal = true;
     },
     openEdit(prod) {
@@ -46,7 +46,7 @@
                     <tr>
                         <th>Sl No</th>
                         <th>Name</th>
-                        <th>SKU</th>
+                        <th>Barcode</th>
                         <th>Category</th>
                         <th>Price</th>
                         <th>Cost</th>
@@ -61,7 +61,7 @@
                     <tr>
                         <td data-label="Sl No" class="text-slate-400 font-semibold">{{ $p->id }}</td>
                         <td data-label="Name" class="font-bold text-slate-800">{{ $p->name }}</td>
-                        <td data-label="SKU" class="font-mono text-xs font-semibold text-slate-500">{{ $p->sku ?? '—' }}</td>
+                        <td data-label="Barcode" class="font-mono text-xs font-semibold text-slate-500">{{ $p->barcode ?? '—' }}</td>
                         <td data-label="Category" class="font-medium text-slate-600">{{ $p->category ?? '—' }}</td>
                         <td data-label="Price" class="text-emerald-600 font-bold">₹{{ number_format($p->price, 2) }}</td>
                         <td data-label="Cost" class="font-medium text-slate-600">₹{{ number_format($p->cost_price, 2) }}</td>
@@ -79,7 +79,7 @@
                                 <button @click="openEdit({ 
                                     id: {{ $p->id }}, 
                                     name: '{{ addslashes($p->name) }}', 
-                                    sku: '{{ addslashes($p->sku ?? '') }}', 
+                                    barcode: '{{ addslashes($p->barcode ?? '') }}', 
                                     category: '{{ addslashes($p->category ?? '') }}', 
                                     price: '{{ $p->price }}', 
                                     cost_price: '{{ $p->cost_price }}', 
@@ -137,8 +137,8 @@
                     </div>
 
                     <div>
-                        <label class="form-label">SKU</label>
-                        <input type="text" name="sku" x-model="product.sku" placeholder="SKU code" class="form-input">
+                        <label class="form-label">Barcode</label>
+                        <input type="text" name="barcode" x-model="product.barcode" placeholder="Scan or enter barcode" class="form-input">
                     </div>
 
                     <div>

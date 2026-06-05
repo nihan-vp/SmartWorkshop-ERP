@@ -23,6 +23,7 @@ class User extends Authenticatable
         'email',
         'password',
         'workshop_id',
+        'branch_id',
         'role',
     ];
 
@@ -54,8 +55,23 @@ class User extends Authenticatable
         return $this->role === 'super_admin';
     }
 
+    public function isEnterpriseAdmin(): bool
+    {
+        return $this->role === 'admin' && empty($this->branch_id);
+    }
+
+    public function isBranchAdmin(): bool
+    {
+        return $this->role === 'admin' && !empty($this->branch_id);
+    }
+
     public function workshop()
     {
         return $this->belongsTo(Workshop::class);
+    }
+
+    public function branch()
+    {
+        return $this->belongsTo(Branch::class);
     }
 }

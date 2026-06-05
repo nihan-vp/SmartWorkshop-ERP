@@ -11,27 +11,27 @@
                 <div class="grid grid-cols-1 sm:grid-cols-2 gap-5">
                     <div>
                         <label class="form-label">Name *</label>
-                        <input type="text" name="name" value="{{ old('name') }}" class="form-input" required>
+                        <input type="text" name="name" value="{{ old('name') }}" class="form-input" required placeholder="Enter name">
                     </div>
                     <div>
                         <label class="form-label">Phone</label>
-                        <input type="text" name="phone" value="{{ old('phone') }}" class="form-input">
+                        <input type="text" name="phone" value="{{ old('phone') }}" class="form-input" placeholder="Enter phone">
                     </div>
                 </div>
                 <div class="grid grid-cols-1 sm:grid-cols-2 gap-5">
                     <div>
                         <label class="form-label">Email</label>
-                        <input type="email" name="email" value="{{ old('email') }}" class="form-input">
+                        <input type="email" name="email" value="{{ old('email') }}" class="form-input" placeholder="Enter email">
                     </div>
                     <div>
                         <label class="form-label">Role *</label>
-                        <input type="text" name="role" value="{{ old('role') }}" class="form-input" required>
+                        <input type="text" name="role" value="{{ old('role') }}" class="form-input" required placeholder="Enter role">
                     </div>
                 </div>
                 <div class="grid grid-cols-1 sm:grid-cols-3 gap-5">
                     <div>
                         <label class="form-label">Salary *</label>
-                        <input type="number" step="0.01" name="salary" value="{{ old('salary') }}" class="form-input" required>
+                        <input type="number" step="0.01" name="salary" value="{{ old('salary') }}" class="form-input" required placeholder="Enter salary">
                     </div>
                     <div>
                         <label class="form-label">Join Date</label>

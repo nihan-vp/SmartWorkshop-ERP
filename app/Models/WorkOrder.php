@@ -6,10 +6,11 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
 use App\Traits\BelongsToWorkshop;
+use App\Traits\BelongsToBranch;
 
 class WorkOrder extends Model
 {
-    use BelongsToWorkshop;
+    use BelongsToWorkshop, BelongsToBranch;
 
     protected $fillable = [
         'order_number', 'customer_id', 'vehicle_id', 'employee_id',

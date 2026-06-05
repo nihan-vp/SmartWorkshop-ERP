@@ -5,10 +5,11 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Model;
 
 use App\Traits\BelongsToWorkshop;
+use App\Traits\BelongsToBranch;
 
 class Expense extends Model
 {
-    use BelongsToWorkshop;
+    use BelongsToWorkshop, BelongsToBranch;
 
     protected $fillable = ['category', 'description', 'amount', 'payment_method', 'expense_date', 'workshop_id'];
 

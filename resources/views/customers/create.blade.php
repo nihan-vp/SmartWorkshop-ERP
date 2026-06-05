@@ -10,21 +10,21 @@
             <div class="space-y-5">
                 <div>
                     <label class="form-label">Name *</label>
-                    <input type="text" name="name" value="{{ old('name') }}" class="form-input" required id="input-name">
+                    <input type="text" name="name" value="{{ old('name') }}" class="form-input" required id="input-name" placeholder="Enter name">
                 </div>
                 <div class="grid grid-cols-1 sm:grid-cols-2 gap-5">
                     <div>
                         <label class="form-label">Phone</label>
-                        <input type="text" name="phone" value="{{ old('phone') }}" class="form-input" id="input-phone">
+                        <input type="text" name="phone" value="{{ old('phone') }}" class="form-input" id="input-phone" placeholder="Enter phone">
                     </div>
                     <div>
                         <label class="form-label">Email</label>
-                        <input type="email" name="email" value="{{ old('email') }}" class="form-input" id="input-email">
+                        <input type="email" name="email" value="{{ old('email') }}" class="form-input" id="input-email" placeholder="Enter email">
                     </div>
                 </div>
                 <div>
                     <label class="form-label">Address</label>
-                    <textarea name="address" rows="3" class="form-input" id="input-address">{{ old('address') }}</textarea>
+                    <textarea name="address" rows="3" class="form-input" id="input-address" placeholder="Enter address">{{ old('address') }}</textarea>
                 </div>
             </div>
             <div class="flex items-center gap-3 mt-8 pt-6 border-t border-white/10">

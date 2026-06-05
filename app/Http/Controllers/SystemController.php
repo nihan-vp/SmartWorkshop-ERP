@@ -98,6 +98,36 @@ class SystemController extends Controller
     }
 
     /**
+     * Change user password.
+     */
+    public function changePassword(Request $request)
+    {
+        if (auth()->user()->role !== 'admin') {
+            abort(403, 'Unauthorized action.');
+        }
+
+        $user = auth()->user();
+
+        $validated = $request->validate([
+            'current_password' => 'required|string',
+            'new_password' => 'required|string|min:8|confirmed',
+        ]);
+
+        if (!\Illuminate\Support\Facades\Hash::check($validated['current_password'], $user->password)) {
+            return redirect()->back()->withErrors(['current_password' => 'The provided password does not match your current password.']);
+        }
+
+        $user->update([
+            'password' => \Illuminate\Support\Facades\Hash::make($validated['new_password']),
+        ]);
+
+        // Log the activity
+        \App\Models\ActivityLog::log('password_change', "Changed password for user: {$user->email}");
+
+        return redirect()->route('system.index')->with('success', 'Password changed successfully.');
+    }
+
+    /**
      * Clear all business data for the current workshop.
      */
     public function clearData()

@@ -62,15 +62,15 @@
                         </select>
                     </div>
                 </div>
-                <div><label for="description" class="form-label">Job Description / Instructions</label><textarea id="description" name="description" rows="4" class="form-input">{{ old('description', $workOrder->description ?? '') }}</textarea></div>
+                <div><label for="description" class="form-label">Job Description / Instructions</label><textarea id="description" name="description" rows="4" class="form-input" placeholder="Enter description">{{ old('description', $workOrder->description ?? '') }}</textarea></div>
             </div>
 
             {{-- Estimates & Dates --}}
             <div class="pt-6 border-t border-white/10">
                 <h3 class="text-sm font-semibold text-primary-400 uppercase tracking-wider mb-4">Estimates & Dates</h3>
                 <div class="grid grid-cols-1 md:grid-cols-4 gap-5">
-                    <div><label for="estimated_cost" class="form-label">Est. Cost (₹)</label><input id="estimated_cost" type="number" step="0.01" name="estimated_cost" value="{{ old('estimated_cost', $workOrder->estimated_cost ?? '') }}" class="form-input"></div>
-                    <div><label for="actual_cost" class="form-label">Actual Cost (₹)</label><input id="actual_cost" type="number" step="0.01" name="actual_cost" value="{{ old('actual_cost', $workOrder->actual_cost ?? '') }}" class="form-input"></div>
+                    <div><label for="estimated_cost" class="form-label">Est. Cost (₹)</label><input id="estimated_cost" type="number" step="0.01" name="estimated_cost" value="{{ old('estimated_cost', $workOrder- placeholder="Enter estimated cost">estimated_cost ?? '') }}" class="form-input"></div>
+                    <div><label for="actual_cost" class="form-label">Actual Cost (₹)</label><input id="actual_cost" type="number" step="0.01" name="actual_cost" value="{{ old('actual_cost', $workOrder- placeholder="Enter actual cost">actual_cost ?? '') }}" class="form-input"></div>
                     <div><label for="start_date" class="form-label">Start Date</label><input id="start_date" type="date" name="start_date" value="{{ old('start_date', isset($workOrder) && $workOrder->start_date ? $workOrder->start_date->format('Y-m-d') : '') }}" class="form-input"></div>
                     <div><label for="end_date" class="form-label">End Date</label><input id="end_date" type="date" name="end_date" value="{{ old('end_date', isset($workOrder) && $workOrder->end_date ? $workOrder->end_date->format('Y-m-d') : '') }}" class="form-input"></div>
                 </div>

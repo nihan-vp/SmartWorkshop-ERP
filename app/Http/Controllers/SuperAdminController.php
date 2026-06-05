@@ -62,11 +62,6 @@ class SuperAdminController extends Controller
     }
     public function storeWorkshop(Request $request)
     {
-        if (Workshop::count() >= 2) {
-            throw ValidationException::withMessages([
-                'name' => 'The system has reached the limit of 2 registered workshop accounts.'
-            ]);
-        }
 
         $validated = $request->validate([
             'name' => 'required|string|max:255',

@@ -26,21 +26,21 @@
                 <div class="grid grid-cols-1 sm:grid-cols-2 gap-5">
                     <div class="sm:col-span-2">
                         <label class="form-label">Model *</label>
-                        <input type="text" name="model" value="{{ old('model', $vehicle->model) }}" class="form-input" required>
+                        <input type="text" name="model" value="{{ old('model', $vehicle- placeholder="Enter model">model) }}" class="form-input" required>
                     </div>
                 </div>
                 <div class="grid grid-cols-1 sm:grid-cols-3 gap-5">
                     <div>
                         <label class="form-label">Year</label>
-                        <input type="number" name="year" value="{{ old('year', $vehicle->year) }}" class="form-input">
+                        <input type="number" name="year" value="{{ old('year', $vehicle- placeholder="Enter year">year) }}" class="form-input">
                     </div>
                     <div>
                         <label class="form-label">Plate Number *</label>
-                        <input type="text" name="plate_number" value="{{ old('plate_number', $vehicle->plate_number) }}" class="form-input" required>
+                        <input type="text" name="plate_number" value="{{ old('plate_number', $vehicle- placeholder="Enter plate number">plate_number) }}" class="form-input" required>
                     </div>
                     <div>
                         <label class="form-label">Color</label>
-                        <input type="text" name="color" value="{{ old('color', $vehicle->color) }}" class="form-input">
+                        <input type="text" name="color" value="{{ old('color', $vehicle- placeholder="Enter color">color) }}" class="form-input">
                     </div>
                 </div>
             </div>

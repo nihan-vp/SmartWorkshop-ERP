@@ -21,7 +21,7 @@
                 <div class="grid grid-cols-1 sm:grid-cols-2 gap-5">
                     <div>
                         <label class="form-label">Amount *</label>
-                        <input type="number" step="0.01" name="amount" value="{{ old('amount', $employeePayment->amount) }}" class="form-input" required>
+                        <input type="number" step="0.01" name="amount" value="{{ old('amount', $employeePayment- placeholder="Enter amount">amount) }}" class="form-input" required>
                     </div>
                     <div>
                         <label class="form-label">Date *</label>
@@ -37,7 +37,7 @@
                 </div>
                 <div>
                     <label class="form-label">Notes</label>
-                    <textarea name="notes" rows="3" class="form-input">{{ old('notes', $employeePayment->notes) }}</textarea>
+                    <textarea name="notes" rows="3" class="form-input" placeholder="Enter notes">{{ old('notes', $employeePayment->notes) }}</textarea>
                 </div>
             </div>
             <div class="flex items-center gap-3 mt-8 pt-6 border-t border-white/10">

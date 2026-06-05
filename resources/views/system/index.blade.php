@@ -52,13 +52,13 @@
                     <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
                         <div>
                             <label for="name" class="form-label font-bold text-slate-700">Workshop / Business Name *</label>
-                            <input type="text" name="name" id="name" value="{{ old('name', $workshop->name) }}" required 
+                            <input type="text" name="name" id="name" value="{{ old('name', $workshop- placeholder="Enter name">name) }}" required 
                                    class="form-input mt-1 w-full bg-slate-50 border border-slate-200 rounded-xl px-4 py-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500/20 focus:border-blue-500">
                         </div>
 
                         <div>
                             <label for="phone" class="form-label font-bold text-slate-700">Contact Number *</label>
-                            <input type="text" name="phone" id="phone" value="{{ old('phone', $workshop->phone) }}" required 
+                            <input type="text" name="phone" id="phone" value="{{ old('phone', $workshop- placeholder="Enter phone">phone) }}" required 
                                    class="form-input mt-1 w-full bg-slate-50 border border-slate-200 rounded-xl px-4 py-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500/20 focus:border-blue-500">
                         </div>
                     </div>
@@ -66,13 +66,13 @@
                     <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
                         <div>
                             <label for="email" class="form-label font-bold text-slate-700">Business Email Address</label>
-                            <input type="email" name="email" id="email" value="{{ old('email', $workshop->email) }}" 
+                            <input type="email" name="email" id="email" value="{{ old('email', $workshop- placeholder="Enter email">email) }}" 
                                    class="form-input mt-1 w-full bg-slate-50 border border-slate-200 rounded-xl px-4 py-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500/20 focus:border-blue-500">
                         </div>
 
                         <div>
                             <label for="gstin" class="form-label font-bold text-slate-700">GSTIN / Tax Registration Number</label>
-                            <input type="text" name="gstin" id="gstin" value="{{ old('gstin', $workshop->gstin) }}" placeholder="e.g. 22AAAAA0000A1Z5" 
+                            <input type="text" name="gstin" id="gstin" value="{{ old('gstin', $workshop- placeholder="Enter gstin">gstin) }}" placeholder="e.g. 22AAAAA0000A1Z5" 
                                    class="form-input mt-1 w-full bg-slate-50 border border-slate-200 rounded-xl px-4 py-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500/20 focus:border-blue-500 uppercase">
                         </div>
                     </div>
@@ -80,39 +80,10 @@
                     <div>
                         <label for="address" class="form-label font-bold text-slate-700">Workshop Physical Address</label>
                         <textarea name="address" id="address" rows="3" 
-                                  class="form-input mt-1 w-full bg-slate-50 border border-slate-200 rounded-xl px-4 py-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500/20 focus:border-blue-500">{{ old('address', $workshop->address) }}</textarea>
+                                  class="form-input mt-1 w-full bg-slate-50 border border-slate-200 rounded-xl px-4 py-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500/20 focus:border-blue-500" placeholder="Enter address">{{ old('address', $workshop->address) }}</textarea>
                     </div>
 
-                    {{-- Logo Upload with Preview --}}
-                    <div class="border-t border-slate-100 pt-6">
-                        <label class="form-label font-bold text-slate-700 block mb-2">Invoice / Estimate Header Logo</label>
-                        <div class="flex flex-col sm:flex-row items-center gap-6 bg-slate-50 p-4 rounded-2xl border border-slate-150">
-                            
-                            {{-- Logo Preview Container --}}
-                            <div class="w-32 h-32 rounded-xl bg-white border border-slate-200 flex items-center justify-center overflow-hidden shrink-0 relative shadow-inner">
-                                @if($workshop->logo && file_exists(public_path('storage/' . $workshop->logo)))
-                                    <img id="logo-preview-image" src="{{ asset('storage/' . $workshop->logo) }}" alt="Logo" class="max-w-full max-h-full object-contain p-2">
-                                @else
-                                    <div id="logo-placeholder" class="text-center p-3 text-slate-400">
-                                        <svg class="w-8 h-8 mx-auto mb-1 text-slate-300" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M4 16l4.586-4.586a1 1 0 011.414 0L16 17m0 0l1.414-1.414a1 1 0 011.414 0L20 17.586V19a2 2 0 01-2 2H6a2 2 0 01-2-2v-3.586l.086-.086z"/><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M15 11a3 3 0 11-6 0 3 3 0 016 0z"/></svg>
-                                        <span class="text-[9px] font-semibold uppercase tracking-wider">No Logo Set</span>
-                                    </div>
-                                    <img id="logo-preview-image" src="#" alt="Logo Preview" class="max-w-full max-h-full object-contain p-2 hidden">
-                                @endif
-                            </div>
 
-                            <div class="space-y-2 text-center sm:text-left min-w-0">
-                                <input type="file" name="logo" id="logo-file-input" accept="image/*" class="hidden" onchange="previewLogo(this)">
-                                <button type="button" onclick="document.getElementById('logo-file-input').click()" 
-                                        class="btn-primary bg-white hover:bg-slate-50 border-slate-200 text-slate-700 shadow-sm !py-2 !px-4 text-xs">
-                                    Choose Logo Image
-                                </button>
-                                <p class="text-[10px] text-slate-400 font-semibold mt-1">Supports JPEG, PNG, JPG, or GIF. Max size: 2MB.</p>
-                                <p class="text-[9px] text-blue-500 font-medium leading-normal bg-blue-50 border border-blue-100 p-2 rounded-xl mt-1">This logo will be displayed on the top of generated PDFs and invoices.</p>
-                            </div>
-
-                        </div>
-                    </div>
 
                     <div class="border-t border-slate-100 pt-6 flex justify-end">
                         <button type="submit" class="btn-primary !py-2.5 !px-6 text-sm shadow-sm flex items-center justify-center gap-2">
@@ -124,6 +95,45 @@
 
             </div>
 
+            {{-- Change Password Card --}}
+            <div class="glass-card shadow-sm border border-slate-200/80 mt-8">
+                <div class="border-b border-slate-100 pb-5 mb-6">
+                    <h3 class="text-lg font-bold text-slate-900 font-outfit">Change Account Password</h3>
+                    <p class="text-xs text-slate-500 mt-1">Update your login credentials securely. Passwords must be at least 8 characters long.</p>
+                </div>
+
+                <form action="{{ route('system.change_password') }}" method="POST" class="space-y-6">
+                    @csrf
+
+                    <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+                        <div>
+                            <label for="current_password" class="form-label font-bold text-slate-700">Current Password *</label>
+                            <input type="password" name="current_password" id="current_password" required 
+                                   class="form-input mt-1 w-full bg-slate-50 border border-slate-200 rounded-xl px-4 py-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500/20 focus:border-blue-500" placeholder="Enter current password">
+                        </div>
+
+                        <div>
+                            <label for="new_password" class="form-label font-bold text-slate-700">New Password *</label>
+                            <input type="password" name="new_password" id="new_password" required 
+                                   class="form-input mt-1 w-full bg-slate-50 border border-slate-200 rounded-xl px-4 py-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500/20 focus:border-blue-500" placeholder="Enter new password">
+                        </div>
+
+                        <div>
+                            <label for="new_password_confirmation" class="form-label font-bold text-slate-700">Confirm New Password *</label>
+                            <input type="password" name="new_password_confirmation" id="new_password_confirmation" required 
+                                   class="form-input mt-1 w-full bg-slate-50 border border-slate-200 rounded-xl px-4 py-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500/20 focus:border-blue-500" placeholder="Enter new password confirmation">
+                        </div>
+                    </div>
+
+                    <div class="flex justify-end pt-4 border-t border-slate-100">
+                        <button type="submit" class="btn-primary !py-2.5 !px-6 text-sm shadow-sm flex items-center justify-center gap-2">
+                            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z"/></svg>
+                            Update Password
+                        </button>
+                    </div>
+                </form>
+            </div>
+
             {{-- Reset Database / Remove Demo Data Card --}}
             <div class="glass-card shadow-sm border border-slate-200/80 border-t-4 border-t-rose-500 mt-8">
                 <div class="border-b border-slate-100 pb-5 mb-6">
@@ -131,7 +141,7 @@
                         Danger Zone: Reset Database Data
                         <span class="badge badge-rose text-[9px] uppercase">Reset Data</span>
                     </h3>
-                    <p class="text-xs text-slate-500 mt-1">Permanently remove seeded dummy data or empty all business tables for this workshop to start with a clean slate.</p>
+                    <p class="text-xs text-slate-500 mt-1">Permanently empty all business tables for this workshop to start with a clean slate.</p>
                 </div>
 
                 <div class="space-y-4">
@@ -143,12 +153,12 @@
                         </div>
                     </div>
 
-                    <form action="{{ route('system.clear_data') }}" method="POST" onsubmit="return confirm('CRITICAL WARNING: Are you absolutely sure you want to permanently clear all business data for this workshop? This will delete all customers, vehicles, invoices, work orders, and other records. This action CANNOT be undone!')">
+                    <form action="{{ route('system.clear_data') }}" method="POST" onsubmit="if(!confirm('CRITICAL WARNING: Are you absolutely sure you want to permanently clear all business data for this workshop? This will delete all customers, vehicles, invoices, work orders, and other records. This action CANNOT be undone!')) { event.preventDefault(); return false; }">
                         @csrf
                         <div class="flex justify-end">
-                            <button type="submit" class="btn-primary bg-rose-600 hover:bg-rose-700 border-rose-600 shadow-sm !py-2.5 !px-6 text-sm flex items-center justify-center gap-2">
-                                <svg class="w-4.5 h-4.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"/></svg>
-                                Clear Workshop Demo Data
+                            <button type="submit" class="w-full sm:w-auto px-4 py-2 bg-red-600 text-white text-sm font-medium rounded-lg hover:bg-red-700 transition-colors shadow-sm flex items-center justify-center gap-2">
+                                <svg class="w-4 h-4 opacity-80" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"/></svg>
+                                Clear Workshop Data
                             </button>
                         </div>
                     </form>

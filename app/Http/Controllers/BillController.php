@@ -34,7 +34,8 @@ class BillController extends Controller
         $products = Product::where('stock_qty', '>', 0)->orderBy('name')->get();
         $services = Service::orderBy('name')->get();
         $billNumber = Bill::generateBillNumber();
-        return view('bills.create', compact('customers', 'vehicles', 'products', 'services', 'billNumber'));
+        $productsList = Product::select('id', 'name', 'price', 'barcode')->whereNotNull('barcode')->where('barcode', '!=', '')->get();
+        return view('bills.create', compact('customers', 'vehicles', 'products', 'services', 'billNumber', 'productsList'));
     }
 
     public function store(Request $request)
@@ -43,7 +44,7 @@ class BillController extends Controller
             'customer_id' => 'required|exists:customers,id',
             'vehicle_id' => 'nullable|exists:vehicles,id',
             'payment_method' => 'required|in:cash,upi',
-            'payment_status' => 'required|in:paid,pending,partial',
+            'amount_paid' => 'nullable|numeric|min:0',
             'discount' => 'nullable|numeric|min:0',
             'tax' => 'nullable|numeric|min:0',
             'notes' => 'nullable|string',
@@ -84,6 +85,14 @@ class BillController extends Controller
             $tax = $validated['tax'] ?? 0;
             $total = $subtotal - $discount + $tax;
 
+            $amountPaid = $validated['amount_paid'] ?? 0;
+            $paymentStatus = 'pending';
+            if ($amountPaid >= $total) {
+                $paymentStatus = 'paid';
+            } elseif ($amountPaid > 0) {
+                $paymentStatus = 'partial';
+            }
+
             $bill = Bill::create([
                 'bill_number' => ($validated['bill_number'] ?? null) ?: Bill::generateBillNumber(),
                 'customer_id' => $validated['customer_id'],
@@ -92,8 +101,9 @@ class BillController extends Controller
                 'tax' => $tax,
                 'discount' => $discount,
                 'total' => $total,
+                'amount_paid' => $amountPaid,
                 'payment_method' => $validated['payment_method'],
-                'payment_status' => $validated['payment_status'],
+                'payment_status' => $paymentStatus,
                 'notes' => $validated['notes'] ?? null,
                 'bill_date' => $validated['bill_date'] ?? now()->toDateString(),
             ]);
@@ -118,7 +128,8 @@ class BillController extends Controller
         $vehicles = Vehicle::with('customer')->orderBy('plate_number')->get();
         $products = Product::orderBy('name')->get();
         $services = Service::orderBy('name')->get();
-        return view('bills.edit', compact('bill', 'customers', 'vehicles', 'products', 'services'));
+        $productsList = Product::select('id', 'name', 'price', 'barcode')->whereNotNull('barcode')->where('barcode', '!=', '')->get();
+        return view('bills.edit', compact('bill', 'customers', 'vehicles', 'products', 'services', 'productsList'));
     }
 
     public function update(Request $request, Bill $bill)
@@ -127,7 +138,7 @@ class BillController extends Controller
             'customer_id' => 'required|exists:customers,id',
             'vehicle_id' => 'nullable|exists:vehicles,id',
             'payment_method' => 'required|in:cash,upi',
-            'payment_status' => 'required|in:paid,pending,partial',
+            'amount_paid' => 'nullable|numeric|min:0',
             'discount' => 'nullable|numeric|min:0',
             'tax' => 'nullable|numeric|min:0',
             'notes' => 'nullable|string',
@@ -181,6 +192,14 @@ class BillController extends Controller
             $tax = $validated['tax'] ?? 0;
             $total = $subtotal - $discount + $tax;
 
+            $amountPaid = $validated['amount_paid'] ?? 0;
+            $paymentStatus = 'pending';
+            if ($amountPaid >= $total) {
+                $paymentStatus = 'paid';
+            } elseif ($amountPaid > 0) {
+                $paymentStatus = 'partial';
+            }
+
             $bill->update([
                 'customer_id' => $validated['customer_id'],
                 'vehicle_id' => $validated['vehicle_id'] ?? null,
@@ -188,8 +207,9 @@ class BillController extends Controller
                 'tax' => $tax,
                 'discount' => $discount,
                 'total' => $total,
+                'amount_paid' => $amountPaid,
                 'payment_method' => $validated['payment_method'],
-                'payment_status' => $validated['payment_status'],
+                'payment_status' => $paymentStatus,
                 'notes' => $validated['notes'] ?? null,
                 'bill_date' => $validated['bill_date'] ?? $bill->bill_date->toDateString(),
             ]);
@@ -202,18 +222,52 @@ class BillController extends Controller
         return redirect()->route('bills.index')->with('success', 'Invoice updated successfully!');
     }
 
+    public function recordPayment(Request $request, Bill $bill)
+    {
+        $validated = $request->validate([
+            'amount_paid' => 'required|numeric|min:0',
+        ]);
+
+        $amountPaid = $validated['amount_paid'];
+        $total = $bill->total;
+
+        $paymentStatus = 'pending';
+        if ($amountPaid >= $total) {
+            $paymentStatus = 'paid';
+        } elseif ($amountPaid > 0) {
+            $paymentStatus = 'partial';
+        }
+
+        $bill->update([
+            'amount_paid' => $amountPaid,
+            'payment_status' => $paymentStatus,
+        ]);
+
+        return redirect()->back()->with('success', 'Payment recorded successfully!');
+    }
+
     public function downloadPDF(Request $request, Bill $bill)
     {
         $bill->load('customer', 'vehicle', 'items', 'workshop');
 
         $size = strtoupper($request->query('size', 'A4'));
-        $allowedSizes = ['A4', 'A5', 'LETTER', 'LEGAL', 'A3'];
+        $allowedSizes = ['A4', 'A5', 'LETTER', 'LEGAL', 'A3', '80MM', '58MM'];
         if (!in_array($size, $allowedSizes)) {
             $size = 'A4';
         }
 
+        $pdfFormat = $size;
+        $margins = [15, 15, 15];
+        if ($size === '80MM') {
+            $pdfFormat = [80, 297];
+            $margins = [5, 5, 5];
+        } elseif ($size === '58MM') {
+            $pdfFormat = [58, 297];
+            $margins = [3, 5, 3];
+        }
+
         // Create new PDF document
-        $pdf = new \TCPDF('P', 'mm', $size, true, 'UTF-8', false);
+        $pdf = new \TCPDF('P', 'mm', $pdfFormat, true, 'UTF-8', false);
 
         // Set document information
         $pdf->SetCreator('Suhaim Soft Workshop');
@@ -228,7 +282,7 @@ class BillController extends Controller
         $pdf->SetDefaultMonospacedFont(PDF_FONT_MONOSPACED);
         
         // Set margins
-        $pdf->SetMargins(15, 15, 15);
+        $pdf->SetMargins($margins[0], $margins[1], $margins[2]);
         
         // Set auto page breaks
         $pdf->SetAutoPageBreak(TRUE, 15);
@@ -240,7 +294,7 @@ class BillController extends Controller
         $pdf->AddPage();
 
         // Render HTML content for the PDF
-        $html = view('bills.pdf', compact('bill'))->render();
+        $html = view('bills.pdf', compact('bill', 'size'))->render();
 
         // Write HTML
         $pdf->writeHTML($html, true, false, true, false, '');

@@ -12,6 +12,31 @@
     </div>
 
     <form action="{{ route('bills.store') }}" method="POST" id="bill-form">
+        {{-- Localized Alert Messages --}}
+        @if (session('success'))
+            <div class="mb-6 p-4 rounded-xl bg-emerald-50 border border-emerald-200 text-emerald-800 flex items-start gap-3 shadow-sm" x-data="{ show: true }" x-show="show">
+                <svg class="w-5 h-5 text-emerald-600 mt-0.5 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"/></svg>
+                <div class="flex-1 text-sm font-medium">{{ session('success') }}</div>
+                <button type="button" @click="show = false" class="text-emerald-500 hover:text-emerald-700"><svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/></svg></button>
+            </div>
+        @endif
+
+        @if (session('error'))
+            <div class="mb-6 p-4 rounded-xl bg-rose-50 border border-rose-200 text-rose-800 flex items-start gap-3 shadow-sm" x-data="{ show: true }" x-show="show">
+                <svg class="w-5 h-5 text-rose-600 mt-0.5 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"/></svg>
+                <div class="flex-1 text-sm font-medium">{{ session('error') }}</div>
+                <button type="button" @click="show = false" class="text-rose-500 hover:text-rose-700"><svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/></svg></button>
+            </div>
+        @endif
+
+        @if (session('warning'))
+            <div class="mb-6 p-4 rounded-xl bg-amber-50 border border-amber-200 text-amber-800 flex items-start gap-3 shadow-sm" x-data="{ show: true }" x-show="show">
+                <svg class="w-5 h-5 text-amber-600 mt-0.5 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"/></svg>
+                <div class="flex-1 text-sm font-medium">{{ session('warning') }}</div>
+                <button type="button" @click="show = false" class="text-amber-500 hover:text-amber-700"><svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/></svg></button>
+            </div>
+        @endif
+
         @csrf
         <div class="grid grid-cols-1 xl:grid-cols-3 gap-6">
             <div class="xl:col-span-2 space-y-6">
@@ -32,7 +57,7 @@
                             <select name="vehicle_id" class="form-select" x-model="vehicleId">
                                 <option value="">Select Vehicle (Optional)</option>
                                 <template x-for="v in vehicles" :key="v.id">
-                                    <option :value="v.id" x-text="v.make + ' ' + v.model + ' (' + v.plate_number + ')'"></option>
+                                    <option :value="v.id" x-text="(v.make && v.make !== 'Unknown' ? v.make + ' ' : '') + v.model + ' (' + v.plate_number + ')'"></option>
                                 </template>
                             </select>
                         </div>
@@ -43,6 +68,12 @@
                     <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-3 mb-4 border-b border-slate-100 pb-3">
                         <h3 class="text-sm font-bold text-slate-900 uppercase tracking-wider">Bill Items</h3>
                         <div class="flex flex-wrap items-center gap-2">
+                            <div class="relative">
+                                <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+                                    <svg class="w-4 h-4 text-slate-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v1m6 11h2m-6 0h-2v4m0-11v3m0 0h.01M12 12h4.01M16 20h4M4 12h4m12 0h.01M5 8h2a1 1 0 001-1V5a1 1 0 00-1-1H5a1 1 0 00-1 1v2a1 1 0 001 1zm14 0h2a1 1 0 001-1V5a1 1 0 00-1-1h-2a1 1 0 00-1 1v2a1 1 0 001 1zM5 20h2a1 1 0 001-1v-2a1 1 0 00-1-1H5a1 1 0 00-1 1v2a1 1 0 001 1z"></path></svg>
+                                </div>
+                                <input type="text" x-model="scannedBarcode" @keydown.enter.prevent="handleScanBarcode" placeholder="Scan Barcode..." class="form-input !py-1.5 !pl-9 !text-xs w-48 bg-slate-50 border-slate-200">
+                            </div>
                             <select class="form-select !py-1.5 !text-xs !w-44" @change="loadTemplate($event.target.value); $event.target.value = '';">
                                 <option value="">Load Preset Package...</option>
                                 @foreach(App\Models\BillTemplate::orderBy('name')->get() as $t)
@@ -56,48 +87,49 @@
                     
                     <div class="space-y-3">
                         <template x-for="(item, index) in items" :key="index">
-                            <div class="flex flex-wrap lg:flex-nowrap items-start gap-3 p-3 bg-slate-50 border border-slate-200/60 rounded-xl">
+                            <div class="grid grid-cols-12 gap-x-3 gap-y-4 p-3 bg-slate-50 border border-slate-200/60 rounded-xl relative">
                                 <input type="hidden" :name="`items[${index}][type]`" :value="item.type">
                                 
-                                <div class="flex-shrink-0 mt-8 text-slate-400 font-bold text-sm w-5 text-center" x-text="(index + 1) + '.'"></div>
-                                
-                                <div class="flex-1 min-w-[200px]">
-                                    <label class="text-xs font-semibold text-slate-500 mb-1 block capitalize" x-text="item.type"></label>
-                                    
-                                    <select x-show="item.type === 'product'" :name="item.type === 'product' ? `items[${index}][id]` : ''" class="form-select !py-2" x-model="item.id" @change="updateItemDetails(index)" :required="item.type === 'product'">
-                                        <option value="">Select Product</option>
-                                        @foreach($products as $p)
-                                        <option value="{{ $p->id }}" data-price="{{ $p->price }}" data-name="{{ $p->name }}">{{ $p->name }} (₹{{ $p->price }})</option>
-                                        @endforeach
-                                    </select>
-                                    
-                                    <select x-show="item.type === 'service'" :name="item.type === 'service' ? `items[${index}][id]` : ''" class="form-select !py-2" x-model="item.id" @change="updateItemDetails(index)" :required="item.type === 'service'">
-                                        <option value="">Select Service</option>
-                                        @foreach($services as $s)
-                                        <option value="{{ $s->id }}" data-price="{{ $s->price }}" data-name="{{ $s->name }}">{{ $s->name }} (₹{{ $s->price }})</option>
-                                        @endforeach
-                                    </select>
-                                    
-                                    <input type="hidden" :name="`items[${index}][name]`" :value="item.name">
+                                <div class="col-span-12 lg:col-span-4 flex gap-2">
+                                    <div class="flex-shrink-0 mt-8 text-slate-400 font-bold text-sm w-5 text-center" x-text="(index + 1) + '.'"></div>
+                                    <div class="flex-1">
+                                        <label class="text-xs font-semibold text-slate-500 mb-1 block capitalize" x-text="item.type"></label>
+                                        
+                                        <select x-show="item.type === 'product'" :name="item.type === 'product' ? `items[${index}][id]` : ''" class="form-select !py-2 w-full" x-model="item.id" @change="updateItemDetails(index)" :required="item.type === 'product'">
+                                            <option value="">Select Product</option>
+                                            @foreach($products as $p)
+                                            <option value="{{ $p->id }}" data-price="{{ $p->price }}" data-name="{{ $p->name }}">{{ $p->name }} (₹{{ $p->price }})</option>
+                                            @endforeach
+                                        </select>
+                                        
+                                        <select x-show="item.type === 'service'" :name="item.type === 'service' ? `items[${index}][id]` : ''" class="form-select !py-2 w-full" x-model="item.id" @change="updateItemDetails(index)" :required="item.type === 'service'">
+                                            <option value="">Select Service</option>
+                                            @foreach($services as $s)
+                                            <option value="{{ $s->id }}" data-price="{{ $s->price }}" data-name="{{ $s->name }}">{{ $s->name }} (₹{{ $s->price }})</option>
+                                            @endforeach
+                                        </select>
+                                        
+                                        <input type="hidden" :name="`items[${index}][name]`" :value="item.name">
+                                    </div>
                                 </div>
                                 
-                                <div class="w-24">
+                                <div class="col-span-4 sm:col-span-4 lg:col-span-2">
                                     <label class="text-xs font-semibold text-slate-500 mb-1 block">Price</label>
-                                    <input type="number" step="0.01" :name="`items[${index}][price]`" x-model="item.price" class="form-input !py-2" readonly>
+                                    <input type="number" step="0.01" :name="`items[${index}][price]`" x-model="item.price" class="form-input !py-2 w-full" readonly placeholder="Enter `items[${index}][price]`">
                                 </div>
                                 
-                                <div class="w-20">
+                                <div class="col-span-4 sm:col-span-3 lg:col-span-2">
                                     <label class="text-xs font-semibold text-slate-500 mb-1 block">Qty</label>
-                                    <input type="number" min="1" :name="`items[${index}][quantity]`" x-model="item.qty" class="form-input !py-2" required>
+                                    <input type="number" min="1" :name="`items[${index}][quantity]`" x-model="item.qty" class="form-input !py-2 w-full" required placeholder="Enter `items[${index}][quantity]`">
                                 </div>
                                 
-                                <div class="w-28">
+                                <div class="col-span-4 sm:col-span-4 lg:col-span-3">
                                     <label class="text-xs font-semibold text-slate-500 mb-1 block">Total</label>
-                                    <input type="text" :value="(item.price * item.qty).toFixed(2)" class="form-input !py-2 bg-slate-100 border-transparent text-slate-800 font-semibold" readonly>
+                                    <input type="text" :value="(item.price * item.qty).toFixed(2)" class="form-input !py-2 w-full bg-slate-100 border-transparent text-slate-800 font-semibold" readonly>
                                 </div>
                                 
-                                <div class="pt-6">
-                                    <button type="button" @click="removeItem(index)" class="text-red-500 hover:text-red-600 p-2"><svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/></svg></button>
+                                <div class="col-span-12 sm:col-span-1 lg:col-span-1 flex items-center justify-end lg:items-start lg:pt-6 absolute top-2 right-2 lg:relative lg:top-0 lg:right-0">
+                                    <button type="button" @click="removeItem(index)" class="text-red-500 hover:text-red-600 hover:bg-red-50 rounded-lg p-1.5 transition-colors"><svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/></svg></button>
                                 </div>
                             </div>
                         </template>
@@ -121,11 +153,11 @@
                         </div>
                         <div class="flex justify-between items-center text-slate-600 font-medium">
                                 <span>Discount Amount (₹)</span>
-                                <input type="number" step="0.01" name="discount" x-model.number="discount" class="form-input !py-1 !px-2 w-24 text-right">
+                                <input type="number" step="0.01" name="discount" x-model.number="discount" class="form-input !py-1 !px-2 w-24 text-right" placeholder="Enter discount">
                             </div>
                         <div class="flex justify-between items-center text-slate-600 font-medium">
                             <span>Tax (₹)</span>
-                            <input type="number" step="0.01" name="tax" x-model.number="tax" class="form-input !py-1 !px-2 w-24 text-right">
+                            <input type="number" step="0.01" name="tax" x-model.number="tax" class="form-input !py-1 !px-2 w-24 text-right" placeholder="Enter tax">
                         </div>
                         <div class="pt-4 border-t border-slate-200 flex justify-between text-slate-900 text-lg font-extrabold">
                             <span>Total</span>
@@ -148,12 +180,18 @@
                             </div>
                         </div>
                         <div>
-                            <label class="form-label !text-xs">Status</label>
-                            <select name="payment_status" class="form-select">
-                                <option value="paid">Paid</option>
-                                <option value="pending">Pending</option>
-                                <option value="partial">Partial</option>
-                            </select>
+                            <label class="form-label !text-xs">Amount Paid (₹)</label>
+                            <div class="relative">
+                                <input type="number" step="0.01" name="amount_paid" x-model.number="amountPaid" class="form-input pr-16" placeholder="0.00">
+                                <button type="button" @click="amountPaid = total" class="absolute right-2 top-2 px-2 py-1 bg-slate-100 hover:bg-slate-200 border border-slate-300 rounded text-[10px] font-bold text-slate-600 transition-colors">Pay Full</button>
+                            </div>
+                        </div>
+                        <div>
+                            <label class="form-label !text-xs">Calculated Status</label>
+                            <div class="py-2.5 px-3 rounded-xl border border-slate-200 bg-slate-50 font-bold text-sm"
+                                 :class="amountPaid >= total ? 'text-emerald-750 bg-emerald-50 border-emerald-200' : (amountPaid > 0 ? 'text-amber-750 bg-amber-50 border-amber-200' : 'text-rose-750 bg-rose-50 border-rose-200')"
+                                 x-text="amountPaid >= total ? 'Paid' : (amountPaid > 0 ? 'Partial' : 'Pending')">
+                            </div>
                         </div>
                     </div>
 
@@ -178,6 +216,9 @@ document.addEventListener('alpine:init', () => {
         discount: 0,
         tax: 0,
         paymentMethod: 'cash',
+        amountPaid: 0,
+        scannedBarcode: '',
+        productsList: @json($productsList),
 
         async fetchVehicles() {
             if(!this.customerId) { this.vehicles = []; this.vehicleId = ''; return; }
@@ -206,6 +247,24 @@ document.addEventListener('alpine:init', () => {
 
         addItem(type) {
             this.items.push({ type: type, id: '', name: '', price: 0, qty: 1 });
+        },
+
+        handleScanBarcode() {
+            if(!this.scannedBarcode.trim()) return;
+            let product = this.productsList.find(p => p.barcode === this.scannedBarcode.trim());
+            if(product) {
+                this.items.push({
+                    type: 'product',
+                    id: product.id,
+                    name: product.name,
+                    price: parseFloat(product.price) || 0,
+                    qty: 1
+                });
+                this.scannedBarcode = '';
+            } else {
+                alert('Product with this barcode not found!');
+                this.scannedBarcode = '';
+            }
         },
 
         removeItem(index) {

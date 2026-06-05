@@ -1,0 +1,18 @@
+<!DOCTYPE html>
+<html>
+<body>
+    <form onsubmit="return confirm('cancel this')">
+        <button type="submit">Submit</button>
+    </form>
+    <div id="page-loader" class="hidden-loader">LOADING</div>
+    <script>
+        document.addEventListener('submit', function(e) {
+            console.log('Document submit received. defaultPrevented:', e.defaultPrevented);
+            if (e.defaultPrevented) return;
+            var el = document.getElementById('page-loader');
+            if (el) el.classList.remove('hidden-loader');
+            console.log('Loader shown');
+        });
+    </script>
+</body>
+</html>

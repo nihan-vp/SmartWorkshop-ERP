@@ -628,7 +628,7 @@
                     <label for="default_trial_duration_main" class="block text-xs font-bold text-slate-700 mb-1.5">Default Trial Duration (Days) *</label>
                     <div class="flex items-center gap-3">
                         <input id="default_trial_duration_main" type="number" name="default_trial_duration" value="{{ $defaultTrialDuration }}" min="1" max="365" autocomplete="off"
-                            class="flex-1 px-4 py-2.5 bg-slate-50 border border-slate-200 rounded-xl text-lg font-bold text-slate-900 focus:outline-none focus:border-amber-400 focus:bg-white transition-colors @error('default_trial_duration') border-red-400 @enderror">
+                            class="flex-1 px-4 py-2.5 bg-slate-50 border border-slate-200 rounded-xl text-lg font-bold text-slate-900 focus:outline-none focus:border-amber-400 focus:bg-white transition-colors @error('default_trial_duration') border-red-400 @enderror" placeholder="Enter default trial duration">
                         <span class="text-sm font-semibold text-slate-500 shrink-0">days</span>
                     </div>
                     @error('default_trial_duration')<p class="text-xs text-red-600 mt-1">{{ $message }}</p>@enderror
@@ -908,21 +908,21 @@
                     <div class="sm:col-span-2"><p class="text-xs font-extrabold text-sky-600 uppercase tracking-widest border-b border-sky-100 pb-2 mb-1">Workshop Details</p></div>
                     <div>
                         <label for="edit_name" class="block text-xs font-bold text-slate-700 mb-1">Workshop Name *</label>
-                        <input id="edit_name" type="text" name="name" required x-model="activeWorkshop.name" autocomplete="organization" class="w-full px-4 py-2.5 bg-slate-50 border border-slate-200 rounded-xl text-sm font-medium focus:outline-none focus:border-sky-400 focus:bg-white transition-colors @error('name') border-rose-400 @enderror">
+                        <input id="edit_name" type="text" name="name" required x-model="activeWorkshop.name" autocomplete="organization" class="w-full px-4 py-2.5 bg-slate-50 border border-slate-200 rounded-xl text-sm font-medium focus:outline-none focus:border-sky-400 focus:bg-white transition-colors @error('name') border-rose-400 @enderror" placeholder="Enter name">
                         @error('name')<p class="text-xs text-rose-600 mt-1">{{ $message }}</p>@enderror
                     </div>
                     <div>
                         <label for="edit_phone" class="block text-xs font-bold text-slate-700 mb-1">Phone *</label>
-                        <input id="edit_phone" type="text" name="phone" required x-model="activeWorkshop.phone" autocomplete="tel" class="w-full px-4 py-2.5 bg-slate-50 border border-slate-200 rounded-xl text-sm font-medium focus:outline-none focus:border-sky-400 focus:bg-white transition-colors @error('phone') border-rose-400 @enderror">
+                        <input id="edit_phone" type="text" name="phone" required x-model="activeWorkshop.phone" autocomplete="tel" class="w-full px-4 py-2.5 bg-slate-50 border border-slate-200 rounded-xl text-sm font-medium focus:outline-none focus:border-sky-400 focus:bg-white transition-colors @error('phone') border-rose-400 @enderror" placeholder="Enter phone">
                         @error('phone')<p class="text-xs text-rose-600 mt-1">{{ $message }}</p>@enderror
                     </div>
                     <div>
                         <label for="edit_email" class="block text-xs font-bold text-slate-700 mb-1">Email</label>
-                        <input id="edit_email" type="email" name="email" x-model="activeWorkshop.email" autocomplete="email" class="w-full px-4 py-2.5 bg-slate-50 border border-slate-200 rounded-xl text-sm font-medium focus:outline-none focus:border-sky-400 focus:bg-white transition-colors">
+                        <input id="edit_email" type="email" name="email" x-model="activeWorkshop.email" autocomplete="email" class="w-full px-4 py-2.5 bg-slate-50 border border-slate-200 rounded-xl text-sm font-medium focus:outline-none focus:border-sky-400 focus:bg-white transition-colors" placeholder="Enter email">
                     </div>
                     <div>
                         <label for="edit_gstin" class="block text-xs font-bold text-slate-700 mb-1">GSTIN</label>
-                        <input id="edit_gstin" type="text" name="gstin" x-model="activeWorkshop.gstin" autocomplete="off" class="w-full px-4 py-2.5 bg-slate-50 border border-slate-200 rounded-xl text-sm font-medium focus:outline-none focus:border-sky-400 focus:bg-white transition-colors">
+                        <input id="edit_gstin" type="text" name="gstin" x-model="activeWorkshop.gstin" autocomplete="off" class="w-full px-4 py-2.5 bg-slate-50 border border-slate-200 rounded-xl text-sm font-medium focus:outline-none focus:border-sky-400 focus:bg-white transition-colors" placeholder="Enter gstin">
                     </div>
                     <div>
                         <label for="edit_status" class="block text-xs font-bold text-slate-700 mb-1">Subscription Status *</label>
@@ -938,7 +938,7 @@
                     </div>
                     <div class="sm:col-span-2">
                         <label for="edit_address" class="block text-xs font-bold text-slate-700 mb-1">Address</label>
-                        <textarea id="edit_address" name="address" rows="2" x-model="activeWorkshop.address" autocomplete="street-address" class="w-full px-4 py-2.5 bg-slate-50 border border-slate-200 rounded-xl text-sm font-medium focus:outline-none focus:border-sky-400 focus:bg-white transition-colors resize-none"></textarea>
+                        <textarea id="edit_address" name="address" rows="2" x-model="activeWorkshop.address" autocomplete="street-address" class="w-full px-4 py-2.5 bg-slate-50 border border-slate-200 rounded-xl text-sm font-medium focus:outline-none focus:border-sky-400 focus:bg-white transition-colors resize-none" placeholder="Enter address"></textarea>
                     </div>
                     <div class="sm:col-span-2 flex gap-4 flex-wrap">
                         <label class="flex items-center gap-2 cursor-pointer">
@@ -954,12 +954,12 @@
                     <div class="sm:col-span-2 pt-2"><p class="text-xs font-extrabold text-sky-600 uppercase tracking-widest border-b border-sky-100 pb-2 mb-1">Administrator Account</p></div>
                     <div>
                         <label for="edit_admin_name" class="block text-xs font-bold text-slate-700 mb-1">Admin Name *</label>
-                        <input id="edit_admin_name" type="text" name="admin_name" required x-model="activeWorkshop.admin_name" autocomplete="off" class="w-full px-4 py-2.5 bg-slate-50 border border-slate-200 rounded-xl text-sm font-medium focus:outline-none focus:border-sky-400 focus:bg-white transition-colors @error('admin_name') border-rose-400 @enderror">
+                        <input id="edit_admin_name" type="text" name="admin_name" required x-model="activeWorkshop.admin_name" autocomplete="off" class="w-full px-4 py-2.5 bg-slate-50 border border-slate-200 rounded-xl text-sm font-medium focus:outline-none focus:border-sky-400 focus:bg-white transition-colors @error('admin_name') border-rose-400 @enderror" placeholder="Enter admin name">
                         @error('admin_name')<p class="text-xs text-rose-600 mt-1">{{ $message }}</p>@enderror
                     </div>
                     <div>
                         <label for="edit_admin_email" class="block text-xs font-bold text-slate-700 mb-1">Admin Email *</label>
-                        <input id="edit_admin_email" type="email" name="admin_email" required x-model="activeWorkshop.admin_email" autocomplete="off" class="w-full px-4 py-2.5 bg-slate-50 border border-slate-200 rounded-xl text-sm font-medium focus:outline-none focus:border-sky-400 focus:bg-white transition-colors @error('admin_email') border-rose-400 @enderror">
+                        <input id="edit_admin_email" type="email" name="admin_email" required x-model="activeWorkshop.admin_email" autocomplete="off" class="w-full px-4 py-2.5 bg-slate-50 border border-slate-200 rounded-xl text-sm font-medium focus:outline-none focus:border-sky-400 focus:bg-white transition-colors @error('admin_email') border-rose-400 @enderror" placeholder="Enter admin email">
                         @error('admin_email')<p class="text-xs text-rose-600 mt-1">{{ $message }}</p>@enderror
                     </div>
                     <div class="sm:col-span-2">
@@ -970,7 +970,7 @@
                     <div class="sm:col-span-2 pt-2"><p class="text-xs font-extrabold text-amber-600 uppercase tracking-widest border-b border-amber-100 pb-2 mb-1">Notification Alert</p></div>
                     <div class="sm:col-span-2">
                         <label for="edit_alert_message" class="block text-xs font-bold text-slate-700 mb-1">Alert Message</label>
-                        <textarea id="edit_alert_message" name="alert_message" rows="2" x-model="activeWorkshop.alert_message" autocomplete="off" class="w-full px-4 py-2.5 bg-slate-50 border border-slate-200 rounded-xl text-sm font-medium focus:outline-none focus:border-amber-400 focus:bg-white transition-colors resize-none"></textarea>
+                        <textarea id="edit_alert_message" name="alert_message" rows="2" x-model="activeWorkshop.alert_message" autocomplete="off" class="w-full px-4 py-2.5 bg-slate-50 border border-slate-200 rounded-xl text-sm font-medium focus:outline-none focus:border-amber-400 focus:bg-white transition-colors resize-none" placeholder="Enter alert message"></textarea>
                     </div>
                     <div>
                         <label for="edit_alert_expires_at" class="block text-xs font-bold text-slate-700 mb-1">Alert Expires At</label>
@@ -1021,7 +1021,7 @@
             </div>
             <div>
                 <label for="gen_quantity" class="block text-xs font-bold text-slate-700 mb-1">Quantity to Generate *</label>
-                <input id="gen_quantity" type="number" name="quantity" required min="1" max="100" value="5" autocomplete="off" class="w-full px-4 py-2.5 bg-slate-50 border border-slate-200 rounded-xl text-sm font-medium focus:outline-none focus:border-violet-400">
+                <input id="gen_quantity" type="number" name="quantity" required min="1" max="100" value="5" autocomplete="off" class="w-full px-4 py-2.5 bg-slate-50 border border-slate-200 rounded-xl text-sm font-medium focus:outline-none focus:border-violet-400" placeholder="Enter quantity">
                 <p class="text-[11px] text-slate-400 mt-1">Maximum 100 per batch.</p>
             </div>
             <div class="flex justify-end gap-3 pt-2">
