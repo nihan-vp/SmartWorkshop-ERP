@@ -9,12 +9,12 @@
 
     <!-- Removed redundant banner -->
 
-    <!-- Welcome & Overview Banner -->
-    <div class="relative bg-white border border-slate-200/80 rounded-3xl p-6 lg:p-8 shadow-sm overflow-hidden flex flex-col sm:flex-row items-start sm:items-center justify-between gap-6">
+    <!-- Welcome & Overview Banner with Filter -->
+    <div class="relative bg-white border border-slate-200/80 rounded-3xl p-6 lg:p-8 shadow-sm overflow-hidden flex flex-col md:flex-row items-start md:items-center justify-between gap-6">
         <!-- Background decorative blur -->
         <div class="absolute -right-16 -bottom-16 w-64 h-64 rounded-full bg-primary-100/20 filter blur-[30px] pointer-events-none"></div>
         
-        <div class="space-y-1.5 z-10">
+        <div class="space-y-1.5 z-10 flex-1">
             <h3 class="text-xl font-bold font-outfit text-slate-900 flex items-center gap-2">
                 Welcome back, Workshop Manager!
                 <span class="relative flex h-2.5 w-2.5">
@@ -22,10 +22,33 @@
                   <span class="relative inline-flex rounded-full h-2.5 w-2.5 bg-emerald-500"></span>
                 </span>
             </h3>
-            <p class="text-sm text-slate-500 font-medium">Here is a simplified summary of your shop's operations and finances for today.</p>
+            <p class="text-sm text-slate-500 font-medium">Here is a summary of your shop's operations and finances.</p>
         </div>
         
-        <div class="w-full sm:w-auto flex items-center z-10">
+        <div class="w-full md:w-auto flex flex-col sm:flex-row items-center z-10 gap-3">
+            <form method="GET" action="{{ route('dashboard') }}" class="w-full sm:w-auto relative" x-data="{ open: false }">
+                <button @click="open = !open" @click.away="open = false" type="button" class="w-full sm:w-48 bg-slate-50 border border-slate-200 text-slate-700 py-2.5 px-4 rounded-xl text-sm font-semibold flex items-center justify-between shadow-sm hover:bg-slate-100 transition-colors">
+                    <span class="flex items-center gap-2">
+                        <svg class="w-4 h-4 text-slate-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"/></svg>
+                        {{ match($filter) {
+                            'today' => 'Today',
+                            'yesterday' => 'Yesterday',
+                            'week' => 'Last 7 Days',
+                            'month' => 'This Month',
+                            'all' => 'All Time',
+                            default => 'Today'
+                        } }}
+                    </span>
+                    <svg class="w-4 h-4 text-slate-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"/></svg>
+                </button>
+                <div x-show="open" x-transition class="absolute top-full mt-2 w-full sm:w-48 bg-white rounded-xl shadow-lg border border-slate-100 overflow-hidden z-50" style="display: none;">
+                    <a href="?filter=today" class="block px-4 py-2 text-sm font-medium text-slate-700 hover:bg-primary-50 hover:text-primary-700 {{ $filter === 'today' ? 'bg-primary-50 text-primary-700' : '' }}">Today</a>
+                    <a href="?filter=yesterday" class="block px-4 py-2 text-sm font-medium text-slate-700 hover:bg-primary-50 hover:text-primary-700 {{ $filter === 'yesterday' ? 'bg-primary-50 text-primary-700' : '' }}">Yesterday</a>
+                    <a href="?filter=week" class="block px-4 py-2 text-sm font-medium text-slate-700 hover:bg-primary-50 hover:text-primary-700 {{ $filter === 'week' ? 'bg-primary-50 text-primary-700' : '' }}">Last 7 Days</a>
+                    <a href="?filter=month" class="block px-4 py-2 text-sm font-medium text-slate-700 hover:bg-primary-50 hover:text-primary-700 {{ $filter === 'month' ? 'bg-primary-50 text-primary-700' : '' }}">This Month</a>
+                    <a href="?filter=all" class="block px-4 py-2 text-sm font-medium text-slate-700 hover:bg-primary-50 hover:text-primary-700 {{ $filter === 'all' ? 'bg-primary-50 text-primary-700' : '' }}">All Time</a>
+                </div>
+            </form>
             <a href="{{ route('bills.create') }}" class="btn-primary shadow-sm !py-2.5 !px-5 text-sm w-full sm:w-auto justify-center text-center">
                 <svg class="w-4 h-4 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"/></svg>
                 Create Invoice
@@ -139,17 +162,6 @@
                 <p class="text-xs font-bold text-slate-500 uppercase tracking-wider">Active Staff</p>
                 <p class="text-2xl font-black text-slate-800">{{ $totalEmployees }}</p>
             </div>
-        </div>
-    </div>
-
-    <!-- Overall Performance Chart -->
-    <div class="glass-card !p-0 overflow-hidden">
-        <div class="p-5 sm:p-6 border-b border-slate-100 flex items-center justify-between bg-white flex-wrap gap-4">
-            <h3 class="text-base font-bold text-slate-900 font-outfit">Performance Overview (7 Days)</h3>
-        </div>
-        <div class="p-4 sm:p-6 w-full">
-            <div id="performance-chart" class="w-full h-72"></div>
-        </div>
     </div>
 
     <!-- Main Content Layout Split (2:1 Column Split) -->
@@ -389,71 +401,5 @@
 
         </div>
 
-    </div>
-
 </div>
-
-<script src="https://cdn.jsdelivr.net/npm/apexcharts"></script>
-<script>
-document.addEventListener("DOMContentLoaded", function () {
-    var options = {
-        series: [{
-            name: 'Revenue',
-            data: {!! json_encode($chartIncome) !!}
-        }, {
-            name: 'Expenses',
-            data: {!! json_encode($chartExpense) !!}
-        }],
-        chart: {
-            type: 'area',
-            height: 300,
-            fontFamily: "'Inter', sans-serif",
-            toolbar: { show: false },
-            zoom: { enabled: false }
-        },
-        colors: ['#10b981', '#f43f5e'],
-        fill: {
-            type: 'gradient',
-            gradient: {
-                shadeIntensity: 1,
-                opacityFrom: 0.4,
-                opacityTo: 0.05,
-                stops: [0, 90, 100]
-            }
-        },
-        dataLabels: { enabled: false },
-        stroke: { curve: 'smooth', width: 3 },
-        xaxis: {
-            categories: {!! json_encode($chartDates) !!},
-            axisBorder: { show: false },
-            axisTicks: { show: false },
-            labels: {
-                style: { colors: '#64748b', fontSize: '12px', fontWeight: 500 }
-            }
-        },
-        yaxis: {
-            labels: {
-                formatter: function (value) { return '₹' + value.toLocaleString(); },
-                style: { colors: '#64748b', fontSize: '12px', fontWeight: 500 }
-            }
-        },
-        grid: {
-            borderColor: '#f1f5f9',
-            strokeDashArray: 4,
-            yaxis: { lines: { show: true } }
-        },
-        legend: {
-            position: 'top',
-            horizontalAlign: 'right',
-            fontWeight: 600
-        },
-        tooltip: {
-            y: { formatter: function (val) { return "₹" + val.toLocaleString() } }
-        }
-    };
-
-    var chart = new ApexCharts(document.querySelector("#performance-chart"), options);
-    chart.render();
-});
-</script>
 @endsection

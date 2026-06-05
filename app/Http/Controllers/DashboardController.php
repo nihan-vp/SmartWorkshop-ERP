@@ -16,53 +16,58 @@ use Illuminate\Http\Request;
 
 class DashboardController extends Controller
 {
-    public function index()
+    public function index(Request $request)
     {
+        $filter = $request->query('filter', 'today');
         $today = today();
-        $totalIncome = Bill::where('payment_status', 'paid')->whereDate('bill_date', $today)->sum('total');
-        $totalExpenses = Expense::whereDate('expense_date', $today)->sum('amount');
-        $totalSalaries = Salary::where('status', 'paid')->whereDate('payment_date', $today)->sum('amount');
+
+        $queryDate = function ($query, $dateColumn = 'created_at') use ($filter, $today) {
+            if ($filter === 'today') {
+                return $query->whereDate($dateColumn, $today);
+            } elseif ($filter === 'yesterday') {
+                return $query->whereDate($dateColumn, $today->copy()->subDay());
+            } elseif ($filter === 'week') {
+                return $query->whereBetween($dateColumn, [$today->copy()->subDays(6), $today]);
+            } elseif ($filter === 'month') {
+                return $query->whereMonth($dateColumn, $today->month)->whereYear($dateColumn, $today->year);
+            }
+            return $query;
+        };
+
+        $totalIncome = $queryDate(Bill::where('payment_status', 'paid'), 'bill_date')->sum('total');
+        $totalExpenses = $queryDate(Expense::query(), 'expense_date')->sum('amount');
+        $totalSalaries = $queryDate(Salary::where('status', 'paid'), 'payment_date')->sum('amount');
         $totalExpensesAll = $totalExpenses + $totalSalaries;
         $totalProfit = $totalIncome - $totalExpensesAll;
-        $totalServices = Service::count();
-        $totalRecords = Bill::count();
-        $totalCustomers = Customer::count();
-        $totalVehicles = Vehicle::count();
-        $totalEmployees = Employee::where('status', 'active')->count();
+        
+        $totalServices = Service::count(); // Master Data
+        $totalRecords = $queryDate(Bill::query(), 'bill_date')->count();
+        $totalCustomers = $queryDate(Customer::query())->count();
+        $totalVehicles = $queryDate(Vehicle::query())->count();
+        $totalEmployees = Employee::where('status', 'active')->count(); // Master Data
 
-        $upiPayments = Bill::where('payment_method', 'upi')->where('payment_status', 'paid')->whereDate('bill_date', $today)->sum('total');
-        $cashPayments = Bill::where('payment_method', 'cash')->where('payment_status', 'paid')->whereDate('bill_date', $today)->sum('total');
+        $upiPayments = $queryDate(Bill::where('payment_method', 'upi')->where('payment_status', 'paid'), 'bill_date')->sum('total');
+        $cashPayments = $queryDate(Bill::where('payment_method', 'cash')->where('payment_status', 'paid'), 'bill_date')->sum('total');
 
         $stockValue = Product::selectRaw('SUM(cost_price * stock_qty) as value')->value('value') ?? 0;
-        $totalWorkOrders = WorkOrder::count();
-        $pendingWorkOrders = WorkOrder::where('status', 'pending')->count();
+        $totalWorkOrders = $queryDate(WorkOrder::query())->count();
+        $pendingWorkOrders = $queryDate(WorkOrder::where('status', 'pending'))->count();
 
         $recentBills = Bill::with('customer')->latest()->take(5)->get();
         $recentExpenses = Expense::latest()->take(5)->get();
         $lowStockProducts = Product::whereColumn('stock_qty', '<=', 'min_stock')->get();
         $pendingOrders = WorkOrder::with('customer', 'vehicle')->where('status', '!=', 'completed')->latest()->take(5)->get();
-        $activeWarranties = Warranty::where('status', 'active')->count();
+        
+        $activeWarranties = $queryDate(Warranty::where('status', 'active'))->count();
         $totalProducts = Product::count();
 
-        // Chart Data (Last 7 Days Performance)
-        $chartDates = [];
-        $chartIncome = [];
-        $chartExpense = [];
-        for ($i = 6; $i >= 0; $i--) {
-            $date = today()->subDays($i);
-            $chartDates[] = $date->format('M d');
-            $chartIncome[] = Bill::where('payment_status', 'paid')->whereDate('bill_date', $date)->sum('total');
-            $exp = Expense::whereDate('expense_date', $date)->sum('amount');
-            $sal = Salary::where('status', 'paid')->whereDate('payment_date', $date)->sum('amount');
-            $chartExpense[] = $exp + $sal;
-        }
-
         return view('dashboard', compact(
+            'filter',
             'totalIncome', 'totalExpenses', 'totalSalaries', 'totalExpensesAll', 'totalProfit',
             'totalServices', 'totalRecords', 'totalCustomers', 'totalVehicles', 'totalEmployees',
             'upiPayments', 'cashPayments', 'stockValue', 'totalWorkOrders', 'pendingWorkOrders',
             'recentBills', 'recentExpenses', 'lowStockProducts', 'pendingOrders',
-            'activeWarranties', 'totalProducts', 'chartDates', 'chartIncome', 'chartExpense'
+            'activeWarranties', 'totalProducts'
         ));
     }
 }
