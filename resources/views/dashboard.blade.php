@@ -162,6 +162,7 @@
                 <p class="text-xs font-bold text-slate-500 uppercase tracking-wider">Active Staff</p>
                 <p class="text-2xl font-black text-slate-800">{{ $totalEmployees }}</p>
             </div>
+        </div>
     </div>
 
     <!-- Main Content Layout Split (2:1 Column Split) -->
