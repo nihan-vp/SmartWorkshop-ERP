@@ -140,6 +140,7 @@
             @if($bill->vehicle)
                 <strong>Vehicle Details</strong><br>
                 Plate: {{ $bill->vehicle->plate_number ?? '' }}<br>
+                Owner: {{ $bill->vehicle->customer->name ?? $bill->customer->name ?? '' }}<br>
                 @if(!empty($bill->vehicle->make) && strtolower($bill->vehicle->make) !== 'unknown')
                     Make: {{ $bill->vehicle->make }}<br>
                 @endif

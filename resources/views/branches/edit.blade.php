@@ -18,7 +18,7 @@
         <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
             <div class="md:col-span-2">
                 <label class="form-label">Branch Name *</label>
-                <input type="text" name="name" value="{{ old('name', $branch- placeholder="Enter name">name) }}" class="form-input" required>
+                <input type="text" name="name" value="{{ old("name", $branch->name) }}" placeholder="Enter name" class="form-input" required>
                 @error('name') <p class="form-error">{{ $message }}</p> @enderror
             </div>
 
@@ -30,13 +30,13 @@
 
             <div>
                 <label class="form-label">Phone Number</label>
-                <input type="text" name="phone" value="{{ old('phone', $branch- placeholder="Enter phone">phone) }}" class="form-input">
+                <input type="text" name="phone" value="{{ old("phone", $branch->phone) }}" placeholder="Enter phone" class="form-input">
                 @error('phone') <p class="form-error">{{ $message }}</p> @enderror
             </div>
 
             <div>
                 <label class="form-label">Email Address</label>
-                <input type="email" name="email" value="{{ old('email', $branch- placeholder="Enter email">email) }}" class="form-input">
+                <input type="email" name="email" value="{{ old("email", $branch->email) }}" placeholder="Enter email" class="form-input">
                 @error('email') <p class="form-error">{{ $message }}</p> @enderror
             </div>
         </div>

@@ -21,7 +21,7 @@
                 <div class="grid grid-cols-1 sm:grid-cols-2 gap-5">
                     <div>
                         <label class="form-label">Amount *</label>
-                        <input type="number" step="0.01" name="amount" value="{{ old('amount', $employeePayment- placeholder="Enter amount">amount) }}" class="form-input" required>
+                        <input type="number" step="0.01" name="amount" value="{{ old("amount", $employeePayment->amount) }}" placeholder="Enter amount" class="form-input" required>
                     </div>
                     <div>
                         <label class="form-label">Date *</label>

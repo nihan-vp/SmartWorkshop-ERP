@@ -12,27 +12,27 @@
                 <div class="grid grid-cols-1 sm:grid-cols-2 gap-5">
                     <div>
                         <label class="form-label">Name *</label>
-                        <input type="text" name="name" value="{{ old('name', $employee- placeholder="Enter name">name) }}" class="form-input" required>
+                        <input type="text" name="name" value="{{ old("name", $employee->name) }}" placeholder="Enter name" class="form-input" required>
                     </div>
                     <div>
                         <label class="form-label">Phone</label>
-                        <input type="text" name="phone" value="{{ old('phone', $employee- placeholder="Enter phone">phone) }}" class="form-input">
+                        <input type="text" name="phone" value="{{ old("phone", $employee->phone) }}" placeholder="Enter phone" class="form-input">
                     </div>
                 </div>
                 <div class="grid grid-cols-1 sm:grid-cols-2 gap-5">
                     <div>
                         <label class="form-label">Email</label>
-                        <input type="email" name="email" value="{{ old('email', $employee- placeholder="Enter email">email) }}" class="form-input">
+                        <input type="email" name="email" value="{{ old("email", $employee->email) }}" placeholder="Enter email" class="form-input">
                     </div>
                     <div>
                         <label class="form-label">Role *</label>
-                        <input type="text" name="role" value="{{ old('role', $employee- placeholder="Enter role">role) }}" class="form-input" required>
+                        <input type="text" name="role" value="{{ old("role", $employee->role) }}" placeholder="Enter role" class="form-input" required>
                     </div>
                 </div>
                 <div class="grid grid-cols-1 sm:grid-cols-3 gap-5">
                     <div>
                         <label class="form-label">Salary *</label>
-                        <input type="number" step="0.01" name="salary" value="{{ old('salary', $employee- placeholder="Enter salary">salary) }}" class="form-input" required>
+                        <input type="number" step="0.01" name="salary" value="{{ old("salary", $employee->salary) }}" placeholder="Enter salary" class="form-input" required>
                     </div>
                     <div>
                         <label class="form-label">Join Date</label>

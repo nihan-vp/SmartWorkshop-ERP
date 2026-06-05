@@ -20,25 +20,25 @@
             <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
                 <div class="col-span-2 md:col-span-1">
                     <label class="form-label">Company Name <span class="text-red-500">*</span></label>
-                    <input type="text" name="name" value="{{ old('name', $supplier- placeholder="Enter name">name) }}" class="form-input" required>
+                    <input type="text" name="name" value="{{ old("name", $supplier->name) }}" placeholder="Enter name" class="form-input" required>
                     @error('name') <p class="text-red-500 text-xs mt-1">{{ $message }}</p> @enderror
                 </div>
 
                 <div class="col-span-2 md:col-span-1">
                     <label class="form-label">Contact Person</label>
-                    <input type="text" name="contact_person" value="{{ old('contact_person', $supplier- placeholder="Enter contact person">contact_person) }}" class="form-input">
+                    <input type="text" name="contact_person" value="{{ old("contact_person", $supplier->contact_person) }}" placeholder="Enter contact person" class="form-input">
                     @error('contact_person') <p class="text-red-500 text-xs mt-1">{{ $message }}</p> @enderror
                 </div>
 
                 <div class="col-span-2 md:col-span-1">
                     <label class="form-label">Phone</label>
-                    <input type="text" name="phone" value="{{ old('phone', $supplier- placeholder="Enter phone">phone) }}" class="form-input">
+                    <input type="text" name="phone" value="{{ old("phone", $supplier->phone) }}" placeholder="Enter phone" class="form-input">
                     @error('phone') <p class="text-red-500 text-xs mt-1">{{ $message }}</p> @enderror
                 </div>
 
                 <div class="col-span-2 md:col-span-1">
                     <label class="form-label">Email</label>
-                    <input type="email" name="email" value="{{ old('email', $supplier- placeholder="Enter email">email) }}" class="form-input">
+                    <input type="email" name="email" value="{{ old("email", $supplier->email) }}" placeholder="Enter email" class="form-input">
                     @error('email') <p class="text-red-500 text-xs mt-1">{{ $message }}</p> @enderror
                 </div>
 

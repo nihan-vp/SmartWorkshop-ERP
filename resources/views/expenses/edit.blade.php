@@ -12,11 +12,11 @@
                 <div class="grid grid-cols-1 sm:grid-cols-2 gap-5">
                     <div>
                         <label class="form-label">Category *</label>
-                        <input type="text" name="category" value="{{ old('category', $expense- placeholder="Enter category">category) }}" class="form-input" required>
+                        <input type="text" name="category" value="{{ old("category", $expense->category) }}" placeholder="Enter category" class="form-input" required>
                     </div>
                     <div>
                         <label class="form-label">Amount *</label>
-                        <input type="number" step="0.01" name="amount" value="{{ old('amount', $expense- placeholder="Enter amount">amount) }}" class="form-input" required>
+                        <input type="number" step="0.01" name="amount" value="{{ old("amount", $expense->amount) }}" placeholder="Enter amount" class="form-input" required>
                     </div>
                 </div>
                 <div class="grid grid-cols-1 sm:grid-cols-2 gap-5">

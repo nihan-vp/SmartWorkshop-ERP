@@ -12,21 +12,21 @@
                 <div class="grid grid-cols-1 sm:grid-cols-2 gap-5">
                     <div>
                         <label class="form-label">Service Name *</label>
-                        <input type="text" name="name" value="{{ old('name', $service- placeholder="Enter name">name) }}" class="form-input" required>
+                        <input type="text" name="name" value="{{ old("name", $service->name) }}" placeholder="Enter name" class="form-input" required>
                     </div>
                     <div>
                         <label class="form-label">Category</label>
-                        <input type="text" name="category" value="{{ old('category', $service- placeholder="Enter category">category) }}" class="form-input">
+                        <input type="text" name="category" value="{{ old("category", $service->category) }}" placeholder="Enter category" class="form-input">
                     </div>
                 </div>
                 <div class="grid grid-cols-1 sm:grid-cols-2 gap-5">
                     <div>
                         <label class="form-label">Price *</label>
-                        <input type="number" step="0.01" name="price" value="{{ old('price', $service- placeholder="Enter price">price) }}" class="form-input" required>
+                        <input type="number" step="0.01" name="price" value="{{ old("price", $service->price) }}" placeholder="Enter price" class="form-input" required>
                     </div>
                     <div>
                         <label class="form-label">Duration (Minutes)</label>
-                        <input type="number" name="duration_minutes" value="{{ old('duration_minutes', $service- placeholder="Enter duration minutes">duration_minutes) }}" class="form-input">
+                        <input type="number" name="duration_minutes" value="{{ old("duration_minutes", $service->duration_minutes) }}" placeholder="Enter duration minutes" class="form-input">
                     </div>
                 </div>
                 <div>

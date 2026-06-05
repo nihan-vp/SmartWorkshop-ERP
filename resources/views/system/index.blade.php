@@ -52,13 +52,13 @@
                     <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
                         <div>
                             <label for="name" class="form-label font-bold text-slate-700">Workshop / Business Name *</label>
-                            <input type="text" name="name" id="name" value="{{ old('name', $workshop- placeholder="Enter name">name) }}" required 
+                            <input type="text" name="name" id="name" value="{{ old("name", $workshop->name) }}" placeholder="Enter name" required 
                                    class="form-input mt-1 w-full bg-slate-50 border border-slate-200 rounded-xl px-4 py-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500/20 focus:border-blue-500">
                         </div>
 
                         <div>
                             <label for="phone" class="form-label font-bold text-slate-700">Contact Number *</label>
-                            <input type="text" name="phone" id="phone" value="{{ old('phone', $workshop- placeholder="Enter phone">phone) }}" required 
+                            <input type="text" name="phone" id="phone" value="{{ old("phone", $workshop->phone) }}" placeholder="Enter phone" required 
                                    class="form-input mt-1 w-full bg-slate-50 border border-slate-200 rounded-xl px-4 py-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500/20 focus:border-blue-500">
                         </div>
                     </div>
@@ -66,13 +66,13 @@
                     <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
                         <div>
                             <label for="email" class="form-label font-bold text-slate-700">Business Email Address</label>
-                            <input type="email" name="email" id="email" value="{{ old('email', $workshop- placeholder="Enter email">email) }}" 
+                            <input type="email" name="email" id="email" value="{{ old("email", $workshop->email) }}" placeholder="Enter email" 
                                    class="form-input mt-1 w-full bg-slate-50 border border-slate-200 rounded-xl px-4 py-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500/20 focus:border-blue-500">
                         </div>
 
                         <div>
                             <label for="gstin" class="form-label font-bold text-slate-700">GSTIN / Tax Registration Number</label>
-                            <input type="text" name="gstin" id="gstin" value="{{ old('gstin', $workshop- placeholder="Enter gstin">gstin) }}" placeholder="e.g. 22AAAAA0000A1Z5" 
+                            <input type="text" name="gstin" id="gstin" value="{{ old("gstin", $workshop->gstin) }}" placeholder="Enter gstin" placeholder="e.g. 22AAAAA0000A1Z5" 
                                    class="form-input mt-1 w-full bg-slate-50 border border-slate-200 rounded-xl px-4 py-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500/20 focus:border-blue-500 uppercase">
                         </div>
                     </div>

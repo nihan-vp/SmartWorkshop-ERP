@@ -21,13 +21,13 @@
         <div class="grid grid-cols-1 md:grid-cols-2 gap-6 relative z-10">
             <div class="space-y-1 md:col-span-2">
                 <label for="supplier_name" class="form-label">Supplier Name <span class="text-rose-500">*</span></label>
-                <input type="text" name="supplier_name" id="supplier_name" value="{{ old('supplier_name', $purchase- placeholder="Enter supplier name">supplier_name) }}" required class="form-input">
+                <input type="text" name="supplier_name" id="supplier_name" value="{{ old("supplier_name", $purchase->supplier_name) }}" placeholder="Enter supplier name" required class="form-input">
                 @error('supplier_name') <p class="form-error">{{ $message }}</p> @enderror
             </div>
 
             <div class="space-y-1">
                 <label for="invoice_number" class="form-label">Invoice Number</label>
-                <input type="text" name="invoice_number" id="invoice_number" value="{{ old('invoice_number', $purchase- placeholder="Enter invoice number">invoice_number) }}" class="form-input">
+                <input type="text" name="invoice_number" id="invoice_number" value="{{ old("invoice_number", $purchase->invoice_number) }}" placeholder="Enter invoice number" class="form-input">
                 @error('invoice_number') <p class="form-error">{{ $message }}</p> @enderror
             </div>
 
@@ -39,7 +39,7 @@
 
             <div class="space-y-1">
                 <label for="total_amount" class="form-label">Total Amount (₹) <span class="text-rose-500">*</span></label>
-                <input type="number" step="0.01" min="0" name="total_amount" id="total_amount" value="{{ old('total_amount', $purchase- placeholder="Enter total amount">total_amount) }}" required class="form-input font-mono">
+                <input type="number" step="0.01" min="0" name="total_amount" id="total_amount" value="{{ old("total_amount", $purchase->total_amount) }}" placeholder="Enter total amount" required class="form-input font-mono">
                 @error('total_amount') <p class="form-error">{{ $message }}</p> @enderror
             </div>
 

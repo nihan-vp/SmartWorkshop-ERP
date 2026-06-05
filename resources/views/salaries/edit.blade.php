@@ -21,21 +21,21 @@
                 <div class="grid grid-cols-1 sm:grid-cols-2 gap-5">
                     <div>
                         <label class="form-label">Amount *</label>
-                        <input type="number" step="0.01" name="amount" value="{{ old('amount', $salary- placeholder="Enter amount">amount) }}" class="form-input" required>
+                        <input type="number" step="0.01" name="amount" value="{{ old("amount", $salary->amount) }}" placeholder="Enter amount" class="form-input" required>
                     </div>
                     <div>
                         <label class="form-label">Advance Deduction</label>
-                        <input type="number" step="0.01" name="advance_deduction" value="{{ old('advance_deduction', $salary- placeholder="Enter advance deduction">advance_deduction ?? 0) }}" class="form-input">
+                        <input type="number" step="0.01" name="advance_deduction" value="{{ old("advance_deduction", $salary->advance_deduction ?? 0) }}" placeholder="Enter advance deduction" class="form-input">
                     </div>
                 </div>
                 <div class="grid grid-cols-1 sm:grid-cols-2 gap-5">
                     <div>
                         <label class="form-label">Month *</label>
-                        <input type="text" name="month" value="{{ old('month', $salary- placeholder="Enter month">month) }}" class="form-input" required>
+                        <input type="text" name="month" value="{{ old("month", $salary->month) }}" placeholder="Enter month" class="form-input" required>
                     </div>
                     <div>
                         <label class="form-label">Year *</label>
-                        <input type="number" name="year" value="{{ old('year', $salary- placeholder="Enter year">year) }}" class="form-input" required>
+                        <input type="number" name="year" value="{{ old("year", $salary->year) }}" placeholder="Enter year" class="form-input" required>
                     </div>
                 </div>
                     <div>
