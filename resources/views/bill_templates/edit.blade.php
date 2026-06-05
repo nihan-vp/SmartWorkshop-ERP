@@ -24,7 +24,7 @@
                     <div class="space-y-4">
                         <div>
                             <label class="form-label">Template Name *</label>
-                            <input type="text" name="name" required value="{{ $billTemplate- placeholder="Enter name">name }}" placeholder="e.g. Premium General Servicing Package" class="form-input">
+                            <input type="text" name="name" required value="{{ $billTemplate->name }}" placeholder="e.g. Premium General Servicing Package" class="form-input">
                         </div>
                         <div>
                             <label class="form-label">Description</label>
