@@ -1,14 +1,24 @@
 # Suhaim Soft Workshop Management System
 
-A robust and secure workshop management platform built with Laravel.
+A robust and secure workshop management platform built with Laravel, designed to run in a local environment.
 
-## Live Deployments
+## Local Development Setup
 
-- **Production (Render - Highly Recommended):** [https://suhaimsoftwokrhsop.onrender.com](https://suhaimsoftwokrhsop.onrender.com)
-- **Frontend (Netlify):** [https://suhaimsoftworkshop.netlify.app](https://suhaimsoftworkshop.netlify.app)
+To run this application locally:
 
-*Note: Netlify is configured to deploy the frontend statically. For full backend database functionality, please use the Render deployment.*
-
-## Security
-
-This application is configured for production with secure HTTPS forwarding and properly protected environment variables.
+1. **Configure Environment**: Copy `.env.example` to `.env` (if not already present) and configure your database settings (`DB_DATABASE`, `DB_USERNAME`, `DB_PASSWORD`).
+2. **Install Dependencies**:
+   ```bash
+   composer install
+   npm install
+   ```
+3. **Database Migration & Seed**:
+   ```bash
+   php artisan migrate --seed
+   ```
+4. **Compile Assets & Start Servers**:
+   ```bash
+   npm run dev
+   php artisan serve
+   ```
+   The application will be accessible locally at `http://127.0.0.1:8000`.
