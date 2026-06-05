@@ -57,6 +57,7 @@ class BillController extends Controller
             'bill_number' => 'nullable|string|unique:bills,bill_number',
             'bill_date' => 'nullable|date',
             'should_round' => 'nullable|boolean',
+            'payment_status' => 'required|in:paid,partial,pending',
         ]);
 
         DB::transaction(function () use ($validated) {
@@ -90,12 +91,7 @@ class BillController extends Controller
             }
 
             $amountPaid = $validated['amount_paid'] ?? 0;
-            $paymentStatus = 'pending';
-            if ($amountPaid >= $total) {
-                $paymentStatus = 'paid';
-            } elseif ($amountPaid > 0) {
-                $paymentStatus = 'partial';
-            }
+            $paymentStatus = $validated['payment_status'];
 
             $bill = Bill::create([
                 'bill_number' => ($validated['bill_number'] ?? null) ?: Bill::generateBillNumber(),
@@ -155,6 +151,7 @@ class BillController extends Controller
             'bill_number' => 'nullable|string|unique:bills,bill_number,' . $bill->id,
             'bill_date' => 'nullable|date',
             'should_round' => 'nullable|boolean',
+            'payment_status' => 'required|in:paid,partial,pending',
         ]);
 
         DB::transaction(function () use ($validated, $bill) {
@@ -198,12 +195,7 @@ class BillController extends Controller
             $total = $subtotal - $discount + $tax;
 
             $amountPaid = $validated['amount_paid'] ?? 0;
-            $paymentStatus = 'pending';
-            if ($amountPaid >= $total) {
-                $paymentStatus = 'paid';
-            } elseif ($amountPaid > 0) {
-                $paymentStatus = 'partial';
-            }
+            $paymentStatus = $validated['payment_status'];
 
             $bill->update([
                 'customer_id' => $validated['customer_id'],

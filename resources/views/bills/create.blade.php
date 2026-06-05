@@ -187,11 +187,12 @@
                             </div>
                         </div>
                         <div>
-                            <label class="form-label !text-xs">Calculated Status</label>
-                            <div class="py-2.5 px-3 rounded-xl border border-slate-200 bg-slate-50 font-bold text-sm"
-                                 :class="amountPaid >= total ? 'text-emerald-750 bg-emerald-50 border-emerald-200' : (amountPaid > 0 ? 'text-amber-750 bg-amber-50 border-amber-200' : 'text-rose-750 bg-rose-50 border-rose-200')"
-                                 x-text="amountPaid >= total ? 'Paid' : (amountPaid > 0 ? 'Partial' : 'Pending')">
-                            </div>
+                            <label class="form-label !text-xs">Payment Status</label>
+                            <select name="payment_status" x-model="paymentStatus" class="form-input text-sm font-semibold !py-2.5">
+                                <option value="pending">Pending</option>
+                                <option value="partial">Partial</option>
+                                <option value="paid">Paid</option>
+                            </select>
                         </div>
                     </div>
 
@@ -217,6 +218,7 @@ document.addEventListener('alpine:init', () => {
         tax: 0,
         paymentMethod: 'cash',
         amountPaid: 0,
+        paymentStatus: 'pending',
         scannedBarcode: '',
         productsList: @json($productsList),
 
