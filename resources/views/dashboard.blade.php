@@ -309,9 +309,15 @@
                 @endif
             </div>
 
+        </div>
+
+    </div>
+
+    <!-- Bottom Widgets (Moved from Right Sidebar) -->
+    <div class="grid grid-cols-1 md:grid-cols-2 gap-5">
             <!-- Statistics moved to top -->
 
-            <div class="glass-card">
+        <div class="glass-card">
                 <h3 class="text-sm font-bold text-slate-900 uppercase tracking-wider mb-4">Subscription & Trial</h3>
                 <div class="space-y-3">
                     @if(auth()->user()->workshop)
@@ -349,8 +355,8 @@
                 </div>
             </div>
 
-            {{-- AI Coming Soon Card --}}
-            <div class="glass-card relative overflow-hidden border border-violet-200/60 bg-gradient-to-br from-violet-50 to-indigo-50">
+        {{-- AI Coming Soon Card --}}
+        <div class="glass-card relative overflow-hidden border border-violet-200/60 bg-gradient-to-br from-violet-50 to-indigo-50">
                 {{-- Decorative glow --}}
                 <div class="absolute -top-8 -right-8 w-32 h-32 rounded-full bg-violet-300/30 blur-2xl pointer-events-none"></div>
                 <div class="absolute -bottom-6 -left-6 w-24 h-24 rounded-full bg-indigo-300/20 blur-xl pointer-events-none"></div>
@@ -394,7 +400,8 @@
                 </div>
             </div>
 
-        </div>
 
+    </div>
 </div>
+
 @endsection
