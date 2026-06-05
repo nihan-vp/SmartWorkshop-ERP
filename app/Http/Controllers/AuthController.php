@@ -33,6 +33,12 @@ class AuthController extends Controller
             // Clean up impersonation session if logging in fresh
             $request->session()->forget(['active_workshop_id', 'active_workshop_name']);
 
+            // Generate secure JWT token
+            $token = \App\Helpers\JwtHelper::generateToken(Auth::user());
+            // Store in cookie (valid for 24 hours) and session
+            cookie()->queue('jwt_token', $token, 1440, null, null, false, true);
+            $request->session()->put('jwt_token', $token);
+
             if (Auth::user()->isSuperAdmin()) {
                 return redirect()->route('super_admin.dashboard')->with('success', 'Logged in to Super Admin Panel!');
             }
@@ -104,6 +110,11 @@ class AuthController extends Controller
 
         Auth::login($user);
 
+        // Generate JWT token for newly registered user
+        $token = \App\Helpers\JwtHelper::generateToken($user);
+        cookie()->queue('jwt_token', $token, 1440, null, null, false, true);
+        $request->session()->put('jwt_token', $token);
+
         return redirect()->route('dashboard')->with('success', 'Workshop registered and logged in successfully!');
     }
 
@@ -112,6 +123,10 @@ class AuthController extends Controller
         Auth::logout();
         $request->session()->invalidate();
         $request->session()->regenerateToken();
+        
+        // Clear secure JWT cookie
+        cookie()->queue(cookie()->forget('jwt_token'));
+        
         return redirect()->route('login')->with('success', 'Logged out successfully!');
     }
 }

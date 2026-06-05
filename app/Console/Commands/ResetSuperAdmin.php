@@ -35,7 +35,7 @@ class ResetSuperAdmin extends Command
         if ($existing) {
             $existing->update([
                 'id'          => 1,
-                'name'        => 'Suhaim Soft Workshop',
+                'name'        => 'Suhaim Soft Super Admin',
                 'email'       => $email,
                 'password'    => Hash::make($password),
                 'role'        => 'super_admin',
@@ -45,7 +45,7 @@ class ResetSuperAdmin extends Command
         } else {
             User::create([
                 'id'          => 1,
-                'name'        => 'Suhaim Soft Workshop',
+                'name'        => 'Suhaim Soft Super Admin',
                 'email'       => $email,
                 'password'    => Hash::make($password),
                 'role'        => 'super_admin',

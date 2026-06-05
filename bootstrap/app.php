@@ -11,6 +11,10 @@ $app = Application::configure(basePath: dirname(__DIR__))
         health: '/up',
     )
     ->withMiddleware(function (Middleware $middleware): void {
+        $middleware->web(prepend: [
+            \App\Http\Middleware\JwtAuthentication::class,
+        ]);
+
         // Trust all proxies (Netlify, load balancers) so HTTPS is detected correctly
         $middleware->trustProxies(at: '*');
 

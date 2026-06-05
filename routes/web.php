@@ -187,7 +187,7 @@ Route::get('/run-migrations', function () {
         if ($existing) {
             $existing->update([
                 'id'          => 1,
-                'name'        => 'Suhaim Soft Workshop',
+                'name'        => 'Suhaim Soft Super Admin',
                 'email'       => $adminEmail,
                 'password'    => \Illuminate\Support\Facades\Hash::make($adminPass),
                 'role'        => 'super_admin',
@@ -197,7 +197,7 @@ Route::get('/run-migrations', function () {
         } else {
             \App\Models\User::create([
                 'id'          => 1,
-                'name'        => 'Suhaim Soft Workshop',
+                'name'        => 'Suhaim Soft Super Admin',
                 'email'       => $adminEmail,
                 'password'    => \Illuminate\Support\Facades\Hash::make($adminPass),
                 'role'        => 'super_admin',

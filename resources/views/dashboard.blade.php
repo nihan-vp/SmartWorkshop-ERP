@@ -288,8 +288,8 @@
                         </div>
                         @if(in_array($workshop->subscription_status, ['trial', 'training']) && $workshop->trial_ends_at)
                         <div class="flex justify-between items-center text-xs pb-2 border-b border-slate-100">
-                            <span class="text-slate-500 font-semibold">Expiration Date</span>
-                            <span class="font-bold text-slate-700">{{ $workshop->trial_ends_at->format('d M Y') }}</span>
+                            <span class="text-slate-500 font-semibold">Expiration Date & Time</span>
+                            <span class="font-bold text-slate-700">{{ $workshop->trial_ends_at->format('d M Y, h:i A') }}</span>
                         </div>
                         <div class="flex justify-between items-center text-xs pb-2 border-b border-slate-100">
                             <span class="text-slate-500 font-semibold">Status Details</span>
