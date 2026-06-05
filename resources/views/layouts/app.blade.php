@@ -633,25 +633,128 @@
             window.axios.defaults.headers.common['Authorization'] = 'Bearer ' + window.jwtToken;
         }
 
-        window.wsClient = {
-            getVehicles: function(customerId) {
-                return axios.get('/api/customers/' + customerId + '/vehicles')
-                    .then(response => response.data)
-                    .catch(error => {
-                        console.error('Error fetching vehicles:', error);
-                        throw error;
-                    });
-            },
-            
-            getBillTemplate: function(templateId) {
-                return axios.get('/api/bill-templates/' + templateId)
-                    .then(response => response.data)
-                    .catch(error => {
-                        console.error('Error fetching bill template:', error);
-                        throw error;
-                    });
+        // ═══════════════════════════════════════════════════
+        // Secure Real-Time WebSocket Client
+        // Replaces Axios HTTP calls with persistent WebSocket
+        // ═══════════════════════════════════════════════════
+        window.wsClient = (function () {
+            let socket = null;
+            let isAuthenticated = false;
+            let connectionPromise = null;
+            const pending = {};
+
+            const WS_PORT = '{{ env("WEBSOCKET_PORT", "8080") }}';
+            const WS_URL = 'ws://' + location.hostname + ':' + WS_PORT;
+
+            function connect() {
+                if (connectionPromise) return connectionPromise;
+
+                connectionPromise = new Promise(function (resolve, reject) {
+                    try {
+                        socket = new WebSocket(WS_URL);
+                    } catch (e) {
+                        connectionPromise = null;
+                        return reject(e);
+                    }
+
+                    socket.onopen = function () {
+                        // Step 1: Authenticate with HMAC-SHA256 signature
+                        socket.send(JSON.stringify({
+                            type: 'auth',
+                            userId: window.wsAuth.userId,
+                            time: window.wsAuth.time,
+                            signature: window.wsAuth.signature
+                        }));
+                    };
+
+                    socket.onmessage = function (event) {
+                        let data;
+                        try { data = JSON.parse(event.data); } catch (e) { return; }
+
+                        // Auth response
+                        if (data.type === 'auth_success') {
+                            isAuthenticated = true;
+                            console.log('🟢 WebSocket: Securely authenticated');
+                            resolve(socket);
+                            return;
+                        }
+
+                        if (data.type === 'error' && !isAuthenticated) {
+                            console.error('🔴 WebSocket auth failed:', data.message);
+                            connectionPromise = null;
+                            reject(new Error(data.message));
+                            return;
+                        }
+
+                        // Vehicles response
+                        if (data.type === 'vehicles_data') {
+                            const key = 'vehicles_' + data.customerId;
+                            if (pending[key]) {
+                                pending[key].resolve(data.vehicles);
+                                delete pending[key];
+                            }
+                        }
+
+                        // Bill template response
+                        if (data.type === 'bill_template_data') {
+                            const key = 'template_' + data.templateId;
+                            if (pending[key]) {
+                                pending[key].resolve(data.template);
+                                delete pending[key];
+                            }
+                        }
+
+                        // Error response for pending requests
+                        if (data.type === 'error') {
+                            Object.keys(pending).forEach(function(k) {
+                                pending[k].reject(new Error(data.message));
+                                delete pending[k];
+                            });
+                        }
+                    };
+
+                    socket.onerror = function (err) {
+                        console.warn('⚠️ WebSocket error, falling back to API...');
+                        connectionPromise = null;
+                        reject(err);
+                    };
+
+                    socket.onclose = function () {
+                        isAuthenticated = false;
+                        connectionPromise = null;
+                        socket = null;
+                        console.log('🔌 WebSocket connection closed');
+                    };
+                });
+
+                return connectionPromise;
             }
-        };
+
+            function sendRequest(type, payload, pendingKey) {
+                return connect().then(function () {
+                    return new Promise(function (resolve, reject) {
+                        pending[pendingKey] = { resolve: resolve, reject: reject };
+                        socket.send(JSON.stringify(Object.assign({ type: type }, payload)));
+                        // 10-second timeout per request
+                        setTimeout(function () {
+                            if (pending[pendingKey]) {
+                                pending[pendingKey].reject(new Error('WebSocket request timed out'));
+                                delete pending[pendingKey];
+                            }
+                        }, 10000);
+                    });
+                });
+            }
+
+            return {
+                getVehicles: function (customerId) {
+                    return sendRequest('get_vehicles', { customerId: customerId }, 'vehicles_' + customerId);
+                },
+                getBillTemplate: function (templateId) {
+                    return sendRequest('get_bill_template', { templateId: templateId }, 'template_' + templateId);
+                }
+            };
+        })();
     </script>
 
     {{-- Mobile Overlay --}}
