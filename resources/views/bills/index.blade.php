@@ -7,7 +7,7 @@
     pdfModalOpen: false, 
     pdfUrl: '', 
     pdfBaseUrl: '', 
-    pdfSize: 'A4', 
+    pdfSize: 'A5', 
     iframeLoading: true,
     paymentModalOpen: false,
     paymentBillId: null,
@@ -146,7 +146,6 @@
             
             <div class="flex items-center gap-3 w-full sm:w-auto">
                 <select x-model="pdfSize" @change="pdfUrl = pdfBaseUrl + '?size=' + pdfSize + '#view=FitH'; iframeLoading = true;" class="form-select w-full sm:w-auto py-1.5 pl-3 pr-8 text-sm font-semibold text-slate-700 bg-slate-50 border-slate-200 rounded-lg hover:bg-slate-100 transition-colors focus:ring-2 focus:ring-primary-500/20">
-                    <option value="A4">A4 Size</option>
                     <option value="A5">A5 Size</option>
                     <option value="A3">A3 Size</option>
                     <option value="LETTER">Letter</option>
