@@ -36,7 +36,7 @@ class EnsureWorkshopSelected
                         ], 403);
                     }
 
-                    return response()->view('errors.subscription_expired', [
+                    return response()->view('errors.system_inactive', [
                         'workshop' => $workshop,
                         'isSuspended' => true
                     ], 403);
@@ -50,7 +50,7 @@ class EnsureWorkshopSelected
                         ], 403);
                     }
 
-                    return response()->view('errors.subscription_expired', [
+                    return response()->view('errors.system_inactive', [
                         'workshop' => $workshop,
                         'isSuspended' => false
                     ], 403);

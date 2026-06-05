@@ -21,7 +21,7 @@ class SuperAdminController extends Controller
         $workshops = Workshop::with([
             'users' => fn ($query) => $query->where('role', 'admin')->orderBy('name'),
         ])->withCount([
-            'users',
+            'employees',
             'bills' => fn ($query) => $query->withoutGlobalScopes(),
         ])->orderBy('name')->get();
 
@@ -234,6 +234,9 @@ class SuperAdminController extends Controller
     {
         session(['active_workshop_id' => $workshop->id]);
         session(['active_workshop_name' => $workshop->name]);
+        
+        $adminUser = $workshop->users()->where('role', 'admin')->first();
+        session(['active_workshop_admin_name' => $adminUser ? $adminUser->name : 'Workshop Admin']);
 
         return redirect()->route('dashboard')->with('success', "Inspecting workshop: {$workshop->name}");
     }

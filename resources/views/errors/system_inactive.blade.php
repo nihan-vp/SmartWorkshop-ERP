@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Suhaim Soft - System Inactive</title>
+    <title>{{ $workshop->name }} - System Inactive</title>
     <link rel="shortcut icon" href="/images/logo.png" type="image/png">
     <link rel="icon" href="/images/logo.png" type="image/png">
     <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
@@ -58,7 +58,7 @@
                     </svg>
                 </div>
                 <div>
-                    <h1 class="text-sm font-extrabold text-blue-900 tracking-wide uppercase leading-none">Suhaim Soft</h1>
+                    <h1 class="text-sm font-extrabold text-blue-900 tracking-wide uppercase leading-none">{{ $workshop->name }}</h1>
                     <span class="text-[9px] font-bold text-blue-500 uppercase tracking-widest mt-1 block">Garage Admin</span>
                 </div>
             </div>
@@ -155,8 +155,8 @@
                         <span class="inline-flex items-center gap-1.5 text-[10px] font-extrabold uppercase tracking-widest text-blue-600 bg-blue-50 border border-blue-100 px-3 py-1 rounded-full">
                             ⚡ {{ $isSuspended ? 'Access Suspended' : 'Demo / Trial Expired' }}
                         </span>
-                        <h1 class="text-3xl font-black text-slate-900 tracking-tight leading-none">
-                            Suhaim Soft Inactive
+                        <h1 class="text-3xl font-black text-slate-900 tracking-tight leading-none capitalize">
+                            {{ $workshop->name }} Inactive
                         </h1>
                         <p class="text-slate-500 max-w-md mx-auto font-medium text-[13px] leading-relaxed">
                             To activate your system or be a part of Suhaim Soft, please contact our office at 

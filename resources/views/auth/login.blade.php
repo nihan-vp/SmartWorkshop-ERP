@@ -107,9 +107,9 @@
 
                 {{-- Remember Me --}}
                 <div class="flex items-center pt-2 pb-2">
-                    <label class="flex items-center gap-3 cursor-pointer group">
-                        <div class="relative flex items-center justify-center">
-                            <input type="checkbox" name="remember" class="peer sr-only">
+                    <label for="remember" class="flex items-center gap-3 cursor-pointer group">
+                        <div class="relative flex items-center justify-center w-5 h-5">
+                            <input type="checkbox" name="remember" id="remember" value="1" class="peer absolute opacity-0 w-5 h-5 cursor-pointer z-10">
                             <div class="w-5 h-5 border-2 border-slate-300 rounded peer-checked:bg-blue-600 peer-checked:border-blue-600 transition-colors"></div>
                             <svg class="absolute w-3.5 h-3.5 text-white opacity-0 peer-checked:opacity-100 pointer-events-none" fill="none" stroke="currentColor" stroke-width="3" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M5 13l4 4L19 7"></path></svg>
                         </div>

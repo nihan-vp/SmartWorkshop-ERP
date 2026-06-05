@@ -664,15 +664,20 @@
 
                 <div>
                     <h1 class="text-lg font-bold text-blue-900 leading-tight">
-                        {{ (Auth::user()->isSuperAdmin() && session()->has('active_workshop_id')) ? session('active_workshop_name') : (Auth::user()->isSuperAdmin() ? 'System Admin' : (Auth::user()->workshop->name ?? 'Suhaim Soft')) }}
+                        {{ (Auth::user()->isSuperAdmin() && session()->has('active_workshop_id')) ? session('active_workshop_name') : (Auth::user()->isSuperAdmin() ? Auth::user()->name : (Auth::user()->workshop->name ?? 'Suhaim Soft')) }}
                     </h1>
+                    @if(!Auth::user()->isSuperAdmin() || session()->has('active_workshop_id'))
+                    <p class="text-xs text-slate-500 font-semibold mt-0.5">
+                        {{ session()->has('active_workshop_id') ? session('active_workshop_admin_name', \App\Models\User::where('workshop_id', session('active_workshop_id'))->where('role', 'admin')->first()?->name ?? 'Workshop Admin') : Auth::user()->name }}
+                    </p>
+                    @endif
                     @if((!Auth::user()->isSuperAdmin() || session()->has('active_workshop_id')) && Auth::user()->workshop && Auth::user()->workshop->phone)
-                    <p class="text-xs text-blue-500 font-medium">
+                    <p class="text-xs text-blue-500 font-medium mt-0.5">
                         {{ Auth::user()->workshop->phone }}
                     </p>
                     @endif
-                    <p class="text-xs text-blue-600 font-bold tracking-wider uppercase mt-0.5">
-                        {{ Auth::user()->isSuperAdmin() ? 'Super Admin' : (Auth::user()->role === 'admin' ? 'Workshop Owner' : 'Employee') }}
+                    <p class="text-xs text-blue-600 font-bold tracking-wider uppercase mt-1">
+                        {{ (Auth::user()->isSuperAdmin() && session()->has('active_workshop_id')) ? 'Workshop Owner' : (Auth::user()->isSuperAdmin() ? 'Super Admin' : (Auth::user()->role === 'admin' ? 'Workshop Owner' : 'Staff')) }}
                     </p>
                 </div>
             </div>
@@ -778,7 +783,7 @@
 
             <a href="{{ route('employees.index') }}" class="sidebar-link {{ request()->routeIs('employees.*') ? 'active' : '' }}" id="nav-employees">
                 <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"/></svg>
-                Employees
+                Staff
             </a>
 
             <a href="{{ route('work-orders.index') }}" class="sidebar-link {{ request()->routeIs('work-orders.*') ? 'active' : '' }}" id="nav-work-orders">
