@@ -250,7 +250,8 @@
             }
             .data-table tbody td.text-white,
             .data-table tbody td .text-white {
-                @apply text-slate-800 font-semibold !important;
+                color: #1e293b !important;
+                font-weight: 600 !important;
             }
             .glass-card p.text-white,
             .glass-card span.text-white:not(.badge):not(.btn-primary),
@@ -258,9 +259,9 @@
             .glass-card h2.text-white,
             .glass-card h3.text-white,
             .glass-card h4.text-white,
-            .glass-card font-mono.text-white,
+            .glass-card .font-mono.text-white,
             .glass-card span.font-mono.text-white {
-                @apply text-slate-800 !important;
+                color: #1e293b !important;
             }
             .data-table tbody tr {
                 @apply transition-all duration-150 hover:bg-slate-50/50;
