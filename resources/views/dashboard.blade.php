@@ -160,7 +160,7 @@
     </div>
 
     <!-- Main Content Layout Split (2:1 Column Split) -->
-    <div class="grid grid-cols-1 lg:grid-cols-12 gap-8">
+    <div class="grid grid-cols-1 lg:grid-cols-12 gap-8 items-start">
         
         <!-- Left Side: Core Lists & Activity (Col-Span-8) -->
         <div class="lg:col-span-8 space-y-8">
