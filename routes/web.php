@@ -45,7 +45,6 @@ Route::get('/support', function () {
 Route::get('/register', [AuthController::class, 'showRegister'])->name('register');
 Route::post('/register', [AuthController::class, 'register']);
 
-Route::get('/bills/{bill}/pdf', [BillController::class, 'downloadPDF'])->name('bills.pdf');
 
 // Authenticated Routes
 Route::middleware('auth')->group(function () {

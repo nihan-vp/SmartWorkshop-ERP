@@ -58,7 +58,7 @@
                                 if (strlen($whatsappPhone) === 10) {
                                     $whatsappPhone = '91' . $whatsappPhone;
                                 }
-                                $whatsappMessage = "Hello " . ($bill->customer->name ?? 'Customer') . ", here is your invoice from " . ($bill->workshop->name ?? 'Suhaim Soft Work Shop') . ": " . route('bills.pdf', $bill);
+                                $whatsappMessage = "Hello " . ($bill->customer->name ?? 'Customer') . ", here are your invoice details from " . ($bill->workshop->name ?? 'Suhaim Soft Work Shop') . ". Total Amount: ₹" . number_format($bill->total, 2);
                             @endphp
                             <a href="https://wa.me/{{ $whatsappPhone }}?text={{ urlencode($whatsappMessage) }}" 
                                target="_blank" 
