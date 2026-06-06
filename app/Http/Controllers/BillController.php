@@ -246,6 +246,11 @@ class BillController extends Controller
         return redirect()->back()->with('success', 'Payment recorded successfully!');
     }
 
+    public function invoice(Bill $bill)
+    {
+        $bill->load('customer', 'vehicle.customer', 'items', 'workshop');
+        return view('bills.invoice', compact('bill'));
+    }
 
     public function destroy(Bill $bill)
     {

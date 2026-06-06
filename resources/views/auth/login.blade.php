@@ -1,148 +1,228 @@
-@extends('layouts.app')
-
-@section('title', 'Login')
-@section('seo-title', 'Login to Workshop Manager')
-@section('seo-description', 'Login to your Suhaim Soft Workshop Manager account.')
-
-@section('content')
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Login — Suhaim Soft Workshop Manager</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
+    <link rel="icon" href="/images/logo.png" type="image/png">
+    <link rel="apple-touch-icon" href="/images/logo.png">
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    fontFamily: { sans: ['Inter', 'sans-serif'] },
+                }
+            }
+        }
+    </script>
+    <script src="https://cdn.jsdelivr.net/npm/alpinejs@3.x.x/dist/cdn.min.js" defer></script>
     <style>
-        .glass-card {
-            background: rgba(255, 255, 255, 0.65);
-            backdrop-filter: blur(20px);
-            -webkit-backdrop-filter: blur(20px);
-            border: 1px solid rgba(255, 255, 255, 0.8);
-            box-shadow: 0 25px 50px -12px rgba(15, 23, 42, 0.15), 0 0 0 1px rgba(255,255,255,0.5) inset;
+        body, html { margin: 0; padding: 0; background-color: #ffffff; }
+        
+        .login-layout {
+            display: flex;
+            min-height: 100vh;
+            width: 100%;
         }
-        .input-glowing:focus-within {
-            box-shadow: 0 0 0 4px rgba(59, 130, 246, 0.15);
+
+        /* ── LEFT SIDE (GRAPHIC) ── */
+        .login-hero {
+            position: relative;
+            flex: 1;
+            background: linear-gradient(135deg, #0f172a 0%, #1e3a8a 50%, #3b82f6 100%);
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+            padding: 4rem;
+            color: #ffffff;
+            overflow: hidden;
+        }
+        
+        /* Subtle background pattern/overlay */
+        .login-hero::before {
+            content: "";
+            position: absolute;
+            inset: 0;
+            background-image: radial-gradient(circle at 20% 30%, rgba(255,255,255,0.1) 0%, transparent 40%),
+                              radial-gradient(circle at 80% 80%, rgba(255,255,255,0.1) 0%, transparent 40%);
+            z-index: 1;
+        }
+
+        /* ── RIGHT SIDE (FORM) ── */
+        .login-form-container {
+            flex: 1;
+            max-width: 600px;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            padding: 4rem;
+            background: #ffffff;
+            position: relative;
+        }
+
+        .input-web {
+            background-color: #f8fafc;
+            border: 2px solid transparent;
+            transition: all 0.3s ease;
+        }
+        .input-web:focus-within {
+            background-color: #ffffff;
             border-color: #3b82f6;
+            box-shadow: 0 4px 14px 0 rgba(59, 130, 246, 0.15);
         }
-        .floating-shape {
-            animation: float 6s ease-in-out infinite;
+
+        .btn-web {
+            background-color: #1d4ed8;
+            transition: all 0.3s ease;
         }
-        .floating-shape-2 {
-            animation: float 8s ease-in-out infinite reverse;
+        .btn-web:hover {
+            background-color: #1e40af;
+            box-shadow: 0 8px 20px -6px rgba(29, 78, 216, 0.5);
+            transform: translateY(-1px);
         }
-        @keyframes float {
-            0% { transform: translateY(0) rotate(0deg); }
-            50% { transform: translateY(-20px) rotate(5deg); }
-            100% { transform: translateY(0) rotate(0deg); }
+
+        /* ── ANIMATIONS ── */
+        .fade-in { animation: fadeIn 0.8s ease-out forwards; opacity: 0; }
+        .slide-up { animation: slideUp 0.6s ease-out forwards; opacity: 0; transform: translateY(20px); }
+        @keyframes fadeIn { to { opacity: 1; } }
+        @keyframes slideUp { to { opacity: 1; transform: translateY(0); } }
+
+        /* ── RESPONSIVE ── */
+        @media (max-width: 1024px) {
+            .login-layout { flex-direction: column; }
+            .login-hero { 
+                flex: none; 
+                padding: 3rem 2rem 4rem 2rem; 
+                justify-content: center; 
+                text-align: center; 
+            }
+            .login-hero-footer { display: none; }
+            .login-hero h1 { font-size: 2.5rem; }
+            .login-hero p { font-size: 1.1rem; margin: 0 auto; }
+            .login-hero .inline-flex { margin: 0 auto 1.5rem auto; }
+            
+            .login-form-container { 
+                max-width: 100%; 
+                padding: 3rem 2rem; 
+                border-radius: 2rem 2rem 0 0; 
+                margin-top: -2rem; 
+                z-index: 10; 
+                box-shadow: 0 -15px 40px rgba(0,0,0,0.1); 
+            }
         }
-        .fade-in-up {
-            animation: fadeInUp 0.8s cubic-bezier(0.16, 1, 0.3, 1) forwards;
-            opacity: 0;
-            transform: translateY(20px);
-        }
-        @keyframes fadeInUp {
-            to { opacity: 1; transform: translateY(0); }
+        @media (max-width: 640px) {
+            .login-hero { padding: 2rem 1.5rem 3.5rem 1.5rem; }
+            .login-hero h1 { font-size: 2rem; }
+            .login-hero p { font-size: 1rem; }
+            .login-form-container { padding: 2.5rem 1.5rem; }
         }
     </style>
+</head>
+<body>
 
-    <div class="relative w-full max-w-md mx-auto z-10 fade-in-up pt-4 pb-8">
+    <div class="login-layout">
         
-        {{-- Brand Header --}}
-        <div class="flex flex-col items-center mb-8">
-            <div class="w-16 h-16 rounded-2xl bg-gradient-to-br from-blue-600 to-blue-500 flex items-center justify-center shadow-lg shadow-blue-500/30 mb-4">
-                <svg width="32" height="32" viewBox="0 0 512 512" fill="currentColor" class="text-white">
-                    <path d="M 334 165 C 334 165 298 140 256 140 C 214 140 178 165 178 210 C 178 260 230 275 270 285 C 300 292 342 308 342 355 C 342 410 290 432 256 432 C 210 432 170 410 170 410 L 182 355 C 182 355 220 380 256 380 C 300 380 342 360 342 315 C 342 265 285 245 242 235 C 208 227 170 205 170 160 C 170 100 226 80 256 80 C 306 80 342 105 342 105 Z" />
-                </svg>
-            </div>
-            <h1 class="text-3xl font-black text-slate-900 tracking-tight mb-1">Suhaim Soft</h1>
-            <p class="text-sm text-blue-600 font-bold tracking-widest uppercase bg-blue-50 px-3 py-1 rounded-full">Workshop Manager</p>
-        </div>
-
-        {{-- Login Card --}}
-        <div class="glass-card rounded-[2rem] p-8 sm:p-10 relative overflow-hidden">
-            
-            {{-- Card Highlight --}}
-            <div class="absolute top-0 left-0 w-full h-1 bg-gradient-to-r from-blue-500 via-blue-500 to-blue-500"></div>
-
-            {{-- Back Button --}}
-            <a href="{{ url('/') }}" class="absolute top-6 left-6 p-2.5 rounded-full bg-slate-50 border border-slate-100 text-slate-400 hover:text-blue-600 hover:bg-blue-50 hover:border-blue-100 transition-all duration-300" title="Back to Home">
-                <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 19l-7-7m0 0l7-7m-7 7h18"/>
-                </svg>
-            </a>
-
-            <div class="mb-8 text-center">
-                <h2 class="text-2xl font-bold text-slate-800">Welcome Back</h2>
-                <p class="text-sm text-slate-500 mt-2 font-medium">Enter your credentials to access the dashboard</p>
+        {{-- LEFT SIDE --}}
+        <div class="login-hero fade-in">
+            <div class="z-10 text-center md:text-left">
+                <div class="inline-flex items-center justify-center w-16 h-16 rounded-2xl bg-white/10 backdrop-blur-md border border-white/20 mb-8 mx-auto md:mx-0">
+                    <svg width="32" height="32" viewBox="0 0 512 512" fill="currentColor" class="text-white">
+                        <path d="M 334 165 C 334 165 298 140 256 140 C 214 140 178 165 178 210 C 178 260 230 275 270 285 C 300 292 342 308 342 355 C 342 410 290 432 256 432 C 210 432 170 410 170 410 L 182 355 C 182 355 220 380 256 380 C 300 380 342 360 342 315 C 342 265 285 245 242 235 C 208 227 170 205 170 160 C 170 100 226 80 256 80 C 306 80 342 105 342 105 Z" />
+                    </svg>
+                </div>
+                <h1 class="text-4xl md:text-5xl font-black tracking-tight mb-4 leading-tight">Suhaim Soft <br/><span class="text-blue-300">Web Dashboard</span></h1>
+                <p class="text-blue-100 text-lg md:text-xl font-medium max-w-md mx-auto md:mx-0">Empowering auto repair shops globally with enterprise-grade cloud tools.</p>
             </div>
 
-            <form action="{{ route('login.post') }}" method="POST" class="space-y-5">
-                @csrf
-
-                {{-- Email Input --}}
-                <div>
-                    <label class="block text-xs font-bold text-slate-600 uppercase tracking-wider mb-2 ml-1">Email Address</label>
-                    <div class="relative input-glowing rounded-xl transition-all duration-300 bg-white/60 backdrop-blur-sm border border-slate-200/80">
-                        <div class="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none text-blue-500">
-                            <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2-2H5v10a2 2 0 002 2z"/></svg>
-                        </div>
-                        <input type="email" name="email" required placeholder="admin@example.com" value="{{ old('email') }}"
-                                class="w-full bg-transparent pl-12 pr-4 py-3.5 text-slate-800 placeholder-slate-400 text-sm font-medium focus:outline-none rounded-xl">
+            <div class="z-10 login-hero-footer mt-12">
+                <div class="p-6 bg-white/10 backdrop-blur-md border border-white/10 rounded-2xl max-w-sm">
+                    <div class="flex gap-1 text-yellow-400 mb-3">
+                        <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 20 20"><path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z"/></svg>
+                        <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 20 20"><path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z"/></svg>
+                        <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 20 20"><path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z"/></svg>
+                        <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 20 20"><path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z"/></svg>
+                        <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 20 20"><path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z"/></svg>
                     </div>
-                    @error('email')<p class="text-xs text-red-500 mt-1.5 font-bold ml-1">{{ $message }}</p>@enderror
+                    <p class="text-white text-sm font-medium italic">"Switching our garage to Suhaim Soft was the best decision. Invoicing is instant, and tracking vehicles is seamless."</p>
+                    <p class="text-blue-200 text-xs font-bold mt-4 uppercase tracking-wider">— Verified Workshop Owner</p>
                 </div>
-
-                {{-- Password Input --}}
-                <div x-data="{ show: false }">
-                    <div class="flex items-center justify-between mb-2 ml-1">
-                        <label class="block text-xs font-bold text-slate-600 uppercase tracking-wider">Password</label>
-                        <a href="{{ route('support') }}" class="text-xs font-bold text-blue-600 hover:text-blue-800 transition-colors" title="Developer Support Details">Forgot?</a>
-                    </div>
-                    <div class="relative input-glowing rounded-xl transition-all duration-300 bg-white/60 backdrop-blur-sm border border-slate-200/80">
-                        <div class="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none text-blue-500">
-                            <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z"/></svg>
-                        </div>
-                        <input :type="show ? 'text' : 'password'" name="password" required placeholder="••••••••"
-                                class="w-full bg-transparent pl-12 pr-12 py-3.5 text-slate-800 placeholder-slate-400 text-sm font-medium focus:outline-none rounded-xl">
-                        <button type="button" @click="show = !show" class="absolute inset-y-0 right-0 pr-4 flex items-center text-slate-400 hover:text-blue-500 transition-colors focus:outline-none">
-                            <svg x-show="!show" class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"/><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z"/></svg>
-                            <svg x-show="show" class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24" x-cloak><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M13.875 18.825A10.05 10.05 0 0112 19c-4.478 0-8.268-2.943-9.542-7a9.97 9.97 0 011.563-3.029m5.858.908a3 3 0 114.243 4.243M9.878 9.878l4.242 4.242M9.88 9.88L3 3m12 12l6 6"/></svg>
-                        </button>
-                    </div>
-                    @error('password')<p class="text-xs text-red-500 mt-1.5 font-bold ml-1">{{ $message }}</p>@enderror
-                </div>
-
-                {{-- Remember Me --}}
-                <div class="flex items-center pt-2 pb-2">
-                    <label for="remember" class="flex items-center gap-3 cursor-pointer group">
-                        <div class="relative flex items-center justify-center w-5 h-5">
-                            <input type="checkbox" name="remember" id="remember" value="1" class="peer absolute opacity-0 w-5 h-5 cursor-pointer z-10">
-                            <div class="w-5 h-5 border-2 border-slate-300 rounded peer-checked:bg-blue-600 peer-checked:border-blue-600 transition-colors"></div>
-                            <svg class="absolute w-3.5 h-3.5 text-white opacity-0 peer-checked:opacity-100 pointer-events-none" fill="none" stroke="currentColor" stroke-width="3" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M5 13l4 4L19 7"></path></svg>
-                        </div>
-                        <span class="text-sm text-slate-600 font-medium group-hover:text-slate-900 transition-colors">Remember my device</span>
-                    </label>
-                </div>
-
-                {{-- Submit Button --}}
-                <button type="submit" class="relative w-full inline-flex items-center justify-center gap-2 px-6 py-4 bg-gradient-to-r from-blue-600 via-indigo-600 to-blue-700 text-white text-sm font-bold rounded-xl shadow-lg shadow-blue-500/30 hover:shadow-blue-500/50 transition-all duration-300 hover:-translate-y-0.5 active:translate-y-0 overflow-hidden group">
-                    <div class="absolute inset-0 w-full h-full bg-gradient-to-r from-transparent via-white/20 to-transparent -translate-x-full group-hover:animate-[shimmer_1.5s_infinite]"></div>
-                    <span>Secure Login</span>
-                    <svg class="w-5 h-5 transition-transform group-hover:translate-x-1" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14 5l7 7m0 0l-7 7m7-7H3"/></svg>
-                </button>
-            </form>
-            
-            {{-- Register Link --}}
-            <div class="mt-8 pt-6 border-t border-slate-200/60 text-center">
-                <p class="text-sm text-slate-500 font-medium">New to Suhaim Soft? 
-                    <a href="{{ route('register') }}" class="text-blue-600 font-bold hover:text-blue-800 transition-colors ml-1 hover:underline underline-offset-4">Register Workshop</a>
-                </p>
-                <p class="text-xs text-slate-400 font-semibold mt-3">Forgot password? <a href="{{ route('support') }}" class="text-blue-600 hover:text-blue-800 transition-colors hover:underline">Contact Developer Support</a></p>
             </div>
         </div>
 
-        {{-- Footer --}}
-        <div class="text-center mt-10 fade-in-up" style="animation-delay: 0.2s;">
-            <p class="text-xs font-bold text-slate-400 uppercase tracking-widest">© {{ date('Y') }} Suhaim Soft. All Rights Reserved.</p>
+        {{-- RIGHT SIDE (FORM) --}}
+        <div class="login-form-container">
+            <div class="w-full slide-up" style="animation-delay: 0.1s;">
+                
+                {{-- Return to Website Link --}}
+                <a href="{{ url('/') }}" class="inline-flex items-center gap-2 text-slate-500 hover:text-blue-600 transition-colors mb-10 text-sm font-bold w-fit">
+                    <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 16l-4-4m0 0l4-4m-4 4h18"/></svg>
+                    Back to Main Site
+                </a>
+
+                <div class="mb-10">
+                    <h2 class="text-3xl font-black text-slate-900 mb-3 tracking-tight">Log in to your account</h2>
+                    <p class="text-slate-500 font-medium text-base">Welcome back! Please enter your details.</p>
+                </div>
+
+                <form action="{{ route('login.post') }}" method="POST" class="space-y-6">
+                    @csrf
+
+                    {{-- Email Input --}}
+                    <div>
+                        <label class="block text-sm font-bold text-slate-900 mb-2">Email</label>
+                        <div class="relative input-web rounded-xl flex items-center">
+                            <input type="email" name="email" required placeholder="admin@example.com" value="{{ old('email') }}"
+                                    class="w-full bg-transparent px-4 py-4 text-slate-900 placeholder-slate-400 font-medium focus:outline-none rounded-xl text-base">
+                        </div>
+                        @error('email')<p class="text-sm text-red-500 mt-2 font-bold">{{ $message }}</p>@enderror
+                    </div>
+
+                    {{-- Password Input --}}
+                    <div x-data="{ show: false }">
+                        <div class="flex items-center justify-between mb-2">
+                            <label class="block text-sm font-bold text-slate-900">Password</label>
+                        </div>
+                        <div class="relative input-web rounded-xl flex items-center">
+                            <input :type="show ? 'text' : 'password'" name="password" required placeholder="••••••••"
+                                    class="w-full bg-transparent px-4 py-4 text-slate-900 placeholder-slate-400 font-medium focus:outline-none rounded-xl text-base">
+                            <button type="button" @click="show = !show" class="absolute right-0 pr-4 text-slate-400 hover:text-blue-600 focus:outline-none h-full flex items-center">
+                                <span x-show="!show" class="text-xs font-bold uppercase tracking-wider">Show</span>
+                                <span x-show="show" class="text-xs font-bold uppercase tracking-wider" x-cloak>Hide</span>
+                            </button>
+                        </div>
+                        @error('password')<p class="text-sm text-red-500 mt-2 font-bold">{{ $message }}</p>@enderror
+                    </div>
+
+                    {{-- Forgot Password --}}
+                    <div class="flex items-center justify-end pt-1">
+                        <a href="{{ route('support') }}" class="text-sm font-bold text-blue-600 hover:text-blue-800 transition-colors">Forgot password?</a>
+                    </div>
+
+                    {{-- Submit Button --}}
+                    <button type="submit" class="w-full inline-flex items-center justify-center gap-2 px-6 py-4 btn-web text-white text-base font-bold rounded-xl mt-4">
+                        Sign in
+                    </button>
+                </form>
+                
+                {{-- Register Link --}}
+                <div class="mt-10 text-center">
+                    <p class="text-sm text-slate-600 font-medium">Don't have an account? 
+                        <a href="{{ route('register') }}" class="text-blue-600 font-bold hover:text-blue-800 transition-colors ml-1 hover:underline underline-offset-4">Sign up</a>
+                    </p>
+                </div>
+
+                {{-- Footer --}}
+                <div class="mt-12 text-center">
+                    <p class="text-xs font-semibold text-slate-400 uppercase tracking-widest">© {{ date('Y') }} Suhaim Soft</p>
+                </div>
+            </div>
         </div>
+
     </div>
 
-    <style>
-        @keyframes shimmer {
-            100% { transform: translateX(100%); }
-        }
-    </style>
-@endsection
+</body>
+</html>

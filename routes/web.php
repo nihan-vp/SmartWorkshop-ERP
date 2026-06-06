@@ -82,6 +82,7 @@ Route::middleware('auth')->group(function () {
         Route::resource('services', ServiceController::class);
         Route::resource('employees', EmployeeController::class);
         Route::resource('bills', BillController::class);
+        Route::get('/bills/{bill}/invoice', [BillController::class, 'invoice'])->name('bills.invoice');
         Route::post('/bills/{bill}/record-payment', [BillController::class, 'recordPayment'])->name('bills.record-payment');
 
         Route::resource('bill-templates', BillTemplateController::class);
