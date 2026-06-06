@@ -149,7 +149,7 @@
 <div x-show="activeTab === 'dashboard'" class="space-y-5 animate-fade-in-up" x-cloak>
 
     {{-- 5 KPI Cards --}}
-    <div class="grid grid-cols-2 lg:grid-cols-5 gap-4">
+    <div class="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-5 gap-4">
         <div class="stat-card relative rounded-2xl p-5 overflow-hidden" style="background: linear-gradient(135deg, #eff6ff, #dbeafe); border: 1px solid #bfdbfe;">
             <div class="absolute -top-4 -right-4 w-16 h-16 rounded-full opacity-25" style="background: #3b82f6;"></div>
             <div class="w-10 h-10 rounded-xl bg-blue-500 flex items-center justify-center mb-3 shadow-lg shadow-blue-500/30">
@@ -182,7 +182,7 @@
             <p class="text-3xl font-extrabold text-emerald-900">{{ $unusedProductKeys }}</p>
             <p class="text-xs font-bold text-emerald-600 mt-1 uppercase tracking-wider">Available Keys</p>
         </div>
-        <div class="stat-card relative rounded-2xl p-5 overflow-hidden col-span-2 lg:col-span-1" style="background: linear-gradient(135deg, #fff7ed, #ffedd5); border: 1px solid #fdba74;">
+        <div class="stat-card relative rounded-2xl p-5 overflow-hidden sm:col-span-2 xl:col-span-1" style="background: linear-gradient(135deg, #fff7ed, #ffedd5); border: 1px solid #fdba74;">
             <div class="absolute -top-4 -right-4 w-16 h-16 rounded-full opacity-25" style="background: #ea580c;"></div>
             <div class="w-10 h-10 rounded-xl bg-orange-500 flex items-center justify-center mb-3 shadow-lg shadow-orange-500/30">
                 <svg class="w-5 h-5 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
