@@ -156,12 +156,6 @@
         {{-- RIGHT SIDE (FORM) --}}
         <div class="login-form-container">
             <div class="w-full slide-up" style="animation-delay: 0.1s;">
-                
-                {{-- Return to Website Link --}}
-                <a href="{{ url('/') }}" class="inline-flex items-center gap-2 text-slate-500 hover:text-blue-600 transition-colors mb-10 text-sm font-bold w-fit">
-                    <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 16l-4-4m0 0l4-4m-4 4h18"/></svg>
-                    Back to Main Site
-                </a>
 
                 <div class="mb-10">
                     <h2 class="text-3xl font-black text-slate-900 mb-3 tracking-tight">Log in to your account</h2>
