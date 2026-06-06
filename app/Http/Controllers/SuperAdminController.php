@@ -24,6 +24,7 @@ class SuperAdminController extends Controller
             'bills' => fn ($query) => $query->withoutGlobalScopes(),
         ])->orderBy('name')->get();
 
+        $totalSuperAdmins = User::where('role', 'super_admin')->count();
         $totalWorkshops = Workshop::count();
         $totalUsers = User::where('role', '!=', 'super_admin')->count();
         $totalBills = Bill::withoutGlobalScopes()->count();
@@ -47,6 +48,7 @@ class SuperAdminController extends Controller
 
         return view('super_admin.dashboard', compact(
             'workshops',
+            'totalSuperAdmins',
             'totalWorkshops',
             'totalUsers',
             'totalBills',

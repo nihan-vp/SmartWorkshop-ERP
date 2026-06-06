@@ -148,8 +148,8 @@
 {{-- ══════════════════════════════════════════ --}}
 <div x-show="activeTab === 'dashboard'" class="space-y-5 animate-fade-in-up" x-cloak>
 
-    {{-- 4 KPI Cards --}}
-    <div class="grid grid-cols-2 lg:grid-cols-4 gap-4">
+    {{-- 5 KPI Cards --}}
+    <div class="grid grid-cols-2 lg:grid-cols-5 gap-4">
         <div class="stat-card relative rounded-2xl p-5 overflow-hidden" style="background: linear-gradient(135deg, #eff6ff, #dbeafe); border: 1px solid #bfdbfe;">
             <div class="absolute -top-4 -right-4 w-16 h-16 rounded-full opacity-25" style="background: #3b82f6;"></div>
             <div class="w-10 h-10 rounded-xl bg-blue-500 flex items-center justify-center mb-3 shadow-lg shadow-blue-500/30">
@@ -165,6 +165,14 @@
             </div>
             <p class="text-3xl font-extrabold text-violet-900">{{ $totalUsers }}</p>
             <p class="text-xs font-bold text-violet-600 mt-1 uppercase tracking-wider">Total Users</p>
+        </div>
+        <div class="stat-card relative rounded-2xl p-5 overflow-hidden" style="background: linear-gradient(135deg, #fdf4ff, #fae8ff); border: 1px solid #f5d0fe;">
+            <div class="absolute -top-4 -right-4 w-16 h-16 rounded-full opacity-25" style="background: #d946ef;"></div>
+            <div class="w-10 h-10 rounded-xl bg-fuchsia-500 flex items-center justify-center mb-3 shadow-lg shadow-fuchsia-500/30">
+                <svg class="w-5 h-5 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4.354a4 4 0 110 5.292M15 21H3v-1a6 6 0 0112 0v1zm0 0h6v-1a6 6 0 00-9-5.197M13 7a4 4 0 11-8 0 4 4 0 018 0z"/></svg>
+            </div>
+            <p class="text-3xl font-extrabold text-fuchsia-900">{{ $totalSuperAdmins }}</p>
+            <p class="text-xs font-bold text-fuchsia-600 mt-1 uppercase tracking-wider">Super Admins</p>
         </div>
         <div class="stat-card relative rounded-2xl p-5 overflow-hidden" style="background: linear-gradient(135deg, #ecfdf5, #d1fae5); border: 1px solid #6ee7b7;">
             <div class="absolute -top-4 -right-4 w-16 h-16 rounded-full opacity-25" style="background: #059669;"></div>
