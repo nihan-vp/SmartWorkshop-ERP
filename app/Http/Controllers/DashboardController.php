@@ -19,9 +19,11 @@ class DashboardController extends Controller
     public function index(Request $request)
     {
         $filter = $request->query('filter', 'today');
+        $startDate = $request->query('start_date');
+        $endDate = $request->query('end_date');
         $today = today();
 
-        $queryDate = function ($query, $dateColumn = 'created_at') use ($filter, $today) {
+        $queryDate = function ($query, $dateColumn = 'created_at') use ($filter, $today, $startDate, $endDate) {
             if ($filter === 'today') {
                 return $query->whereDate($dateColumn, $today);
             } elseif ($filter === 'yesterday') {
@@ -30,6 +32,8 @@ class DashboardController extends Controller
                 return $query->whereBetween($dateColumn, [$today->copy()->subDays(6), $today]);
             } elseif ($filter === 'month') {
                 return $query->whereMonth($dateColumn, $today->month)->whereYear($dateColumn, $today->year);
+            } elseif ($filter === 'custom' && $startDate && $endDate) {
+                return $query->whereBetween($dateColumn, [$startDate, $endDate]);
             }
             return $query;
         };

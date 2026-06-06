@@ -25,25 +25,40 @@
             <p class="text-sm text-slate-500 font-medium">Here is a summary of your shop's operations and finances.</p>
         </div>
         
-        <div class="w-full md:w-auto flex flex-col sm:flex-row items-center z-10 gap-3">
-            <form method="GET" action="{{ route('dashboard') }}" class="w-full sm:w-auto">
-                <div class="relative w-full sm:w-48">
+        <div class="w-full xl:w-auto flex flex-col xl:flex-row items-start xl:items-center z-10 gap-3 mt-4 md:mt-0">
+            <form method="GET" action="{{ route('dashboard') }}" class="w-full flex flex-col xl:flex-row items-start xl:items-center gap-3">
+                <div class="relative w-full xl:w-48">
                     <div class="pointer-events-none absolute inset-y-0 left-0 flex items-center pl-3">
                         <svg class="w-4 h-4 text-slate-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"/></svg>
                     </div>
-                    <select name="filter" onchange="this.form.submit()" class="block w-full appearance-none bg-slate-50 border border-slate-200 text-slate-700 py-2.5 pl-10 pr-8 rounded-xl text-sm font-semibold shadow-sm hover:bg-slate-100 transition-colors focus:outline-none focus:ring-2 focus:ring-primary-500 focus:border-primary-500 cursor-pointer">
+                    <select name="filter" onchange="if(this.value === 'custom') { document.getElementById('custom-date-container').classList.remove('hidden'); document.getElementById('custom-date-container').classList.add('flex'); } else { this.form.submit(); }" class="block w-full appearance-none bg-slate-50 border border-slate-200 text-slate-700 py-2.5 pl-10 pr-8 rounded-xl text-sm font-semibold shadow-sm hover:bg-slate-100 transition-colors focus:outline-none focus:ring-2 focus:ring-primary-500 focus:border-primary-500 cursor-pointer">
                         <option value="today" @if(($filter ?? 'today') === 'today') selected @endif>Today</option>
                         <option value="yesterday" @if(($filter ?? 'today') === 'yesterday') selected @endif>Yesterday</option>
                         <option value="week" @if(($filter ?? 'today') === 'week') selected @endif>Last 7 Days</option>
                         <option value="month" @if(($filter ?? 'today') === 'month') selected @endif>This Month</option>
                         <option value="all" @if(($filter ?? 'today') === 'all') selected @endif>All Time</option>
+                        <option value="custom" @if(($filter ?? 'today') === 'custom') selected @endif>Custom Range</option>
                     </select>
                     <div class="pointer-events-none absolute inset-y-0 right-0 flex items-center pr-3">
                         <svg class="w-4 h-4 text-slate-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"/></svg>
                     </div>
                 </div>
+                
+                <div id="custom-date-container" class="{{ ($filter ?? '') === 'custom' ? 'flex' : 'hidden' }} flex-col sm:flex-row items-center gap-2 w-full xl:w-auto">
+                    <input type="date" name="start_date" value="{{ request('start_date') }}" class="block w-full sm:w-auto appearance-none bg-slate-50 border border-slate-200 text-slate-700 py-2.5 px-3 rounded-xl text-sm font-semibold shadow-sm focus:outline-none focus:ring-2 focus:ring-primary-500">
+                    <span class="text-slate-500 text-sm font-medium hidden sm:block">to</span>
+                    <input type="date" name="end_date" value="{{ request('end_date') }}" class="block w-full sm:w-auto appearance-none bg-slate-50 border border-slate-200 text-slate-700 py-2.5 px-3 rounded-xl text-sm font-semibold shadow-sm focus:outline-none focus:ring-2 focus:ring-primary-500">
+                    <div class="flex items-center gap-2 w-full sm:w-auto">
+                        <button type="submit" class="btn-primary !py-2.5 !px-4 text-sm whitespace-nowrap flex-1 sm:flex-none justify-center">Apply</button>
+                        @if(($filter ?? '') === 'custom')
+                            <a href="{{ route('dashboard') }}" class="btn-secondary !py-2.5 !px-4 text-sm whitespace-nowrap flex-1 sm:flex-none justify-center text-center">Clear</a>
+                        @else
+                            <button type="button" onclick="document.getElementById('custom-date-container').classList.add('hidden'); document.getElementById('custom-date-container').classList.remove('flex'); document.querySelector('select[name=\'filter\']').value='today';" class="btn-secondary !py-2.5 !px-4 text-sm whitespace-nowrap flex-1 sm:flex-none justify-center">Cancel</button>
+                        @endif
+                    </div>
+                </div>
             </form>
-            <a href="{{ route('bills.create') }}" class="btn-primary shadow-sm !py-2.5 !px-5 text-sm w-full sm:w-auto justify-center text-center">
+            <a href="{{ route('bills.create') }}" class="btn-primary shadow-sm !py-2.5 !px-5 text-sm w-full xl:w-auto justify-center text-center whitespace-nowrap">
                 <svg class="w-4 h-4 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"/></svg>
                 Create Invoice
             </a>
