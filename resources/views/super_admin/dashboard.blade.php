@@ -1106,19 +1106,75 @@
                 <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/></svg>
             </button>
         </div>
-        <form :action="`/super-admin/workshops/${activeWorkshopToActivate.id}/activate-license`" method="POST" class="p-5 space-y-4" autocomplete="off">
-            @csrf
-            <div>
-                <label for="sa_product_key" class="block text-xs font-bold text-slate-700 mb-1.5">Activation Key *</label>
-                <input id="sa_product_key" type="text" name="product_key" required autocomplete="off" 
-                       class="w-full px-4 py-2.5 bg-slate-50 border border-slate-200 rounded-xl text-sm font-extrabold font-mono tracking-widest text-center uppercase placeholder:normal-case placeholder:tracking-normal focus:outline-none focus:border-blue-400 focus:bg-white transition-colors"
-                       placeholder="SUHAIM-XXXX-XXXX-XXXX">
+        
+        <div x-data="{ mode: 'generate', durationType: '90', customDays: '45', productKeyVal: '' }" 
+             x-init="$watch('openActivateLicenseModal', value => { if (value) { mode = 'generate'; durationType = '90'; customDays = '45'; productKeyVal = ''; } })"
+             class="flex flex-col flex-1 min-h-0">
+            
+            <!-- Tabs Navigation -->
+            <div class="flex border-b border-slate-100 px-5 pt-3 bg-slate-50 gap-2">
+                <button type="button" 
+                        @click="mode = 'generate'" 
+                        :class="mode === 'generate' ? 'border-blue-600 text-blue-600 font-bold' : 'border-transparent text-slate-500 hover:text-slate-800'"
+                        class="px-4 py-2.5 text-xs border-b-2 font-semibold transition-all">
+                    Auto-Generate & Activate
+                </button>
+                <button type="button" 
+                        @click="mode = 'manual'" 
+                        :class="mode === 'manual' ? 'border-blue-600 text-blue-600 font-bold' : 'border-transparent text-slate-500 hover:text-slate-800'"
+                        class="px-4 py-2.5 text-xs border-b-2 font-semibold transition-all">
+                    Redeem Manual Key
+                </button>
             </div>
-            <div class="flex justify-end gap-3 pt-2">
-                <button type="button" @click="openActivateLicenseModal = false" class="px-5 py-2.5 rounded-xl text-sm font-bold border border-slate-200 text-slate-600 hover:bg-slate-50">Cancel</button>
-                <button type="submit" class="px-5 py-2.5 rounded-xl text-sm font-bold text-white transition-all hover:scale-105 active:scale-95 shadow-sm" style="background: linear-gradient(135deg, #1d4ed8, #2563eb);">Activate License</button>
-            </div>
-        </form>
+
+            <form :action="`/super-admin/workshops/${activeWorkshopToActivate.id}/activate-license`" method="POST" class="p-5 space-y-4" autocomplete="off">
+                @csrf
+                
+                <!-- Mode 1: Auto-Generate -->
+                <div x-show="mode === 'generate'" class="space-y-4">
+                    <div>
+                        <label for="sa_duration" class="block text-xs font-bold text-slate-700 mb-1">License Duration *</label>
+                        <select id="sa_duration" x-model="durationType" autocomplete="off" class="w-full px-4 py-2.5 bg-slate-50 border border-slate-200 rounded-xl text-sm font-medium focus:outline-none focus:border-blue-400 focus:bg-white transition-colors">
+                            <option value="30">30 Days (1 Month)</option>
+                            <option value="90">90 Days (3 Months)</option>
+                            <option value="180">180 Days (6 Months)</option>
+                            <option value="365">365 Days (1 Year)</option>
+                            <option value="custom">Custom Days...</option>
+                        </select>
+                    </div>
+                    <input type="hidden" name="duration_days" :value="durationType === 'custom' ? customDays : durationType" :disabled="mode !== 'generate'">
+                    <div x-show="durationType === 'custom'" x-cloak>
+                        <label for="sa_custom_days" class="block text-xs font-bold text-slate-700 mb-1">Custom Duration (Days) *</label>
+                        <input id="sa_custom_days" type="number" x-model="customDays" min="1" max="10000" autocomplete="off" class="w-full px-4 py-2.5 bg-slate-50 border border-slate-200 rounded-xl text-sm font-medium focus:outline-none focus:border-blue-400 focus:bg-white transition-colors" placeholder="e.g. 45">
+                    </div>
+                    <p class="text-[11px] text-slate-400">Selecting this option will automatically generate a new secure license key, redeem it, and update the workshop's subscription immediately.</p>
+                </div>
+
+                <!-- Mode 2: Manual Key -->
+                <div x-show="mode === 'manual'" class="space-y-4" x-cloak>
+                    <div>
+                        <label for="sa_product_key" class="block text-xs font-bold text-slate-700 mb-1.5">Activation Key *</label>
+                        <input id="sa_product_key" type="text" name="product_key" x-model="productKeyVal" :required="mode === 'manual'" :disabled="mode !== 'manual'" autocomplete="off" 
+                               class="w-full px-4 py-2.5 bg-slate-50 border border-slate-200 rounded-xl text-sm font-extrabold font-mono tracking-widest text-center uppercase placeholder:normal-case placeholder:tracking-normal focus:outline-none focus:border-blue-400 focus:bg-white transition-colors"
+                               placeholder="SUHAIM-XXXX-XXXX-XXXX">
+                    </div>
+                </div>
+
+                <div class="flex justify-end gap-3 pt-2">
+                    <button type="button" @click="openActivateLicenseModal = false" class="px-5 py-2.5 rounded-xl text-sm font-bold border border-slate-200 text-slate-600 hover:bg-slate-50">Cancel</button>
+                    
+                    <!-- Submit button for Generate -->
+                    <button type="submit" x-show="mode === 'generate'" class="px-5 py-2.5 rounded-xl text-sm font-bold text-white transition-all hover:scale-105 active:scale-95 shadow-sm" style="background: linear-gradient(135deg, #1d4ed8, #2563eb);">
+                        Generate & Activate
+                    </button>
+                    
+                    <!-- Submit button for Manual Key -->
+                    <button type="submit" x-show="mode === 'manual'" class="px-5 py-2.5 rounded-xl text-sm font-bold text-white transition-all hover:scale-105 active:scale-95 shadow-sm" style="background: linear-gradient(135deg, #1d4ed8, #2563eb);" x-cloak>
+                        Redeem & Activate
+                    </button>
+                </div>
+            </form>
+        </div>
     </div>
 </div>
 

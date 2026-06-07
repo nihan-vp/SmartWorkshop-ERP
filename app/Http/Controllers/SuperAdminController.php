@@ -234,10 +234,44 @@ class SuperAdminController extends Controller
     public function activateLicense(Request $request, Workshop $workshop)
     {
         $request->validate([
-            'product_key' => 'required|string',
+            'product_key' => 'nullable|string',
+            'duration_days' => 'nullable|integer|min:1',
         ]);
 
         $inputKey = trim($request->product_key);
+
+        if (empty($inputKey) && $request->filled('duration_days')) {
+            $durationDays = (int) $request->duration_days;
+            $keyStr = \App\Models\ProductKey::generateSecureKey();
+            
+            DB::transaction(function () use ($keyStr, $durationDays, $workshop) {
+                $productKey = \App\Models\ProductKey::create([
+                    'key' => $keyStr,
+                    'duration_days' => $durationDays,
+                    'status' => 'used',
+                    'used_by_workshop_id' => $workshop->id,
+                    'used_at' => now(),
+                ]);
+
+                if ($workshop->subscription_status === 'active' && $workshop->trial_ends_at && $workshop->trial_ends_at->isFuture()) {
+                    $newExpiration = $workshop->trial_ends_at->copy()->addDays($durationDays);
+                } else {
+                    $newExpiration = now()->addDays($durationDays);
+                }
+
+                $workshop->update([
+                    'subscription_status' => 'active',
+                    'trial_ends_at' => $newExpiration,
+                ]);
+
+                \App\Models\ActivityLog::log('license_activate', "Super Admin auto-generated and activated key {$keyStr} ({$durationDays} days) for workshop {$workshop->name}.", null, $workshop->id);
+            });
+
+            return redirect()
+                ->back()
+                ->with('success', "License auto-generated and activated successfully for workshop '{$workshop->name}' until " . $workshop->fresh()->trial_ends_at->format('M d, Y') . ".");
+        }
+
         $productKey = \App\Models\ProductKey::where('key', $inputKey)->first();
 
         if (!$productKey) {
