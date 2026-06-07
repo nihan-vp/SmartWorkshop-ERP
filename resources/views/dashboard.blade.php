@@ -1,5 +1,17 @@
 @extends('layouts.app')
 
+@php
+    $user = auth()->user();
+    $workshop = null;
+    if ($user) {
+        if ($user->isSuperAdmin() && session()->has('active_workshop_id')) {
+            $workshop = \App\Models\Workshop::find(session('active_workshop_id'));
+        } else {
+            $workshop = $user->workshop;
+        }
+    }
+@endphp
+
 @section('title', 'Dashboard')
 @section('page-title', 'Overview')
 @section('page-subtitle', 'Workshop Performance & Operations')
@@ -325,50 +337,68 @@
             </div>
 
         </div>
-
-    </div>
-
     <!-- Bottom Widgets (Moved from Right Sidebar) -->
-    <div class="grid grid-cols-1 md:grid-cols-2 gap-5">
-            <!-- Statistics moved to top -->
-
-        <div class="glass-card">
-                <h3 class="text-sm font-bold text-slate-900 uppercase tracking-wider mb-4">Subscription & Trial</h3>
-                <div class="space-y-3">
-                    @if(auth()->user()->workshop)
+    <div class="lg:col-span-12 grid grid-cols-1 md:grid-cols-2 gap-5 mt-2">
+        <div class="glass-card" x-data="subscriptionManager({
+            status: '{{ $workshop->subscription_status }}',
+            expiry: '{{ $workshop->trial_ends_at ? $workshop->trial_ends_at->format('d M Y, h:i A') : 'Never (Lifetime)' }}',
+            daysRemaining: {{ $workshop->trial_ends_at ? $workshop->getTrialDaysRemaining() : 0 }},
+            totalDuration: {{ $workshop->trial_ends_at ? $workshop->getTotalDurationDays() : 0 }},
+            subscriptionDay: {{ $workshop->getSubscriptionDay() }},
+            isExpired: {{ $workshop->trial_ends_at && $workshop->isTrialExpired() ? 'true' : 'false' }},
+            hasExpiry: {{ $workshop->trial_ends_at ? 'true' : 'false' }},
+            keys: [
+                @if($workshop)
+                    @foreach($workshop->productKeys()->orderBy('used_at', 'desc')->get() as $key)
                         @php
-                            $workshop = auth()->user()->workshop;
+                            $parts = explode('-', $key->key);
+                            $masked = (count($parts) >= 3) ? ($parts[0] . '-XXXX-XXXX-' . end($parts)) : (substr($key->key, 0, 8) . '...');
                         @endphp
-                        <div class="flex justify-between items-center text-xs pb-2 border-b border-slate-100">
-                            <span class="text-slate-500 font-semibold">Account Type</span>
-                            <span class="font-bold uppercase tracking-wider {{ in_array($workshop->subscription_status, ['active', 'fix', 'fixed']) ? 'text-emerald-600' : 'text-amber-600' }}">{{ $workshop->subscription_status }}</span>
-                        </div>
-                        @if(in_array($workshop->subscription_status, ['trial', 'training']) && $workshop->trial_ends_at)
-                        <div class="flex justify-between items-center text-xs pb-2 border-b border-slate-100">
-                            <span class="text-slate-500 font-semibold">Expiration Date & Time</span>
-                            <span class="font-bold text-slate-700">{{ $workshop->trial_ends_at->format('d M Y, h:i A') }}</span>
-                        </div>
-                        <div class="flex justify-between items-center text-xs pb-2 border-b border-slate-100">
-                            <span class="text-slate-500 font-semibold">Status Details</span>
-                            @if($workshop->isTrialExpired())
-                                <span class="text-rose-600 font-bold bg-rose-50 px-2 py-0.5 rounded border border-rose-100">Expired</span>
-                            @else
-                                <span class="text-slate-700 font-bold">{{ $workshop->getTrialDaysRemaining() }} days left</span>
-                            @endif
-                        </div>
-                        @else
-                        <div class="flex justify-between items-center text-xs pb-2 border-b border-slate-100">
-                            <span class="text-slate-500 font-semibold">Expiration Date</span>
-                            <span class="font-bold text-emerald-600">Never (Lifetime)</span>
-                        </div>
-                        <div class="flex justify-between items-center text-xs pb-2 border-b border-slate-100">
-                            <span class="text-slate-500 font-semibold">Status Details</span>
-                            <span class="text-emerald-600 font-bold bg-emerald-50 px-2 py-0.5 rounded border border-emerald-100">Active & Unlimited</span>
-                        </div>
-                        @endif
-                    @endif
-                </div>
+                        {
+                            key: '{{ $masked }}',
+                            duration: {{ $key->duration_days }},
+                            used_at: '{{ $key->used_at ? $key->used_at->format('d M Y, h:i A') : $key->updated_at->format('d M Y, h:i A') }}'
+                        },
+                    @endforeach
+                @endif
+            ]
+        })">
+            <h3 class="text-sm font-bold text-slate-900 uppercase tracking-wider mb-4 flex items-center justify-between">
+                <span>Subscription &amp; Trial</span>
+                <span class="badge uppercase text-[10px]" :class="status === 'active' || status === 'fix' || status === 'fixed' ? 'badge-success' : 'badge-danger'" x-text="status"></span>
+            </h3>
+            <div class="space-y-3">
+                @if($workshop)
+                    <div class="flex justify-between items-center text-xs pb-1.5 border-b border-slate-100">
+                        <span class="text-slate-500 font-semibold">Account Status</span>
+                        <span class="font-bold uppercase tracking-wider text-xs" :class="status === 'active' || status === 'fix' || status === 'fixed' ? 'text-emerald-600' : 'text-rose-600'" x-text="status"></span>
+                    </div>
+
+                    <div class="flex justify-between items-center text-xs pb-1.5 border-b border-slate-100">
+                        <span class="text-slate-500 font-semibold">Expiration Date</span>
+                        <span class="font-bold text-slate-700" x-text="expiry"></span>
+                    </div>
+
+                    <div class="flex justify-between items-center text-xs pb-1.5 border-b border-slate-100">
+                        <span class="text-slate-500 font-semibold">Time Remaining</span>
+                        <span x-show="isExpired" class="text-rose-600 font-bold bg-rose-50 px-2 py-0.5 rounded border border-rose-100 animate-pulse">Expired</span>
+                        <span x-show="!isExpired" class="text-slate-700 font-bold bg-blue-50 text-blue-700 px-2 py-0.5 rounded border border-blue-100">
+                            <span x-text="hasExpiry ? daysRemaining + ' Days Left' : 'Active &amp; Unlimited'"></span>
+                        </span>
+                    </div>
+                    <div class="flex justify-between items-center text-xs pb-1.5 border-b border-slate-100">
+                        <span class="text-slate-500 font-semibold">Total Duration</span>
+                        <span class="font-bold text-slate-700" x-text="totalDuration + ' Days'"></span>
+                    </div>
+
+                    <div class="flex justify-between items-center text-xs pb-1.5 border-b border-slate-100">
+                        <span class="text-slate-500 font-semibold">Operating Time</span>
+                        <span class="font-bold text-slate-700" x-text="'Day ' + subscriptionDay"></span>
+                    </div>
+
+                @endif
             </div>
+        </div>
 
         {{-- AI Coming Soon Card --}}
         <div class="glass-card relative overflow-hidden border border-violet-200/60 bg-gradient-to-br from-violet-50 to-indigo-50">
@@ -420,3 +450,84 @@
 </div>
 
 @endsection
+
+@push('scripts')
+<script>
+    function subscriptionManager(initialData) {
+        return {
+            showModal: false,
+            submitting: false,
+            productKey: '',
+            status: initialData.status,
+            expiry: initialData.expiry,
+            daysRemaining: initialData.daysRemaining,
+            totalDuration: initialData.totalDuration,
+            subscriptionDay: initialData.subscriptionDay,
+            isExpired: initialData.isExpired,
+            hasExpiry: initialData.hasExpiry,
+            keys: initialData.keys || [],
+            
+            redeemKey() {
+                if (!this.productKey.trim()) return;
+                this.submitting = true;
+                
+                axios.post('{{ route('activate_license') }}', {
+                    product_key: this.productKey
+                }, {
+                    headers: {
+                        'Accept': 'application/json'
+                    }
+                })
+                .then(response => {
+                    const data = response.data;
+                    if (data.success) {
+                        this.status = data.workshop.subscription_status;
+                        this.expiry = data.workshop.trial_ends_at;
+                        this.daysRemaining = data.workshop.days_remaining;
+                        this.totalDuration = data.workshop.total_duration;
+                        this.subscriptionDay = data.workshop.subscription_day;
+                        this.isExpired = data.workshop.is_expired;
+                        this.hasExpiry = data.workshop.has_expiry;
+                        this.keys = data.redeemed_keys.map(k => ({
+                            key: k.key,
+                            duration: k.duration_days,
+                            used_at: k.used_at
+                        }));
+                        this.productKey = '';
+                        
+                        window.dispatchEvent(new CustomEvent('toast', {
+                            detail: {
+                                type: 'success',
+                                title: 'Success',
+                                message: data.message || 'Subscription updated successfully!'
+                            }
+                        }));
+                        
+                        setTimeout(() => {
+                            this.showModal = false;
+                        }, 1000);
+                    }
+                })
+                .catch(error => {
+                    let errorMsg = 'Failed to activate subscription. Please try again.';
+                    if (error.response && error.response.data && error.response.data.error) {
+                        errorMsg = error.response.data.error;
+                    } else if (error.response && error.response.data && error.response.data.message) {
+                        errorMsg = error.response.data.message;
+                    }
+                    window.dispatchEvent(new CustomEvent('toast', {
+                        detail: {
+                            type: 'error',
+                            title: 'Activation Error',
+                            message: errorMsg
+                        }
+                    }));
+                })
+                .finally(() => {
+                    this.submitting = false;
+                });
+            }
+        }
+    }
+</script>
+@endpush

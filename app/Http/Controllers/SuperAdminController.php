@@ -238,7 +238,7 @@ class SuperAdminController extends Controller
             'duration_days' => 'nullable|integer|min:1',
         ]);
 
-        $inputKey = trim($request->product_key);
+        $inputKey = strtoupper(trim($request->product_key ?? ''));
 
         if (empty($inputKey) && $request->filled('duration_days')) {
             $durationDays = (int) $request->duration_days;
@@ -253,11 +253,8 @@ class SuperAdminController extends Controller
                     'used_at' => now(),
                 ]);
 
-                if ($workshop->subscription_status === 'active' && $workshop->trial_ends_at && $workshop->trial_ends_at->isFuture()) {
-                    $newExpiration = $workshop->trial_ends_at->copy()->addDays($durationDays);
-                } else {
-                    $newExpiration = now()->addDays($durationDays);
-                }
+                // Always set from NOW — super admin sets exact duration, not extension
+                $newExpiration = now()->addDays($durationDays);
 
                 $workshop->update([
                     'subscription_status' => 'active',
@@ -287,11 +284,8 @@ class SuperAdminController extends Controller
         }
 
         DB::transaction(function () use ($productKey, $workshop) {
-            if ($workshop->subscription_status === 'active' && $workshop->trial_ends_at && $workshop->trial_ends_at->isFuture()) {
-                $newExpiration = $workshop->trial_ends_at->copy()->addDays($productKey->duration_days);
-            } else {
-                $newExpiration = now()->addDays($productKey->duration_days);
-            }
+            // Always set from NOW — super admin sets exact duration, not extension
+            $newExpiration = now()->addDays($productKey->duration_days);
 
             $workshop->update([
                 'subscription_status' => 'active',

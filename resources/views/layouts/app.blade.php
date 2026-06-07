@@ -1164,6 +1164,10 @@
                     @if(session('error'))
                         this.add('error', 'Error', "{{ session('error') }}");
                     @endif
+                    
+                    window.addEventListener('toast', (e) => {
+                        this.add(e.detail.type, e.detail.title, e.detail.message);
+                    });
                 },
                 add(type, title, message) {
                     const id = Date.now();

@@ -129,6 +129,7 @@ Route::middleware('auth')->group(function () {
         Route::post('/product-keys', [App\Http\Controllers\ProductKeyController::class, 'store'])->name('super_admin.store_product_key');
         Route::put('/product-keys/{productKey}', [App\Http\Controllers\ProductKeyController::class, 'update'])->name('super_admin.update_product_key');
         Route::delete('/product-keys/{productKey}', [App\Http\Controllers\ProductKeyController::class, 'destroy'])->name('super_admin.destroy_product_key');
+        Route::delete('/product-keys', [App\Http\Controllers\ProductKeyController::class, 'destroyAll'])->name('super_admin.destroy_all_product_keys');
 
         // License activation for a workshop (admin-initiated)
         Route::post('/workshops/{workshop}/activate-license', [App\Http\Controllers\SuperAdminController::class, 'activateLicense'])->name('super_admin.activate_license');

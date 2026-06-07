@@ -567,6 +567,16 @@
                     <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M12 4v16m8-8H4"/></svg>
                     Generate
                 </button>
+                {{-- Delete All Keys --}}
+                <form action="{{ route('super_admin.destroy_all_product_keys') }}" method="POST"
+                      onsubmit="return confirm('⚠️ Delete ALL product keys (including redeemed)? This cannot be undone.')">
+                    @csrf
+                    @method('DELETE')
+                    <button type="submit" class="flex items-center gap-1.5 px-4 py-2 rounded-xl text-xs font-bold text-white whitespace-nowrap bg-rose-500 hover:bg-rose-600 transition-colors">
+                        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"/></svg>
+                        Delete All
+                    </button>
+                </form>
             </div>
         </div>
         @if(isset($productKeys) && $productKeys->count())
@@ -1150,22 +1160,14 @@
                     <h3 class="text-base font-bold text-white">Activate License</h3>
                     <p class="text-xs text-blue-100 mt-0.5" x-text="`For workshop: ${activeWorkshopToActivate.name}`"></p>
                 </div>
-                <!-- Jump to Edit button -->
-                <button type="button" 
-                        @click="openActivateLicenseModal = false; openEdit(activeWorkshopToActivate)"
-                        class="px-2 py-0.5 bg-white/20 hover:bg-white/30 text-white rounded text-[10px] font-bold transition-all flex items-center gap-1"
-                        title="Edit Workshop Settings">
-                    <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z"/></svg>
-                    Edit
-                </button>
             </div>
             <button type="button" @click="openActivateLicenseModal = false" class="w-8 h-8 rounded-xl flex items-center justify-center text-white/60 hover:text-white hover:bg-white/10 transition-all">
                 <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/></svg>
             </button>
         </div>
         
-        <div x-data="{ mode: 'generate', durationType: '90', customDays: '45', productKeyVal: '' }" 
-             x-init="$watch('openActivateLicenseModal', value => { if (value) { mode = 'generate'; durationType = '90'; customDays = '45'; productKeyVal = ''; } })"
+        <div x-data="{ mode: 'generate', durationType: '30', customDays: '45', productKeyVal: '' }" 
+             x-init="$watch('openActivateLicenseModal', value => { if (value) { mode = 'generate'; durationType = '30'; customDays = '45'; productKeyVal = ''; } })"
              class="flex flex-col flex-1 min-h-0">
             
             <!-- Tabs Navigation -->
@@ -1199,7 +1201,8 @@
                             <option value="custom">Custom Days...</option>
                         </select>
                     </div>
-                    <input type="hidden" name="duration_days" :value="durationType === 'custom' ? customDays : durationType" :disabled="mode !== 'generate'">
+                    {{-- Hidden field: only has a 'name' when in generate mode so it actually submits --}}
+                    <input type="hidden" :name="mode === 'generate' ? 'duration_days' : ''" :value="durationType === 'custom' ? customDays : durationType">
                     <div x-show="durationType === 'custom'" x-cloak>
                         <label for="sa_custom_days" class="block text-xs font-bold text-slate-700 mb-1">Custom Duration (Days) *</label>
                         <input id="sa_custom_days" type="number" x-model="customDays" min="1" max="10000" autocomplete="off" class="w-full px-4 py-2.5 bg-slate-50 border border-slate-200 rounded-xl text-sm font-medium focus:outline-none focus:border-blue-400 focus:bg-white transition-colors" placeholder="e.g. 45">
@@ -1208,10 +1211,110 @@
                 </div>
 
                 <!-- Mode 2: Manual Key -->
-                <div x-show="mode === 'manual'" class="space-y-4" x-cloak>
+                <div x-show="mode === 'manual'" class="space-y-3" x-cloak
+                     x-data="{
+                        savedKeys: @json($productKeys->where('status','unused')->values()),
+                        editingKeyId: null,
+                        editingKeyVal: '',
+                        selectKey(k) { productKeyVal = k.key; },
+                        startEdit(k) { editingKeyId = k.id; editingKeyVal = k.key; },
+                        cancelEdit() { editingKeyId = null; editingKeyVal = ''; },
+                        saveEdit(k) {
+                            fetch(`/super-admin/product-keys/${k.id}`, {
+                                method: 'POST',
+                                headers: { 'Content-Type': 'application/json', 'X-HTTP-Method-Override': 'PUT', 'X-CSRF-TOKEN': document.querySelector('meta[name=csrf-token]').content },
+                                body: JSON.stringify({ key: editingKeyVal, duration_days: k.duration_days })
+                            }).then(r => {
+                                if (r.ok) { k.key = editingKeyVal; if (productKeyVal) productKeyVal = editingKeyVal; editingKeyId = null; }
+                                else { alert('Save failed'); }
+                            });
+                        },
+                        deleteKey(k, idx) {
+                            if (!confirm('Delete key ' + k.key + '?')) return;
+                            fetch(`/super-admin/product-keys/${k.id}`, {
+                                method: 'POST',
+                                headers: { 'X-HTTP-Method-Override': 'DELETE', 'X-CSRF-TOKEN': document.querySelector('meta[name=csrf-token]').content }
+                            }).then(r => {
+                                if (r.ok) { savedKeys.splice(idx, 1); if (productKeyVal === k.key) productKeyVal = ''; }
+                                else { alert('Delete failed'); }
+                            });
+                        }
+                     }">
+
+                    {{-- Saved keys list --}}
                     <div>
-                        <label for="sa_product_key" class="block text-xs font-bold text-slate-700 mb-1.5">Activation Key *</label>
-                        <input id="sa_product_key" type="text" name="product_key" x-model="productKeyVal" :required="mode === 'manual'" :disabled="mode !== 'manual'" autocomplete="off" 
+                        <label class="block text-xs font-bold text-slate-700 mb-1.5">Activation Key *
+                            <span class="ml-1 text-[10px] font-normal text-slate-400">(pick from saved or type below)</span>
+                        </label>
+
+                        <template x-if="savedKeys.length === 0">
+                            <p class="text-[11px] text-slate-400 italic py-2">No unused keys available. Generate some first.</p>
+                        </template>
+
+                        <div x-show="savedKeys.length > 0" class="border border-slate-200 rounded-xl overflow-hidden max-h-44 overflow-y-auto divide-y divide-slate-100 mb-2">
+                            <template x-for="(k, idx) in savedKeys" :key="k.id">
+                                <div class="flex items-center gap-2 px-3 py-2 hover:bg-blue-50/50 transition-colors"
+                                     :class="productKeyVal === k.key ? 'bg-blue-50 border-l-2 border-blue-500' : 'bg-white'">
+
+                                    {{-- Editable key text or display --}}
+                                    <template x-if="editingKeyId !== k.id">
+                                        <button type="button" @click="selectKey(k)"
+                                                class="flex-1 text-left font-mono font-bold text-xs text-slate-700 uppercase tracking-wider truncate"
+                                                x-text="k.key"></button>
+                                    </template>
+                                    <template x-if="editingKeyId === k.id">
+                                        <input type="text" x-model="editingKeyVal" @keydown.enter.prevent="saveEdit(k)" @keydown.escape.prevent="cancelEdit()"
+                                               class="flex-1 font-mono font-bold text-xs uppercase tracking-wider px-2 py-1 border border-blue-400 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-400 bg-white">
+                                    </template>
+
+                                    {{-- Duration badge --}}
+                                    <span class="shrink-0 text-[9px] font-bold bg-slate-100 text-slate-500 px-1.5 py-0.5 rounded-full" x-text="k.duration_days + 'd'"></span>
+
+                                    {{-- Actions --}}
+                                    <template x-if="editingKeyId !== k.id">
+                                        <div class="flex items-center gap-1 shrink-0">
+                                            {{-- Select --}}
+                                            <button type="button" @click="selectKey(k)" title="Use this key"
+                                                    class="w-6 h-6 flex items-center justify-center rounded-lg transition-colors"
+                                                    :class="productKeyVal === k.key ? 'bg-blue-500 text-white' : 'text-slate-400 hover:text-blue-600 hover:bg-blue-50'">
+                                                <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M5 13l4 4L19 7"/></svg>
+                                            </button>
+                                            {{-- Edit --}}
+                                            <button type="button" @click="startEdit(k)" title="Edit key"
+                                                    class="w-6 h-6 flex items-center justify-center rounded-lg text-slate-400 hover:text-amber-600 hover:bg-amber-50 transition-colors">
+                                                <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z"/></svg>
+                                            </button>
+                                            {{-- Delete --}}
+                                            <button type="button" @click="deleteKey(k, idx)" title="Delete key"
+                                                    class="w-6 h-6 flex items-center justify-center rounded-lg text-slate-400 hover:text-rose-600 hover:bg-rose-50 transition-colors">
+                                                <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"/></svg>
+                                            </button>
+                                        </div>
+                                    </template>
+                                    <template x-if="editingKeyId === k.id">
+                                        <div class="flex items-center gap-1 shrink-0">
+                                            {{-- Save --}}
+                                            <button type="button" @click="saveEdit(k)" title="Save"
+                                                    class="w-6 h-6 flex items-center justify-center rounded-lg bg-emerald-500 text-white hover:bg-emerald-600 transition-colors">
+                                                <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M5 13l4 4L19 7"/></svg>
+                                            </button>
+                                            {{-- Cancel --}}
+                                            <button type="button" @click="cancelEdit()" title="Cancel"
+                                                    class="w-6 h-6 flex items-center justify-center rounded-lg bg-slate-200 text-slate-600 hover:bg-slate-300 transition-colors">
+                                                <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M6 18L18 6M6 6l12 12"/></svg>
+                                            </button>
+                                        </div>
+                                    </template>
+
+                                </div>
+                            </template>
+                        </div>
+                    </div>
+
+                    {{-- Selected / manual key input --}}
+                    <div>
+                        <label class="block text-[10px] font-bold text-slate-500 uppercase tracking-wider mb-1">Selected / Type Key</label>
+                        <input id="sa_product_key" type="text" :name="mode === 'manual' ? 'product_key' : ''" x-model="productKeyVal" :required="mode === 'manual'" autocomplete="off"
                                class="w-full px-4 py-2.5 bg-slate-50 border border-slate-200 rounded-xl text-sm font-extrabold font-mono tracking-widest text-center uppercase placeholder:normal-case placeholder:tracking-normal focus:outline-none focus:border-blue-400 focus:bg-white transition-colors"
                                placeholder="SUHAIM-XXXX-XXXX-XXXX">
                     </div>

@@ -41,19 +41,32 @@ class ProductKeyController extends Controller
     /**
      * Remove the specified product key from database (if unused).
      */
-    public function destroy(ProductKey $productKey)
+    public function destroy(ProductKey $productKey, Request $request)
     {
-        if ($productKey->isUsed()) {
-            return redirect()
-                ->back()
-                ->with('error', 'Cannot delete a product key that has already been redeemed.');
-        }
-
         $productKey->delete();
+
+        if ($request->expectsJson() || $request->ajax()) {
+            return response()->json(['success' => true]);
+        }
 
         return redirect()
             ->back()
             ->with('success', 'Product key deleted successfully!');
+    }
+
+
+
+    /**
+     * Delete ALL product keys (used and unused) in bulk.
+     */
+    public function destroyAll()
+    {
+        $count = ProductKey::count();
+        ProductKey::truncate();
+
+        return redirect()
+            ->back()
+            ->with('success', "All {$count} product keys deleted successfully.");
     }
 
     /**
@@ -65,40 +78,48 @@ class ProductKeyController extends Controller
             'product_key' => 'required|string',
         ]);
 
-        $inputKey = trim($request->product_key);
+        $inputKey = strtoupper(trim($request->product_key ?? ''));
 
         $productKey = ProductKey::where('key', $inputKey)->first();
 
         if (!$productKey) {
+            if ($request->expectsJson() || $request->ajax()) {
+                return response()->json(['error' => 'Incorrect activation key. Please enter a valid product key.'], 422);
+            }
             return redirect()
                 ->back()
                 ->with('error', 'Incorrect activation key. Please enter a valid product key.');
         }
 
         if ($productKey->isUsed()) {
+            if ($request->expectsJson() || $request->ajax()) {
+                return response()->json(['error' => 'This product key has already been redeemed.'], 422);
+            }
             return redirect()
                 ->back()
                 ->with('error', 'This product key has already been redeemed.');
         }
 
         $user = auth()->user();
-        $workshop = $user->workshop;
+        $workshop = null;
+        if ($user->isSuperAdmin() && session()->has('active_workshop_id')) {
+            $workshop = Workshop::find(session('active_workshop_id'));
+        } else {
+            $workshop = $user->workshop;
+        }
 
         if (!$workshop) {
+            if ($request->expectsJson() || $request->ajax()) {
+                return response()->json(['error' => 'You must belong to a workshop to activate a license.'], 422);
+            }
             return redirect()
                 ->back()
                 ->with('error', 'You must belong to a workshop to activate a license.');
         }
 
         DB::transaction(function () use ($productKey, $workshop) {
-            // Calculate new expiration date
-            // If currently active and not expired, extend from existing expiration
-            if ($workshop->isActive() && $workshop->trial_ends_at && $workshop->trial_ends_at->isFuture()) {
-                $newExpiration = $workshop->trial_ends_at->copy()->addDays($productKey->duration_days);
-            } else {
-                // If expired or suspended, extend starting from now
-                $newExpiration = now()->addDays($productKey->duration_days);
-            }
+            // Always reset from NOW so the user gets exactly the key's duration
+            $newExpiration = now()->addDays($productKey->duration_days);
 
             // Update workshop
             $workshop->update([
@@ -117,17 +138,45 @@ class ProductKeyController extends Controller
         // Get the updated trial ends at date
         $expiryDate = $workshop->fresh()->trial_ends_at;
 
+        if ($request->expectsJson() || $request->ajax()) {
+            return response()->json([
+                'success' => true,
+                'message' => "License activated successfully! Your subscription is now active until " . $expiryDate->format('M d, Y') . ".",
+                'workshop' => [
+                    'subscription_status' => $workshop->subscription_status,
+                    'trial_ends_at' => $workshop->trial_ends_at ? $workshop->trial_ends_at->format('d M Y, h:i A') : 'Never (Lifetime)',
+                    'days_remaining' => $workshop->getTrialDaysRemaining(),
+                    'total_duration' => $workshop->getTotalDurationDays(),
+                    'subscription_day' => $workshop->getSubscriptionDay(),
+                    'is_expired' => $workshop->isTrialExpired(),
+                    'has_expiry' => (bool)$workshop->trial_ends_at,
+                ],
+                'redeemed_keys' => $workshop->productKeys()->orderBy('used_at', 'desc')->get()->map(function($key) {
+                    $parts = explode('-', $key->key);
+                    $masked = (count($parts) >= 3) ? ($parts[0] . '-XXXX-XXXX-' . end($parts)) : (substr($key->key, 0, 8) . '...');
+                    return [
+                        'key' => $masked,
+                        'duration_days' => $key->duration_days,
+                        'used_at' => $key->used_at ? $key->used_at->format('d M Y, h:i A') : $key->updated_at->format('d M Y, h:i A'),
+                    ];
+                })
+            ]);
+        }
+
         return redirect()
             ->route('dashboard')
             ->with('success', "License activated successfully! Your subscription is now active until " . $expiryDate->format('M d, Y') . ".");
     }
 
     /**
-     * Update the specified product key duration.
+     * Update the specified product key.
      */
     public function update(Request $request, ProductKey $productKey)
     {
         if ($productKey->isUsed()) {
+            if ($request->expectsJson() || $request->ajax()) {
+                return response()->json(['error' => 'Cannot edit a product key that has already been redeemed.'], 422);
+            }
             return redirect()
                 ->back()
                 ->with('error', 'Cannot edit a product key that has already been redeemed.');
@@ -135,11 +184,22 @@ class ProductKeyController extends Controller
 
         $validated = $request->validate([
             'duration_days' => 'required|integer|min:1',
+            'key' => 'nullable|string|max:255|unique:product_keys,key,' . $productKey->id,
         ]);
 
-        $productKey->update([
+        $updates = [
             'duration_days' => (int) $validated['duration_days'],
-        ]);
+        ];
+
+        if (!empty($validated['key'])) {
+            $updates['key'] = strtoupper(trim($validated['key']));
+        }
+
+        $productKey->update($updates);
+
+        if ($request->expectsJson() || $request->ajax()) {
+            return response()->json(['success' => true]);
+        }
 
         return redirect()
             ->back()
