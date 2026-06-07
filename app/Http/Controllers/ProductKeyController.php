@@ -72,7 +72,7 @@ class ProductKeyController extends Controller
         if (!$productKey) {
             return redirect()
                 ->back()
-                ->with('error', 'Incorrect activation key. Please contact Suhaim Soft (8891479505) to get a valid access key.');
+                ->with('error', 'Incorrect activation key. Please enter a valid product key.');
         }
 
         if ($productKey->isUsed()) {
