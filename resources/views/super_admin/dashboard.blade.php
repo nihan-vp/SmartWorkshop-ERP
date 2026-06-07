@@ -429,7 +429,7 @@
                                         <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"/><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z"/></svg>
                                     </button>
                                 </form>
-                                <button type="button" @click="openActivateModal(@js(['id'=>$workshop->id,'name'=>$workshop->name]))"
+                                <button type="button" @click="openActivateModal(@js(['id'=>$workshop->id,'name'=>$workshop->name,'phone'=>$workshop->phone,'email'=>$workshop->email,'gstin'=>$workshop->gstin,'address'=>$workshop->address,'subscription_status'=>$workshop->subscription_status,'trial_ends_at'=>$workshop->trial_ends_at?$workshop->trial_ends_at->format('Y-m-d\TH:i'):'','trial_days'=>'','alert_message'=>$workshop->alert_message,'alert_expires_at'=>$workshop->alert_expires_at?$workshop->alert_expires_at->format('Y-m-d\TH:i'):'','admin_user_id'=>$workshop->users->first()?->id,'admin_name'=>$workshop->users->first()?->name,'admin_email'=>$workshop->users->first()?->email]))"
                                     class="p-2 text-emerald-400 hover:text-emerald-700 hover:bg-emerald-50 rounded-xl transition-all" title="Activate License">
                                     <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 7a2 2 0 012 2m-9 8a2 2 0 012-2m7-3a6 6 0 11-12 0 6 6 0 0112 0z"/></svg>
                                 </button>
@@ -486,7 +486,7 @@
                             Inspect
                         </button>
                     </form>
-                    <button type="button" @click="openActivateModal(@js(['id'=>$workshop->id,'name'=>$workshop->name]))"
+                    <button type="button" @click="openActivateModal(@js(['id'=>$workshop->id,'name'=>$workshop->name,'phone'=>$workshop->phone,'email'=>$workshop->email,'gstin'=>$workshop->gstin,'address'=>$workshop->address,'subscription_status'=>$workshop->subscription_status,'trial_ends_at'=>$workshop->trial_ends_at?$workshop->trial_ends_at->format('Y-m-d\TH:i'):'','trial_days'=>'','alert_message'=>$workshop->alert_message,'alert_expires_at'=>$workshop->alert_expires_at?$workshop->alert_expires_at->format('Y-m-d\TH:i'):'','admin_user_id'=>$workshop->users->first()?->id,'admin_name'=>$workshop->users->first()?->name,'admin_email'=>$workshop->users->first()?->email]))"
                         class="flex-1 min-w-[70px] flex items-center justify-center gap-1.5 py-2 rounded-xl text-xs font-bold border border-emerald-200 bg-emerald-50 text-emerald-700">
                         Activate
                     </button>
@@ -1098,9 +1098,19 @@
     <div class="absolute inset-0" style="background: rgba(15,23,42,0.7); backdrop-filter: blur(4px);" @click="openActivateLicenseModal = false"></div>
     <div class="modal-enter relative bg-white w-full sm:rounded-3xl sm:max-w-md shadow-2xl flex flex-col overflow-hidden z-10 rounded-t-3xl">
         <div class="shrink-0 flex justify-between items-center px-6 py-4" style="background: linear-gradient(135deg, #1d4ed8, #2563eb);">
-            <div>
-                <h3 class="text-base font-bold text-white">Activate License</h3>
-                <p class="text-xs text-blue-100 mt-0.5" x-text="`For workshop: ${activeWorkshopToActivate.name}`"></p>
+            <div class="flex items-center gap-3">
+                <div>
+                    <h3 class="text-base font-bold text-white">Activate License</h3>
+                    <p class="text-xs text-blue-100 mt-0.5" x-text="`For workshop: ${activeWorkshopToActivate.name}`"></p>
+                </div>
+                <!-- Jump to Edit button -->
+                <button type="button" 
+                        @click="openActivateLicenseModal = false; openEdit(activeWorkshopToActivate)"
+                        class="px-2 py-0.5 bg-white/20 hover:bg-white/30 text-white rounded text-[10px] font-bold transition-all flex items-center gap-1"
+                        title="Edit Workshop Settings">
+                    <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z"/></svg>
+                    Edit
+                </button>
             </div>
             <button type="button" @click="openActivateLicenseModal = false" class="w-8 h-8 rounded-xl flex items-center justify-center text-white/60 hover:text-white hover:bg-white/10 transition-all">
                 <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/></svg>
