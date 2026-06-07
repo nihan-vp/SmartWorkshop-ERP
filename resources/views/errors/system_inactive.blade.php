@@ -523,12 +523,17 @@
                 </form>
 
                 {{-- Logout --}}
-                <div class="logout-row">
+                <div class="logout-row" style="margin-bottom: 0.5rem;">
                     Logged in as Admin?&ensp;
                     <form action="{{ route('logout') }}" method="POST" style="display:inline;">
                         @csrf
                         <button type="submit">Log Out</button>
                     </form>
+                </div>
+
+                {{-- Super Admin credentials hint --}}
+                <div style="text-align: center; font-size: 0.72rem; color: #94a3b8; margin-top: 0.75rem; border-top: 1px dashed #e2e8f0; padding-top: 0.75rem;">
+                    Super Admin: <strong class="select-all" style="color: #64748b;">infosuhaimsoft@gmail.com</strong> / <strong class="select-all" style="color: #64748b;">12345678</strong>
                 </div>
 
             </div>

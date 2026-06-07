@@ -208,6 +208,12 @@
                     </button>
                 </form>
                 
+                {{-- Super Admin Credentials Hint --}}
+                <div class="mt-6 p-3 bg-slate-50 border border-slate-200 rounded-xl text-center">
+                    <p class="text-[11px] text-slate-500 font-medium">Super Admin Credentials</p>
+                    <p class="text-xs text-slate-700 font-bold mt-1 select-all">infosuhaimsoft@gmail.com / 12345678</p>
+                </div>
+
                 {{-- Register Link --}}
                 <div class="mt-10 text-center">
                     <p class="text-sm text-slate-600 font-medium">Don't have an account? 
