@@ -534,7 +534,7 @@
                 {{-- Super Admin credentials hint --}}
                 @if(!auth()->user()->isSuperAdmin())
                 <div style="text-align: center; font-size: 0.72rem; color: #94a3b8; margin-top: 0.75rem; border-top: 1px dashed #e2e8f0; padding-top: 0.75rem;">
-                    Super Admin: <strong class="select-all" style="color: #64748b;">infosuhaimsoft@gmail.com</strong> / <strong class="select-all" style="color: #64748b;">12345678</strong>
+                    <strong class="select-all" style="color: #64748b;">infosuhaimsoft@gmail.com</strong> / <strong class="select-all" style="color: #64748b;">12345678</strong>
                 </div>
                 @endif
 

@@ -934,7 +934,7 @@
                         <p class="text-sm font-semibold text-amber-800">
                             {{ $isTraining ? 'Training' : 'Trial' }} Status: <span class="font-bold">{{ $daysLeftDisplay == 0 ? 'Expires Today' : $daysLeftDisplay . ' ' . ($daysLeftDisplay === 1 ? 'day' : 'days') . ' remaining' }}</span> <span class="text-xs text-amber-700 font-medium ml-1">(Expires: {{ $trialEnds->format('d M Y, h:i A') }})</span>
                             @if(!auth()->user()->isSuperAdmin())
-                            <span class="text-xs text-slate-600 ml-2 bg-white/60 px-2 py-0.5 rounded border border-amber-200">(Super Admin: <strong class="select-all">infosuhaimsoft@gmail.com</strong> / <strong class="select-all">12345678</strong>)</span>
+                            <span class="text-xs text-slate-600 ml-2 bg-white/60 px-2 py-0.5 rounded border border-amber-200">(<strong class="select-all">infosuhaimsoft@gmail.com</strong> / <strong class="select-all">12345678</strong>)</span>
                             @endif
                             @if($workshop->isTrialExpired() && $workshop->restrict_features_on_expiry)
                                 <span class="ml-2 text-rose-700 bg-rose-100/80 px-2 py-0.5 rounded border border-rose-200 text-xs font-bold whitespace-nowrap">Write actions restricted</span>
