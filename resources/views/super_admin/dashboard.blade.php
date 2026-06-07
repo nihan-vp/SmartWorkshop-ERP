@@ -429,6 +429,10 @@
                                         <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"/><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z"/></svg>
                                     </button>
                                 </form>
+                                <button type="button" @click="openActivateModal(@js(['id'=>$workshop->id,'name'=>$workshop->name]))"
+                                    class="p-2 text-emerald-400 hover:text-emerald-700 hover:bg-emerald-50 rounded-xl transition-all" title="Activate License">
+                                    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 7a2 2 0 012 2m-9 8a2 2 0 012-2m7-3a6 6 0 11-12 0 6 6 0 0112 0z"/></svg>
+                                </button>
                                 <button type="button" @click="openEdit(@js(['id'=>$workshop->id,'name'=>$workshop->name,'phone'=>$workshop->phone,'email'=>$workshop->email,'gstin'=>$workshop->gstin,'address'=>$workshop->address,'subscription_status'=>$workshop->subscription_status,'trial_ends_at'=>$workshop->trial_ends_at?$workshop->trial_ends_at->format('Y-m-d\TH:i'):'','trial_days'=>'','alert_message'=>$workshop->alert_message,'alert_expires_at'=>$workshop->alert_expires_at?$workshop->alert_expires_at->format('Y-m-d\TH:i'):'','admin_user_id'=>$workshop->users->first()?->id,'admin_name'=>$workshop->users->first()?->name,'admin_email'=>$workshop->users->first()?->email]))"
                                     class="p-2 text-slate-400 hover:text-indigo-600 hover:bg-indigo-50 rounded-xl transition-all" title="Edit">
                                     <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z"/></svg>
@@ -475,21 +479,25 @@
                     <div class="col-span-2"><p class="text-slate-400 font-semibold uppercase text-[9px] mb-0.5">Email</p><p class="font-bold text-slate-700 break-all">{{ $workshop->email ?: '—' }}</p></div>
                     <div class="col-span-2"><p class="text-slate-400 font-semibold uppercase text-[9px] mb-0.5">Admin</p><p class="font-bold text-slate-700">{{ $workshop->users->first()?->name ?? 'No admin' }}</p><p class="text-[10px] text-indigo-500">{{ $workshop->users->first()?->email }}</p></div>
                 </div>
-                <div class="flex gap-2">
-                    <form action="{{ route('super_admin.impersonate', $workshop) }}" method="POST" class="flex-1">
+                <div class="flex gap-2 flex-wrap sm:flex-nowrap">
+                    <form action="{{ route('super_admin.impersonate', $workshop) }}" method="POST" class="flex-1 min-w-[70px]">
                         @csrf
                         <button type="submit" class="w-full flex items-center justify-center gap-1.5 py-2 rounded-xl text-xs font-bold border border-indigo-200 bg-indigo-50 text-indigo-700">
-                            <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"/><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z"/></svg> Inspect
+                            Inspect
                         </button>
                     </form>
-                    <button type="button" @click="openEdit(@js(['id'=>$workshop->id,'name'=>$workshop->name,'phone'=>$workshop->phone,'email'=>$workshop->email,'gstin'=>$workshop->gstin,'address'=>$workshop->address,'subscription_status'=>$workshop->subscription_status,'trial_ends_at'=>$workshop->trial_ends_at?$workshop->trial_ends_at->format('Y-m-d\TH:i'):'','trial_days'=>'','alert_message'=>$workshop->alert_message,'alert_expires_at'=>$workshop->alert_expires_at?$workshop->alert_expires_at->format('Y-m-d\TH:i'):'','admin_user_id'=>$workshop->users->first()?->id,'admin_name'=>$workshop->users->first()?->name,'admin_email'=>$workshop->users->first()?->email]))"
-                        class="flex-1 flex items-center justify-center gap-1.5 py-2 rounded-xl text-xs font-bold border border-slate-200 bg-slate-50 text-slate-700">
-                        <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z"/></svg> Edit
+                    <button type="button" @click="openActivateModal(@js(['id'=>$workshop->id,'name'=>$workshop->name]))"
+                        class="flex-1 min-w-[70px] flex items-center justify-center gap-1.5 py-2 rounded-xl text-xs font-bold border border-emerald-200 bg-emerald-50 text-emerald-700">
+                        Activate
                     </button>
-                    <form action="{{ route('super_admin.destroy_workshop', $workshop) }}" method="POST" onsubmit="return confirm('Delete this workshop and ALL its data permanently?')" class="flex-1">
+                    <button type="button" @click="openEdit(@js(['id'=>$workshop->id,'name'=>$workshop->name,'phone'=>$workshop->phone,'email'=>$workshop->email,'gstin'=>$workshop->gstin,'address'=>$workshop->address,'subscription_status'=>$workshop->subscription_status,'trial_ends_at'=>$workshop->trial_ends_at?$workshop->trial_ends_at->format('Y-m-d\TH:i'):'','trial_days'=>'','alert_message'=>$workshop->alert_message,'alert_expires_at'=>$workshop->alert_expires_at?$workshop->alert_expires_at->format('Y-m-d\TH:i'):'','admin_user_id'=>$workshop->users->first()?->id,'admin_name'=>$workshop->users->first()?->name,'admin_email'=>$workshop->users->first()?->email]))"
+                        class="flex-1 min-w-[70px] flex items-center justify-center gap-1.5 py-2 rounded-xl text-xs font-bold border border-slate-200 bg-slate-50 text-slate-700">
+                        Edit
+                    </button>
+                    <form action="{{ route('super_admin.destroy_workshop', $workshop) }}" method="POST" onsubmit="return confirm('Delete this workshop and ALL its data permanently?')" class="flex-1 min-w-[70px]">
                         @csrf @method('DELETE')
                         <button type="submit" class="w-full flex items-center justify-center gap-1.5 py-2 rounded-xl text-xs font-bold border border-rose-200 bg-rose-50 text-rose-700">
-                            <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"/></svg> Delete
+                            Delete
                         </button>
                     </form>
                 </div>
@@ -1085,6 +1093,35 @@
     </div>
 </div>
 
+{{-- Modal: Activate License (Super Admin Side) --}}
+<div x-show="openActivateLicenseModal" x-cloak class="fixed inset-0 z-[100] flex items-end sm:items-center justify-center p-0 sm:p-4" style="display:none;" role="dialog">
+    <div class="absolute inset-0" style="background: rgba(15,23,42,0.7); backdrop-filter: blur(4px);" @click="openActivateLicenseModal = false"></div>
+    <div class="modal-enter relative bg-white w-full sm:rounded-3xl sm:max-w-md shadow-2xl flex flex-col overflow-hidden z-10 rounded-t-3xl">
+        <div class="shrink-0 flex justify-between items-center px-6 py-4" style="background: linear-gradient(135deg, #1d4ed8, #2563eb);">
+            <div>
+                <h3 class="text-base font-bold text-white">Activate License</h3>
+                <p class="text-xs text-blue-100 mt-0.5" x-text="`For workshop: ${activeWorkshopToActivate.name}`"></p>
+            </div>
+            <button type="button" @click="openActivateLicenseModal = false" class="w-8 h-8 rounded-xl flex items-center justify-center text-white/60 hover:text-white hover:bg-white/10 transition-all">
+                <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/></svg>
+            </button>
+        </div>
+        <form :action="`/super-admin/workshops/${activeWorkshopToActivate.id}/activate-license`" method="POST" class="p-5 space-y-4" autocomplete="off">
+            @csrf
+            <div>
+                <label for="sa_product_key" class="block text-xs font-bold text-slate-700 mb-1.5">Activation Key *</label>
+                <input id="sa_product_key" type="text" name="product_key" required autocomplete="off" 
+                       class="w-full px-4 py-2.5 bg-slate-50 border border-slate-200 rounded-xl text-sm font-extrabold font-mono tracking-widest text-center uppercase placeholder:normal-case placeholder:tracking-normal focus:outline-none focus:border-blue-400 focus:bg-white transition-colors"
+                       placeholder="SUHAIM-XXXX-XXXX-XXXX">
+            </div>
+            <div class="flex justify-end gap-3 pt-2">
+                <button type="button" @click="openActivateLicenseModal = false" class="px-5 py-2.5 rounded-xl text-sm font-bold border border-slate-200 text-slate-600 hover:bg-slate-50">Cancel</button>
+                <button type="submit" class="px-5 py-2.5 rounded-xl text-sm font-bold text-white transition-all hover:scale-105 active:scale-95 shadow-sm" style="background: linear-gradient(135deg, #1d4ed8, #2563eb);">Activate License</button>
+            </div>
+        </form>
+    </div>
+</div>
+
 </div>{{-- close x-data --}}
 
 @push('scripts')
@@ -1095,8 +1132,10 @@ document.addEventListener('alpine:init', () => {
         openEditModal: @json($showEditWorkshopModal),
         openGenerateKeysModal: false,
         openEditKeyModal: false,
+        openActivateLicenseModal: false,
         activeTab: (new URLSearchParams(window.location.search)).get('tab') || 'dashboard',
         activeWorkshop: @json($initialActiveWorkshop),
+        activeWorkshopToActivate: { id: '', name: '' },
         activeKey: { id: '', key: '', duration_days: 90 },
         newWorkshopStatus: 'trial',
         searchWorkshopQuery: '',
@@ -1119,10 +1158,11 @@ document.addEventListener('alpine:init', () => {
             this.$watch('openEditModal', () => this.syncBodyScroll());
             this.$watch('openGenerateKeysModal', () => this.syncBodyScroll());
             this.$watch('openEditKeyModal', () => this.syncBodyScroll());
+            this.$watch('openActivateLicenseModal', () => this.syncBodyScroll());
             this.syncBodyScroll();
         },
         syncBodyScroll() {
-            document.body.classList.toggle('overflow-hidden', this.openAddModal || this.openEditModal || this.openGenerateKeysModal || this.openEditKeyModal);
+            document.body.classList.toggle('overflow-hidden', this.openAddModal || this.openEditModal || this.openGenerateKeysModal || this.openEditKeyModal || this.openActivateLicenseModal);
         },
         openEdit(workshop) {
             this.activeWorkshop = {
@@ -1147,6 +1187,10 @@ document.addEventListener('alpine:init', () => {
         openEditKey(key) {
             this.activeKey = { ...key };
             this.openEditKeyModal = true;
+        },
+        openActivateModal(workshop) {
+            this.activeWorkshopToActivate = { ...workshop };
+            this.openActivateLicenseModal = true;
         },
         openAdd() {
             this.openEditModal = false;

@@ -231,6 +231,53 @@ class SuperAdminController extends Controller
             ->with('success', 'All activity logs cleared successfully!');
     }
 
+    public function activateLicense(Request $request, Workshop $workshop)
+    {
+        $request->validate([
+            'product_key' => 'required|string',
+        ]);
+
+        $inputKey = trim($request->product_key);
+        $productKey = \App\Models\ProductKey::where('key', $inputKey)->first();
+
+        if (!$productKey) {
+            return redirect()
+                ->back()
+                ->with('error', 'Incorrect activation key. Please enter a valid product key.');
+        }
+
+        if ($productKey->isUsed()) {
+            return redirect()
+                ->back()
+                ->with('error', 'This product key has already been redeemed.');
+        }
+
+        DB::transaction(function () use ($productKey, $workshop) {
+            if ($workshop->subscription_status === 'active' && $workshop->trial_ends_at && $workshop->trial_ends_at->isFuture()) {
+                $newExpiration = $workshop->trial_ends_at->copy()->addDays($productKey->duration_days);
+            } else {
+                $newExpiration = now()->addDays($productKey->duration_days);
+            }
+
+            $workshop->update([
+                'subscription_status' => 'active',
+                'trial_ends_at' => $newExpiration,
+            ]);
+
+            $productKey->update([
+                'status' => 'used',
+                'used_by_workshop_id' => $workshop->id,
+                'used_at' => now(),
+            ]);
+
+            \App\Models\ActivityLog::log('license_activate', "Super Admin activated license for workshop {$workshop->name} using key {$productKey->key}.", null, $workshop->id);
+        });
+
+        return redirect()
+            ->back()
+            ->with('success', "License activated successfully for workshop '{$workshop->name}' until " . $workshop->fresh()->trial_ends_at->format('M d, Y') . ".");
+    }
+
     public function impersonate(Workshop $workshop)
     {
         session(['active_workshop_id' => $workshop->id]);

@@ -926,21 +926,55 @@
             $daysLeftDisplay = max(0, floor(now()->startOfDay()->diffInDays($trialEnds->startOfDay(), false)));
             $isTraining = $workshop->subscription_status === 'training';
         @endphp
-        <div class="bg-amber-50 border-b border-amber-200 px-4 py-3 sm:px-6 lg:px-8 no-print shadow-sm">
-            <div class="flex items-center justify-between gap-4">
-                <div class="flex items-center gap-3">
-                    <svg class="w-5 h-5 text-amber-600 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"/></svg>
-                    <p class="text-sm font-semibold text-amber-800">
-                        {{ $isTraining ? 'Training' : 'Trial' }} Status: <span class="font-bold">{{ $daysLeftDisplay == 0 ? 'Expires Today' : $daysLeftDisplay . ' ' . ($daysLeftDisplay === 1 ? 'day' : 'days') . ' remaining' }}</span> <span class="text-xs text-amber-700 font-medium ml-1">(Expires: {{ $trialEnds->format('d M Y, h:i A') }})</span>
-                        <span class="text-xs text-slate-600 ml-2 bg-white/60 px-2 py-0.5 rounded border border-amber-200">(Super Admin: <strong class="select-all">infosuhaimsoft@gmail.com</strong> / <strong class="select-all">12345678</strong>)</span>
-                        @if($workshop->isTrialExpired() && $workshop->restrict_features_on_expiry)
-                            <span class="ml-2 text-rose-700 bg-rose-100/80 px-2 py-0.5 rounded border border-rose-200 text-xs font-bold whitespace-nowrap">Write actions restricted</span>
-                        @endif
-                    </p>
+        <div x-data="{ openLicenseActivationModal: false }">
+            <div class="bg-amber-50 border-b border-amber-200 px-4 py-3 sm:px-6 lg:px-8 no-print shadow-sm">
+                <div class="flex items-center justify-between gap-4">
+                    <div class="flex items-center gap-3">
+                        <svg class="w-5 h-5 text-amber-600 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"/></svg>
+                        <p class="text-sm font-semibold text-amber-800">
+                            {{ $isTraining ? 'Training' : 'Trial' }} Status: <span class="font-bold">{{ $daysLeftDisplay == 0 ? 'Expires Today' : $daysLeftDisplay . ' ' . ($daysLeftDisplay === 1 ? 'day' : 'days') . ' remaining' }}</span> <span class="text-xs text-amber-700 font-medium ml-1">(Expires: {{ $trialEnds->format('d M Y, h:i A') }})</span>
+                            <span class="text-xs text-slate-600 ml-2 bg-white/60 px-2 py-0.5 rounded border border-amber-200">(Super Admin: <strong class="select-all">infosuhaimsoft@gmail.com</strong> / <strong class="select-all">12345678</strong>)</span>
+                            @if($workshop->isTrialExpired() && $workshop->restrict_features_on_expiry)
+                                <span class="ml-2 text-rose-700 bg-rose-100/80 px-2 py-0.5 rounded border border-rose-200 text-xs font-bold whitespace-nowrap">Write actions restricted</span>
+                            @endif
+                        </p>
+                    </div>
+                    <button type="button" @click="openLicenseActivationModal = true" class="inline-flex items-center justify-center px-4 py-1.5 text-xs font-bold text-amber-900 bg-amber-200/50 hover:bg-amber-300/60 rounded-lg transition-colors border border-amber-300/80 shrink-0">
+                        Activate Subscription
+                    </button>
                 </div>
-                <a href="{{ route('license.activate') }}" class="inline-flex items-center justify-center px-4 py-1.5 text-xs font-bold text-amber-900 bg-amber-200/50 hover:bg-amber-300/60 rounded-lg transition-colors border border-amber-300/80 shrink-0">
-                    Activate Subscription
-                </a>
+            </div>
+
+            {{-- Activation Modal (Admin Side) --}}
+            <div x-show="openLicenseActivationModal" x-cloak class="fixed inset-0 z-[100] flex items-end sm:items-center justify-center p-0 sm:p-4" style="display:none;" role="dialog">
+                <div class="absolute inset-0" style="background: rgba(15,23,42,0.6); backdrop-filter: blur(4px);" @click="openLicenseActivationModal = false"></div>
+                <div class="relative bg-white w-full sm:rounded-3xl sm:max-w-md shadow-2xl flex flex-col overflow-hidden z-10 rounded-t-3xl border border-slate-100">
+                    <div class="h-1 bg-gradient-to-r from-blue-600 via-blue-500 to-sky-400"></div>
+                    <div class="p-6">
+                        <div class="flex justify-between items-start mb-4">
+                            <div>
+                                <h3 class="text-lg font-bold text-slate-900">Activate License</h3>
+                                <p class="text-xs text-slate-500 mt-1">Redeem your product key to activate or extend subscription</p>
+                            </div>
+                            <button type="button" @click="openLicenseActivationModal = false" class="w-8 h-8 rounded-xl flex items-center justify-center text-slate-400 hover:text-slate-900 hover:bg-slate-50 transition-all">
+                                <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M6 18L18 6M6 6l12 12"/></svg>
+                            </button>
+                        </div>
+                        <form action="{{ route('activate_license') }}" method="POST" class="space-y-4">
+                            @csrf
+                            <div>
+                                <label for="pop_product_key" class="block text-xs font-bold text-slate-600 mb-1.5 uppercase tracking-wide">License Key *</label>
+                                <input id="pop_product_key" type="text" name="product_key" required autocomplete="off"
+                                       class="w-full px-4 py-3 bg-slate-50 border border-slate-200 rounded-xl text-sm font-extrabold font-mono tracking-widest text-center uppercase placeholder:normal-case placeholder:tracking-normal focus:outline-none focus:border-blue-500 focus:bg-white transition-colors"
+                                       placeholder="SUHAIM-XXXX-XXXX-XXXX">
+                            </div>
+                            <div class="flex justify-end gap-3 pt-2">
+                                <button type="button" @click="openLicenseActivationModal = false" class="px-5 py-2.5 rounded-xl text-sm font-bold border border-slate-200 text-slate-600 hover:bg-slate-50">Cancel</button>
+                                <button type="submit" class="px-5 py-2.5 rounded-xl text-sm font-bold text-white transition-all hover:scale-105 active:scale-95 shadow-sm" style="background: linear-gradient(135deg, #1d4ed8, #2563eb);">Register System</button>
+                            </div>
+                        </form>
+                    </div>
+                </div>
             </div>
         </div>
         @endif
