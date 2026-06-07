@@ -1121,6 +1121,61 @@
             }
         });
     </script>
+
+    {{-- Global Toast Notifications --}}
+    <div x-data="globalToastManager()" x-init="init()" class="fixed top-4 right-4 z-[9999] flex flex-col gap-2 max-w-sm w-full pointer-events-none" x-cloak>
+        <template x-for="t in toasts" :key="t.id">
+            <div x-show="t.show"
+                 x-transition:enter="transition ease-out duration-200"
+                 x-transition:enter-start="opacity-0 translate-y-1"
+                 x-transition:enter-end="opacity-100 translate-y-0"
+                 x-transition:leave="transition ease-in duration-150"
+                 x-transition:leave-start="opacity-100"
+                 x-transition:leave-end="opacity-0"
+                 class="pointer-events-auto bg-white rounded-xl p-3.5 flex items-start gap-3 shadow-lg border-l-4"
+                 :class="t.type === 'success' ? 'border-emerald-500' : 'border-rose-500'">
+                <div class="w-8 h-8 rounded-lg flex items-center justify-center shrink-0"
+                     :class="t.type === 'success' ? 'bg-emerald-50 text-emerald-600' : 'bg-rose-50 text-rose-600'">
+                    <template x-if="t.type === 'success'">
+                        <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M5 13l4 4L19 7"/></svg>
+                    </template>
+                    <template x-if="t.type === 'error'">
+                        <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M12 9v2m0 4h.01M10.29 3.86L1.82 18a2 2 0 001.71 3h16.94a2 2 0 001.71-3L13.71 3.86a2 2 0 00-3.42 0z"/></svg>
+                    </template>
+                </div>
+                <div class="flex-1 min-w-0">
+                    <div class="text-[10px] font-extrabold uppercase tracking-widest"
+                         :class="t.type === 'success' ? 'text-emerald-700' : 'text-rose-700'" x-text="t.title"></div>
+                    <div class="text-xs font-semibold text-slate-600 mt-0.5" x-text="t.message"></div>
+                </div>
+                <button type="button" class="text-slate-400 hover:text-slate-700" @click="t.show = false">✕</button>
+            </div>
+        </template>
+    </div>
+
+    <script>
+        function globalToastManager() {
+            return {
+                toasts: [],
+                init() {
+                    @if(session('success'))
+                        this.add('success', 'Success', "{{ session('success') }}");
+                    @endif
+                    @if(session('error'))
+                        this.add('error', 'Error', "{{ session('error') }}");
+                    @endif
+                },
+                add(type, title, message) {
+                    const id = Date.now();
+                    this.toasts.push({ id, type, title, message, show: true });
+                    setTimeout(() => {
+                        const t = this.toasts.find(t => t.id === id);
+                        if (t) t.show = false;
+                    }, 5000);
+                }
+            }
+        }
+    </script>
     @stack('scripts')
 </body>
 </html>
