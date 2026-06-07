@@ -301,6 +301,41 @@
                 </div>
             </div>
 
+            {{-- Recent Unused Keys List in Dashboard --}}
+            <div class="bg-white rounded-2xl border border-slate-200 shadow-sm overflow-hidden">
+                <div class="px-5 py-4 border-b border-slate-100 flex items-center justify-between">
+                    <div class="flex items-center gap-2">
+                        <svg class="w-4 h-4 text-violet-500" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 7a2 2 0 012 2m-9 8a2 2 0 012-2m7-3a6 6 0 11-12 0 6 6 0 0112 0z"/></svg>
+                        <h3 class="text-sm font-bold text-slate-900">Recent Unused Keys</h3>
+                    </div>
+                    <button type="button" @click="activeTab='keys'; window.history.replaceState(null,null,'?tab=keys')" class="text-xs font-bold text-violet-600 hover:text-violet-800 flex items-center gap-1">
+                        View All <svg class="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"/></svg>
+                    </button>
+                </div>
+                @if($productKeys->where('status', 'unused')->count())
+                <div class="divide-y divide-slate-50">
+                    @foreach($productKeys->where('status', 'unused')->take(5) as $k)
+                    <div class="px-5 py-3 hover:bg-slate-50/60 transition-colors flex items-center justify-between gap-3">
+                        <div class="min-w-0">
+                            <p class="font-mono text-xs font-bold text-slate-800 select-all">{{ $k->key }}</p>
+                            <p class="text-[10px] text-slate-400 mt-0.5 font-medium">{{ $k->duration_days }} days duration · Created {{ $k->created_at->diffForHumans() }}</p>
+                        </div>
+                        <button type="button" 
+                                onclick="navigator.clipboard.writeText('{{ $k->key }}'); alert('Key copied to clipboard!')"
+                                class="p-1.5 text-slate-400 hover:text-violet-600 hover:bg-violet-50 rounded-lg transition-all"
+                                title="Copy Key">
+                            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 5H6a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2v-1M8 5a2 2 0 002 2h2a2 2 0 002-2M8 5a2 2 0 012-2h2a2 2 0 012 2m0 0h2a2 2 0 012 2v3m2 4H10m0 0l3-3m-3 3l3 3"/></svg>
+                        </button>
+                    </div>
+                    @endforeach
+                </div>
+                @else
+                <div class="text-center py-8">
+                    <p class="text-xs text-slate-400 font-semibold">No unused keys available.</p>
+                </div>
+                @endif
+            </div>
+
             {{-- Activity Logs --}}
             <div class="bg-white rounded-2xl border border-slate-200 shadow-sm overflow-hidden">
                 <div class="px-5 py-4 border-b border-slate-100 flex items-center justify-between">
@@ -560,7 +595,12 @@
                             <span class="inline-flex items-center gap-1 px-2.5 py-1 rounded-full text-xs font-bold bg-slate-100 text-slate-600 border border-slate-200"><span class="w-1.5 h-1.5 rounded-full bg-slate-400"></span>Redeemed</span>
                             @endif
                         </td>
-                        <td class="px-5 py-3.5 text-xs text-slate-600">{{ $key->workshop?->name ?? '—' }}</td>
+                        <td class="px-5 py-3.5 text-xs text-slate-600">
+                            {{ $key->workshop?->name ?? '—' }}
+                            @if($key->isUsed() && $key->used_at)
+                            <p class="text-[10px] text-slate-400 mt-0.5 font-semibold" title="Redemption date">Redeemed: {{ $key->used_at->format('M d, Y h:i A') }}</p>
+                            @endif
+                        </td>
                         <td class="px-5 py-3.5 text-xs text-slate-400 whitespace-nowrap">{{ $key->created_at->format('M d, Y') }}</td>
                         <td class="px-5 py-3.5">
                             <div class="flex items-center justify-end gap-1">
@@ -596,7 +636,14 @@
                     @endif
                 </div>
                 <div class="flex items-center justify-between text-xs">
-                    <span class="text-slate-500">{{ $key->duration_days }} days · {{ $key->workshop?->name ?? 'Unused' }}</span>
+                    <span class="text-slate-500">
+                        {{ $key->duration_days }} days
+                        @if($key->isUsed())
+                            · Used by {{ $key->workshop?->name }} @if($key->used_at) on {{ $key->used_at->format('M d, Y') }} @endif
+                        @else
+                            · Unused
+                        @endif
+                    </span>
                     <div class="flex gap-1">
                         @if($key->status === 'unused')
                         <button type="button" @click="openEditKey({ id: '{{ $key->id }}', key: '{{ $key->key }}', duration_days: {{ $key->duration_days }} })"
