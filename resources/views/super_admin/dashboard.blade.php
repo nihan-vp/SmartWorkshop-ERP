@@ -1199,13 +1199,20 @@
                             <option value="180">180 Days (6 Months)</option>
                             <option value="365">365 Days (1 Year)</option>
                             <option value="custom">Custom Days...</option>
+                            <option value="exact_date">Exact Date & Time...</option>
                         </select>
                     </div>
                     {{-- Hidden field: only has a 'name' when in generate mode so it actually submits --}}
                     <input type="hidden" :name="mode === 'generate' ? 'duration_days' : ''" :value="durationType === 'custom' ? customDays : durationType">
+                    
                     <div x-show="durationType === 'custom'" x-cloak>
                         <label for="sa_custom_days" class="block text-xs font-bold text-slate-700 mb-1">Custom Duration (Days) *</label>
                         <input id="sa_custom_days" type="number" x-model="customDays" min="1" max="10000" autocomplete="off" class="w-full px-4 py-2.5 bg-slate-50 border border-slate-200 rounded-xl text-sm font-medium focus:outline-none focus:border-blue-400 focus:bg-white transition-colors" placeholder="e.g. 45">
+                    </div>
+
+                    <div x-show="durationType === 'exact_date'" x-cloak>
+                        <label for="sa_exact_date" class="block text-xs font-bold text-slate-700 mb-1">Exact Expiration Date & Time *</label>
+                        <input id="sa_exact_date" type="datetime-local" :name="mode === 'generate' && durationType === 'exact_date' ? 'exact_date' : ''" autocomplete="off" class="w-full px-4 py-2.5 bg-slate-50 border border-slate-200 rounded-xl text-sm font-medium focus:outline-none focus:border-blue-400 focus:bg-white transition-colors">
                     </div>
                     <p class="text-[11px] text-slate-400">Selecting this option will automatically generate a new secure license key, redeem it, and update the workshop's subscription immediately.</p>
                 </div>

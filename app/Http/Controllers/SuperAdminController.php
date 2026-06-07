@@ -82,7 +82,7 @@ class SuperAdminController extends Controller
             'admin_email.unique' => 'This email is already registered. Use a different email for the workshop administrator (not your super admin login email).',
         ]);
 
-        DB::transaction(function () use ($validated) {
+        DB::transaction(function () use ($validated, $request) {
             $workshop = Workshop::create([
                 'name' => $validated['name'],
                 'phone' => $validated['phone'],
@@ -91,8 +91,8 @@ class SuperAdminController extends Controller
                 'gstin' => $validated['gstin'],
                 'subscription_status' => $validated['subscription_status'],
                 'trial_ends_at' => $validated['trial_ends_at'] ?? null,
-                'restrict_features_on_expiry' => $validated['restrict_features_on_expiry'] ?? true,
-                'admin_extend_allowed' => $validated['admin_extend_allowed'] ?? false,
+                'restrict_features_on_expiry' => $request->boolean('restrict_features_on_expiry'),
+                'admin_extend_allowed' => $request->boolean('admin_extend_allowed'),
             ]);
 
             $user = User::create([
@@ -138,7 +138,7 @@ class SuperAdminController extends Controller
             'admin_email.unique' => 'This email is already registered. Use a different email for the workshop administrator.',
         ]);
 
-        DB::transaction(function () use ($validated, $workshop) {
+        DB::transaction(function () use ($validated, $workshop, $request) {
             $oldStatus = $workshop->subscription_status;
             $oldExpiry = $workshop->trial_ends_at;
 
@@ -150,8 +150,8 @@ class SuperAdminController extends Controller
                 'gstin' => $validated['gstin'],
                 'subscription_status' => $validated['subscription_status'],
                 'trial_ends_at' => $validated['trial_ends_at'] ?? null,
-                'restrict_features_on_expiry' => $validated['restrict_features_on_expiry'] ?? false,
-                'admin_extend_allowed' => $validated['admin_extend_allowed'] ?? false,
+                'restrict_features_on_expiry' => $request->boolean('restrict_features_on_expiry'),
+                'admin_extend_allowed' => $request->boolean('admin_extend_allowed'),
                 'alert_message' => $validated['alert_message'] ?? null,
                 'alert_expires_at' => $validated['alert_expires_at'] ?? null,
             ]);
@@ -235,16 +235,30 @@ class SuperAdminController extends Controller
     {
         $request->validate([
             'product_key' => 'nullable|string',
-            'duration_days' => 'nullable|integer|min:1',
+            'duration_days' => 'nullable|string', // String because it can be 'exact_date'
+            'exact_date' => 'nullable|date',
         ]);
 
         $inputKey = strtoupper(trim($request->product_key ?? ''));
 
         if (empty($inputKey) && $request->filled('duration_days')) {
-            $durationDays = (int) $request->duration_days;
+            $isExact = $request->duration_days === 'exact_date';
+            
+            $durationDays = 0;
+            $newExpiration = now();
+
+            if ($isExact && $request->filled('exact_date')) {
+                $newExpiration = \Carbon\Carbon::parse($request->exact_date);
+                // Calculate days for the product key record
+                $durationDays = max(1, (int) now()->startOfDay()->diffInDays($newExpiration->startOfDay()));
+            } else {
+                $durationDays = (int) $request->duration_days;
+                $newExpiration = now()->addDays($durationDays);
+            }
+
             $keyStr = \App\Models\ProductKey::generateSecureKey();
             
-            DB::transaction(function () use ($keyStr, $durationDays, $workshop) {
+            DB::transaction(function () use ($keyStr, $durationDays, $newExpiration, $workshop) {
                 $productKey = \App\Models\ProductKey::create([
                     'key' => $keyStr,
                     'duration_days' => $durationDays,
@@ -253,15 +267,13 @@ class SuperAdminController extends Controller
                     'used_at' => now(),
                 ]);
 
-                // Always set from NOW — super admin sets exact duration, not extension
-                $newExpiration = now()->addDays($durationDays);
-
                 $workshop->update([
                     'subscription_status' => 'active',
                     'trial_ends_at' => $newExpiration,
                 ]);
 
-                \App\Models\ActivityLog::log('license_activate', "Super Admin auto-generated and activated key {$keyStr} ({$durationDays} days) for workshop {$workshop->name}.", null, $workshop->id);
+                $displayDuration = $durationDays . ' days';
+                \App\Models\ActivityLog::log('license_activate', "Super Admin auto-generated and activated key {$keyStr} ({$displayDuration}) for workshop {$workshop->name}.", null, $workshop->id);
             });
 
             return redirect()
