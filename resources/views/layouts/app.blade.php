@@ -981,10 +981,19 @@
         </div>
         @endif
         
-        @if(auth()->user()->workshop && auth()->user()->workshop->alert_message)
-            @php
-                $alertWorkshop = auth()->user()->workshop;
-            @endphp
+        @php
+            $alertUser = auth()->user();
+            $alertWorkshop = null;
+            if ($alertUser) {
+                if ($alertUser->isSuperAdmin() && session()->has('active_workshop_id')) {
+                    $alertWorkshop = \App\Models\Workshop::find(session('active_workshop_id'));
+                } else {
+                    $alertWorkshop = $alertUser->workshop;
+                }
+            }
+        @endphp
+        
+        @if($alertWorkshop && $alertWorkshop->alert_message)
             @if(!$alertWorkshop->alert_expires_at || now()->lessThan($alertWorkshop->alert_expires_at))
             <div class="bg-indigo-50 border-b border-indigo-200 px-4 py-3 sm:px-6 lg:px-8 no-print">
                 <div class="flex flex-col sm:flex-row items-start sm:items-center gap-3 w-full">
