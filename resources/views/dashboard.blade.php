@@ -340,13 +340,13 @@
     <!-- Bottom Widgets (Moved from Right Sidebar) -->
     <div class="lg:col-span-12 grid grid-cols-1 md:grid-cols-2 gap-5 mt-2">
         <div class="glass-card" x-data="subscriptionManager({
-            status: '{{ $workshop->subscription_status }}',
-            expiry: '{{ $workshop->trial_ends_at ? $workshop->trial_ends_at->format('d M Y, h:i A') : 'Never (Lifetime)' }}',
-            daysRemaining: {{ $workshop->trial_ends_at ? $workshop->getTrialDaysRemaining() : 0 }},
-            totalDuration: {{ $workshop->trial_ends_at ? $workshop->getTotalDurationDays() : 0 }},
-            subscriptionDay: {{ $workshop->getSubscriptionDay() }},
-            isExpired: {{ $workshop->trial_ends_at && $workshop->isTrialExpired() ? 'true' : 'false' }},
-            hasExpiry: {{ $workshop->trial_ends_at ? 'true' : 'false' }},
+            status: '{{ $workshop ? $workshop->subscription_status : 'N/A' }}',
+            expiry: '{{ $workshop && $workshop->trial_ends_at ? $workshop->trial_ends_at->format('d M Y, h:i A') : 'Never (Lifetime)' }}',
+            daysRemaining: {{ $workshop && $workshop->trial_ends_at ? $workshop->getTrialDaysRemaining() : 0 }},
+            totalDuration: {{ $workshop && $workshop->trial_ends_at ? $workshop->getTotalDurationDays() : 0 }},
+            subscriptionDay: {{ $workshop ? $workshop->getSubscriptionDay() : 0 }},
+            isExpired: {{ $workshop && $workshop->trial_ends_at && $workshop->isTrialExpired() ? 'true' : 'false' }},
+            hasExpiry: {{ $workshop && $workshop->trial_ends_at ? 'true' : 'false' }},
             keys: [
                 @if($workshop)
                     @foreach($workshop->productKeys()->orderBy('used_at', 'desc')->get() as $key)

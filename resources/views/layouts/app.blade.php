@@ -823,12 +823,7 @@
 
         {{-- Sidebar Footer --}}
         <div class="p-4 border-t border-blue-100 no-print">
-            <div id="pwa-install-container" class="hidden mb-3">
-                <button id="pwa-install-button" class="w-full py-2.5 px-3.5 bg-gradient-to-br from-blue-600 to-blue-500 hover:from-blue-700 hover:to-blue-600 text-white font-bold text-xs rounded-xl shadow-md hover:shadow-lg transition-all flex items-center justify-center gap-2 active:scale-95 cursor-pointer">
-                    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4"/></svg>
-                    <span>Install App</span>
-                </button>
-            </div>
+
             <div class="glass-card !p-3 !rounded-xl !bg-blue-50/50 !border-blue-100 shadow-sm text-center">
                 <p class="text-xs text-blue-900 font-bold">
                     {{ (Auth::user()->isSuperAdmin() && session()->has('active_workshop_id')) ? 'Inspecting: ' . session('active_workshop_name') : (Auth::user()->isSuperAdmin() ? 'System Super Admin' : (Auth::user()->workshop->name ?? 'Suhaim Soft')) }}
@@ -862,7 +857,7 @@
 
                 {{-- Right side --}}
                 <div class="flex items-center gap-2 sm:gap-4 shrink-0">
-                    @if(Auth::user()->isEnterpriseAdmin() && Auth::user()->workshop->branches->count() > 0)
+                    @if(Auth::user()->isEnterpriseAdmin() && Auth::user()->workshop && Auth::user()->workshop->branches->count() > 0)
                     <div class="relative" x-data="{ open: false }">
                         <button @click="open = !open" @click.away="open = false" class="flex items-center gap-1.5 sm:gap-2 px-2 py-1.5 sm:px-4 sm:py-2 bg-slate-50 hover:bg-slate-100 rounded-lg sm:rounded-xl border border-slate-200 transition-all font-semibold text-xs text-slate-700">
                             <svg class="w-4 h-4 text-slate-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4"/></svg>
