@@ -339,6 +339,7 @@
         </div>
     <!-- Bottom Widgets (Moved from Right Sidebar) -->
     <div class="lg:col-span-12 grid grid-cols-1 md:grid-cols-2 gap-5 mt-2">
+        @if($workshop)
         <div class="glass-card" x-data="subscriptionManager({
             status: '{{ $workshop ? $workshop->subscription_status : 'N/A' }}',
             expiry: '{{ $workshop && $workshop->trial_ends_at ? $workshop->trial_ends_at->format('d M Y, h:i A') : 'Never (Lifetime)' }}',
@@ -399,6 +400,7 @@
                 @endif
             </div>
         </div>
+        @endif
 
         {{-- AI Coming Soon Card --}}
         <div class="glass-card relative overflow-hidden border border-violet-200/60 bg-gradient-to-br from-violet-50 to-indigo-50">

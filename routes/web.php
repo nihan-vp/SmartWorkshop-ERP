@@ -15,7 +15,7 @@ use App\Http\Controllers\WorkOrderController;
 use App\Http\Controllers\BillTemplateController;
 use App\Http\Controllers\PurchaseController;
 use App\Http\Controllers\SupplierController;
-use App\Http\Controllers\BranchController;
+
 use Illuminate\Support\Facades\Route;
 
 use App\Http\Controllers\SuperAdminController;
@@ -71,10 +71,7 @@ Route::middleware('auth')->group(function () {
 
     // Tenant-scoped Routes
     Route::middleware(['workshop', 'check.trial'])->group(function () {
-        Route::post('/branches/switch', [BranchController::class, 'switchBranch'])->name('branches.switch');
         Route::get('/dashboard', [DashboardController::class, 'index'])->name('dashboard');
-
-        Route::resource('branches', BranchController::class)->except(['show']);
         Route::resource('customers', CustomerController::class);
         Route::resource('suppliers', SupplierController::class);
         Route::resource('vehicles', VehicleController::class);

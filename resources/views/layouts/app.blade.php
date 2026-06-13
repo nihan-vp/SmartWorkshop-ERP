@@ -730,12 +730,7 @@
                 Dashboard
             </a>
             
-            @if(Auth::user()->isEnterpriseAdmin() || Auth::user()->isSuperAdmin())
-            <a href="{{ route('branches.index') }}" class="sidebar-link {{ request()->routeIs('branches.*') ? 'active' : '' }}" id="nav-branches">
-                <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4"/></svg>
-                Branches
-            </a>
-            @endif
+
             <a href="{{ route('bills.index') }}" class="sidebar-link {{ request()->routeIs('bills.*') && !request()->routeIs('bills.create') ? 'active' : '' }}" id="nav-bills">
                 <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M9 14l6-6m-5.5.5h.01m4.99 5h.01M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16l3.5-2 3.5 2 3.5-2 3.5 2z"/></svg>
                 Invoices
@@ -857,35 +852,7 @@
 
                 {{-- Right side --}}
                 <div class="flex items-center gap-2 sm:gap-4 shrink-0">
-                    @if(Auth::user()->isEnterpriseAdmin() && Auth::user()->workshop && Auth::user()->workshop->branches->count() > 0)
-                    <div class="relative" x-data="{ open: false }">
-                        <button @click="open = !open" @click.away="open = false" class="flex items-center gap-1.5 sm:gap-2 px-2 py-1.5 sm:px-4 sm:py-2 bg-slate-50 hover:bg-slate-100 rounded-lg sm:rounded-xl border border-slate-200 transition-all font-semibold text-xs text-slate-700">
-                            <svg class="w-4 h-4 text-slate-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4"/></svg>
-                            <span class="hidden sm:inline">
-                                @php
-                                    $activeBranchId = session('active_branch_id');
-                                    $activeBranch = $activeBranchId ? Auth::user()->workshop->branches->where('id', $activeBranchId)->first() : null;
-                                @endphp
-                                {{ $activeBranch ? $activeBranch->name : 'All Branches' }}
-                            </span>
-                            <svg class="w-4 h-4 text-slate-400" fill="none" stroke="currentColor" viewBox="0 0 24 24" :class="{'rotate-180': open}"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"/></svg>
-                        </button>
-                        <div x-show="open" x-transition class="absolute right-0 mt-2 w-48 bg-white rounded-xl shadow-lg border border-slate-100 py-1 z-50">
-                            <form action="{{ route('branches.switch') }}" method="POST">
-                                @csrf
-                                <input type="hidden" name="branch_id" value="">
-                                <button type="submit" class="w-full text-left px-4 py-2 text-xs font-semibold hover:bg-slate-50 {{ !$activeBranchId ? 'text-primary-600 bg-primary-50' : 'text-slate-700' }}">All Branches</button>
-                            </form>
-                            @foreach(Auth::user()->workshop->branches as $branch)
-                            <form action="{{ route('branches.switch') }}" method="POST">
-                                @csrf
-                                <input type="hidden" name="branch_id" value="{{ $branch->id }}">
-                                <button type="submit" class="w-full text-left px-4 py-2 text-xs font-semibold hover:bg-slate-50 {{ $activeBranchId == $branch->id ? 'text-primary-600 bg-primary-50' : 'text-slate-700' }}">{{ $branch->name }}</button>
-                            </form>
-                            @endforeach
-                        </div>
-                    </div>
-                    @endif
+
 
                     <div class="flex items-center gap-1 sm:gap-2 px-2 py-1.5 sm:px-4 sm:py-2 bg-slate-50 rounded-lg sm:rounded-xl border border-slate-200 overflow-hidden text-ellipsis whitespace-nowrap min-w-0">
                         <svg class="hidden sm:block w-3.5 h-3.5 sm:w-4 sm:h-4 text-slate-400 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"/></svg>
