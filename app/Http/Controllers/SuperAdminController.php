@@ -75,9 +75,9 @@ class SuperAdminController extends Controller
             'restrict_features_on_expiry' => 'nullable|boolean',
             'admin_extend_allowed' => 'nullable|boolean',
             // Admin user details
-            'admin_name' => 'required|string|max:255',
-            'admin_email' => 'required|email|max:255|unique:users,email',
-            'admin_password' => 'required|string|min:8',
+            'admin_name' => 'nullable|string|max:255',
+            'admin_email' => 'nullable|email|max:255|unique:users,email',
+            'admin_password' => 'nullable|string|min:8',
         ], [
             'admin_email.unique' => 'This email is already registered. Use a different email for the workshop administrator (not your super admin login email).',
         ]);
@@ -95,15 +95,18 @@ class SuperAdminController extends Controller
                 'admin_extend_allowed' => $request->boolean('admin_extend_allowed'),
             ]);
 
-            $user = User::create([
-                'name' => $validated['admin_name'],
-                'email' => $validated['admin_email'],
-                'password' => Hash::make($validated['admin_password']),
-                'workshop_id' => $workshop->id,
-                'role' => 'admin',
-            ]);
-
-            \App\Models\ActivityLog::log('workshop_create', "Created workshop {$workshop->name} and admin user {$user->name}.");
+            if (!empty($validated['admin_email'])) {
+                $user = User::create([
+                    'name' => $validated['admin_name'] ?? 'Workshop Admin',
+                    'email' => $validated['admin_email'],
+                    'password' => Hash::make($validated['admin_password'] ?? '12345678'),
+                    'workshop_id' => $workshop->id,
+                    'role' => 'admin',
+                ]);
+                \App\Models\ActivityLog::log('workshop_create', "Created workshop {$workshop->name} and admin user {$user->name}.");
+            } else {
+                \App\Models\ActivityLog::log('workshop_create', "Created workshop {$workshop->name} without an admin user.");
+            }
         });
 
         return redirect()

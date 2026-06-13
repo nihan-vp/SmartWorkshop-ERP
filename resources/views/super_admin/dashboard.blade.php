@@ -918,18 +918,18 @@
                         <p class="text-xs font-extrabold text-indigo-600 uppercase tracking-widest border-b border-indigo-100 pb-2 mb-3">Administrator Account</p>
                     </div>
                     <div>
-                        <label for="add_admin_name" class="block text-xs font-bold text-slate-700 mb-1">Admin Name *</label>
-                        <input id="add_admin_name" type="text" name="admin_name" required placeholder="e.g. Rajesh Kumar" value="{{ old('admin_name') }}" autocomplete="name" class="w-full px-4 py-2.5 bg-slate-50 border border-slate-200 rounded-xl text-sm font-medium focus:outline-none focus:border-indigo-400 focus:bg-white transition-colors @error('admin_name') border-rose-400 @enderror">
+                        <label for="add_admin_name" class="block text-xs font-bold text-slate-700 mb-1">Admin Name (Optional)</label>
+                        <input id="add_admin_name" type="text" name="admin_name" placeholder="e.g. Rajesh Kumar" value="{{ old('admin_name') }}" autocomplete="name" class="w-full px-4 py-2.5 bg-slate-50 border border-slate-200 rounded-xl text-sm font-medium focus:outline-none focus:border-indigo-400 focus:bg-white transition-colors @error('admin_name') border-rose-400 @enderror">
                         @error('admin_name')<p class="text-xs text-rose-600 mt-1">{{ $message }}</p>@enderror
                     </div>
                     <div>
-                        <label for="add_admin_email" class="block text-xs font-bold text-slate-700 mb-1">Admin Email *</label>
-                        <input id="add_admin_email" type="email" name="admin_email" required placeholder="owner@garage.com" value="{{ old('admin_email') }}" autocomplete="email" class="w-full px-4 py-2.5 bg-slate-50 border border-slate-200 rounded-xl text-sm font-medium focus:outline-none focus:border-indigo-400 focus:bg-white transition-colors @error('admin_email') border-rose-400 @enderror">
+                        <label for="add_admin_email" class="block text-xs font-bold text-slate-700 mb-1">Admin Email (Optional)</label>
+                        <input id="add_admin_email" type="email" name="admin_email" placeholder="owner@garage.com" value="{{ old('admin_email') }}" autocomplete="email" class="w-full px-4 py-2.5 bg-slate-50 border border-slate-200 rounded-xl text-sm font-medium focus:outline-none focus:border-indigo-400 focus:bg-white transition-colors @error('admin_email') border-rose-400 @enderror">
                         @error('admin_email')<p class="text-xs text-rose-600 mt-1">{{ $message }}</p>@enderror
                     </div>
                     <div class="sm:col-span-2">
-                        <label for="add_admin_password" class="block text-xs font-bold text-slate-700 mb-1">Admin Password *</label>
-                        <input id="add_admin_password" type="password" name="admin_password" required placeholder="Min 8 characters" autocomplete="new-password" class="w-full px-4 py-2.5 bg-slate-50 border border-slate-200 rounded-xl text-sm font-medium focus:outline-none focus:border-indigo-400 focus:bg-white transition-colors @error('admin_password') border-rose-400 @enderror">
+                        <label for="add_admin_password" class="block text-xs font-bold text-slate-700 mb-1">Admin Password (Optional)</label>
+                        <input id="add_admin_password" type="password" name="admin_password" placeholder="Min 8 characters" autocomplete="new-password" class="w-full px-4 py-2.5 bg-slate-50 border border-slate-200 rounded-xl text-sm font-medium focus:outline-none focus:border-indigo-400 focus:bg-white transition-colors @error('admin_password') border-rose-400 @enderror">
                         @error('admin_password')<p class="text-xs text-rose-600 mt-1">{{ $message }}</p>@enderror
                     </div>
 
