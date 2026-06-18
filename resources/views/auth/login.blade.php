@@ -22,8 +22,10 @@
     </script>
     <script src="https://cdn.tailwindcss.com"></script>
     <script>
-        tailwind.config = {
-            theme: { extend: { fontFamily: { sans: ['Inter', 'sans-serif'] } } }
+        if (typeof tailwind !== 'undefined') {
+            tailwind.config = {
+                theme: { extend: { fontFamily: { sans: ['Inter', 'sans-serif'] } } }
+            }
         }
     </script>
     <script src="https://cdn.jsdelivr.net/npm/alpinejs@3.x.x/dist/cdn.min.js" defer></script>
