@@ -16,7 +16,7 @@ class VehicleController extends Controller
                   ->orWhere('make', 'like', "%{$request->search}%")
                   ->orWhere('model', 'like', "%{$request->search}%");
         }
-        $vehicles = $query->latest()->paginate(15);
+        $vehicles = $query->latest()->paginate((int) request('limit', 15));
         return view('vehicles.index', compact('vehicles'));
     }
 

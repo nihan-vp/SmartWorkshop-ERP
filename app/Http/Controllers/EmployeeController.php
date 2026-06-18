@@ -14,7 +14,7 @@ class EmployeeController extends Controller
             $query->where('name', 'like', "%{$request->search}%")
                   ->orWhere('role', 'like', "%{$request->search}%");
         }
-        $employees = $query->latest()->paginate(15);
+        $employees = $query->latest()->paginate((int) request('limit', 15));
         return view('employees.index', compact('employees'));
     }
 

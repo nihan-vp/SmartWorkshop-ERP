@@ -27,7 +27,7 @@ class PurchaseController extends Controller
             $query->where('payment_method', $request->payment_method);
         }
 
-        $purchases = $query->latest('purchase_date')->paginate(15);
+        $purchases = $query->latest('purchase_date')->paginate((int) request('limit', 15));
         
         $totalPurchases = Purchase::sum('total_amount');
         $unpaidPurchases = Purchase::where('payment_status', 'unpaid')->sum('total_amount');

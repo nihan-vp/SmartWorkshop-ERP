@@ -847,10 +847,6 @@
                     </svg>
                 </a>
                 <a href="#features" class="btn-outline">Explore Features</a>
-                <button id="welcome-pwa-install" class="btn-outline" style="display: none; align-items: center; justify-content: center; gap: 0.5rem; cursor: pointer; border: 2px solid var(--blue-600); color: var(--blue-600); background: var(--blue-50);">
-                    <svg width="16" height="16" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4"/></svg>
-                    <span>Install App</span>
-                </button>
             </div>
 
             <div class="hero-stats">
@@ -1349,12 +1345,12 @@
     }
 
     window.addEventListener('beforeinstallprompt', (e) => {
-        // Prevent Chrome 67 and earlier from automatically showing the prompt
-        e.preventDefault();
-        // Stash the event so it can be triggered later.
-        deferredPrompt = e;
-        // Update UI to notify the user they can install the PWA
         if (installBtn) {
+            // Prevent Chrome 67 and earlier from automatically showing the prompt
+            e.preventDefault();
+            // Stash the event so it can be triggered later.
+            deferredPrompt = e;
+            // Update UI to notify the user they can install the PWA
             installBtn.style.display = 'inline-flex';
         }
     });

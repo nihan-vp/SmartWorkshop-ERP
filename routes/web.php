@@ -14,7 +14,6 @@ use App\Http\Controllers\WarrantyController;
 use App\Http\Controllers\WorkOrderController;
 use App\Http\Controllers\BillTemplateController;
 use App\Http\Controllers\PurchaseController;
-use App\Http\Controllers\SupplierController;
 
 use Illuminate\Support\Facades\Route;
 
@@ -73,7 +72,6 @@ Route::middleware('auth')->group(function () {
     Route::middleware(['workshop', 'check.trial'])->group(function () {
         Route::get('/dashboard', [DashboardController::class, 'index'])->name('dashboard');
         Route::resource('customers', CustomerController::class);
-        Route::resource('suppliers', SupplierController::class);
         Route::resource('vehicles', VehicleController::class);
         Route::resource('products', ProductController::class);
         Route::resource('services', ServiceController::class);
@@ -90,11 +88,6 @@ Route::middleware('auth')->group(function () {
         Route::resource('employee-payments', \App\Http\Controllers\EmployeePaymentController::class)->except(['index', 'create', 'show']);
         Route::resource('warranties', WarrantyController::class);
         Route::resource('work-orders', WorkOrderController::class);
-
-        // Offline Viewer routes (Admin Only)
-        Route::get('/offline-viewer', [\App\Http\Controllers\OfflineViewerController::class, 'index'])->name('offline-viewer.index');
-        Route::get('/offline-viewer/download', [\App\Http\Controllers\OfflineViewerController::class, 'download'])->name('offline-viewer.download');
-        Route::delete('/offline-viewer/delete', [\App\Http\Controllers\OfflineViewerController::class, 'destroy'])->name('offline-viewer.destroy');
 
         // System Settings routes (Admin Only)
         Route::get('/system', [\App\Http\Controllers\SystemController::class, 'index'])->name('system.index');

@@ -23,7 +23,7 @@ class BillController extends Controller
         if ($request->payment_method) {
             $query->where('payment_method', $request->payment_method);
         }
-        $bills = $query->latest()->paginate(15);
+        $bills = $query->latest()->paginate((int) request('limit', 15));
         return view('bills.index', compact('bills'));
     }
 

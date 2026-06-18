@@ -20,7 +20,7 @@ class WorkOrderController extends Controller
         if ($request->status) {
             $query->where('status', $request->status);
         }
-        $workOrders = $query->latest()->paginate(15);
+        $workOrders = $query->latest()->paginate((int) request('limit', 15));
         return view('work_orders.index', compact('workOrders'));
     }
 

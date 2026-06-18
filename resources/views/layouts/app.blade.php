@@ -746,11 +746,6 @@
                 Customers
             </a>
 
-            <a href="{{ route('suppliers.index') }}" class="sidebar-link {{ request()->routeIs('suppliers.*') ? 'active' : '' }}" id="nav-suppliers">
-                <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4"/></svg>
-                Suppliers
-            </a>
-
             <a href="{{ route('vehicles.index') }}" class="sidebar-link {{ request()->routeIs('vehicles.*') ? 'active' : '' }}" id="nav-vehicles">
                 <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M8 17h8M8 17v4H6v-4m2 0H4.5A1.5 1.5 0 013 15.5v-3.194a1.5 1.5 0 01.138-.632L5 8h14l1.862 3.674c.09.2.138.416.138.632V15.5a1.5 1.5 0 01-1.5 1.5H16m0 0v4h-2v-4m0 0H8M7 11h.01M17 11h.01"/></svg>
                 Vehicles
@@ -795,12 +790,6 @@
                 <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z"/></svg>
                 Warranty
             </a>
-            @if(Auth::user()->role === 'admin' || session()->has('active_workshop_id'))
-            <a href="{{ route('offline-viewer.index') }}" class="sidebar-link {{ request()->routeIs('offline-viewer.*') ? 'active' : '' }}" id="nav-offline-viewer">
-                <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"/></svg>
-                Offline Viewer
-            </a>
-            @endif
 
             <a href="{{ route('backup.index') }}" class="sidebar-link {{ request()->routeIs('backup.*') ? 'active' : '' }}" id="nav-backup-tenant">
                 <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M4 7v10c0 2.21 3.582 4 8 4s8-1.79 8-4V7M4 7c0 2.21 3.582 4 8 4s8-1.79 8-4M4 7c0-2.21 3.582-4 8-4s8 1.79 8 4m0 5c0 2.21-3.582 4-8 4s-8-1.79-8-4"/></svg>
@@ -895,9 +884,6 @@
                         <svg class="w-5 h-5 text-amber-600 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"/></svg>
                         <p class="text-sm font-semibold text-amber-800">
                             {{ $isTraining ? 'Training' : 'Trial' }} Status: <span class="font-bold">{{ $daysLeftDisplay == 0 ? 'Expires Today' : $daysLeftDisplay . ' ' . ($daysLeftDisplay === 1 ? 'day' : 'days') . ' remaining' }}</span> <span class="text-xs text-amber-700 font-medium ml-1">(Expires: {{ $trialEnds->format('d M Y, h:i A') }})</span>
-                            @if(!auth()->user()->isSuperAdmin())
-                            <span class="text-xs text-slate-600 ml-2 bg-white/60 px-2 py-0.5 rounded border border-amber-200">(<strong class="select-all">infosuhaimsoft@gmail.com</strong> / <strong class="select-all">12345678</strong>)</span>
-                            @endif
                             @if($workshop->isTrialExpired() && $workshop->restrict_features_on_expiry)
                                 <span class="ml-2 text-rose-700 bg-rose-100/80 px-2 py-0.5 rounded border border-rose-200 text-xs font-bold whitespace-nowrap">Write actions restricted</span>
                             @endif
@@ -1058,14 +1044,19 @@
         }
 
         window.addEventListener('beforeinstallprompt', (e) => {
-            // Prevent standard install banner from appearing
-            e.preventDefault();
-            // Stash install prompt event
-            deferredAppPrompt = e;
-            // Show the install button container
-            if (installAppContainer) {
-                installAppContainer.classList.remove('hidden');
+            if (installAppButton) {
+                // Prevent standard install banner from appearing only if we have a custom button
+                e.preventDefault();
+                // Stash install prompt event
+                deferredAppPrompt = e;
+                // Show the install button container
+                if (installAppContainer) {
+                    installAppContainer.classList.remove('hidden');
+                }
             }
+            // If no custom button exists, we do NOT call preventDefault(),
+            // allowing the browser to show its default install banner automatically
+            // and preventing the console warning.
         });
 
         if (installAppButton) {

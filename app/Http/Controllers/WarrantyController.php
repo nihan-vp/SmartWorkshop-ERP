@@ -19,7 +19,7 @@ class WarrantyController extends Controller
         if ($request->status) {
             $query->where('status', $request->status);
         }
-        $warranties = $query->latest()->paginate(15);
+        $warranties = $query->latest()->paginate((int) request('limit', 15));
         return view('warranties.index', compact('warranties'));
     }
 

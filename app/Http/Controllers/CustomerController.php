@@ -14,7 +14,7 @@ class CustomerController extends Controller
             $query->where('name', 'like', "%{$request->search}%")
                   ->orWhere('phone', 'like', "%{$request->search}%");
         }
-        $customers = $query->latest()->paginate(15);
+        $customers = $query->latest()->paginate((int) request('limit', 15));
         return view('customers.index', compact('customers'));
     }
 

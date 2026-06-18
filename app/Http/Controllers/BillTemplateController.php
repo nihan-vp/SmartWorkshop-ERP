@@ -12,7 +12,7 @@ class BillTemplateController extends Controller
 {
     public function index()
     {
-        $templates = BillTemplate::withCount('items')->latest()->paginate(15);
+        $templates = BillTemplate::withCount('items')->latest()->paginate((int) request('limit', 15));
         return view('bill_templates.index', compact('templates'));
     }
 

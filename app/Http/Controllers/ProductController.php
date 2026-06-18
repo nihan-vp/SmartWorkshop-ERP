@@ -14,7 +14,7 @@ class ProductController extends Controller
             $query->where('name', 'like', "%{$request->search}%")
                   ->orWhere('category', 'like', "%{$request->search}%");
         }
-        $products = $query->latest()->paginate(15);
+        $products = $query->latest()->paginate((int) request('limit', 15));
         return view('products.index', compact('products'));
     }
 

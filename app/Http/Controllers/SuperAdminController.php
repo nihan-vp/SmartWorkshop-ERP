@@ -13,16 +13,29 @@ use Illuminate\Validation\ValidationException;
 
 class SuperAdminController extends Controller
 {
-    public function index()
+    public function index(Request $request)
     {
         // Leave impersonation when returning to the global control panel.
         session()->forget(['active_workshop_id', 'active_workshop_name']);
 
-        $workshops = Workshop::with([
+        $limit = (int) $request->get('limit', 15);
+        $search = $request->get('search');
+
+        $workshopQuery = Workshop::with([
             'users' => fn ($query) => $query->where('role', 'admin')->orderBy('name'),
         ])->withCount([
             'bills' => fn ($query) => $query->withoutGlobalScopes(),
-        ])->orderBy('name')->get();
+        ])->orderBy('name');
+
+        if ($search) {
+            $workshopQuery->where(function($q) use ($search) {
+                $q->where('name', 'like', "%{$search}%")
+                  ->orWhere('phone', 'like', "%{$search}%")
+                  ->orWhere('email', 'like', "%{$search}%");
+            });
+        }
+
+        $workshops = $workshopQuery->paginate($limit, ['*'], 'workshops_page')->appends($request->query());
 
         $totalSuperAdmins = User::where('role', 'super_admin')->count();
         $totalWorkshops = Workshop::count();
@@ -30,12 +43,14 @@ class SuperAdminController extends Controller
         $totalBills = Bill::withoutGlobalScopes()->count();
         $totalRevenue = (float) Bill::withoutGlobalScopes()->sum('total');
 
-        $productKeys = \App\Models\ProductKey::with('workshop')
-            ->orderBy('created_at', 'desc')
-            ->get();
-        $totalProductKeys = $productKeys->count();
-        $unusedProductKeys = $productKeys->where('status', 'unused')->count();
-        $usedProductKeys = $productKeys->where('status', 'used')->count();
+        $productKeysQuery = \App\Models\ProductKey::with('workshop')
+            ->orderBy('created_at', 'desc');
+            
+        $productKeys = $productKeysQuery->paginate($limit, ['*'], 'keys_page')->appends($request->query());
+            
+        $totalProductKeys = \App\Models\ProductKey::count();
+        $unusedProductKeys = \App\Models\ProductKey::where('status', 'unused')->count();
+        $usedProductKeys = \App\Models\ProductKey::where('status', 'used')->count();
 
         // System Settings
         $defaultTrialDuration = (int) \App\Models\SystemSetting::getVal('default_trial_duration', 14);
@@ -43,8 +58,7 @@ class SuperAdminController extends Controller
         // Activity Logs
         $activityLogs = \App\Models\ActivityLog::with(['user', 'workshop'])
             ->orderBy('created_at', 'desc')
-            ->take(100)
-            ->get();
+            ->paginate($limit, ['*'], 'logs_page')->appends($request->query());
 
         return view('super_admin.dashboard', compact(
             'workshops',

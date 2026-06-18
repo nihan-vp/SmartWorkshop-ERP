@@ -14,7 +14,7 @@ class ServiceController extends Controller
             $query->where('name', 'like', "%{$request->search}%")
                   ->orWhere('category', 'like', "%{$request->search}%");
         }
-        $services = $query->latest()->paginate(15);
+        $services = $query->latest()->paginate((int) request('limit', 15));
         return view('services.index', compact('services'));
     }
 

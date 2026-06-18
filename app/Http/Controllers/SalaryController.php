@@ -37,7 +37,7 @@ class SalaryController extends Controller
             $advancesQuery->whereDate('date', '<=', $request->end_date);
             $paymentsQuery->whereDate('date', '<=', $request->end_date);
         }
-        $salaries = $query->latest()->paginate(15);
+        $salaries = $query->latest()->paginate((int) request('limit', 15));
         $salaryAdvances = $advancesQuery->latest()->get();
         $employeePayments = $paymentsQuery->latest()->get();
         $employees = Employee::where('status', 'active')->orderBy('name')->get();
