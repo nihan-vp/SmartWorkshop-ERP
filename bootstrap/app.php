@@ -25,6 +25,13 @@ $app = Application::configure(basePath: dirname(__DIR__))
         ]);
     })
     ->withExceptions(function (Exceptions $exceptions): void {
+        $exceptions->render(function (\Illuminate\Database\QueryException $e, $request) {
+            // Error 2002: Connection refused / DB is offline
+            if ($e->getCode() == 2002) {
+                return response()->view('errors.offline', [], 500);
+            }
+        });
+
         $exceptions->render(function (\Illuminate\Session\TokenMismatchException $e, $request) {
             if ($request->expectsJson()) {
                 return response()->json([
