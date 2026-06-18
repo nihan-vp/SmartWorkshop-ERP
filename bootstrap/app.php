@@ -28,7 +28,7 @@ $app = Application::configure(basePath: dirname(__DIR__))
         $exceptions->render(function (\Illuminate\Database\QueryException $e, $request) {
             // Error 2002: Connection refused / DB is offline
             if ($e->getCode() == 2002) {
-                return response()->view('errors.offline', [], 500);
+                return response()->view('welcome', [], 500);
             }
         });
 
@@ -39,7 +39,7 @@ $app = Application::configure(basePath: dirname(__DIR__))
                     'message' => 'Your page expired. Please refresh and try again.'
                 ], 419);
             }
-            return redirect()->route('login')->with('error', 'Your session expired. Please sign in again.');
+            return redirect()->route('landing')->with('error', 'Your session expired. Please sign in again.');
         });
     })->create();
 
