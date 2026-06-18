@@ -805,16 +805,6 @@
             @endif
         </nav>
 
-        {{-- Sidebar Footer --}}
-        <div class="p-4 border-t border-blue-100 no-print">
-
-            <div class="glass-card !p-3 !rounded-xl !bg-blue-50/50 !border-blue-100 shadow-sm text-center">
-                <p class="text-xs text-blue-900 font-bold">
-                    {{ (Auth::user()->isSuperAdmin() && session()->has('active_workshop_id')) ? 'Inspecting: ' . session('active_workshop_name') : (Auth::user()->isSuperAdmin() ? 'System Super Admin' : (Auth::user()->workshop->name ?? 'Suhaim Soft')) }}
-                </p>
-                <p class="text-[10px] text-blue-400 mt-0.5">© {{ date('Y') }} All Rights Reserved</p>
-            </div>
-        </div>
     </aside>
     @endauth
 
@@ -1141,6 +1131,34 @@
                 }
             }
         }
+    </script>
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const mobileMenuBtn = document.getElementById('mobile-menu-btn');
+            const sidebar = document.getElementById('sidebar');
+            const sidebarOverlay = document.getElementById('sidebar-overlay');
+
+            if (mobileMenuBtn && sidebar && sidebarOverlay) {
+                mobileMenuBtn.addEventListener('click', function() {
+                    sidebar.classList.remove('-translate-x-full');
+                    sidebarOverlay.classList.remove('hidden');
+                });
+
+                sidebarOverlay.addEventListener('click', function() {
+                    sidebar.classList.add('-translate-x-full');
+                    sidebarOverlay.classList.add('hidden');
+                });
+            }
+        });
+
+        window.toggleSidebar = function() {
+            const sidebar = document.getElementById('sidebar');
+            const sidebarOverlay = document.getElementById('sidebar-overlay');
+            if (sidebar && sidebarOverlay) {
+                sidebar.classList.toggle('-translate-x-full');
+                sidebarOverlay.classList.toggle('hidden');
+            }
+        };
     </script>
     @stack('scripts')
 </body>
