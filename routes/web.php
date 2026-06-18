@@ -21,11 +21,15 @@ use App\Http\Controllers\SuperAdminController;
 
 // Guest Routes
 Route::get('/', function () {
-    if (auth()->check()) {
-        if (auth()->user()->isSuperAdmin()) {
-            return redirect()->route('super_admin.dashboard');
+    try {
+        if (auth()->check()) {
+            if (auth()->user()->isSuperAdmin()) {
+                return redirect()->route('super_admin.dashboard');
+            }
+            return redirect()->route('dashboard');
         }
-        return redirect()->route('dashboard');
+    } catch (\Exception $e) {
+        // DB unavailable — show welcome page as guest
     }
     return view('welcome');
 })->name('landing');

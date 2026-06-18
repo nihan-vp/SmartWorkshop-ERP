@@ -15,36 +15,43 @@ class JwtAuthentication
      */
     public function handle(Request $request, Closure $next): Response
     {
-        // Check if user is not already authenticated via standard session
-        if (!Auth::check()) {
-            $token = null;
+        try {
+            // Check if user is not already authenticated via standard session
+            if (!Auth::check()) {
+                $token = null;
 
-            // 1. Check Authorization header (Bearer token)
-            $header = $request->header('Authorization');
-            if ($header && preg_match('/Bearer\s+(.*)$/i', $header, $matches)) {
-                $token = $matches[1];
-            }
+                // 1. Check Authorization header (Bearer token)
+                $header = $request->header('Authorization');
+                if ($header && preg_match('/Bearer\s+(.*)$/i', $header, $matches)) {
+                    $token = $matches[1];
+                }
 
-            // 2. Check cookie if header not present
-            if (!$token) {
-                $token = $request->cookie('jwt_token');
-            }
+                // 2. Check cookie if header not present
+                if (!$token) {
+                    $token = $request->cookie('jwt_token');
+                }
 
-            // 3. Check query parameter if cookie not present (useful for web sockets or quick testing)
-            if (!$token) {
-                $token = $request->query('token');
-            }
+                // 3. Check query parameter if cookie not present
+                if (!$token) {
+                    $token = $request->query('token');
+                }
 
-            // 4. Validate and login
-            if ($token) {
-                $payload = JwtHelper::validateToken($token);
-                if ($payload && isset($payload['sub'])) {
-                    $user = \App\Models\User::find($payload['sub']);
-                    if ($user) {
-                        Auth::login($user);
+                // 4. Validate and login
+                if ($token) {
+                    $payload = JwtHelper::validateToken($token);
+                    if ($payload && isset($payload['sub'])) {
+                        $user = \App\Models\User::find($payload['sub']);
+                        if ($user) {
+                            Auth::login($user);
+                        }
                     }
                 }
             }
+        } catch (\Exception $e) {
+            // Database is unavailable — clear stale auth state and continue as guest
+            Auth::forgetUser();
+            // Expire the JWT cookie so the browser stops sending it
+            cookie()->queue(cookie()->forget('jwt_token'));
         }
 
         return $next($request);

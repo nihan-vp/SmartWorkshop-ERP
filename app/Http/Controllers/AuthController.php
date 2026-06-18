@@ -11,11 +11,16 @@ class AuthController extends Controller
 {
     public function showLogin()
     {
-        if (Auth::check()) {
-            if (Auth::user()->isSuperAdmin()) {
-                return redirect()->route('super_admin.dashboard');
+        try {
+            if (Auth::check()) {
+                if (Auth::user()->isSuperAdmin()) {
+                    return redirect()->route('super_admin.dashboard');
+                }
+                return redirect()->route('dashboard');
             }
-            return redirect()->route('dashboard');
+        } catch (\Exception $e) {
+            // DB unavailable — clear session and show login
+            Auth::logout();
         }
         return view('auth.login');
     }
