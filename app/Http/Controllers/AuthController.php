@@ -31,23 +31,33 @@ class AuthController extends Controller
             'password' => 'required|string',
         ]);
 
-        if (Auth::attempt($credentials, $request->boolean('remember'))) {
-            $request->session()->regenerate();
-            
-            // Clean up impersonation session if logging in fresh
-            $request->session()->forget(['active_workshop_id', 'active_workshop_name']);
+        try {
+            if (Auth::attempt($credentials, $request->boolean('remember'))) {
+                $request->session()->regenerate();
+                
+                // Clean up impersonation session if logging in fresh
+                $request->session()->forget(['active_workshop_id', 'active_workshop_name']);
 
-            // Generate secure JWT token
-            $token = \App\Helpers\JwtHelper::generateToken(Auth::user());
-            // Store in cookie (valid for 24 hours) and session
-            cookie()->queue('jwt_token', $token, 1440, null, null, false, true);
-            $request->session()->put('jwt_token', $token);
+                // Generate secure JWT token
+                $token = \App\Helpers\JwtHelper::generateToken(Auth::user());
+                // Store in cookie (valid for 24 hours) and session
+                cookie()->queue('jwt_token', $token, 1440, null, null, false, true);
+                $request->session()->put('jwt_token', $token);
 
-            if (Auth::user()->isSuperAdmin()) {
-                return redirect()->route('super_admin.dashboard')->with('success', 'Logged in to Super Admin Panel!');
+                if (Auth::user()->isSuperAdmin()) {
+                    return redirect()->route('super_admin.dashboard')->with('success', 'Logged in to Super Admin Panel!');
+                }
+
+                return redirect()->intended('/dashboard')->with('success', 'Logged in successfully!');
             }
-
-            return redirect()->intended('/dashboard')->with('success', 'Logged in successfully!');
+        } catch (\Illuminate\Database\QueryException $e) {
+            return back()->withErrors([
+                'email' => 'System is currently offline or database is unreachable. Please ensure MySQL is running.',
+            ])->onlyInput('email');
+        } catch (\Exception $e) {
+            return back()->withErrors([
+                'email' => 'An unexpected error occurred. Please try again later.',
+            ])->onlyInput('email');
         }
 
         return back()->withErrors([
