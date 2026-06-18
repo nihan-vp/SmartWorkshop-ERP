@@ -19,8 +19,7 @@ class AuthController extends Controller
                 return redirect()->route('dashboard');
             }
         } catch (\Exception $e) {
-            // DB unavailable — clear session and show login
-            Auth::logout();
+            // DB unavailable — just show login page
         }
         return view('auth.login');
     }
