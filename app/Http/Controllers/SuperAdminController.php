@@ -39,7 +39,7 @@ class SuperAdminController extends Controller
 
         $totalSuperAdmins = User::where('role', 'super_admin')->count();
         $totalWorkshops = Workshop::count();
-        $totalUsers = User::where('role', '!=', 'super_admin')->count();
+        $totalUsers = User::where('role', '!=', 'super_admin')->whereNotNull('workshop_id')->count();
         $totalBills = Bill::withoutGlobalScopes()->count();
         $totalRevenue = (float) Bill::withoutGlobalScopes()->sum('total');
 
@@ -53,7 +53,7 @@ class SuperAdminController extends Controller
         $usedProductKeys = \App\Models\ProductKey::where('status', 'used')->count();
 
         // System Settings
-        $defaultTrialDuration = (int) \App\Models\SystemSetting::getVal('default_trial_duration', 14);
+        $defaultTrialDuration = (int) \App\Models\SystemSetting::getVal('default_trial_duration', 0);
 
         // Activity Logs
         $activityLogs = \App\Models\ActivityLog::with(['user', 'workshop'])
@@ -210,6 +210,8 @@ class SuperAdminController extends Controller
     public function destroyWorkshop(Workshop $workshop)
     {
         $name = $workshop->name;
+        // Delete users associated with this workshop
+        $workshop->users()->delete();
         // Deleting the workshop will cascade delete all its related records in tenant tables (due to our migration's cascade constraints).
         $workshop->delete();
 
@@ -223,7 +225,7 @@ class SuperAdminController extends Controller
     public function updateSettings(Request $request)
     {
         $validated = $request->validate([
-            'default_trial_duration' => 'required|integer|min:1|max:1000',
+            'default_trial_duration' => 'required|integer|min:0|max:1000',
         ]);
 
         \App\Models\SystemSetting::setVal('default_trial_duration', $validated['default_trial_duration']);

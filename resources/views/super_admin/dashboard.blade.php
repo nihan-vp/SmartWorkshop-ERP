@@ -281,7 +281,7 @@
                     @csrf
                     <div>
                         <label class="block text-sm font-semibold text-slate-700 mb-1">Default Trial Duration (Days)</label>
-                        <input type="number" name="default_trial_duration" value="{{ $defaultTrialDuration }}" class="w-full px-4 py-2 border border-slate-300 rounded-lg text-sm focus:ring-blue-500 focus:border-blue-500">
+                        <input type="number" name="default_trial_duration" value="{{ $defaultTrialDuration }}" min="0" class="w-full px-4 py-2 border border-slate-300 rounded-lg text-sm focus:ring-blue-500 focus:border-blue-500">
                     </div>
                     <button type="submit" class="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded-lg text-sm font-semibold transition-colors">Save Settings</button>
                 </form>
