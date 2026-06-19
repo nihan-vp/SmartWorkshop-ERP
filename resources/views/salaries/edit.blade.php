@@ -42,7 +42,6 @@
                         <label class="form-label">Payment Date</label>
                         <input type="date" name="payment_date" value="{{ old('payment_date', $salary->payment_date ? \Carbon\Carbon::parse($salary->payment_date)->format('Y-m-d') : '') }}" class="form-input">
                     </div>
-                </div>
                 <div class="grid grid-cols-1 sm:grid-cols-2 gap-5">
                     <div>
                         <label class="form-label">Payment Method *</label>

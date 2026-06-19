@@ -41,7 +41,6 @@
                         <label class="form-label">Payment Date</label>
                         <input type="date" name="payment_date" value="{{ old('payment_date') }}" class="form-input">
                     </div>
-                </div>
                 <div class="grid grid-cols-1 sm:grid-cols-2 gap-5">
                     <div>
                         <label class="form-label">Payment Method *</label>
