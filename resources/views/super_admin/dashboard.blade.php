@@ -215,6 +215,7 @@
                                 <th class="px-4 py-3">Status</th>
                                 <th class="px-4 py-3">Used By</th>
                                 <th class="px-4 py-3">Generated</th>
+                                <th class="px-4 py-3 text-right">Actions</th>
                             </tr>
                         </thead>
                         <tbody class="divide-y divide-slate-100">
@@ -229,10 +230,21 @@
                                 </td>
                                 <td class="px-4 py-3 text-slate-600">{{ $key->workshop ? $key->workshop->name : '-' }}</td>
                                 <td class="px-4 py-3 text-slate-600">{{ $key->created_at->format('M d, Y') }}</td>
+                                <td class="px-4 py-3 text-right space-x-2">
+                                    @if($key->status === 'unused')
+                                        <button @click="openEditKeyModalFn(@js(['id'=>$key->id,'duration_days'=>$key->duration_days,'key'=>$key->key]))" class="text-blue-600 hover:underline text-xs font-semibold">Edit</button>
+                                        <form action="{{ route('super_admin.destroy_product_key', $key) }}" method="POST" class="inline" onsubmit="return confirm('Delete this license key?');">
+                                            @csrf @method('DELETE')
+                                            <button class="text-red-600 hover:underline text-xs font-semibold">Delete</button>
+                                        </form>
+                                    @else
+                                        <span class="text-xs text-slate-400">N/A</span>
+                                    @endif
+                                </td>
                             </tr>
                             @empty
                             <tr>
-                                <td colspan="5" class="px-4 py-12 text-center text-slate-500">
+                                <td colspan="6" class="px-4 py-12 text-center text-slate-500">
                                     <svg class="w-12 h-12 mx-auto text-slate-300 mb-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M15 7a2 2 0 012 2m4 0a6 6 0 01-7.743 5.743L11 17H9v2H7v2H4a1 1 0 01-1-1v-2.586a1 1 0 01.293-.707l5.964-5.964A6 6 0 1121 9z"/>
                                     </svg>
@@ -429,6 +441,31 @@
         </div>
     </div>
 
+    {{-- Edit License Key Modal --}}
+    <div x-show="openEditKeyModal" x-cloak class="fixed inset-0 z-50 flex items-center justify-center p-4 bg-slate-900/50 backdrop-blur-sm">
+        <div class="bg-white rounded-xl shadow-xl w-full max-w-md">
+            <div class="p-4 border-b border-slate-200 flex justify-between items-center">
+                <h3 class="font-bold text-slate-800">Edit License Key</h3>
+                <button @click="openEditKeyModal = false" class="text-slate-400">&times;</button>
+            </div>
+            <form :action="`/super-admin/product-keys/${activeKey.id}`" method="POST" class="p-4 space-y-4" x-show="activeKey.id">
+                @csrf @method('PUT')
+                <div>
+                    <label class="block text-xs font-semibold mb-1">Key Value</label>
+                    <input type="text" name="key" x-model="activeKey.key" class="w-full border rounded p-2 text-sm font-mono" required>
+                </div>
+                <div>
+                    <label class="block text-xs font-semibold mb-1">Duration (Days)</label>
+                    <input type="number" name="duration_days" x-model="activeKey.duration_days" min="1" class="w-full border rounded p-2 text-sm" required>
+                </div>
+                <div class="flex justify-end gap-2">
+                    <button type="button" @click="openEditKeyModal = false" class="px-4 py-2 border rounded text-sm font-semibold">Cancel</button>
+                    <button type="submit" class="px-4 py-2 bg-blue-600 text-white rounded text-sm font-semibold">Update</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
 </div>
 
 <script>
@@ -439,12 +476,18 @@ document.addEventListener('alpine:init', () => {
         openAddModal: {{ $showAddWorkshopModal ? 'true' : 'false' }},
         openEditModal: {{ $showEditWorkshopModal ? 'true' : 'false' }},
         openGenerateKeysModal: false,
+        openEditKeyModal: false,
         openActivateLicenseModal: false,
         activeWorkshop: @json($initialActiveWorkshop ?: ['id'=>'']),
         activeWorkshopToActivate: { id: '', name: '' },
+        activeKey: { id: '', duration_days: '', key: '' },
 
         openAdd() {
             this.openAddModal = true;
+        },
+        openEditKeyModalFn(keyObj) {
+            this.activeKey = { ...keyObj };
+            this.openEditKeyModal = true;
         },
         openEdit(workshop) {
             this.activeWorkshop = { ...workshop };
