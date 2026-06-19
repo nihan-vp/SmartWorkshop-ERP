@@ -38,8 +38,6 @@ class AuthController extends Controller
                 // Super admin accounts cannot log in via the public login page
                 if (Auth::user()->isSuperAdmin()) {
                     Auth::logout();
-                    $request->session()->invalidate();
-                    $request->session()->regenerateToken();
                     return back()->withErrors([
                         'email' => 'The provided credentials do not match our records.',
                     ])->onlyInput('email');
