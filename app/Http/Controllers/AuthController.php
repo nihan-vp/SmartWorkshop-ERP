@@ -13,8 +13,10 @@ class AuthController extends Controller
     {
         try {
             if (Auth::check()) {
+                // Super admins are not accessible via the public login page
                 if (Auth::user()->isSuperAdmin()) {
-                    return redirect()->route('super_admin.dashboard');
+                    Auth::logout();
+                    return redirect()->route('login');
                 }
                 return redirect()->route('dashboard');
             }
@@ -33,8 +35,18 @@ class AuthController extends Controller
 
         try {
             if (Auth::attempt($credentials, $request->boolean('remember'))) {
+                // Super admin accounts cannot log in via the public login page
+                if (Auth::user()->isSuperAdmin()) {
+                    Auth::logout();
+                    $request->session()->invalidate();
+                    $request->session()->regenerateToken();
+                    return back()->withErrors([
+                        'email' => 'The provided credentials do not match our records.',
+                    ])->onlyInput('email');
+                }
+
                 $request->session()->regenerate();
-                
+
                 // Clean up impersonation session if logging in fresh
                 $request->session()->forget(['active_workshop_id', 'active_workshop_name']);
 
@@ -44,15 +56,11 @@ class AuthController extends Controller
                 cookie()->queue('jwt_token', $token, 1440, null, null, false, true);
                 $request->session()->put('jwt_token', $token);
 
-                if (Auth::user()->isSuperAdmin()) {
-                    return redirect()->route('super_admin.dashboard')->with('success', 'Logged in to Super Admin Panel!');
-                }
-
                 return redirect()->intended('/dashboard')->with('success', 'Logged in successfully!');
             }
         } catch (\Illuminate\Database\QueryException $e) {
             return back()->withErrors([
-                'email' => 'tryagian  pls  cheak  your    internetcontion  ok    easy  to   seee',
+                'email' => 'Unable to connect. Please check your internet connection and try again.',
             ])->onlyInput('email');
         } catch (\Exception $e) {
             return back()->withErrors([
@@ -72,9 +80,6 @@ class AuthController extends Controller
         }
 
         if (Auth::check()) {
-            if (Auth::user()->isSuperAdmin()) {
-                return redirect()->route('super_admin.dashboard');
-            }
             return redirect()->route('dashboard');
         }
         return view('auth.register');
