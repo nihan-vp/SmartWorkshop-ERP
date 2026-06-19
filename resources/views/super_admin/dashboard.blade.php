@@ -44,12 +44,6 @@
                 <button x-show="activeTab === 'keys'" @click="openGenerateKeysModal = true" class="bg-emerald-600 hover:bg-emerald-700 text-white px-4 py-2 rounded-lg text-sm font-semibold transition-colors">
                     + Generate Keys
                 </button>
-                <form action="{{ route('super_admin.wipe_data') }}" method="POST" class="inline" onsubmit="return confirm('DANGER! Are you sure you want to completely wipe all garages, users, license keys, and business data from the system? This CANNOT be undone.');">
-                    @csrf @method('DELETE')
-                    <button type="submit" class="bg-red-600 hover:bg-red-700 text-white px-4 py-2 rounded-lg text-sm font-semibold transition-colors">
-                        Wipe All Data
-                    </button>
-                </form>
             </div>
         </div>
 
@@ -190,6 +184,11 @@
                                 <td class="px-4 py-3 text-right space-x-2">
                                     <button @click="openActivateModal(@js(['id'=>$workshop->id,'name'=>$workshop->name]))" class="text-emerald-600 hover:underline text-xs font-semibold">License</button>
                                     <button @click="openEdit(@js(['id'=>$workshop->id,'name'=>$workshop->name,'phone'=>$workshop->phone,'email'=>$workshop->email,'gstin'=>$workshop->gstin,'address'=>$workshop->address,'subscription_status'=>$workshop->subscription_status,'trial_ends_at'=>$workshop->trial_ends_at?$workshop->trial_ends_at->format('Y-m-d\TH:i'):'','alert_message'=>$workshop->alert_message,'alert_expires_at'=>$workshop->alert_expires_at?$workshop->alert_expires_at->format('Y-m-d\TH:i'):'','admin_user_id'=>$workshop->users->first()?->id,'admin_name'=>$workshop->users->first()?->name,'admin_email'=>$workshop->users->first()?->email]))" class="text-slate-600 hover:underline text-xs font-semibold">Edit</button>
+                                    <form action="{{ route('super_admin.destroy_workshop', $workshop) }}" method="POST" class="inline" onsubmit="return confirm('Are you sure you want to delete this garage and all its associated data?');">
+                                        @csrf
+                                        @method('DELETE')
+                                        <button type="submit" class="text-rose-600 hover:underline text-xs font-semibold">Delete</button>
+                                    </form>
                                 </td>
                             </tr>
                             @empty
@@ -323,58 +322,37 @@
     {{-- MODALS --}}
 
     {{-- Add Workshop Modal --}}
-    <div x-show="openAddModal" x-cloak class="fixed inset-0 z-50 flex items-center justify-center p-4 bg-slate-900/50 backdrop-blur-sm">
-        <div class="bg-white rounded-xl shadow-xl w-full max-w-2xl max-h-[90vh] overflow-hidden flex flex-col">
-            <div class="p-4 border-b border-slate-200 flex justify-between items-center">
-                <h3 class="font-bold text-slate-800">Add Workshop</h3>
-                <button @click="openAddModal = false" class="text-slate-400 hover:text-slate-600">&times;</button>
+    <div x-show="openAddModal" x-cloak class="fixed inset-0 z-50 flex items-center justify-center p-4 bg-slate-900/40 backdrop-blur-sm"
+         x-transition:enter="transition ease-out duration-300" x-transition:enter-start="opacity-0" x-transition:enter-end="opacity-100"
+         x-transition:leave="transition ease-in duration-200" x-transition:leave-start="opacity-100" x-transition:leave-end="opacity-0">
+        <div class="bg-white rounded-2xl shadow-xl w-full max-w-2xl max-h-[90vh] overflow-hidden flex flex-col border border-slate-100"
+             x-show="openAddModal" x-transition:enter="transition ease-out duration-300 transform" x-transition:enter-start="scale-95 translate-y-4" x-transition:enter-end="scale-100 translate-y-0">
+            <div class="p-6 border-b border-slate-100 flex justify-between items-center bg-slate-50/50">
+                <div>
+                    <h3 class="text-lg font-bold text-slate-900 font-outfit">Add New Garage</h3>
+                    <p class="text-xs text-slate-500 mt-0.5">Register a new workshop and set up its administrator account.</p>
+                </div>
+                <button @click="openAddModal = false" class="text-slate-400 hover:text-slate-600 bg-white hover:bg-slate-100 p-1.5 rounded-lg border border-slate-200 transition-colors">&times;</button>
             </div>
-            <form action="{{ route('super_admin.store_workshop') }}" method="POST" class="flex-1 overflow-y-auto p-4 space-y-4">
+            <form action="{{ route('super_admin.store_workshop') }}" method="POST" class="flex-1 overflow-y-auto p-6 space-y-6">
                 @csrf
-                <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
-                    <div class="sm:col-span-2 font-semibold text-slate-700 border-b pb-1">Garage Details</div>
-                    <div><label class="block text-xs font-semibold mb-1">Name *</label><input type="text" name="name" required class="w-full border rounded p-2 text-sm"></div>
-                    <div><label class="block text-xs font-semibold mb-1">Phone *</label><input type="text" name="phone" required class="w-full border rounded p-2 text-sm"></div>
-                    <div><label class="block text-xs font-semibold mb-1">Email</label><input type="email" name="email" class="w-full border rounded p-2 text-sm"></div>
+                <div class="grid grid-cols-1 sm:grid-cols-2 gap-5">
+                    <div class="sm:col-span-2 font-bold text-slate-900 text-sm border-b border-slate-100 pb-2">Garage Details</div>
                     <div>
-                        <label class="block text-xs font-semibold mb-1">Status *</label>
-                        <select name="subscription_status" class="w-full border rounded p-2 text-sm">
-                            <option value="training">Training</option>
-                            <option value="active">Active</option>
-                            <option value="suspended">Suspended</option>
-                        </select>
+                        <label class="block text-xs font-bold text-slate-500 uppercase tracking-wider mb-1.5">Garage Name <span class="text-rose-500">*</span></label>
+                        <input type="text" name="name" required class="w-full border border-slate-200 rounded-xl px-3 py-2 text-slate-800 focus:outline-none focus:ring-2 focus:ring-blue-500/20 focus:border-blue-500 text-sm transition-all" placeholder="e.g. Suhaim Soft Garage">
                     </div>
-                    <div class="sm:col-span-2 font-semibold text-slate-700 border-b pb-1 mt-2">Admin Account</div>
-                    <div><label class="block text-xs font-semibold mb-1">Admin Name</label><input type="text" name="admin_name" class="w-full border rounded p-2 text-sm"></div>
-                    <div><label class="block text-xs font-semibold mb-1">Admin Email</label><input type="email" name="admin_email" class="w-full border rounded p-2 text-sm"></div>
-                    <div class="sm:col-span-2"><label class="block text-xs font-semibold mb-1">Admin Password</label><input type="password" name="admin_password" class="w-full border rounded p-2 text-sm"></div>
-                </div>
-                <div class="flex justify-end gap-2 pt-4">
-                    <button type="button" @click="openAddModal = false" class="px-4 py-2 border rounded text-sm font-semibold">Cancel</button>
-                    <button type="submit" class="px-4 py-2 bg-blue-600 text-white rounded text-sm font-semibold">Save</button>
-                </div>
-            </form>
-        </div>
-    </div>
-
-    {{-- Edit Workshop Modal --}}
-    <div x-show="openEditModal" x-cloak class="fixed inset-0 z-50 flex items-center justify-center p-4 bg-slate-900/50 backdrop-blur-sm">
-        <div class="bg-white rounded-xl shadow-xl w-full max-w-2xl max-h-[90vh] overflow-hidden flex flex-col">
-            <div class="p-4 border-b border-slate-200 flex justify-between items-center">
-                <h3 class="font-bold text-slate-800">Edit Workshop</h3>
-                <button @click="openEditModal = false" class="text-slate-400 hover:text-slate-600">&times;</button>
-            </div>
-            <form :action="`/super-admin/workshops/${activeWorkshop.id}`" method="POST" class="flex-1 overflow-y-auto p-4 space-y-4" x-show="activeWorkshop.id">
-                @csrf @method('PUT')
-                <input type="hidden" name="admin_user_id" x-model="activeWorkshop.admin_user_id">
-                <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
-                    <div class="sm:col-span-2 font-semibold text-slate-700 border-b pb-1">Garage Details</div>
-                    <div><label class="block text-xs font-semibold mb-1">Name *</label><input type="text" name="name" x-model="activeWorkshop.name" required class="w-full border rounded p-2 text-sm"></div>
-                    <div><label class="block text-xs font-semibold mb-1">Phone *</label><input type="text" name="phone" x-model="activeWorkshop.phone" required class="w-full border rounded p-2 text-sm"></div>
-                    <div><label class="block text-xs font-semibold mb-1">Email</label><input type="email" name="email" x-model="activeWorkshop.email" class="w-full border rounded p-2 text-sm"></div>
                     <div>
-                        <label class="block text-xs font-semibold mb-1">Status *</label>
-                        <select name="subscription_status" x-model="activeWorkshop.subscription_status" class="w-full border rounded p-2 text-sm">
+                        <label class="block text-xs font-bold text-slate-500 uppercase tracking-wider mb-1.5">Phone Number <span class="text-rose-500">*</span></label>
+                        <input type="text" name="phone" required class="w-full border border-slate-200 rounded-xl px-3 py-2 text-slate-800 focus:outline-none focus:ring-2 focus:ring-blue-500/20 focus:border-blue-500 text-sm transition-all" placeholder="e.g. 08891479505">
+                    </div>
+                    <div>
+                        <label class="block text-xs font-bold text-slate-500 uppercase tracking-wider mb-1.5">Email Address</label>
+                        <input type="email" name="email" class="w-full border border-slate-200 rounded-xl px-3 py-2 text-slate-800 focus:outline-none focus:ring-2 focus:ring-blue-500/20 focus:border-blue-500 text-sm transition-all" placeholder="e.g. info@garage.com">
+                    </div>
+                    <div>
+                        <label class="block text-xs font-bold text-slate-500 uppercase tracking-wider mb-1.5">Initial Status <span class="text-rose-500">*</span></label>
+                        <select name="subscription_status" class="w-full border border-slate-200 rounded-xl px-3 py-2 text-slate-800 focus:outline-none focus:ring-2 focus:ring-blue-500/20 focus:border-blue-500 text-sm transition-all bg-white cursor-pointer">
                             <option value="training">Training</option>
                             <option value="trial">Trial</option>
                             <option value="active">Active</option>
@@ -382,44 +360,139 @@
                             <option value="fix">Fix</option>
                         </select>
                     </div>
-                    <div>
-                        <label class="block text-xs font-semibold mb-1">Training/Trial Ends At</label>
-                        <input type="datetime-local" name="trial_ends_at" x-model="activeWorkshop.trial_ends_at" class="w-full border rounded p-2 text-sm">
+                    <div class="sm:col-span-2">
+                        <label class="block text-xs font-bold text-slate-500 uppercase tracking-wider mb-1.5">Training / Trial Ends At</label>
+                        <input type="datetime-local" name="trial_ends_at" class="w-full border border-slate-200 rounded-xl px-3 py-2 text-slate-800 focus:outline-none focus:ring-2 focus:ring-blue-500/20 focus:border-blue-500 text-sm transition-all">
                     </div>
-                    <div class="sm:col-span-2 font-semibold text-slate-700 border-b pb-1 mt-2">Warning Popup System</div>
+
+                    <div class="sm:col-span-2 font-bold text-slate-900 text-sm border-b border-slate-100 pb-2 mt-2">Warning Notification Banner</div>
                     <div>
-                        <label class="block text-xs font-semibold mb-1">Warning Message</label>
-                        <input type="text" name="alert_message" x-model="activeWorkshop.alert_message" placeholder="e.g. Your training period ends soon!" class="w-full border rounded p-2 text-sm">
+                        <label class="block text-xs font-bold text-slate-500 uppercase tracking-wider mb-1.5">Warning Message</label>
+                        <input type="text" name="alert_message" placeholder="e.g. Your subscription is expiring soon!" class="w-full border border-slate-200 rounded-xl px-3 py-2 text-slate-800 focus:outline-none focus:ring-2 focus:ring-blue-500/20 focus:border-blue-500 text-sm transition-all">
                     </div>
                     <div>
-                        <label class="block text-xs font-semibold mb-1">Warning Expires At</label>
-                        <input type="datetime-local" name="alert_expires_at" x-model="activeWorkshop.alert_expires_at" class="w-full border rounded p-2 text-sm">
+                        <label class="block text-xs font-bold text-slate-500 uppercase tracking-wider mb-1.5">Warning Expires At</label>
+                        <input type="datetime-local" name="alert_expires_at" class="w-full border border-slate-200 rounded-xl px-3 py-2 text-slate-800 focus:outline-none focus:ring-2 focus:ring-blue-500/20 focus:border-blue-500 text-sm transition-all">
                     </div>
-                    <div class="sm:col-span-2 font-semibold text-slate-700 border-b pb-1 mt-2">Admin Account</div>
-                    <div><label class="block text-xs font-semibold mb-1">Admin Name</label><input type="text" name="admin_name" x-model="activeWorkshop.admin_name" class="w-full border rounded p-2 text-sm"></div>
-                    <div><label class="block text-xs font-semibold mb-1">Admin Email</label><input type="email" name="admin_email" x-model="activeWorkshop.admin_email" class="w-full border rounded p-2 text-sm"></div>
-                    <div class="sm:col-span-2"><label class="block text-xs font-semibold mb-1">New Password (leave blank to keep)</label><input type="password" name="admin_password" class="w-full border rounded p-2 text-sm"></div>
+                    
+                    <div class="sm:col-span-2 font-bold text-slate-900 text-sm border-b border-slate-100 pb-2 mt-2">Administrator Account</div>
+                    <div>
+                        <label class="block text-xs font-bold text-slate-500 uppercase tracking-wider mb-1.5">Admin Name</label>
+                        <input type="text" name="admin_name" class="w-full border border-slate-200 rounded-xl px-3 py-2 text-slate-800 focus:outline-none focus:ring-2 focus:ring-blue-500/20 focus:border-blue-500 text-sm transition-all" placeholder="e.g. John Doe">
+                    </div>
+                    <div>
+                        <label class="block text-xs font-bold text-slate-500 uppercase tracking-wider mb-1.5">Admin Email</label>
+                        <input type="email" name="admin_email" class="w-full border border-slate-200 rounded-xl px-3 py-2 text-slate-800 focus:outline-none focus:ring-2 focus:ring-blue-500/20 focus:border-blue-500 text-sm transition-all" placeholder="e.g. admin@garage.com">
+                    </div>
+                    <div class="sm:col-span-2">
+                        <label class="block text-xs font-bold text-slate-500 uppercase tracking-wider mb-1.5">Admin Password</label>
+                        <input type="password" name="admin_password" class="w-full border border-slate-200 rounded-xl px-3 py-2 text-slate-800 focus:outline-none focus:ring-2 focus:ring-blue-500/20 focus:border-blue-500 text-sm transition-all" placeholder="Enter password (minimum 8 characters)">
+                    </div>
                 </div>
-                <div class="flex justify-end gap-2 pt-4">
-                    <button type="button" @click="openEditModal = false" class="px-4 py-2 border rounded text-sm font-semibold">Cancel</button>
-                    <button type="submit" class="px-4 py-2 bg-blue-600 text-white rounded text-sm font-semibold">Update</button>
+                <div class="flex justify-end gap-3 pt-6 border-t border-slate-100">
+                    <button type="button" @click="openAddModal = false" class="px-4 py-2.5 border border-slate-200 hover:bg-slate-50 text-slate-700 rounded-xl text-sm font-semibold transition-colors">Cancel</button>
+                    <button type="submit" class="px-5 py-2.5 bg-blue-600 hover:bg-blue-700 text-white rounded-xl text-sm font-semibold transition-colors shadow-sm shadow-blue-500/10">Save Garage</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    {{-- Edit Workshop Modal --}}
+    <div x-show="openEditModal" x-cloak class="fixed inset-0 z-50 flex items-center justify-center p-4 bg-slate-900/40 backdrop-blur-sm"
+         x-transition:enter="transition ease-out duration-300" x-transition:enter-start="opacity-0" x-transition:enter-end="opacity-100"
+         x-transition:leave="transition ease-in duration-200" x-transition:leave-start="opacity-100" x-transition:leave-end="opacity-0">
+        <div class="bg-white rounded-2xl shadow-xl w-full max-w-2xl max-h-[90vh] overflow-hidden flex flex-col border border-slate-100"
+             x-show="openEditModal" x-transition:enter="transition ease-out duration-300 transform" x-transition:enter-start="scale-95 translate-y-4" x-transition:enter-end="scale-100 translate-y-0">
+            <div class="p-6 border-b border-slate-100 flex justify-between items-center bg-slate-50/50">
+                <div>
+                    <h3 class="text-lg font-bold text-slate-900 font-outfit">Edit Garage Settings</h3>
+                    <p class="text-xs text-slate-500 mt-0.5">Update workspace details, warnings, and administrative access.</p>
+                </div>
+                <button @click="openEditModal = false" class="text-slate-400 hover:text-slate-600 bg-white hover:bg-slate-100 p-1.5 rounded-lg border border-slate-200 transition-colors">&times;</button>
+            </div>
+            <form :action="`/super-admin/workshops/${activeWorkshop.id}`" method="POST" class="flex-1 overflow-y-auto p-6 space-y-6" x-show="activeWorkshop.id">
+                @csrf @method('PUT')
+                <input type="hidden" name="admin_user_id" x-model="activeWorkshop.admin_user_id">
+                <div class="grid grid-cols-1 sm:grid-cols-2 gap-5">
+                    
+                    <div class="sm:col-span-2 font-bold text-slate-900 text-sm border-b border-slate-100 pb-2">Garage Details</div>
+                    <div>
+                        <label class="block text-xs font-bold text-slate-500 uppercase tracking-wider mb-1.5">Garage Name <span class="text-rose-500">*</span></label>
+                        <input type="text" name="name" x-model="activeWorkshop.name" required class="w-full border border-slate-200 rounded-xl px-3 py-2 text-slate-800 focus:outline-none focus:ring-2 focus:ring-blue-500/20 focus:border-blue-500 text-sm transition-all">
+                    </div>
+                    <div>
+                        <label class="block text-xs font-bold text-slate-500 uppercase tracking-wider mb-1.5">Phone Number <span class="text-rose-500">*</span></label>
+                        <input type="text" name="phone" x-model="activeWorkshop.phone" required class="w-full border border-slate-200 rounded-xl px-3 py-2 text-slate-800 focus:outline-none focus:ring-2 focus:ring-blue-500/20 focus:border-blue-500 text-sm transition-all">
+                    </div>
+                    <div>
+                        <label class="block text-xs font-bold text-slate-500 uppercase tracking-wider mb-1.5">Email Address</label>
+                        <input type="email" name="email" x-model="activeWorkshop.email" class="w-full border border-slate-200 rounded-xl px-3 py-2 text-slate-800 focus:outline-none focus:ring-2 focus:ring-blue-500/20 focus:border-blue-500 text-sm transition-all">
+                    </div>
+                    <div>
+                        <label class="block text-xs font-bold text-slate-500 uppercase tracking-wider mb-1.5">Subscription Status <span class="text-rose-500">*</span></label>
+                        <select name="subscription_status" x-model="activeWorkshop.subscription_status" class="w-full border border-slate-200 rounded-xl px-3 py-2 text-slate-800 focus:outline-none focus:ring-2 focus:ring-blue-500/20 focus:border-blue-500 text-sm transition-all bg-white cursor-pointer">
+                            <option value="training">Training</option>
+                            <option value="trial">Trial</option>
+                            <option value="active">Active</option>
+                            <option value="suspended">Suspended</option>
+                            <option value="fix">Fix</option>
+                        </select>
+                    </div>
+                    <div class="sm:col-span-2">
+                        <label class="block text-xs font-bold text-slate-500 uppercase tracking-wider mb-1.5">Training / Trial Ends At</label>
+                        <input type="datetime-local" name="trial_ends_at" x-model="activeWorkshop.trial_ends_at" class="w-full border border-slate-200 rounded-xl px-3 py-2 text-slate-800 focus:outline-none focus:ring-2 focus:ring-blue-500/20 focus:border-blue-500 text-sm transition-all">
+                    </div>
+
+                    <div class="sm:col-span-2 font-bold text-slate-900 text-sm border-b border-slate-100 pb-2 mt-2">Warning Notification Banner</div>
+                    <div>
+                        <label class="block text-xs font-bold text-slate-500 uppercase tracking-wider mb-1.5">Warning Message</label>
+                        <input type="text" name="alert_message" x-model="activeWorkshop.alert_message" placeholder="e.g. Your subscription is expiring soon!" class="w-full border border-slate-200 rounded-xl px-3 py-2 text-slate-800 focus:outline-none focus:ring-2 focus:ring-blue-500/20 focus:border-blue-500 text-sm transition-all">
+                    </div>
+                    <div>
+                        <label class="block text-xs font-bold text-slate-500 uppercase tracking-wider mb-1.5">Warning Expires At</label>
+                        <input type="datetime-local" name="alert_expires_at" x-model="activeWorkshop.alert_expires_at" class="w-full border border-slate-200 rounded-xl px-3 py-2 text-slate-800 focus:outline-none focus:ring-2 focus:ring-blue-500/20 focus:border-blue-500 text-sm transition-all">
+                    </div>
+
+                    <div class="sm:col-span-2 font-bold text-slate-900 text-sm border-b border-slate-100 pb-2 mt-2">Administrator Access</div>
+                    <div>
+                        <label class="block text-xs font-bold text-slate-500 uppercase tracking-wider mb-1.5">Admin Name</label>
+                        <input type="text" name="admin_name" x-model="activeWorkshop.admin_name" class="w-full border border-slate-200 rounded-xl px-3 py-2 text-slate-800 focus:outline-none focus:ring-2 focus:ring-blue-500/20 focus:border-blue-500 text-sm transition-all">
+                    </div>
+                    <div>
+                        <label class="block text-xs font-bold text-slate-500 uppercase tracking-wider mb-1.5">Admin Email</label>
+                        <input type="email" name="admin_email" x-model="activeWorkshop.admin_email" class="w-full border border-slate-200 rounded-xl px-3 py-2 text-slate-800 focus:outline-none focus:ring-2 focus:ring-blue-500/20 focus:border-blue-500 text-sm transition-all">
+                    </div>
+                    <div class="sm:col-span-2">
+                        <label class="block text-xs font-bold text-slate-500 uppercase tracking-wider mb-1.5">Reset Password <span class="text-slate-400 font-normal lowercase">(leave blank to keep current)</span></label>
+                        <input type="password" name="admin_password" class="w-full border border-slate-200 rounded-xl px-3 py-2 text-slate-800 focus:outline-none focus:ring-2 focus:ring-blue-500/20 focus:border-blue-500 text-sm transition-all" placeholder="Enter new password">
+                    </div>
+                </div>
+                <div class="flex justify-end gap-3 pt-6 border-t border-slate-100">
+                    <button type="button" @click="openEditModal = false" class="px-4 py-2.5 border border-slate-200 hover:bg-slate-50 text-slate-700 rounded-xl text-sm font-semibold transition-colors">Cancel</button>
+                    <button type="submit" class="px-5 py-2.5 bg-blue-600 hover:bg-blue-700 text-white rounded-xl text-sm font-semibold transition-colors shadow-sm shadow-blue-500/10">Save Changes</button>
                 </div>
             </form>
         </div>
     </div>
 
     {{-- Generate Keys Modal --}}
-    <div x-show="openGenerateKeysModal" x-cloak class="fixed inset-0 z-50 flex items-center justify-center p-4 bg-slate-900/50 backdrop-blur-sm">
-        <div class="bg-white rounded-xl shadow-xl w-full max-w-md">
-            <div class="p-4 border-b border-slate-200 flex justify-between items-center">
-                <h3 class="font-bold text-slate-800">Generate Keys</h3>
-                <button @click="openGenerateKeysModal = false" class="text-slate-400">&times;</button>
+    <div x-show="openGenerateKeysModal" x-cloak class="fixed inset-0 z-50 flex items-center justify-center p-4 bg-slate-900/40 backdrop-blur-sm"
+         x-transition:enter="transition ease-out duration-300" x-transition:enter-start="opacity-0" x-transition:enter-end="opacity-100"
+         x-transition:leave="transition ease-in duration-200" x-transition:leave-start="opacity-100" x-transition:leave-end="opacity-0">
+        <div class="bg-white rounded-2xl shadow-xl w-full max-w-md overflow-hidden border border-slate-100"
+             x-show="openGenerateKeysModal" x-transition:enter="transition ease-out duration-300 transform" x-transition:enter-start="scale-95 translate-y-4" x-transition:enter-end="scale-100 translate-y-0">
+            <div class="p-6 border-b border-slate-100 flex justify-between items-center bg-slate-50/50">
+                <div>
+                    <h3 class="text-lg font-bold text-slate-900 font-outfit">Generate License Key</h3>
+                    <p class="text-xs text-slate-500 mt-0.5">Create a new key to sell or activate subscription.</p>
+                </div>
+                <button @click="openGenerateKeysModal = false" class="text-slate-400 hover:text-slate-600 bg-white hover:bg-slate-100 p-1.5 rounded-lg border border-slate-200 transition-colors">&times;</button>
             </div>
-            <form action="{{ route('super_admin.store_product_key') }}" method="POST" class="p-4 space-y-4">
+            <form action="{{ route('super_admin.store_product_key') }}" method="POST" class="p-6 space-y-4">
                 @csrf
                 <div>
-                    <label class="block text-xs font-semibold mb-1">Duration (Days)</label>
-                    <select name="duration_days" class="w-full border rounded p-2 text-sm">
+                    <label class="block text-xs font-bold text-slate-500 uppercase tracking-wider mb-1.5">Key Duration <span class="text-rose-500">*</span></label>
+                    <select name="duration_days" class="w-full border border-slate-200 rounded-xl px-3 py-2 text-slate-800 focus:outline-none focus:ring-2 focus:ring-blue-500/20 focus:border-blue-500 text-sm transition-all bg-white cursor-pointer">
                         <option value="30">30 Days</option>
                         <option value="90">90 Days</option>
                         <option value="180">180 Days</option>
@@ -428,65 +501,84 @@
                 </div>
                 <!-- Quantity fixed to 1 -->
                 <input type="hidden" name="quantity" value="1">
-                <div class="flex justify-end gap-2">
-                    <button type="button" @click="openGenerateKeysModal = false" class="px-4 py-2 border rounded text-sm font-semibold">Cancel</button>
-                    <button type="submit" class="px-4 py-2 bg-emerald-600 text-white rounded text-sm font-semibold">Generate</button>
+                <div class="flex justify-end gap-3 pt-4 border-t border-slate-100">
+                    <button type="button" @click="openGenerateKeysModal = false" class="px-4 py-2.5 border border-slate-200 hover:bg-slate-50 text-slate-700 rounded-xl text-sm font-semibold transition-colors">Cancel</button>
+                    <button type="submit" class="px-5 py-2.5 bg-emerald-600 hover:bg-emerald-700 text-white rounded-xl text-sm font-semibold transition-colors shadow-sm shadow-emerald-500/10">Generate Key</button>
                 </div>
             </form>
         </div>
     </div>
 
     {{-- Activate License Modal --}}
-    <div x-show="openActivateLicenseModal" x-cloak class="fixed inset-0 z-50 flex items-center justify-center p-4 bg-slate-900/50 backdrop-blur-sm">
-        <div class="bg-white rounded-xl shadow-xl w-full max-w-md">
-            <div class="p-4 border-b border-slate-200 flex justify-between items-center">
-                <h3 class="font-bold text-slate-800">Activate License for <span x-text="activeWorkshopToActivate.name"></span></h3>
-                <button @click="openActivateLicenseModal = false" class="text-slate-400">&times;</button>
+    <div x-show="openActivateLicenseModal" x-cloak class="fixed inset-0 z-50 flex items-center justify-center p-4 bg-slate-900/40 backdrop-blur-sm"
+         x-transition:enter="transition ease-out duration-300" x-transition:enter-start="opacity-0" x-transition:enter-end="opacity-100"
+         x-transition:leave="transition ease-in duration-200" x-transition:leave-start="opacity-100" x-transition:leave-end="opacity-0">
+        <div class="bg-white rounded-2xl shadow-xl w-full max-w-md overflow-hidden border border-slate-100"
+             x-show="openActivateLicenseModal" x-transition:enter="transition ease-out duration-300 transform" x-transition:enter-start="scale-95 translate-y-4" x-transition:enter-end="scale-100 translate-y-0">
+            <div class="p-6 border-b border-slate-100 flex justify-between items-center bg-slate-50/50">
+                <div>
+                    <h3 class="text-lg font-bold text-slate-900 font-outfit truncate">Activate Garage License</h3>
+                    <p class="text-xs text-slate-500 mt-0.5" x-text="'Activating for ' + activeWorkshopToActivate.name"></p>
+                </div>
+                <button @click="openActivateLicenseModal = false" class="text-slate-400 hover:text-slate-600 bg-white hover:bg-slate-100 p-1.5 rounded-lg border border-slate-200 transition-colors">&times;</button>
             </div>
-            <form :action="`/super-admin/workshops/${activeWorkshopToActivate.id}/activate-license`" method="POST" class="p-4 space-y-4">
+            <form :action="`/super-admin/workshops/${activeWorkshopToActivate.id}/activate-license`" method="POST" class="p-6 space-y-4">
                 @csrf
                 <div>
-                    <label class="block text-xs font-semibold mb-1">License Duration (Auto-Generate)</label>
-                    <select name="duration_days" class="w-full border rounded p-2 text-sm">
+                    <label class="block text-xs font-bold text-slate-500 uppercase tracking-wider mb-1.5">Auto-Generate &amp; Activate License</label>
+                    <select name="duration_days" class="w-full border border-slate-200 rounded-xl px-3 py-2 text-slate-800 focus:outline-none focus:ring-2 focus:ring-blue-500/20 focus:border-blue-500 text-sm transition-all bg-white cursor-pointer">
                         <option value="30">30 Days</option>
                         <option value="90">90 Days</option>
                         <option value="180">180 Days</option>
                         <option value="365">365 Days</option>
                     </select>
                 </div>
-                <p class="text-center text-xs text-slate-500">OR</p>
-                <div>
-                    <label class="block text-xs font-semibold mb-1">Enter Existing Key</label>
-                    <input type="text" name="product_key" class="w-full border rounded p-2 text-sm font-mono uppercase" placeholder="XXXX-XXXX-XXXX-XXXX">
+                <div class="relative py-2">
+                    <div class="absolute inset-0 flex items-center" aria-hidden="true">
+                        <div class="w-full border-t border-slate-200"></div>
+                    </div>
+                    <div class="relative flex justify-center text-xs uppercase">
+                        <span class="bg-white px-2 text-slate-400 font-bold">OR</span>
+                    </div>
                 </div>
-                <div class="flex justify-end gap-2">
-                    <button type="button" @click="openActivateLicenseModal = false" class="px-4 py-2 border rounded text-sm font-semibold">Cancel</button>
-                    <button type="submit" class="px-4 py-2 bg-blue-600 text-white rounded text-sm font-semibold">Activate</button>
+                <div>
+                    <label class="block text-xs font-bold text-slate-500 uppercase tracking-wider mb-1.5">Redeem Existing License Key</label>
+                    <input type="text" name="product_key" class="w-full border border-slate-200 rounded-xl px-3 py-2 text-slate-800 focus:outline-none focus:ring-2 focus:ring-blue-500/20 focus:border-blue-500 text-sm font-mono uppercase transition-all" placeholder="XXXX-XXXX-XXXX-XXXX">
+                </div>
+                <div class="flex justify-end gap-3 pt-4 border-t border-slate-100">
+                    <button type="button" @click="openActivateLicenseModal = false" class="px-4 py-2.5 border border-slate-200 hover:bg-slate-50 text-slate-700 rounded-xl text-sm font-semibold transition-colors">Cancel</button>
+                    <button type="submit" class="px-5 py-2.5 bg-blue-600 hover:bg-blue-700 text-white rounded-xl text-sm font-semibold transition-colors shadow-sm shadow-blue-500/10">Activate License</button>
                 </div>
             </form>
         </div>
     </div>
 
     {{-- Edit License Key Modal --}}
-    <div x-show="openEditKeyModal" x-cloak class="fixed inset-0 z-50 flex items-center justify-center p-4 bg-slate-900/50 backdrop-blur-sm">
-        <div class="bg-white rounded-xl shadow-xl w-full max-w-md">
-            <div class="p-4 border-b border-slate-200 flex justify-between items-center">
-                <h3 class="font-bold text-slate-800">Edit License Key</h3>
-                <button @click="openEditKeyModal = false" class="text-slate-400">&times;</button>
+    <div x-show="openEditKeyModal" x-cloak class="fixed inset-0 z-50 flex items-center justify-center p-4 bg-slate-900/40 backdrop-blur-sm"
+         x-transition:enter="transition ease-out duration-300" x-transition:enter-start="opacity-0" x-transition:enter-end="opacity-100"
+         x-transition:leave="transition ease-in duration-200" x-transition:leave-start="opacity-100" x-transition:leave-end="opacity-0">
+        <div class="bg-white rounded-2xl shadow-xl w-full max-w-md overflow-hidden border border-slate-100"
+             x-show="openEditKeyModal" x-transition:enter="transition ease-out duration-300 transform" x-transition:enter-start="scale-95 translate-y-4" x-transition:enter-end="scale-100 translate-y-0">
+            <div class="p-6 border-b border-slate-100 flex justify-between items-center bg-slate-50/50">
+                <div>
+                    <h3 class="text-lg font-bold text-slate-900 font-outfit">Edit License Key</h3>
+                    <p class="text-xs text-slate-500 mt-0.5">Modify key value and duration settings.</p>
+                </div>
+                <button @click="openEditKeyModal = false" class="text-slate-400 hover:text-slate-600 bg-white hover:bg-slate-100 p-1.5 rounded-lg border border-slate-200 transition-colors">&times;</button>
             </div>
-            <form :action="`/super-admin/product-keys/${activeKey.id}`" method="POST" class="p-4 space-y-4" x-show="activeKey.id">
+            <form :action="`/super-admin/product-keys/${activeKey.id}`" method="POST" class="p-6 space-y-4" x-show="activeKey.id">
                 @csrf @method('PUT')
                 <div>
-                    <label class="block text-xs font-semibold mb-1">Key Value</label>
-                    <input type="text" name="key" x-model="activeKey.key" class="w-full border rounded p-2 text-sm font-mono" required>
+                    <label class="block text-xs font-bold text-slate-500 uppercase tracking-wider mb-1.5">Key Value <span class="text-rose-500">*</span></label>
+                    <input type="text" name="key" x-model="activeKey.key" class="w-full border border-slate-200 rounded-xl px-3 py-2 text-slate-800 focus:outline-none focus:ring-2 focus:ring-blue-500/20 focus:border-blue-500 text-sm font-mono transition-all" required>
                 </div>
                 <div>
-                    <label class="block text-xs font-semibold mb-1">Duration (Days)</label>
-                    <input type="number" name="duration_days" x-model="activeKey.duration_days" min="1" class="w-full border rounded p-2 text-sm" required>
+                    <label class="block text-xs font-bold text-slate-500 uppercase tracking-wider mb-1.5">Duration (Days) <span class="text-rose-500">*</span></label>
+                    <input type="number" name="duration_days" x-model="activeKey.duration_days" min="1" class="w-full border border-slate-200 rounded-xl px-3 py-2 text-slate-800 focus:outline-none focus:ring-2 focus:ring-blue-500/20 focus:border-blue-500 text-sm transition-all" required>
                 </div>
-                <div class="flex justify-end gap-2">
-                    <button type="button" @click="openEditKeyModal = false" class="px-4 py-2 border rounded text-sm font-semibold">Cancel</button>
-                    <button type="submit" class="px-4 py-2 bg-blue-600 text-white rounded text-sm font-semibold">Update</button>
+                <div class="flex justify-end gap-3 pt-4 border-t border-slate-100">
+                    <button type="button" @click="openEditKeyModal = false" class="px-4 py-2.5 border border-slate-200 hover:bg-slate-50 text-slate-700 rounded-xl text-sm font-semibold transition-colors">Cancel</button>
+                    <button type="submit" class="px-5 py-2.5 bg-blue-600 hover:bg-blue-700 text-white rounded-xl text-sm font-semibold transition-colors shadow-sm shadow-blue-500/10">Update Key</button>
                 </div>
             </form>
         </div>

@@ -88,6 +88,8 @@ class SuperAdminController extends Controller
             'trial_ends_at' => 'nullable|date',
             'restrict_features_on_expiry' => 'nullable|boolean',
             'admin_extend_allowed' => 'nullable|boolean',
+            'alert_message' => 'nullable|string|max:1000',
+            'alert_expires_at' => 'nullable|date',
             // Admin user details
             'admin_name' => 'nullable|string|max:255',
             'admin_email' => 'nullable|email|max:255|unique:users,email',
@@ -107,6 +109,8 @@ class SuperAdminController extends Controller
                 'trial_ends_at' => $validated['trial_ends_at'] ?? null,
                 'restrict_features_on_expiry' => $request->boolean('restrict_features_on_expiry'),
                 'admin_extend_allowed' => $request->boolean('admin_extend_allowed'),
+                'alert_message' => $validated['alert_message'] ?? null,
+                'alert_expires_at' => $validated['alert_expires_at'] ?? null,
             ]);
 
             if (!empty($validated['admin_email'])) {
@@ -246,45 +250,6 @@ class SuperAdminController extends Controller
         return redirect()
             ->route('super_admin.dashboard', ['tab' => 'logs'])
             ->with('success', 'All activity logs cleared successfully!');
-    }
-
-    public function wipeData()
-    {
-        // Disable foreign key checks
-        \Illuminate\Support\Facades\DB::statement('SET FOREIGN_KEY_CHECKS=0;');
-
-        // Truncate all tables except migrations, super admin users, and other essential config
-        \Illuminate\Support\Facades\DB::table('bill_items')->truncate();
-        \Illuminate\Support\Facades\DB::table('bill_template_items')->truncate();
-        \Illuminate\Support\Facades\DB::table('bills')->truncate();
-        \Illuminate\Support\Facades\DB::table('warranties')->truncate();
-        \Illuminate\Support\Facades\DB::table('work_orders')->truncate();
-        \Illuminate\Support\Facades\DB::table('salary_advances')->truncate();
-        \Illuminate\Support\Facades\DB::table('employee_payments')->truncate();
-        \Illuminate\Support\Facades\DB::table('salaries')->truncate();
-        \Illuminate\Support\Facades\DB::table('employees')->truncate();
-        \Illuminate\Support\Facades\DB::table('expenses')->truncate();
-        \Illuminate\Support\Facades\DB::table('purchases')->truncate();
-        \Illuminate\Support\Facades\DB::table('bill_templates')->truncate();
-        \Illuminate\Support\Facades\DB::table('services')->truncate();
-        \Illuminate\Support\Facades\DB::table('products')->truncate();
-        \Illuminate\Support\Facades\DB::table('vehicles')->truncate();
-        \Illuminate\Support\Facades\DB::table('customers')->truncate();
-        \Illuminate\Support\Facades\DB::table('product_keys')->truncate();
-        \Illuminate\Support\Facades\DB::table('workshops')->truncate();
-        \Illuminate\Support\Facades\DB::table('activity_logs')->truncate();
-
-        // Delete all non-super-admin users
-        \Illuminate\Support\Facades\DB::table('users')->where('role', '!=', 'super_admin')->delete();
-
-        // Re-enable foreign key checks
-        \Illuminate\Support\Facades\DB::statement('SET FOREIGN_KEY_CHECKS=1;');
-
-        \App\Models\ActivityLog::log('system_wipe', 'Super admin wiped all system data.');
-
-        return redirect()
-            ->route('super_admin.dashboard')
-            ->with('success', 'All system data has been wiped successfully. You now have a clean slate.');
     }
 
     public function activateLicense(Request $request, Workshop $workshop)
