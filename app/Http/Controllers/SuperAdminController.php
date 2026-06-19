@@ -250,37 +250,35 @@ class SuperAdminController extends Controller
 
     public function wipeData()
     {
-        \Illuminate\Support\Facades\DB::transaction(function () {
-            // Disable foreign key checks
-            \Illuminate\Support\Facades\DB::statement('SET FOREIGN_KEY_CHECKS=0;');
+        // Disable foreign key checks
+        \Illuminate\Support\Facades\DB::statement('SET FOREIGN_KEY_CHECKS=0;');
 
-            // Truncate all tables except migrations, super admin users, and other essential config
-            \Illuminate\Support\Facades\DB::table('bill_items')->truncate();
-            \Illuminate\Support\Facades\DB::table('bill_template_items')->truncate();
-            \Illuminate\Support\Facades\DB::table('bills')->truncate();
-            \Illuminate\Support\Facades\DB::table('warranties')->truncate();
-            \Illuminate\Support\Facades\DB::table('work_orders')->truncate();
-            \Illuminate\Support\Facades\DB::table('salary_advances')->truncate();
-            \Illuminate\Support\Facades\DB::table('employee_payments')->truncate();
-            \Illuminate\Support\Facades\DB::table('salaries')->truncate();
-            \Illuminate\Support\Facades\DB::table('employees')->truncate();
-            \Illuminate\Support\Facades\DB::table('expenses')->truncate();
-            \Illuminate\Support\Facades\DB::table('purchases')->truncate();
-            \Illuminate\Support\Facades\DB::table('bill_templates')->truncate();
-            \Illuminate\Support\Facades\DB::table('services')->truncate();
-            \Illuminate\Support\Facades\DB::table('products')->truncate();
-            \Illuminate\Support\Facades\DB::table('vehicles')->truncate();
-            \Illuminate\Support\Facades\DB::table('customers')->truncate();
-            \Illuminate\Support\Facades\DB::table('product_keys')->truncate();
-            \Illuminate\Support\Facades\DB::table('workshops')->truncate();
-            \Illuminate\Support\Facades\DB::table('activity_logs')->truncate();
+        // Truncate all tables except migrations, super admin users, and other essential config
+        \Illuminate\Support\Facades\DB::table('bill_items')->truncate();
+        \Illuminate\Support\Facades\DB::table('bill_template_items')->truncate();
+        \Illuminate\Support\Facades\DB::table('bills')->truncate();
+        \Illuminate\Support\Facades\DB::table('warranties')->truncate();
+        \Illuminate\Support\Facades\DB::table('work_orders')->truncate();
+        \Illuminate\Support\Facades\DB::table('salary_advances')->truncate();
+        \Illuminate\Support\Facades\DB::table('employee_payments')->truncate();
+        \Illuminate\Support\Facades\DB::table('salaries')->truncate();
+        \Illuminate\Support\Facades\DB::table('employees')->truncate();
+        \Illuminate\Support\Facades\DB::table('expenses')->truncate();
+        \Illuminate\Support\Facades\DB::table('purchases')->truncate();
+        \Illuminate\Support\Facades\DB::table('bill_templates')->truncate();
+        \Illuminate\Support\Facades\DB::table('services')->truncate();
+        \Illuminate\Support\Facades\DB::table('products')->truncate();
+        \Illuminate\Support\Facades\DB::table('vehicles')->truncate();
+        \Illuminate\Support\Facades\DB::table('customers')->truncate();
+        \Illuminate\Support\Facades\DB::table('product_keys')->truncate();
+        \Illuminate\Support\Facades\DB::table('workshops')->truncate();
+        \Illuminate\Support\Facades\DB::table('activity_logs')->truncate();
 
-            // Delete all non-super-admin users
-            \Illuminate\Support\Facades\DB::table('users')->where('role', '!=', 'super_admin')->delete();
+        // Delete all non-super-admin users
+        \Illuminate\Support\Facades\DB::table('users')->where('role', '!=', 'super_admin')->delete();
 
-            // Re-enable foreign key checks
-            \Illuminate\Support\Facades\DB::statement('SET FOREIGN_KEY_CHECKS=1;');
-        });
+        // Re-enable foreign key checks
+        \Illuminate\Support\Facades\DB::statement('SET FOREIGN_KEY_CHECKS=1;');
 
         \App\Models\ActivityLog::log('system_wipe', 'Super admin wiped all system data.');
 
