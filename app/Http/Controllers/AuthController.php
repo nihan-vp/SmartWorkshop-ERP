@@ -52,7 +52,7 @@ class AuthController extends Controller
             }
         } catch (\Illuminate\Database\QueryException $e) {
             return back()->withErrors([
-                'email' => 'System is currently offline or database is unreachable. Please ensure MySQL is running.',
+                'email' => 'tryagian  pls  cheak  your    internetcontion  ok    easy  to   seee',
             ])->onlyInput('email');
         } catch (\Exception $e) {
             return back()->withErrors([
