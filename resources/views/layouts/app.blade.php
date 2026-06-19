@@ -929,24 +929,11 @@
         
         @if($alertWorkshop && $alertWorkshop->alert_message)
             @if(!$alertWorkshop->alert_expires_at || now()->lessThan($alertWorkshop->alert_expires_at))
-            <div class="bg-indigo-50 border-b border-indigo-200 px-4 py-3 sm:px-6 lg:px-8 no-print">
-                <div class="flex flex-col sm:flex-row items-start sm:items-center gap-3 w-full">
-                    <div class="flex items-start gap-3 flex-1 min-w-0">
-                        <div class="mt-0.5 text-indigo-600 shrink-0">
-                            <svg class="w-5 h-5 animate-pulse" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 17h5l-1.405-1.405A2.032 2.032 0 0118 14.158V11a6.002 6.002 0 00-4-5.659V5a2 2 0 10-4 0v.341C7.67 6.165 6 8.388 6 11v3.159c0 .538-.214 1.055-.595 1.436L4 17h5m6 0v1a3 3 0 11-6 0v-1m6 0H9"/></svg>
-                        </div>
-                        <div class="min-w-0">
-                            <h3 class="text-sm font-bold text-indigo-800 truncate">Message from System Admin</h3>
-                            <p class="text-xs font-medium text-indigo-700 mt-1 whitespace-pre-wrap break-words">{{ $alertWorkshop->alert_message }}</p>
-                        </div>
-                    </div>
-                </div>
-            </div>
-            
-            <script>
-                document.addEventListener('DOMContentLoaded', function() {
-                    const alertKey = 'admin_alert_' + {{ $alertWorkshop->id }} + '_' + "{{ md5($alertWorkshop->alert_message) }}";
+            <div x-data="{ openSystemAlert: false }" x-init="
+                    const alertKey = 'admin_alert_' + {{ $alertWorkshop->id }} + '_' + '{{ md5($alertWorkshop->alert_message) }}';
                     if (!sessionStorage.getItem(alertKey)) {
+                        openSystemAlert = true;
+                        sessionStorage.setItem(alertKey, 'true');
                         try {
                             const audioCtx = new (window.AudioContext || window.webkitAudioContext)();
                             function playBeep(freq, time, type) {
@@ -960,17 +947,41 @@
                                 gain.gain.exponentialRampToValueAtTime(0.00001, audioCtx.currentTime + time + 0.3);
                                 osc.stop(audioCtx.currentTime + time + 0.4);
                             }
-                            // Play gentle chime
-                            playBeep(523.25, 0.1, 'sine'); // C5
-                            playBeep(659.25, 0.25, 'sine'); // E5
-                            playBeep(783.99, 0.4, 'sine'); // G5
-                            sessionStorage.setItem(alertKey, 'true');
-                        } catch(e) {
-                            console.log('Audio blocked', e);
-                        }
+                            playBeep(523.25, 0.1, 'sine');
+                            playBeep(659.25, 0.25, 'sine');
+                            playBeep(783.99, 0.4, 'sine');
+                        } catch(e) {}
                     }
-                });
-            </script>
+                ">
+                
+                {{-- Modal Overlay --}}
+                <div x-show="openSystemAlert" x-cloak class="fixed inset-0 z-[100] flex items-center justify-center p-4 bg-slate-900/60 backdrop-blur-sm">
+                    <div class="bg-white rounded-2xl shadow-2xl w-full max-w-md overflow-hidden transform transition-all"
+                         @click.away="openSystemAlert = false"
+                         x-transition:enter="ease-out duration-300"
+                         x-transition:enter-start="opacity-0 translate-y-4 sm:translate-y-0 sm:scale-95"
+                         x-transition:enter-end="opacity-100 translate-y-0 sm:scale-100"
+                         x-transition:leave="ease-in duration-200"
+                         x-transition:leave-start="opacity-100 translate-y-0 sm:scale-100"
+                         x-transition:leave-end="opacity-0 translate-y-4 sm:translate-y-0 sm:scale-95">
+                        
+                        <div class="bg-amber-50 p-6 border-b border-amber-100 text-center">
+                            <div class="mx-auto flex items-center justify-center h-16 w-16 rounded-full bg-amber-100 mb-4">
+                                <svg class="h-8 w-8 text-amber-600 animate-pulse" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"/></svg>
+                            </div>
+                            <h3 class="text-xl font-extrabold text-amber-900">Message from System Admin</h3>
+                        </div>
+                        <div class="p-6 text-center">
+                            <p class="text-base font-medium text-slate-700 whitespace-pre-wrap break-words">{{ $alertWorkshop->alert_message }}</p>
+                        </div>
+                        <div class="p-4 bg-slate-50 border-t border-slate-100 flex justify-center">
+                            <button @click="openSystemAlert = false" type="button" class="px-6 py-2.5 bg-amber-600 hover:bg-amber-700 text-white font-bold rounded-xl shadow-sm transition-colors w-full sm:w-auto">
+                                I Understand
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
             @endif
         @endif
         @endauth
