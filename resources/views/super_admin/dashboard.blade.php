@@ -188,10 +188,6 @@
                                     @endif
                                 </td>
                                 <td class="px-4 py-3 text-right space-x-2">
-                                    <form action="{{ route('super_admin.impersonate', $workshop) }}" method="POST" class="inline">
-                                        @csrf
-                                        <button class="text-blue-600 hover:underline text-xs font-semibold">Login</button>
-                                    </form>
                                     <button @click="openActivateModal(@js(['id'=>$workshop->id,'name'=>$workshop->name]))" class="text-emerald-600 hover:underline text-xs font-semibold">License</button>
                                     <button @click="openEdit(@js(['id'=>$workshop->id,'name'=>$workshop->name,'phone'=>$workshop->phone,'email'=>$workshop->email,'gstin'=>$workshop->gstin,'address'=>$workshop->address,'subscription_status'=>$workshop->subscription_status,'trial_ends_at'=>$workshop->trial_ends_at?$workshop->trial_ends_at->format('Y-m-d\TH:i'):'','admin_user_id'=>$workshop->users->first()?->id,'admin_name'=>$workshop->users->first()?->name,'admin_email'=>$workshop->users->first()?->email]))" class="text-slate-600 hover:underline text-xs font-semibold">Edit</button>
                                 </td>
