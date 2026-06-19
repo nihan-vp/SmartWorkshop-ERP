@@ -323,17 +323,17 @@
 
     {{-- Add Workshop Modal --}}
     <div x-show="openAddModal" x-cloak
-         class="fixed inset-0 z-50 flex items-end sm:items-center justify-center p-0 sm:p-4 bg-slate-900/50 backdrop-blur-sm"
+         class="fixed inset-0 z-50 flex items-end sm:items-center justify-center bg-slate-900/50 backdrop-blur-sm"
          x-transition:enter="transition ease-out duration-200" x-transition:enter-start="opacity-0" x-transition:enter-end="opacity-100"
          x-transition:leave="transition ease-in duration-150" x-transition:leave-start="opacity-100" x-transition:leave-end="opacity-0"
          @click.self="openAddModal = false">
-        <div class="bg-white w-full sm:rounded-2xl sm:max-w-lg max-h-[95vh] flex flex-col rounded-t-2xl shadow-2xl"
-             x-transition:enter="transition ease-out duration-200 transform" x-transition:enter-start="translate-y-4 sm:scale-95" x-transition:enter-end="translate-y-0 sm:scale-100">
+        <div class="bg-white w-full h-full sm:h-auto sm:rounded-2xl sm:max-w-xl sm:max-h-[92vh] flex flex-col shadow-2xl"
+             x-transition:enter="transition ease-out duration-200 transform" x-transition:enter-start="translate-y-full sm:translate-y-4 sm:scale-95" x-transition:enter-end="translate-y-0 sm:scale-100">
 
-            {{-- Header --}}
-            <div class="flex items-center justify-between px-5 py-4 border-b border-slate-100">
+            {{-- Sticky Header --}}
+            <div class="flex-shrink-0 flex items-center justify-between px-5 py-4 border-b border-slate-100 bg-white">
                 <div class="flex items-center gap-3">
-                    <div class="w-9 h-9 bg-blue-50 rounded-xl flex items-center justify-center">
+                    <div class="w-9 h-9 bg-blue-50 rounded-xl flex items-center justify-center flex-shrink-0">
                         <svg class="w-5 h-5 text-blue-600" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4"/></svg>
                     </div>
                     <div>
@@ -341,106 +341,130 @@
                         <p class="text-xs text-slate-400">Register workshop &amp; admin account</p>
                     </div>
                 </div>
-                <button @click="openAddModal = false" class="w-8 h-8 flex items-center justify-center rounded-lg text-slate-400 hover:text-slate-700 hover:bg-slate-100 transition-colors text-lg leading-none">&times;</button>
+                <button @click="openAddModal = false"
+                        class="w-9 h-9 flex items-center justify-center rounded-xl text-slate-400 hover:text-slate-700 hover:bg-slate-100 transition-colors text-xl leading-none flex-shrink-0">&times;</button>
             </div>
 
             {{-- Scrollable Body --}}
-            <form action="{{ route('super_admin.store_workshop') }}" method="POST" class="flex-1 overflow-y-auto">
+            <form action="{{ route('super_admin.store_workshop') }}" method="POST" class="flex-1 flex flex-col min-h-0">
                 @csrf
+                <div class="flex-1 overflow-y-auto">
 
-                {{-- Garage Info --}}
-                <div class="px-5 pt-5 pb-4">
-                    <p class="text-xs font-bold text-blue-600 uppercase tracking-widest mb-3">Garage Details</p>
-                    <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
-                        <div class="sm:col-span-2">
-                            <label class="block text-xs font-semibold text-slate-600 mb-1">Garage Name <span class="text-rose-500">*</span></label>
-                            <input type="text" name="name" required
-                                   class="w-full border border-slate-200 bg-slate-50 rounded-lg px-3 py-2.5 text-slate-800 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500/25 focus:border-blue-400 focus:bg-white transition-all"
-                                   placeholder="e.g. Suhaim Auto Garage">
-                            @error('name') <p class="text-rose-500 text-xs mt-1">{{ $message }}</p> @enderror
+                    {{-- Garage Details --}}
+                    <div class="px-5 pt-5 pb-5">
+                        <div class="flex items-center gap-2 mb-4">
+                            <span class="w-5 h-5 bg-blue-100 text-blue-600 rounded-md flex items-center justify-center text-xs">🏠</span>
+                            <p class="text-xs font-bold text-blue-600 uppercase tracking-widest">Garage Details</p>
                         </div>
-                        <div>
-                            <label class="block text-xs font-semibold text-slate-600 mb-1">Phone <span class="text-rose-500">*</span></label>
-                            <input type="text" name="phone" required
-                                   class="w-full border border-slate-200 bg-slate-50 rounded-lg px-3 py-2.5 text-slate-800 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500/25 focus:border-blue-400 focus:bg-white transition-all"
-                                   placeholder="e.g. 9876543210">
-                        </div>
-                        <div>
-                            <label class="block text-xs font-semibold text-slate-600 mb-1">Email</label>
-                            <input type="email" name="email"
-                                   class="w-full border border-slate-200 bg-slate-50 rounded-lg px-3 py-2.5 text-slate-800 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500/25 focus:border-blue-400 focus:bg-white transition-all"
-                                   placeholder="info@garage.com">
-                        </div>
-                        <div>
-                            <label class="block text-xs font-semibold text-slate-600 mb-1">Status <span class="text-rose-500">*</span></label>
-                            <select name="subscription_status"
-                                    class="w-full border border-slate-200 bg-slate-50 rounded-lg px-3 py-2.5 text-slate-800 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500/25 focus:border-blue-400 focus:bg-white transition-all cursor-pointer">
-                                <option value="training">Training</option>
-                                <option value="trial">Trial</option>
-                                <option value="active">Active</option>
-                                <option value="suspended">Suspended</option>
-                                <option value="fix">Fix</option>
-                            </select>
-                        </div>
-                        <div>
-                            <label class="block text-xs font-semibold text-slate-600 mb-1">Trial / Training Ends At</label>
-                            <input type="datetime-local" name="trial_ends_at"
-                                   class="w-full border border-slate-200 bg-slate-50 rounded-lg px-3 py-2.5 text-slate-800 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500/25 focus:border-blue-400 focus:bg-white transition-all">
+                        <div class="space-y-4">
+                            <div>
+                                <label class="block text-xs font-semibold text-slate-600 mb-1.5">Garage Name <span class="text-rose-500">*</span></label>
+                                <input type="text" name="name" required
+                                       class="w-full border border-slate-200 bg-slate-50 rounded-xl px-4 py-3 text-slate-800 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500/20 focus:border-blue-400 focus:bg-white transition-all placeholder-slate-400"
+                                       placeholder="e.g. Suhaim Auto Garage">
+                                @error('name') <p class="text-rose-500 text-xs mt-1.5">{{ $message }}</p> @enderror
+                            </div>
+                            <div class="grid grid-cols-2 gap-3">
+                                <div>
+                                    <label class="block text-xs font-semibold text-slate-600 mb-1.5">Phone <span class="text-rose-500">*</span></label>
+                                    <input type="text" name="phone" required
+                                           class="w-full border border-slate-200 bg-slate-50 rounded-xl px-4 py-3 text-slate-800 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500/20 focus:border-blue-400 focus:bg-white transition-all placeholder-slate-400"
+                                           placeholder="9876543210">
+                                </div>
+                                <div>
+                                    <label class="block text-xs font-semibold text-slate-600 mb-1.5">Email</label>
+                                    <input type="email" name="email"
+                                           class="w-full border border-slate-200 bg-slate-50 rounded-xl px-4 py-3 text-slate-800 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500/20 focus:border-blue-400 focus:bg-white transition-all placeholder-slate-400"
+                                           placeholder="info@garage.com">
+                                </div>
+                            </div>
+                            <div class="grid grid-cols-2 gap-3">
+                                <div>
+                                    <label class="block text-xs font-semibold text-slate-600 mb-1.5">Status <span class="text-rose-500">*</span></label>
+                                    <select name="subscription_status"
+                                            class="w-full border border-slate-200 bg-slate-50 rounded-xl px-4 py-3 text-slate-800 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500/20 focus:border-blue-400 focus:bg-white transition-all cursor-pointer">
+                                        <option value="training">Training</option>
+                                        <option value="trial">Trial</option>
+                                        <option value="active">Active</option>
+                                        <option value="suspended">Suspended</option>
+                                        <option value="fix">Fix</option>
+                                    </select>
+                                </div>
+                                <div>
+                                    <label class="block text-xs font-semibold text-slate-600 mb-1.5">Ends At</label>
+                                    <input type="datetime-local" name="trial_ends_at"
+                                           class="w-full border border-slate-200 bg-slate-50 rounded-xl px-4 py-3 text-slate-800 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500/20 focus:border-blue-400 focus:bg-white transition-all">
+                                </div>
+                            </div>
                         </div>
                     </div>
-                </div>
 
-                {{-- Warning Banner --}}
-                <div class="px-5 py-4 border-t border-slate-100">
-                    <p class="text-xs font-bold text-orange-500 uppercase tracking-widest mb-3">⚠ Warning Notification Banner</p>
-                    <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
-                        <div class="sm:col-span-2">
-                            <label class="block text-xs font-semibold text-slate-600 mb-1">Warning Message</label>
-                            <input type="text" name="alert_message"
-                                   class="w-full border border-slate-200 bg-slate-50 rounded-lg px-3 py-2.5 text-slate-800 text-sm focus:outline-none focus:ring-2 focus:ring-orange-400/25 focus:border-orange-400 focus:bg-white transition-all"
-                                   placeholder="e.g. Your subscription is expiring soon!">
+                    {{-- Warning Banner --}}
+                    <div class="px-5 py-5 border-t border-slate-100 bg-orange-50/40">
+                        <div class="flex items-center gap-2 mb-4">
+                            <span class="text-sm">⚠️</span>
+                            <p class="text-xs font-bold text-orange-600 uppercase tracking-widest">Warning Notification</p>
                         </div>
-                        <div class="sm:col-span-2">
-                            <label class="block text-xs font-semibold text-slate-600 mb-1">Warning Expires At</label>
-                            <input type="datetime-local" name="alert_expires_at"
-                                   class="w-full border border-slate-200 bg-slate-50 rounded-lg px-3 py-2.5 text-slate-800 text-sm focus:outline-none focus:ring-2 focus:ring-orange-400/25 focus:border-orange-400 focus:bg-white transition-all">
+                        <div class="space-y-4">
+                            <div>
+                                <label class="block text-xs font-semibold text-slate-600 mb-1.5">Warning Message</label>
+                                <input type="text" name="alert_message"
+                                       class="w-full border border-orange-200 bg-white rounded-xl px-4 py-3 text-slate-800 text-sm focus:outline-none focus:ring-2 focus:ring-orange-400/20 focus:border-orange-400 transition-all placeholder-slate-400"
+                                       placeholder="e.g. Your subscription is expiring soon!">
+                            </div>
+                            <div>
+                                <label class="block text-xs font-semibold text-slate-600 mb-1.5">Warning Expires At</label>
+                                <input type="datetime-local" name="alert_expires_at"
+                                       class="w-full border border-orange-200 bg-white rounded-xl px-4 py-3 text-slate-800 text-sm focus:outline-none focus:ring-2 focus:ring-orange-400/20 focus:border-orange-400 transition-all">
+                            </div>
                         </div>
                     </div>
-                </div>
 
-                {{-- Admin Account --}}
-                <div class="px-5 py-4 border-t border-slate-100 bg-slate-50/60">
-                    <p class="text-xs font-bold text-emerald-600 uppercase tracking-widest mb-3">Administrator Account</p>
-                    <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
-                        <div>
-                            <label class="block text-xs font-semibold text-slate-600 mb-1">Admin Name</label>
-                            <input type="text" name="admin_name"
-                                   class="w-full border border-slate-200 bg-white rounded-lg px-3 py-2.5 text-slate-800 text-sm focus:outline-none focus:ring-2 focus:ring-emerald-500/25 focus:border-emerald-400 transition-all"
-                                   placeholder="e.g. John Doe">
+                    {{-- Administrator Account --}}
+                    <div class="px-5 py-5 border-t border-slate-100 bg-emerald-50/30">
+                        <div class="flex items-center gap-2 mb-4">
+                            <span class="text-sm">👤</span>
+                            <p class="text-xs font-bold text-emerald-600 uppercase tracking-widest">Administrator Account</p>
                         </div>
-                        <div>
-                            <label class="block text-xs font-semibold text-slate-600 mb-1">Admin Email</label>
-                            <input type="email" name="admin_email"
-                                   class="w-full border border-slate-200 bg-white rounded-lg px-3 py-2.5 text-slate-800 text-sm focus:outline-none focus:ring-2 focus:ring-emerald-500/25 focus:border-emerald-400 transition-all"
-                                   placeholder="admin@garage.com">
-                        </div>
-                        <div class="sm:col-span-2">
-                            <label class="block text-xs font-semibold text-slate-600 mb-1">Password <span class="text-slate-400 font-normal">(min. 8 chars)</span></label>
-                            <input type="password" name="admin_password"
-                                   class="w-full border border-slate-200 bg-white rounded-lg px-3 py-2.5 text-slate-800 text-sm focus:outline-none focus:ring-2 focus:ring-emerald-500/25 focus:border-emerald-400 transition-all"
-                                   placeholder="Set a secure password">
+                        <div class="space-y-4">
+                            <div class="grid grid-cols-2 gap-3">
+                                <div>
+                                    <label class="block text-xs font-semibold text-slate-600 mb-1.5">Admin Name</label>
+                                    <input type="text" name="admin_name"
+                                           class="w-full border border-slate-200 bg-white rounded-xl px-4 py-3 text-slate-800 text-sm focus:outline-none focus:ring-2 focus:ring-emerald-500/20 focus:border-emerald-400 transition-all placeholder-slate-400"
+                                           placeholder="Full name">
+                                </div>
+                                <div>
+                                    <label class="block text-xs font-semibold text-slate-600 mb-1.5">Admin Email</label>
+                                    <input type="email" name="admin_email"
+                                           class="w-full border border-slate-200 bg-white rounded-xl px-4 py-3 text-slate-800 text-sm focus:outline-none focus:ring-2 focus:ring-emerald-500/20 focus:border-emerald-400 transition-all placeholder-slate-400"
+                                           placeholder="admin@garage.com">
+                                </div>
+                            </div>
+                            <div>
+                                <label class="block text-xs font-semibold text-slate-600 mb-1.5">Password <span class="text-slate-400 font-normal">(min. 8 characters)</span></label>
+                                <input type="password" name="admin_password"
+                                       class="w-full border border-slate-200 bg-white rounded-xl px-4 py-3 text-slate-800 text-sm focus:outline-none focus:ring-2 focus:ring-emerald-500/20 focus:border-emerald-400 transition-all placeholder-slate-400"
+                                       placeholder="Set a secure password">
+                            </div>
                         </div>
                     </div>
-                </div>
 
-                {{-- Footer Actions --}}
-                <div class="flex items-center justify-end gap-2 px-5 py-4 border-t border-slate-100">
-                    <button type="button" @click="openAddModal = false"
-                            class="px-4 py-2 text-sm font-semibold text-slate-600 bg-slate-100 hover:bg-slate-200 rounded-lg transition-colors">Cancel</button>
-                    <button type="submit"
-                            class="px-5 py-2 text-sm font-semibold text-white bg-blue-600 hover:bg-blue-700 rounded-lg transition-colors shadow-sm">
-                        + Save Garage
-                    </button>
+                </div>{{-- end overflow body --}}
+
+                {{-- Sticky Footer --}}
+                <div class="flex-shrink-0 bg-white border-t border-slate-100 flex items-center justify-between gap-3 px-5 py-4">
+                    <p class="text-xs text-slate-400"><span class="text-rose-500 font-bold">*</span> required fields</p>
+                    <div class="flex gap-2">
+                        <button type="button" @click="openAddModal = false"
+                                class="px-4 py-2.5 text-sm font-semibold text-slate-600 bg-slate-100 hover:bg-slate-200 rounded-xl transition-colors">
+                            Cancel
+                        </button>
+                        <button type="submit"
+                                class="px-6 py-2.5 text-sm font-semibold text-white bg-blue-600 hover:bg-blue-700 active:scale-95 rounded-xl transition-all shadow-sm shadow-blue-500/20">
+                            + Save Garage
+                        </button>
+                    </div>
                 </div>
             </form>
         </div>
