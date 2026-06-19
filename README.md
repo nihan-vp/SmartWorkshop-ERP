@@ -22,3 +22,41 @@ To run this application locally:
    php artisan serve
    ```
    The application will be accessible locally at `http://127.0.0.1:8000`.
+
+---
+
+## 🔐 Super Admin Credentials
+
+Login URL: `http://127.0.0.1:8000/login`
+
+### Super Admin 1
+| Field    | Value                        |
+|----------|------------------------------|
+| Name     | Suhaim Soft Super Admin      |
+| Email    | `infosuhaimsoft@gmail.com`   |
+| Password | `12345678`                   |
+
+### Super Admin 2
+| Field    | Value                        |
+|----------|------------------------------|
+| Name     | Super Admin 2                |
+| Email    | `admin2@suhaimsoft.com`      |
+| Password | `admin2@123`                 |
+
+> ⚠️ **Important:** Change these passwords in a production environment.
+
+---
+
+## 🔄 Reset Super Admin
+
+To reset or recreate a super admin account, run:
+
+```bash
+php artisan super-admin:reset
+```
+
+Or use the secure web route (requires `ADMIN_RESET_KEY` env variable):
+
+```
+http://127.0.0.1:8000/run-migrations?key=YOUR_SECRET_KEY
+```

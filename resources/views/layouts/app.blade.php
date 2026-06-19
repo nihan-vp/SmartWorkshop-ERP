@@ -42,7 +42,7 @@
     <meta property="og:url"          content="{{ $canonicalUrl }}">
     <meta property="og:title"        content="{{ $fullTitle }}">
     <meta property="og:description"  content="{{ $seoDesc }}">
-    <meta property="og:image"        content="{{ $seoImage }}">
+    @if($seoImage)<meta property="og:image"        content="{{ $seoImage }}">@endif
     <meta property="og:image:alt"    content="{{ $siteName }} Logo">
     <meta property="og:site_name"    content="{{ $siteName }}">
     <meta property="og:locale"       content="{{ $seoLocale }}">
@@ -869,7 +869,9 @@
                     <div class="flex items-center gap-3">
                         <svg class="w-5 h-5 text-amber-600 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"/></svg>
                         <p class="text-sm font-semibold text-amber-800">
-                            {{ $isTraining ? 'Training' : 'Trial' }} Status: <span class="font-bold">{{ $daysLeftDisplay == 0 ? 'Expires Today' : $daysLeftDisplay . ' ' . ($daysLeftDisplay === 1 ? 'day' : 'days') . ' remaining' }}</span> <span class="text-xs text-amber-700 font-medium ml-1">(Expires: {{ $trialEnds->format('d M Y, h:i A') }})</span>
+                            {{ $isTraining ? 'Training' : 'Trial' }} Status:
+                            <span id="trial-countdown" class="font-bold">Loading...</span>
+                            <span class="text-xs text-amber-700 font-medium ml-1">(Expires: <span id="trial-expiry-display"></span>)</span>
                             @if($workshop->isTrialExpired() && $workshop->restrict_features_on_expiry)
                                 <span class="ml-2 text-rose-700 bg-rose-100/80 px-2 py-0.5 rounded border border-rose-200 text-xs font-bold whitespace-nowrap">Write actions restricted</span>
                             @endif
@@ -881,38 +883,269 @@
                 </div>
             </div>
 
-            {{-- Activation Modal (Admin Side) --}}
-            <div x-show="openLicenseActivationModal" x-cloak class="fixed inset-0 z-[100] flex items-end sm:items-center justify-center p-0 sm:p-4" style="display:none;" role="dialog">
-                <div class="absolute inset-0" style="background: rgba(15,23,42,0.6); backdrop-filter: blur(4px);" @click="openLicenseActivationModal = false"></div>
-                <div class="relative bg-white w-full sm:rounded-3xl sm:max-w-md shadow-2xl flex flex-col overflow-hidden z-10 rounded-t-3xl border border-slate-100">
-                    <div class="h-1 bg-gradient-to-r from-blue-600 via-blue-500 to-sky-400"></div>
-                    <div class="p-6">
-                        <div class="flex justify-between items-start mb-4">
-                            <div>
-                                <h3 class="text-lg font-bold text-slate-900">Activate License</h3>
-                                <p class="text-xs text-slate-500 mt-1">Redeem your product key to activate or extend subscription</p>
+            <script>
+            (function() {
+                // Expiry from server — ISO string in UTC
+                var expiryISO = '{{ $trialEnds->toIso8601String() }}';
+                var expiryDate = new Date(expiryISO);
+                var isTraining = {{ $isTraining ? 'true' : 'false' }};
+                var label = isTraining ? 'Training' : 'Trial';
+
+                function pad(n) { return String(n).padStart(2, '0'); }
+
+                // Format expiry as local time
+                function formatExpiry(d) {
+                    var months = ['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'];
+                    var h = d.getHours();
+                    var ampm = h >= 12 ? 'PM' : 'AM';
+                    h = h % 12 || 12;
+                    return pad(d.getDate()) + ' ' + months[d.getMonth()] + ' ' + d.getFullYear() +
+                           ', ' + h + ':' + pad(d.getMinutes()) + ' ' + ampm;
+                }
+
+                var expiryEl   = document.getElementById('trial-expiry-display');
+                var countdownEl = document.getElementById('trial-countdown');
+
+                if (expiryEl) expiryEl.textContent = formatExpiry(expiryDate);
+
+                function updateCountdown() {
+                    var now  = new Date();
+                    var diff = expiryDate - now; // ms
+
+                    if (!countdownEl) return;
+
+                    if (diff <= 0) {
+                        countdownEl.textContent = 'Expired';
+                        countdownEl.style.color = '#be123c';
+                        return;
+                    }
+
+                    var totalSecs = Math.floor(diff / 1000);
+                    var days  = Math.floor(totalSecs / 86400);
+                    var hours = Math.floor((totalSecs % 86400) / 3600);
+                    var mins  = Math.floor((totalSecs % 3600) / 60);
+                    var secs  = totalSecs % 60;
+
+                    var text;
+                    if (days > 1) {
+                        text = days + ' day' + (days !== 1 ? 's' : '') + ' ' + pad(hours) + 'h ' + pad(mins) + 'm remaining';
+                    } else if (days === 1) {
+                        text = '1 day ' + pad(hours) + 'h ' + pad(mins) + 'm remaining';
+                    } else if (hours > 0) {
+                        text = pad(hours) + 'h ' + pad(mins) + 'm ' + pad(secs) + 's remaining';
+                    } else {
+                        text = pad(mins) + 'm ' + pad(secs) + 's remaining';
+                        countdownEl.style.color = '#dc2626'; // urgent red
+                    }
+
+                    countdownEl.textContent = text;
+                }
+
+                updateCountdown();
+                setInterval(updateCountdown, 1000);
+            })();
+            </script>
+
+            {{-- ══ Activation Modal (Admin Side) — New UI ══ --}}
+            <div x-show="openLicenseActivationModal" x-cloak
+                 class="fixed inset-0 z-[100] flex items-end sm:items-center justify-center p-0 sm:p-4"
+                 style="display:none;" role="dialog" aria-modal="true"
+                 x-transition:enter="transition ease-out duration-200"
+                 x-transition:enter-start="opacity-0"
+                 x-transition:enter-end="opacity-100"
+                 x-transition:leave="transition ease-in duration-150"
+                 x-transition:leave-start="opacity-100"
+                 x-transition:leave-end="opacity-0">
+
+                {{-- Backdrop --}}
+                <div class="absolute inset-0" style="background:rgba(2,6,23,0.55);backdrop-filter:blur(6px);"
+                     @click="openLicenseActivationModal = false"></div>
+
+                {{-- Card --}}
+                <div class="relative w-full sm:max-w-sm z-10 rounded-t-3xl sm:rounded-3xl overflow-hidden shadow-2xl"
+                     style="background:#fff;"
+                     x-transition:enter="transition ease-out duration-250 transform"
+                     x-transition:enter-start="translate-y-8 sm:translate-y-0 sm:scale-95 opacity-0"
+                     x-transition:enter-end="translate-y-0 sm:scale-100 opacity-100">
+
+                    {{-- Top gradient bar --}}
+                    <div style="height:4px;background:linear-gradient(90deg,#6366f1,#2563eb,#0ea5e9);"></div>
+
+                    <div class="px-6 pt-6 pb-5">
+
+                        {{-- Header --}}
+                        <div class="flex items-start justify-between mb-5">
+                            <div class="flex items-center gap-3">
+                                <div style="width:42px;height:42px;border-radius:14px;background:linear-gradient(135deg,#ede9fe,#dbeafe);display:flex;align-items:center;justify-content:center;flex-shrink:0;">
+                                    <svg width="20" height="20" fill="none" stroke="#4f46e5" stroke-width="2" viewBox="0 0 24 24">
+                                        <path stroke-linecap="round" stroke-linejoin="round" d="M15 7a2 2 0 012 2m4 0a6 6 0 01-7.743 5.743L11 17H9v2H7v2H4a1 1 0 01-1-1v-2.586a1 1 0 01.293-.707l5.964-5.964A6 6 0 1121 9z"/>
+                                    </svg>
+                                </div>
+                                <div>
+                                    <h3 style="font-size:1rem;font-weight:800;color:#0f172a;line-height:1.2;">Activate License</h3>
+                                    <p style="font-size:0.72rem;color:#64748b;margin-top:2px;">Enter your key to unlock full access</p>
+                                </div>
                             </div>
-                            <button type="button" @click="openLicenseActivationModal = false" class="w-8 h-8 rounded-xl flex items-center justify-center text-slate-400 hover:text-slate-900 hover:bg-slate-50 transition-all">
-                                <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M6 18L18 6M6 6l12 12"/></svg>
+                            <button type="button" @click="openLicenseActivationModal = false"
+                                    style="width:32px;height:32px;border-radius:10px;display:flex;align-items:center;justify-content:center;color:#94a3b8;border:1px solid #e2e8f0;background:#fff;cursor:pointer;transition:all .15s;"
+                                    onmouseover="this.style.background='#f1f5f9';this.style.color='#0f172a';"
+                                    onmouseout="this.style.background='#fff';this.style.color='#94a3b8';">
+                                <svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12"/></svg>
                             </button>
                         </div>
-                        <form action="{{ route('activate_license') }}" method="POST" class="space-y-4">
+
+                        {{-- Form --}}
+                        <form id="licenseActivateForm" action="{{ route('activate_license') }}" method="POST" novalidate>
                             @csrf
-                            <div>
-                                <label for="pop_product_key" class="block text-xs font-bold text-slate-600 mb-1.5 uppercase tracking-wide">License Key *</label>
-                                <input id="pop_product_key" type="text" name="product_key" required autocomplete="off"
-                                       class="w-full px-4 py-3 bg-slate-50 border border-slate-200 rounded-xl text-sm font-extrabold font-mono tracking-widest text-center uppercase placeholder:normal-case placeholder:tracking-normal focus:outline-none focus:border-blue-500 focus:bg-white transition-colors"
-                                       placeholder="SUHAIM-XXXX-XXXX-XXXX">
+
+                            {{-- Session error --}}
+                            @if(session('error'))
+                            <div style="background:#fef2f2;border:1px solid #fecaca;border-radius:12px;padding:10px 14px;display:flex;align-items:flex-start;gap:8px;margin-bottom:14px;">
+                                <svg width="15" height="15" fill="none" stroke="#ef4444" stroke-width="2" viewBox="0 0 24 24" style="flex-shrink:0;margin-top:1px;"><path stroke-linecap="round" stroke-linejoin="round" d="M12 8v4m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
+                                <span style="font-size:0.78rem;font-weight:600;color:#dc2626;">{{ session('error') }}</span>
                             </div>
-                            <div class="flex justify-end gap-3 pt-2">
-                                <button type="button" @click="openLicenseActivationModal = false" class="px-5 py-2.5 rounded-xl text-sm font-bold border border-slate-200 text-slate-600 hover:bg-slate-50">Cancel</button>
-                                <button type="submit" class="px-5 py-2.5 rounded-xl text-sm font-bold text-white transition-all hover:scale-105 active:scale-95 shadow-sm" style="background: linear-gradient(135deg, #1d4ed8, #2563eb);">Register System</button>
+                            @endif
+
+                            {{-- Key Input --}}
+                            <div style="margin-bottom:6px;">
+                                <label style="display:block;font-size:0.68rem;font-weight:700;color:#475569;text-transform:uppercase;letter-spacing:.08em;margin-bottom:8px;">
+                                    License Key
+                                </label>
+                                <input id="pop_product_key" type="text" name="product_key"
+                                       required autocomplete="off" spellcheck="false" maxlength="19"
+                                       placeholder="XXXX-XXXX-XXXX-XXXX"
+                                       style="width:100%;box-sizing:border-box;padding:14px 16px;background:#f8fafc;border:1.5px solid #e2e8f0;border-radius:14px;font-family:'Courier New',monospace;font-size:1.05rem;font-weight:700;letter-spacing:.15em;text-align:center;text-transform:uppercase;color:#0f172a;outline:none;transition:all .2s;"
+                                       onfocus="this.style.borderColor='#6366f1';this.style.background='#fff';this.style.boxShadow='0 0 0 4px rgba(99,102,241,0.12)';"
+                                       onblur="this.style.borderColor='#e2e8f0';this.style.background='#f8fafc';this.style.boxShadow='none';">
                             </div>
+
+                            {{-- Segment progress dots --}}
+                            <div style="display:flex;gap:6px;margin-bottom:18px;" id="popKeySegs">
+                                <div id="popSeg0" style="flex:1;height:3px;border-radius:999px;background:#e2e8f0;transition:background .25s;"></div>
+                                <div id="popSeg1" style="flex:1;height:3px;border-radius:999px;background:#e2e8f0;transition:background .25s;"></div>
+                                <div id="popSeg2" style="flex:1;height:3px;border-radius:999px;background:#e2e8f0;transition:background .25s;"></div>
+                                <div id="popSeg3" style="flex:1;height:3px;border-radius:999px;background:#e2e8f0;transition:background .25s;"></div>
+                            </div>
+
+                            {{-- Inline validation msg --}}
+                            <div id="popKeyError" style="display:none;background:#fef2f2;border:1px solid #fecaca;border-radius:10px;padding:8px 12px;font-size:0.75rem;font-weight:600;color:#dc2626;margin-bottom:14px;"></div>
+
+                            {{-- Buttons --}}
+                            <div style="display:flex;gap:10px;">
+                                <button type="button" @click="openLicenseActivationModal = false"
+                                        style="flex:1;padding:12px;border-radius:14px;border:1.5px solid #e2e8f0;background:#fff;font-size:0.875rem;font-weight:700;color:#475569;cursor:pointer;transition:all .15s;"
+                                        onmouseover="this.style.background='#f8fafc';" onmouseout="this.style.background='#fff';">
+                                    Cancel
+                                </button>
+                                <button type="submit" id="popSubmitBtn"
+                                        style="flex:2;padding:12px;border-radius:14px;border:none;background:linear-gradient(135deg,#4f46e5,#2563eb);color:#fff;font-size:0.875rem;font-weight:700;cursor:pointer;display:flex;align-items:center;justify-content:center;gap:8px;transition:all .2s;box-shadow:0 4px 14px rgba(79,70,229,0.35);"
+                                        onmouseover="this.style.transform='translateY(-1px)';this.style.boxShadow='0 6px 20px rgba(79,70,229,0.45)';"
+                                        onmouseout="this.style.transform='translateY(0)';this.style.boxShadow='0 4px 14px rgba(79,70,229,0.35)';">
+                                    <svg id="popBtnIcon" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24">
+                                        <path stroke-linecap="round" stroke-linejoin="round" d="M8 11V7a4 4 0 118 0m-4 8v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2z"/>
+                                    </svg>
+                                    <div id="popBtnSpinner" style="display:none;width:16px;height:16px;border:2.5px solid rgba(255,255,255,0.3);border-top-color:#fff;border-radius:50%;animation:popSpin .7s linear infinite;"></div>
+                                    <span id="popBtnText">Activate Now</span>
+                                </button>
+                            </div>
+
+                            {{-- Help text --}}
+                            <p style="text-align:center;font-size:0.7rem;color:#94a3b8;margin-top:14px;">
+                                Need a key? Call
+                                <a href="tel:8891479505" style="color:#6366f1;font-weight:700;text-decoration:none;">8891479505</a>
+                            </p>
                         </form>
                     </div>
                 </div>
             </div>
+
+            <style>
+            @keyframes popSpin { to { transform: rotate(360deg); } }
+            </style>
+
+            <script>
+            (function() {
+                var inp  = document.getElementById('pop_product_key');
+                var form = document.getElementById('licenseActivateForm');
+                var segs = [
+                    document.getElementById('popSeg0'),
+                    document.getElementById('popSeg1'),
+                    document.getElementById('popSeg2'),
+                    document.getElementById('popSeg3'),
+                ];
+                var errEl   = document.getElementById('popKeyError');
+                var spinner = document.getElementById('popBtnSpinner');
+                var icon    = document.getElementById('popBtnIcon');
+                var btnText = document.getElementById('popBtnText');
+                var btn     = document.getElementById('popSubmitBtn');
+
+                if (!inp) return;
+
+                // Auto-format with dashes
+                inp.addEventListener('input', function() {
+                    var raw = this.value.replace(/[^A-Za-z0-9]/g, '').toUpperCase().slice(0, 16);
+                    var fmt = '';
+                    for (var i = 0; i < raw.length; i++) {
+                        if (i > 0 && i % 4 === 0) fmt += '-';
+                        fmt += raw[i];
+                    }
+                    this.value = fmt;
+                    // Update segments
+                    segs.forEach(function(s, i) {
+                        var filled = raw.length >= (i + 1) * 4;
+                        s.style.background = filled ? 'linear-gradient(90deg,#6366f1,#2563eb)' : '#e2e8f0';
+                    });
+                    errEl.style.display = 'none';
+                    inp.style.borderColor = '#e2e8f0';
+                });
+
+                // Backspace over dashes
+                inp.addEventListener('keydown', function(e) {
+                    if (e.key === 'Backspace' && this.value.slice(-1) === '-') {
+                        e.preventDefault();
+                        this.value = this.value.slice(0, -2);
+                        this.dispatchEvent(new Event('input'));
+                    }
+                });
+
+                // Paste fix
+                inp.addEventListener('paste', function(e) {
+                    e.preventDefault();
+                    var pasted = (e.clipboardData || window.clipboardData).getData('text');
+                    var raw = pasted.replace(/[^A-Za-z0-9]/g, '').toUpperCase().slice(0, 16);
+                    var fmt = '';
+                    for (var i = 0; i < raw.length; i++) {
+                        if (i > 0 && i % 4 === 0) fmt += '-';
+                        fmt += raw[i];
+                    }
+                    this.value = fmt;
+                    this.dispatchEvent(new Event('input'));
+                });
+
+                // Submit validation
+                if (form) {
+                    form.addEventListener('submit', function(e) {
+                        var raw = inp.value.replace(/-/g, '');
+                        if (raw.length < 16) {
+                            e.preventDefault();
+                            inp.style.borderColor = '#ef4444';
+                            inp.style.boxShadow = '0 0 0 4px rgba(239,68,68,0.1)';
+                            errEl.textContent = 'Please enter a complete 16-character license key.';
+                            errEl.style.display = 'block';
+                            inp.focus();
+                            return;
+                        }
+                        // Loading state
+                        btn.disabled = true;
+                        spinner.style.display = 'block';
+                        icon.style.display = 'none';
+                        btnText.textContent = 'Activating…';
+                    });
+                }
+            })();
+            </script>
         </div>
+
         @endif
         
         @php
@@ -1061,8 +1294,7 @@
                 if (!deferredAppPrompt) return;
                 // Show prompt
                 deferredAppPrompt.prompt();
-                const { outcome } = await deferredAppPrompt.userChoice;
-                console.log(`PWA installation outcome: ${outcome}`);
+                await deferredAppPrompt.userChoice;
                 // Discard prompt
                 deferredAppPrompt = null;
                 // Hide button
@@ -1072,8 +1304,7 @@
             });
         }
 
-        window.addEventListener('appinstalled', (evt) => {
-            console.log('PWA app installed successfully');
+        window.addEventListener('appinstalled', () => {
             deferredAppPrompt = null;
             if (installAppContainer) {
                 installAppContainer.classList.add('hidden');

@@ -480,21 +480,21 @@
              x-transition:enter="transition ease-out duration-200 transform" x-transition:enter-start="translate-y-4 sm:scale-95" x-transition:enter-end="translate-y-0 sm:scale-100">
 
             {{-- Header --}}
-            <div class="flex items-center justify-between px-5 py-4 border-b border-slate-100">
+            <div class="flex-shrink-0 flex items-center justify-between px-5 py-4 border-b border-slate-100">
                 <div class="flex items-center gap-3">
                     <div class="w-9 h-9 bg-amber-50 rounded-xl flex items-center justify-center">
                         <svg class="w-5 h-5 text-amber-500" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z"/></svg>
                     </div>
                     <div>
-                        <h3 class="text-base font-bold text-slate-900" x-text="'Edit: ' + activeWorkshop.name">Edit Garage</h3>
+                        <h3 class="text-base font-bold text-slate-900" x-text="'Edit: ' + (activeWorkshop.name || 'Garage')">Edit Garage</h3>
                         <p class="text-xs text-slate-400">Update details &amp; admin access</p>
                     </div>
                 </div>
                 <button @click="openEditModal = false" class="w-8 h-8 flex items-center justify-center rounded-lg text-slate-400 hover:text-slate-700 hover:bg-slate-100 transition-colors text-lg leading-none">&times;</button>
             </div>
 
-            {{-- Scrollable Body --}}
-            <form :action="`/super-admin/workshops/${activeWorkshop.id}`" method="POST" class="flex-1 overflow-y-auto" x-show="activeWorkshop.id">
+            {{-- Scrollable Body — form always visible, no x-show --}}
+            <form :action="`/super-admin/workshops/${activeWorkshop.id}`" method="POST" class="flex-1 overflow-y-auto min-h-0">
                 @csrf @method('PUT')
                 <input type="hidden" name="admin_user_id" x-model="activeWorkshop.admin_user_id">
 
@@ -571,7 +571,7 @@
                 </div>
 
                 {{-- Footer Actions --}}
-                <div class="flex items-center justify-end gap-2 px-5 py-4 border-t border-slate-100">
+                <div class="flex-shrink-0 flex items-center justify-end gap-2 px-5 py-4 border-t border-slate-100 bg-white">
                     <button type="button" @click="openEditModal = false"
                             class="px-4 py-2 text-sm font-semibold text-slate-600 bg-slate-100 hover:bg-slate-200 rounded-lg transition-colors">Cancel</button>
                     <button type="submit"
@@ -582,8 +582,8 @@
             </form>
         </div>
     </div>
-
     {{-- Generate Keys Modal --}}
+
     <div x-show="openGenerateKeysModal" x-cloak class="fixed inset-0 z-50 flex items-center justify-center p-4 bg-slate-900/40 backdrop-blur-sm"
          x-transition:enter="transition ease-out duration-300" x-transition:enter-start="opacity-0" x-transition:enter-end="opacity-100"
          x-transition:leave="transition ease-in duration-200" x-transition:leave-start="opacity-100" x-transition:leave-end="opacity-0">
@@ -695,6 +695,25 @@
 </div>
 
 <script>
+// ── Helper: Get current local datetime in 'YYYY-MM-DDTHH:mm' format for datetime-local inputs
+function localNow() {
+    const d = new Date();
+    const pad = n => String(n).padStart(2, '0');
+    return `${d.getFullYear()}-${pad(d.getMonth()+1)}-${pad(d.getDate())}T${pad(d.getHours())}:${pad(d.getMinutes())}`;
+}
+
+// ── Helper: Fix a datetime-local value — if time is 00:00 (midnight / 12:00 AM bug), replace with current time
+function fixDatetime(val) {
+    if (!val) return '';
+    // val is like '2026-06-20T00:00' — if time is exactly 00:00 replace it with current time
+    if (val.endsWith('T00:00') || val.endsWith('T00:0')) {
+        const now = new Date();
+        const pad = n => String(n).padStart(2, '0');
+        return val.replace(/T\d{2}:\d{2}$/, `T${pad(now.getHours())}:${pad(now.getMinutes())}`);
+    }
+    return val;
+}
+
 document.addEventListener('alpine:init', () => {
     Alpine.data('workshopAdminPanel', () => ({
         activeTab: new URLSearchParams(window.location.search).get('tab') || 'dashboard',
@@ -710,19 +729,35 @@ document.addEventListener('alpine:init', () => {
 
         openAdd() {
             this.openAddModal = true;
+            // ── Auto-fill date inputs with current local time so they never default to 12:00 AM
+            this.$nextTick(() => {
+                const now = localNow();
+                const trialInput = document.querySelector('[x-show="openAddModal"] input[name="trial_ends_at"]');
+                const alertInput = document.querySelector('[x-show="openAddModal"] input[name="alert_expires_at"]');
+                if (trialInput && !trialInput.value) trialInput.value = now;
+                if (alertInput && !alertInput.value) alertInput.value = now;
+            });
         },
+
         openEditKeyModalFn(keyObj) {
             this.activeKey = { ...keyObj };
             this.openEditKeyModal = true;
         },
+
         openEdit(workshop) {
-            this.activeWorkshop = { ...workshop };
+            const w = { ...workshop };
+            // ── Fix 12:00 AM (00:00) bug: replace midnight time with current local time
+            w.trial_ends_at   = fixDatetime(w.trial_ends_at);
+            w.alert_expires_at = fixDatetime(w.alert_expires_at);
+            this.activeWorkshop = w;
             this.openEditModal = true;
         },
+
         openActivateModal(workshop) {
             this.activeWorkshopToActivate = { ...workshop };
             this.openActivateLicenseModal = true;
         },
+
         matchesWorkshopSearch(name, phone, email, adminName, adminEmail) {
             if (!this.searchWorkshopQuery) return true;
             let q = this.searchWorkshopQuery.toLowerCase();
