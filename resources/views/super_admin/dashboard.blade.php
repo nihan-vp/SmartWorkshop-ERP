@@ -388,10 +388,8 @@
                         <option value="365">365 Days</option>
                     </select>
                 </div>
-                <div>
-                    <label class="block text-xs font-semibold mb-1">Quantity</label>
-                    <input type="number" name="quantity" value="5" min="1" max="100" class="w-full border rounded p-2 text-sm">
-                </div>
+                <!-- Quantity fixed to 1 -->
+                <input type="hidden" name="quantity" value="1">
                 <div class="flex justify-end gap-2">
                     <button type="button" @click="openGenerateKeysModal = false" class="px-4 py-2 border rounded text-sm font-semibold">Cancel</button>
                     <button type="submit" class="px-4 py-2 bg-emerald-600 text-white rounded text-sm font-semibold">Generate</button>
