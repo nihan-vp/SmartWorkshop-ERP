@@ -336,74 +336,70 @@
                 @endif
             </div>
 
-        </div>
-    <!-- Bottom Widgets (Moved from Right Sidebar) -->
-    <div class="lg:col-span-12 grid grid-cols-1 md:grid-cols-2 gap-5 mt-2">
-        @if($workshop)
-        <div class="glass-card" x-data="subscriptionManager({
-            status: '{{ $workshop ? $workshop->subscription_status : 'N/A' }}',
-            expiry: '{{ $workshop && $workshop->trial_ends_at ? $workshop->trial_ends_at->format('d M Y, h:i A') : 'Never (Lifetime)' }}',
-            daysRemaining: {{ $workshop && $workshop->trial_ends_at ? $workshop->getTrialDaysRemaining() : 0 }},
-            totalDuration: {{ $workshop && $workshop->trial_ends_at ? $workshop->getTotalDurationDays() : 0 }},
-            subscriptionDay: {{ $workshop ? $workshop->getSubscriptionDay() : 0 }},
-            isExpired: {{ $workshop && $workshop->trial_ends_at && $workshop->isTrialExpired() ? 'true' : 'false' }},
-            hasExpiry: {{ $workshop && $workshop->trial_ends_at ? 'true' : 'false' }},
-            keys: [
-                @if($workshop)
-                    @foreach($workshop->productKeys()->orderBy('used_at', 'desc')->get() as $key)
-                        @php
-                            $parts = explode('-', $key->key);
-                            $masked = (count($parts) >= 3) ? ($parts[0] . '-XXXX-XXXX-' . end($parts)) : (substr($key->key, 0, 8) . '...');
-                        @endphp
-                        {
-                            key: '{{ $masked }}',
-                            duration: {{ $key->duration_days }},
-                            used_at: '{{ $key->used_at ? $key->used_at->format('d M Y, h:i A') : $key->updated_at->format('d M Y, h:i A') }}'
-                        },
-                    @endforeach
-                @endif
-            ]
-        })">
-            <h3 class="text-sm font-bold text-slate-900 uppercase tracking-wider mb-4 flex items-center justify-between">
-                <span>Subscription &amp; Trial</span>
-                <span class="badge uppercase text-[10px]" :class="status === 'active' || status === 'fix' || status === 'fixed' ? 'badge-success' : 'badge-danger'" x-text="status"></span>
-            </h3>
-            <div class="space-y-3">
-                @if($workshop)
-                    <div class="flex justify-between items-center text-xs pb-1.5 border-b border-slate-100">
-                        <span class="text-slate-500 font-semibold">Account Status</span>
-                        <span class="font-bold uppercase tracking-wider text-xs" :class="status === 'active' || status === 'fix' || status === 'fixed' ? 'text-emerald-600' : 'text-rose-600'" x-text="status"></span>
-                    </div>
+            <!-- Subscription & Trial (Moved back to Right Sidebar) -->
+            @if($workshop)
+            <div class="glass-card" x-data="subscriptionManager({
+                status: '{{ $workshop ? $workshop->subscription_status : 'N/A' }}',
+                expiry: '{{ $workshop && $workshop->trial_ends_at ? $workshop->trial_ends_at->format('d M Y, h:i A') : 'Never (Lifetime)' }}',
+                daysRemaining: {{ $workshop && $workshop->trial_ends_at ? $workshop->getTrialDaysRemaining() : 0 }},
+                totalDuration: {{ $workshop && $workshop->trial_ends_at ? $workshop->getTotalDurationDays() : 0 }},
+                subscriptionDay: {{ $workshop ? $workshop->getSubscriptionDay() : 0 }},
+                isExpired: {{ $workshop && $workshop->trial_ends_at && $workshop->isTrialExpired() ? 'true' : 'false' }},
+                hasExpiry: {{ $workshop && $workshop->trial_ends_at ? 'true' : 'false' }},
+                keys: [
+                    @if($workshop)
+                        @foreach($workshop->productKeys()->orderBy('used_at', 'desc')->get() as $key)
+                            @php
+                                $parts = explode('-', $key->key);
+                                $masked = (count($parts) >= 3) ? ($parts[0] . '-XXXX-XXXX-' . end($parts)) : (substr($key->key, 0, 8) . '...');
+                            @endphp
+                            {
+                                key: '{{ $masked }}',
+                                duration: {{ $key->duration_days }},
+                                used_at: '{{ $key->used_at ? $key->used_at->format('d M Y, h:i A') : $key->updated_at->format('d M Y, h:i A') }}'
+                            },
+                        @endforeach
+                    @endif
+                ]
+            })">
+                <h3 class="text-sm font-bold text-slate-900 uppercase tracking-wider mb-4 flex items-center justify-between">
+                    <span>Subscription &amp; Trial</span>
+                    <span class="badge uppercase text-[10px]" :class="status === 'active' || status === 'fix' || status === 'fixed' ? 'badge-success' : 'badge-danger'" x-text="status"></span>
+                </h3>
+                <div class="space-y-3">
+                    @if($workshop)
+                        <div class="flex justify-between items-center text-xs pb-1.5 border-b border-slate-100">
+                            <span class="text-slate-500 font-semibold">Account Status</span>
+                            <span class="font-bold uppercase tracking-wider text-xs" :class="status === 'active' || status === 'fix' || status === 'fixed' ? 'text-emerald-600' : 'text-rose-600'" x-text="status"></span>
+                        </div>
 
-                    <div class="flex justify-between items-center text-xs pb-1.5 border-b border-slate-100">
-                        <span class="text-slate-500 font-semibold">Expiration Date</span>
-                        <span class="font-bold text-slate-700" x-text="expiry"></span>
-                    </div>
+                        <div class="flex justify-between items-center text-xs pb-1.5 border-b border-slate-100">
+                            <span class="text-slate-500 font-semibold">Expiration Date</span>
+                            <span class="font-bold text-slate-700" x-text="expiry"></span>
+                        </div>
 
-                    <div class="flex justify-between items-center text-xs pb-1.5 border-b border-slate-100">
-                        <span class="text-slate-500 font-semibold">Time Remaining</span>
-                        <span x-show="isExpired" class="text-rose-600 font-bold bg-rose-50 px-2 py-0.5 rounded border border-rose-100 animate-pulse">Expired</span>
-                        <span x-show="!isExpired" class="text-slate-700 font-bold bg-blue-50 text-blue-700 px-2 py-0.5 rounded border border-blue-100">
-                            <span x-text="hasExpiry ? daysRemaining + ' Days Left' : 'Active &amp; Unlimited'"></span>
-                        </span>
-                    </div>
-                    <div class="flex justify-between items-center text-xs pb-1.5 border-b border-slate-100">
-                        <span class="text-slate-500 font-semibold">Total Duration</span>
-                        <span class="font-bold text-slate-700" x-text="totalDuration + ' Days'"></span>
-                    </div>
+                        <div class="flex justify-between items-center text-xs pb-1.5 border-b border-slate-100">
+                            <span class="text-slate-500 font-semibold">Time Remaining</span>
+                            <span x-show="isExpired" class="text-rose-600 font-bold bg-rose-50 px-2 py-0.5 rounded border border-rose-100 animate-pulse">Expired</span>
+                            <span x-show="!isExpired" class="text-slate-700 font-bold bg-blue-50 text-blue-700 px-2 py-0.5 rounded border border-blue-100">
+                                <span x-text="hasExpiry ? daysRemaining + ' Days Left' : 'Active &amp; Unlimited'"></span>
+                            </span>
+                        </div>
+                        <div class="flex justify-between items-center text-xs pb-1.5 border-b border-slate-100">
+                            <span class="text-slate-500 font-semibold">Total Duration</span>
+                            <span class="font-bold text-slate-700" x-text="totalDuration + ' Days'"></span>
+                        </div>
 
-                    <div class="flex justify-between items-center text-xs pb-1.5 border-b border-slate-100">
-                        <span class="text-slate-500 font-semibold">Operating Time</span>
-                        <span class="font-bold text-slate-700" x-text="'Day ' + subscriptionDay"></span>
-                    </div>
+                        <div class="flex justify-between items-center text-xs pb-1.5 border-b border-slate-100">
+                            <span class="text-slate-500 font-semibold">Operating Time</span>
+                            <span class="font-bold text-slate-700" x-text="'Day ' + subscriptionDay"></span>
+                        </div>
 
-                @endif
+                    @endif
+                </div>
             </div>
+            @endif
         </div>
-        @endif
-
-
-
     </div>
 </div>
 
