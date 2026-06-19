@@ -390,6 +390,24 @@
                     </div>
                 </div>
 
+                {{-- Warning Banner --}}
+                <div class="px-5 py-4 border-t border-slate-100">
+                    <p class="text-xs font-bold text-orange-500 uppercase tracking-widest mb-3">⚠ Warning Notification Banner</p>
+                    <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                        <div class="sm:col-span-2">
+                            <label class="block text-xs font-semibold text-slate-600 mb-1">Warning Message</label>
+                            <input type="text" name="alert_message"
+                                   class="w-full border border-slate-200 bg-slate-50 rounded-lg px-3 py-2.5 text-slate-800 text-sm focus:outline-none focus:ring-2 focus:ring-orange-400/25 focus:border-orange-400 focus:bg-white transition-all"
+                                   placeholder="e.g. Your subscription is expiring soon!">
+                        </div>
+                        <div class="sm:col-span-2">
+                            <label class="block text-xs font-semibold text-slate-600 mb-1">Warning Expires At</label>
+                            <input type="datetime-local" name="alert_expires_at"
+                                   class="w-full border border-slate-200 bg-slate-50 rounded-lg px-3 py-2.5 text-slate-800 text-sm focus:outline-none focus:ring-2 focus:ring-orange-400/25 focus:border-orange-400 focus:bg-white transition-all">
+                        </div>
+                    </div>
+                </div>
+
                 {{-- Admin Account --}}
                 <div class="px-5 py-4 border-t border-slate-100 bg-slate-50/60">
                     <p class="text-xs font-bold text-emerald-600 uppercase tracking-widest mb-3">Administrator Account</p>
