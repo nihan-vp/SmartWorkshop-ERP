@@ -42,9 +42,9 @@
             {{-- Developer 1 --}}
             <div class="p-4 border border-slate-200 rounded-xl bg-slate-50">
                 <p class="text-[10px] font-bold text-blue-600 uppercase tracking-wider mb-1">Developer</p>
-                <h4 class="font-bold text-slate-800">Shahil T</h4>
-                <p class="text-sm text-slate-600 mt-1">Phone: <span class="font-medium text-slate-800 block sm:inline">+91 92074 01977</span></p>
-                <p class="text-sm text-slate-600">Email: <span class="font-medium text-slate-800 block sm:inline break-all sm:break-normal">shahilt@suhaimsoft.com</span></p>
+                <h4 class="font-bold text-slate-800">nihan</h4>
+                <p class="text-sm text-slate-600 mt-1">Phone: <span class="font-medium text-slate-800 block sm:inline">+91 77367 08566</span></p>
+                <p class="text-sm text-slate-600">Email: <span class="font-medium text-slate-800 block sm:inline break-all sm:break-normal">alivp@gmail.com</span></p>
             </div>
 
             {{-- Developer 2 --}}

@@ -501,7 +501,7 @@
                     </div>
                     <div>
                         <div class="text-label">Developer Support</div>
-                        <div class="text-name">Suhaim Soft &amp; Shahil T Support</div>
+                        <div class="text-name">Suhaim Soft &amp; nihan Support</div>
                     </div>
                     <div class="arrow">
                         <svg width="13" height="13" fill="none" stroke="#fff" stroke-width="2.5" viewBox="0 0 24 24"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
