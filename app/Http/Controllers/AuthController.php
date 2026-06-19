@@ -13,10 +13,8 @@ class AuthController extends Controller
     {
         try {
             if (Auth::check()) {
-                // Super admins are not accessible via the public login page
                 if (Auth::user()->isSuperAdmin()) {
-                    Auth::logout();
-                    return redirect()->route('login');
+                    return redirect()->route('super_admin.dashboard');
                 }
                 return redirect()->route('dashboard');
             }
@@ -35,14 +33,6 @@ class AuthController extends Controller
 
         try {
             if (Auth::attempt($credentials, $request->boolean('remember'))) {
-                // Super admin accounts cannot log in via the public login page
-                if (Auth::user()->isSuperAdmin()) {
-                    Auth::logout();
-                    return back()->withErrors([
-                        'email' => 'The provided credentials do not match our records.',
-                    ])->onlyInput('email');
-                }
-
                 $request->session()->regenerate();
 
                 // Clean up impersonation session if logging in fresh
@@ -53,6 +43,10 @@ class AuthController extends Controller
                 // Store in cookie (valid for 24 hours) and session
                 cookie()->queue('jwt_token', $token, 1440, null, null, false, true);
                 $request->session()->put('jwt_token', $token);
+
+                if (Auth::user()->isSuperAdmin()) {
+                    return redirect()->route('super_admin.dashboard')->with('success', 'Logged in to Super Admin Panel!');
+                }
 
                 return redirect()->intended('/dashboard')->with('success', 'Logged in successfully!');
             }
