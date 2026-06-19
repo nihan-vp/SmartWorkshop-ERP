@@ -189,7 +189,7 @@
                                 </td>
                                 <td class="px-4 py-3 text-right space-x-2">
                                     <button @click="openActivateModal(@js(['id'=>$workshop->id,'name'=>$workshop->name]))" class="text-emerald-600 hover:underline text-xs font-semibold">License</button>
-                                    <button @click="openEdit(@js(['id'=>$workshop->id,'name'=>$workshop->name,'phone'=>$workshop->phone,'email'=>$workshop->email,'gstin'=>$workshop->gstin,'address'=>$workshop->address,'subscription_status'=>$workshop->subscription_status,'trial_ends_at'=>$workshop->trial_ends_at?$workshop->trial_ends_at->format('Y-m-d\TH:i'):'','admin_user_id'=>$workshop->users->first()?->id,'admin_name'=>$workshop->users->first()?->name,'admin_email'=>$workshop->users->first()?->email]))" class="text-slate-600 hover:underline text-xs font-semibold">Edit</button>
+                                    <button @click="openEdit(@js(['id'=>$workshop->id,'name'=>$workshop->name,'phone'=>$workshop->phone,'email'=>$workshop->email,'gstin'=>$workshop->gstin,'address'=>$workshop->address,'subscription_status'=>$workshop->subscription_status,'trial_ends_at'=>$workshop->trial_ends_at?$workshop->trial_ends_at->format('Y-m-d\TH:i'):'','alert_message'=>$workshop->alert_message,'alert_expires_at'=>$workshop->alert_expires_at?$workshop->alert_expires_at->format('Y-m-d\TH:i'):'','admin_user_id'=>$workshop->users->first()?->id,'admin_name'=>$workshop->users->first()?->name,'admin_email'=>$workshop->users->first()?->email]))" class="text-slate-600 hover:underline text-xs font-semibold">Edit</button>
                                 </td>
                             </tr>
                             @empty
@@ -376,10 +376,24 @@
                         <label class="block text-xs font-semibold mb-1">Status *</label>
                         <select name="subscription_status" x-model="activeWorkshop.subscription_status" class="w-full border rounded p-2 text-sm">
                             <option value="training">Training</option>
+                            <option value="trial">Trial</option>
                             <option value="active">Active</option>
                             <option value="suspended">Suspended</option>
                             <option value="fix">Fix</option>
                         </select>
+                    </div>
+                    <div>
+                        <label class="block text-xs font-semibold mb-1">Training/Trial Ends At</label>
+                        <input type="datetime-local" name="trial_ends_at" x-model="activeWorkshop.trial_ends_at" class="w-full border rounded p-2 text-sm">
+                    </div>
+                    <div class="sm:col-span-2 font-semibold text-slate-700 border-b pb-1 mt-2">Warning Popup System</div>
+                    <div>
+                        <label class="block text-xs font-semibold mb-1">Warning Message</label>
+                        <input type="text" name="alert_message" x-model="activeWorkshop.alert_message" placeholder="e.g. Your training period ends soon!" class="w-full border rounded p-2 text-sm">
+                    </div>
+                    <div>
+                        <label class="block text-xs font-semibold mb-1">Warning Expires At</label>
+                        <input type="datetime-local" name="alert_expires_at" x-model="activeWorkshop.alert_expires_at" class="w-full border rounded p-2 text-sm">
                     </div>
                     <div class="sm:col-span-2 font-semibold text-slate-700 border-b pb-1 mt-2">Admin Account</div>
                     <div><label class="block text-xs font-semibold mb-1">Admin Name</label><input type="text" name="admin_name" x-model="activeWorkshop.admin_name" class="w-full border rounded p-2 text-sm"></div>
