@@ -170,7 +170,7 @@
                             </tr>
                         </thead>
                         <tbody class="divide-y divide-slate-100">
-                            @foreach($workshops as $workshop)
+                            @forelse($workshops as $workshop)
                             <tr class="hover:bg-slate-50">
                                 <td class="px-4 py-3 font-medium text-slate-800">{{ $workshop->name }}</td>
                                 <td class="px-4 py-3 text-slate-600">{{ $workshop->phone }}<br><span class="text-xs text-slate-400">{{ $workshop->email }}</span></td>
@@ -196,7 +196,17 @@
                                     <button @click="openEdit(@js(['id'=>$workshop->id,'name'=>$workshop->name,'phone'=>$workshop->phone,'email'=>$workshop->email,'gstin'=>$workshop->gstin,'address'=>$workshop->address,'subscription_status'=>$workshop->subscription_status,'trial_ends_at'=>$workshop->trial_ends_at?$workshop->trial_ends_at->format('Y-m-d\TH:i'):'','admin_user_id'=>$workshop->users->first()?->id,'admin_name'=>$workshop->users->first()?->name,'admin_email'=>$workshop->users->first()?->email]))" class="text-slate-600 hover:underline text-xs font-semibold">Edit</button>
                                 </td>
                             </tr>
-                            @endforeach
+                            @empty
+                            <tr>
+                                <td colspan="5" class="px-4 py-12 text-center text-slate-500">
+                                    <svg class="w-12 h-12 mx-auto text-slate-300 mb-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4"/>
+                                    </svg>
+                                    <p class="font-medium text-slate-600">No garages found.</p>
+                                    <p class="text-sm mt-1">Click "+ Add Workshop" to create one.</p>
+                                </td>
+                            </tr>
+                            @endforelse
                         </tbody>
                     </table>
                 </div>
