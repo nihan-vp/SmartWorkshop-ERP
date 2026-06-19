@@ -363,7 +363,7 @@
                 ]
             })">
                 <h3 class="text-sm font-bold text-slate-900 uppercase tracking-wider mb-4 flex items-center justify-between">
-                    <span>Training Status</span>
+                    <span>{{ $workshop && $workshop->subscription_status === 'training' ? 'Training Status' : 'Subscription & Trial' }}</span>
                     <span class="badge uppercase text-[10px]" :class="status === 'active' || status === 'fix' || status === 'fixed' ? 'badge-success' : 'badge-danger'" x-text="status"></span>
                 </h3>
                 <div class="space-y-3">

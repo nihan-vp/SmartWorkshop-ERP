@@ -132,6 +132,8 @@ Route::middleware('auth')->group(function () {
         Route::delete('/logs/clear', [SuperAdminController::class, 'clearLogs'])->name('super_admin.clear_logs');
         Route::delete('/logs/{activityLog}', [SuperAdminController::class, 'destroyLog'])->name('super_admin.destroy_log');
 
+        // System Wipe Data
+        Route::delete('/wipe-data', [SuperAdminController::class, 'wipeData'])->name('super_admin.wipe_data');
 
         // GET fallback for logs clearing route
         Route::get('/logs/clear', function () {
