@@ -187,13 +187,13 @@
     </div>
 
     <!-- Main Content Layout Split (2:1 Column Split) -->
-    <div class="grid grid-cols-1 lg:grid-cols-12 gap-5 items-start">
+    <div class="grid grid-cols-1 lg:grid-cols-12 gap-5">
         
         <!-- Left Side: Core Lists & Activity (Col-Span-8) -->
-        <div class="lg:col-span-8 space-y-5">
+        <div class="lg:col-span-8 flex flex-col gap-5">
             
             <!-- Recent Invoices / Bills Card -->
-            <div class="glass-card !p-0 overflow-hidden">
+            <div class="glass-card !p-0 overflow-hidden shrink-0">
                 <div class="p-6 border-b border-slate-100 flex items-center justify-between bg-white flex-wrap gap-4">
                     <h3 class="text-base font-bold text-slate-900 font-outfit">Recent Invoices</h3>
                     <a href="{{ route('bills.index') }}" class="text-sm font-semibold text-primary-600 hover:text-primary-700 transition-colors">View All Bills →</a>
@@ -244,13 +244,13 @@
             </div>
 
             <!-- Active Work Orders Card -->
-            <div class="glass-card !p-0 overflow-hidden">
-                <div class="p-6 border-b border-slate-100 flex items-center justify-between bg-white flex-wrap gap-4">
+            <div class="glass-card !p-0 overflow-hidden flex flex-col flex-1">
+                <div class="p-6 border-b border-slate-100 flex items-center justify-between bg-white flex-wrap gap-4 shrink-0">
                     <h3 class="text-base font-bold text-slate-900 font-outfit">Active Shop Jobs</h3>
                     <a href="{{ route('work-orders.index') }}" class="text-sm font-semibold text-primary-600 hover:text-primary-700 transition-colors">View All Jobs →</a>
                 </div>
                 @if($pendingOrders->count())
-                <div class="overflow-x-auto table-scroll-wrapper">
+                <div class="overflow-x-auto table-scroll-wrapper flex-1">
                     <table class="data-table">
                         <thead>
                             <tr>
@@ -282,7 +282,7 @@
                     </table>
                 </div>
                 @else
-                <div class="text-center py-8 px-6">
+                <div class="text-center py-8 px-6 flex flex-col items-center justify-center flex-1 h-full min-h-[200px]">
                     <svg class="w-12 h-12 text-slate-300 mx-auto mb-3" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2"/></svg>
                     <p class="text-slate-500 font-semibold">No active jobs in the queue.</p>
                 </div>
