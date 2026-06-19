@@ -363,7 +363,7 @@
                 ]
             })">
                 <h3 class="text-sm font-bold text-slate-900 uppercase tracking-wider mb-4 flex items-center justify-between">
-                    <span>Subscription &amp; Trial</span>
+                    <span>Training Status</span>
                     <span class="badge uppercase text-[10px]" :class="status === 'active' || status === 'fix' || status === 'fixed' ? 'badge-success' : 'badge-danger'" x-text="status"></span>
                 </h3>
                 <div class="space-y-3">
@@ -395,7 +395,55 @@
                             <span class="font-bold text-slate-700" x-text="'Day ' + subscriptionDay"></span>
                         </div>
 
+                        <div class="mt-4 p-3 bg-red-50 border border-red-100 rounded-xl text-center text-xs">
+                            <p class="font-bold text-red-700">Please contact Suhaims Soft at 889147905 for an active key.</p>
+                        </div>
+                        
+                        <button @click="showModal = true" class="mt-3 w-full bg-primary-600 hover:bg-primary-700 text-white font-semibold py-2 px-4 rounded-xl transition-colors text-sm">
+                            Activate License
+                        </button>
                     @endif
+                </div>
+
+                <!-- Activation Modal -->
+                <div x-show="showModal" class="fixed inset-0 z-50 overflow-y-auto" style="display: none;" x-cloak>
+                    <div class="flex items-end justify-center min-h-screen pt-4 px-4 pb-20 text-center sm:block sm:p-0">
+                        <div x-show="showModal" x-transition.opacity class="fixed inset-0 transition-opacity" aria-hidden="true" @click="showModal = false">
+                            <div class="absolute inset-0 bg-slate-900 opacity-75"></div>
+                        </div>
+                        <span class="hidden sm:inline-block sm:align-middle sm:h-screen" aria-hidden="true">&#8203;</span>
+                        <div x-show="showModal" x-transition class="inline-block align-bottom bg-white rounded-2xl text-left overflow-hidden shadow-xl transform transition-all sm:my-8 sm:align-middle sm:max-w-lg sm:w-full">
+                            <div class="bg-white px-4 pt-5 pb-4 sm:p-6 sm:pb-4">
+                                <div class="sm:flex sm:items-start">
+                                    <div class="mt-3 text-center sm:mt-0 sm:text-left w-full">
+                                        <h3 class="text-lg leading-6 font-bold text-slate-900 font-outfit" id="modal-title">
+                                            Activate License
+                                        </h3>
+                                        <div class="mt-2">
+                                            <p class="text-sm text-slate-500 mb-4">
+                                                Redeem your product key to activate or extend subscription
+                                            </p>
+                                            <div class="space-y-4">
+                                                <div>
+                                                    <label class="block text-sm font-semibold text-slate-700 mb-1">License Key <span class="text-rose-500">*</span></label>
+                                                    <input type="text" x-model="productKey" class="block w-full border border-slate-300 rounded-xl px-4 py-2 text-slate-900 focus:ring-primary-500 focus:border-primary-500 sm:text-sm font-mono" placeholder="XXXX-XXXX-XXXX-XXXX">
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="bg-slate-50 px-4 py-3 sm:px-6 sm:flex sm:flex-row-reverse rounded-b-2xl">
+                                <button type="button" @click="redeemKey()" :disabled="submitting || !productKey.trim()" class="w-full inline-flex justify-center rounded-xl border border-transparent shadow-sm px-4 py-2 bg-primary-600 text-base font-semibold text-white hover:bg-primary-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-primary-500 sm:ml-3 sm:w-auto sm:text-sm disabled:opacity-50 disabled:cursor-not-allowed">
+                                    <span x-show="!submitting">Activate License</span>
+                                    <span x-show="submitting">Activating...</span>
+                                </button>
+                                <button type="button" @click="showModal = false" class="mt-3 w-full inline-flex justify-center rounded-xl border border-slate-300 shadow-sm px-4 py-2 bg-white text-base font-semibold text-slate-700 hover:bg-slate-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-slate-500 sm:mt-0 sm:ml-3 sm:w-auto sm:text-sm">
+                                    Cancel
+                                </button>
+                            </div>
+                        </div>
+                    </div>
                 </div>
             </div>
             @endif
