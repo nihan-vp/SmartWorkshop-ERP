@@ -402,50 +402,6 @@
         </div>
         @endif
 
-        {{-- AI Coming Soon Card --}}
-        <div class="glass-card relative overflow-hidden border border-violet-200/60 bg-gradient-to-br from-violet-50 to-indigo-50">
-                {{-- Decorative glow --}}
-                <div class="absolute -top-8 -right-8 w-32 h-32 rounded-full bg-violet-300/30 blur-2xl pointer-events-none"></div>
-                <div class="absolute -bottom-6 -left-6 w-24 h-24 rounded-full bg-indigo-300/20 blur-xl pointer-events-none"></div>
-                
-                <div class="relative z-10">
-                    <div class="flex items-center gap-3 mb-3">
-                        <div class="w-9 h-9 rounded-xl bg-gradient-to-br from-violet-500 to-indigo-600 flex items-center justify-center shadow-md shadow-violet-200">
-                            <svg class="w-5 h-5 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9.663 17h4.673M12 3v1m6.364 1.636l-.707.707M21 12h-1M4 12H3m3.343-5.657l-.707-.707m2.828 9.9a5 5 0 117.072 0l-.548.547A3.374 3.374 0 0014 18.469V19a2 2 0 11-4 0v-.531c0-.895-.356-1.754-.988-2.386l-.548-.547z"/>
-                            </svg>
-                        </div>
-                        <div>
-                            <h3 class="text-sm font-bold text-violet-900">AI Workshop Assistant</h3>
-                            <span class="inline-flex items-center gap-1 text-[10px] font-bold uppercase tracking-widest text-violet-500 bg-violet-100 border border-violet-200 px-2 py-0.5 rounded-full">
-                                <span class="relative flex h-1.5 w-1.5">
-                                    <span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-violet-400 opacity-75"></span>
-                                    <span class="relative inline-flex rounded-full h-1.5 w-1.5 bg-violet-500"></span>
-                                </span>
-                                Coming Soon
-                            </span>
-                        </div>
-                    </div>
-                    
-                    <p class="text-xs text-violet-700/80 font-medium leading-relaxed mb-4">
-                        Your AI-powered assistant will help you generate invoices, answer customer queries, get business insights, and much more — right from your dashboard.
-                    </p>
-                    
-                    {{-- Feature previews --}}
-                    <div class="space-y-2">
-                        <div class="flex items-center gap-2 text-xs text-violet-700/70 font-medium"><span>💬</span><span>Smart invoice generation</span></div>
-                        <div class="flex items-center gap-2 text-xs text-violet-700/70 font-medium"><span>📊</span><span>Business insights &amp; reports</span></div>
-                        <div class="flex items-center gap-2 text-xs text-violet-700/70 font-medium"><span>🔧</span><span>Auto work order suggestions</span></div>
-                    </div>
-
-                    <div class="mt-4 pt-3 border-t border-violet-200/60">
-                        <button disabled class="w-full flex items-center justify-center gap-2 py-2.5 px-4 rounded-xl bg-gradient-to-r from-violet-500 to-indigo-600 text-white text-xs font-bold opacity-60 cursor-not-allowed select-none">
-                            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z"/></svg>
-                            Launch AI Assistant
-                        </button>
-                    </div>
-                </div>
-            </div>
 
 
     </div>
