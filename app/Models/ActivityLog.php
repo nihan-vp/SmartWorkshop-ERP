@@ -25,9 +25,22 @@ class ActivityLog extends Model
 
     public static function log($action, $description, $userId = null, $workshopId = null)
     {
+        $resolvedUserId = $userId ?? auth()->id();
+        if ($resolvedUserId && !\App\Models\User::where('id', $resolvedUserId)->exists()) {
+            $resolvedUserId = null;
+        }
+
+        $resolvedWorkshopId = $workshopId ?? (auth()->check() ? auth()->user()->workshop_id : null);
+        if (!$resolvedWorkshopId && session()->has('active_workshop_id')) {
+            $resolvedWorkshopId = session('active_workshop_id');
+        }
+        if ($resolvedWorkshopId && !\App\Models\Workshop::where('id', $resolvedWorkshopId)->exists()) {
+            $resolvedWorkshopId = null;
+        }
+
         self::create([
-            'user_id' => $userId ?? auth()->id(),
-            'workshop_id' => $workshopId ?? (auth()->check() ? auth()->user()->workshop_id : null),
+            'user_id' => $resolvedUserId,
+            'workshop_id' => $resolvedWorkshopId,
             'action' => $action,
             'description' => $description,
         ]);
