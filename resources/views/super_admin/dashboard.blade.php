@@ -44,6 +44,12 @@
                 <button x-show="activeTab === 'keys'" @click="openGenerateKeysModal = true" class="bg-emerald-600 hover:bg-emerald-700 text-white px-4 py-2 rounded-lg text-sm font-semibold transition-colors">
                     + Generate Keys
                 </button>
+                <form action="{{ route('super_admin.wipe_data') }}" method="POST" class="inline" onsubmit="return confirm('DANGER! Are you sure you want to completely wipe all garages, users, license keys, and business data from the system? This CANNOT be undone.');">
+                    @csrf @method('DELETE')
+                    <button type="submit" class="bg-red-600 hover:bg-red-700 text-white px-4 py-2 rounded-lg text-sm font-semibold transition-colors">
+                        Wipe All Data
+                    </button>
+                </form>
             </div>
         </div>
 
