@@ -23,6 +23,9 @@ class ProductKeyController extends Controller
         $durationDays = (int) $validated['duration_days'];
 
         DB::transaction(function () use ($quantity, $durationDays) {
+            // Delete any existing unused keys so there is only ever one unused key at a time
+            ProductKey::where('status', 'unused')->delete();
+
             for ($i = 0; $i < $quantity; $i++) {
                 $key = ProductKey::generateSecureKey();
                 ProductKey::create([
