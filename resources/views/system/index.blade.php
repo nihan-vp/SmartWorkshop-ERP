@@ -210,8 +210,8 @@
                         <span class="text-xs font-bold text-slate-900 font-mono">{{ $systemInfo['timezone'] }}</span>
                     </div>
                     <div class="flex items-center justify-between py-1.5 border-b border-slate-100/50">
-                        <span class="text-xs text-slate-500 font-medium">Database Backups Size</span>
-                        <span class="text-xs font-bold text-slate-900 font-mono">{{ $systemInfo['backup_size'] }}</span>
+                        <span class="text-xs text-slate-500 font-medium">Live Database Size</span>
+                        <span class="text-xs font-bold text-slate-900 font-mono">{{ $systemInfo['database_size'] }}</span>
                     </div>
                     <div class="flex items-center justify-between py-1.5">
                         <span class="text-xs text-slate-500 font-medium">Application Logs Size</span>

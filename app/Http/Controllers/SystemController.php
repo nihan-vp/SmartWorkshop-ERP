@@ -34,15 +34,9 @@ class SystemController extends Controller
         ];
 
         // Gather storage space metrics
-        $backupDir = storage_path('app/backups');
-        $logDir = storage_path('logs');
-
-        $backupSize = 0;
-        if (File::exists($backupDir)) {
-            foreach (File::files($backupDir) as $file) {
-                $backupSize += $file->getSize();
-            }
-        }
+        $dbName = DB::getDatabaseName();
+        $dbSizeResult = DB::select("SELECT SUM(data_length + index_length) AS size FROM information_schema.TABLES WHERE table_schema = ?", [$dbName]);
+        $databaseSize = $dbSizeResult[0]->size ?? 0;
 
         $logSize = 0;
         if (File::exists($logDir)) {
@@ -51,7 +45,7 @@ class SystemController extends Controller
             }
         }
 
-        $systemInfo['backup_size'] = $this->formatBytes($backupSize);
+        $systemInfo['database_size'] = $this->formatBytes($databaseSize);
         $systemInfo['log_size'] = $this->formatBytes($logSize);
 
         return view('system.index', compact('workshop', 'systemInfo'));
