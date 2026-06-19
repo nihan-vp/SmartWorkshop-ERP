@@ -322,154 +322,220 @@
     {{-- MODALS --}}
 
     {{-- Add Workshop Modal --}}
-    <div x-show="openAddModal" x-cloak class="fixed inset-0 z-50 flex items-center justify-center p-4 bg-slate-900/40 backdrop-blur-sm"
-         x-transition:enter="transition ease-out duration-300" x-transition:enter-start="opacity-0" x-transition:enter-end="opacity-100"
-         x-transition:leave="transition ease-in duration-200" x-transition:leave-start="opacity-100" x-transition:leave-end="opacity-0">
-        <div class="bg-white rounded-2xl shadow-xl w-full max-w-2xl max-h-[90vh] overflow-hidden flex flex-col border border-slate-100"
-             x-show="openAddModal" x-transition:enter="transition ease-out duration-300 transform" x-transition:enter-start="scale-95 translate-y-4" x-transition:enter-end="scale-100 translate-y-0">
-            <div class="p-6 border-b border-slate-100 flex justify-between items-center bg-slate-50/50">
-                <div>
-                    <h3 class="text-lg font-bold text-slate-900 font-outfit">Add New Garage</h3>
-                    <p class="text-xs text-slate-500 mt-0.5">Register a new workshop and set up its administrator account.</p>
-                </div>
-                <button @click="openAddModal = false" class="text-slate-400 hover:text-slate-600 bg-white hover:bg-slate-100 p-1.5 rounded-lg border border-slate-200 transition-colors">&times;</button>
-            </div>
-            <form action="{{ route('super_admin.store_workshop') }}" method="POST" class="flex-1 overflow-y-auto p-6 space-y-6">
-                @csrf
-                <div class="grid grid-cols-1 sm:grid-cols-2 gap-5">
-                    <div class="sm:col-span-2 font-bold text-slate-900 text-sm border-b border-slate-100 pb-2">Garage Details</div>
-                    <div>
-                        <label class="block text-xs font-bold text-slate-500 uppercase tracking-wider mb-1.5">Garage Name <span class="text-rose-500">*</span></label>
-                        <input type="text" name="name" required class="w-full border border-slate-200 rounded-xl px-3 py-2 text-slate-800 focus:outline-none focus:ring-2 focus:ring-blue-500/20 focus:border-blue-500 text-sm transition-all" placeholder="e.g. Suhaim Soft Garage">
-                    </div>
-                    <div>
-                        <label class="block text-xs font-bold text-slate-500 uppercase tracking-wider mb-1.5">Phone Number <span class="text-rose-500">*</span></label>
-                        <input type="text" name="phone" required class="w-full border border-slate-200 rounded-xl px-3 py-2 text-slate-800 focus:outline-none focus:ring-2 focus:ring-blue-500/20 focus:border-blue-500 text-sm transition-all" placeholder="e.g. 08891479505">
-                    </div>
-                    <div>
-                        <label class="block text-xs font-bold text-slate-500 uppercase tracking-wider mb-1.5">Email Address</label>
-                        <input type="email" name="email" class="w-full border border-slate-200 rounded-xl px-3 py-2 text-slate-800 focus:outline-none focus:ring-2 focus:ring-blue-500/20 focus:border-blue-500 text-sm transition-all" placeholder="e.g. info@garage.com">
-                    </div>
-                    <div>
-                        <label class="block text-xs font-bold text-slate-500 uppercase tracking-wider mb-1.5">Initial Status <span class="text-rose-500">*</span></label>
-                        <select name="subscription_status" class="w-full border border-slate-200 rounded-xl px-3 py-2 text-slate-800 focus:outline-none focus:ring-2 focus:ring-blue-500/20 focus:border-blue-500 text-sm transition-all bg-white cursor-pointer">
-                            <option value="training">Training</option>
-                            <option value="trial">Trial</option>
-                            <option value="active">Active</option>
-                            <option value="suspended">Suspended</option>
-                            <option value="fix">Fix</option>
-                        </select>
-                    </div>
-                    <div class="sm:col-span-2">
-                        <label class="block text-xs font-bold text-slate-500 uppercase tracking-wider mb-1.5">Training / Trial Ends At</label>
-                        <input type="datetime-local" name="trial_ends_at" class="w-full border border-slate-200 rounded-xl px-3 py-2 text-slate-800 focus:outline-none focus:ring-2 focus:ring-blue-500/20 focus:border-blue-500 text-sm transition-all">
-                    </div>
+    <div x-show="openAddModal" x-cloak
+         class="fixed inset-0 z-50 flex items-end sm:items-center justify-center p-0 sm:p-4 bg-slate-900/50 backdrop-blur-sm"
+         x-transition:enter="transition ease-out duration-200" x-transition:enter-start="opacity-0" x-transition:enter-end="opacity-100"
+         x-transition:leave="transition ease-in duration-150" x-transition:leave-start="opacity-100" x-transition:leave-end="opacity-0"
+         @click.self="openAddModal = false">
+        <div class="bg-white w-full sm:rounded-2xl sm:max-w-lg max-h-[95vh] flex flex-col rounded-t-2xl shadow-2xl"
+             x-transition:enter="transition ease-out duration-200 transform" x-transition:enter-start="translate-y-4 sm:scale-95" x-transition:enter-end="translate-y-0 sm:scale-100">
 
-                    <div class="sm:col-span-2 font-bold text-slate-900 text-sm border-b border-slate-100 pb-2 mt-2">Warning Notification Banner</div>
-                    <div>
-                        <label class="block text-xs font-bold text-slate-500 uppercase tracking-wider mb-1.5">Warning Message</label>
-                        <input type="text" name="alert_message" placeholder="e.g. Your subscription is expiring soon!" class="w-full border border-slate-200 rounded-xl px-3 py-2 text-slate-800 focus:outline-none focus:ring-2 focus:ring-blue-500/20 focus:border-blue-500 text-sm transition-all">
+            {{-- Header --}}
+            <div class="flex items-center justify-between px-5 py-4 border-b border-slate-100">
+                <div class="flex items-center gap-3">
+                    <div class="w-9 h-9 bg-blue-50 rounded-xl flex items-center justify-center">
+                        <svg class="w-5 h-5 text-blue-600" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4"/></svg>
                     </div>
                     <div>
-                        <label class="block text-xs font-bold text-slate-500 uppercase tracking-wider mb-1.5">Warning Expires At</label>
-                        <input type="datetime-local" name="alert_expires_at" class="w-full border border-slate-200 rounded-xl px-3 py-2 text-slate-800 focus:outline-none focus:ring-2 focus:ring-blue-500/20 focus:border-blue-500 text-sm transition-all">
-                    </div>
-                    
-                    <div class="sm:col-span-2 font-bold text-slate-900 text-sm border-b border-slate-100 pb-2 mt-2">Administrator Account</div>
-                    <div>
-                        <label class="block text-xs font-bold text-slate-500 uppercase tracking-wider mb-1.5">Admin Name</label>
-                        <input type="text" name="admin_name" class="w-full border border-slate-200 rounded-xl px-3 py-2 text-slate-800 focus:outline-none focus:ring-2 focus:ring-blue-500/20 focus:border-blue-500 text-sm transition-all" placeholder="e.g. John Doe">
-                    </div>
-                    <div>
-                        <label class="block text-xs font-bold text-slate-500 uppercase tracking-wider mb-1.5">Admin Email</label>
-                        <input type="email" name="admin_email" class="w-full border border-slate-200 rounded-xl px-3 py-2 text-slate-800 focus:outline-none focus:ring-2 focus:ring-blue-500/20 focus:border-blue-500 text-sm transition-all" placeholder="e.g. admin@garage.com">
-                    </div>
-                    <div class="sm:col-span-2">
-                        <label class="block text-xs font-bold text-slate-500 uppercase tracking-wider mb-1.5">Admin Password</label>
-                        <input type="password" name="admin_password" class="w-full border border-slate-200 rounded-xl px-3 py-2 text-slate-800 focus:outline-none focus:ring-2 focus:ring-blue-500/20 focus:border-blue-500 text-sm transition-all" placeholder="Enter password (minimum 8 characters)">
+                        <h3 class="text-base font-bold text-slate-900">Add New Garage</h3>
+                        <p class="text-xs text-slate-400">Register workshop &amp; admin account</p>
                     </div>
                 </div>
-                <div class="flex justify-end gap-3 pt-6 border-t border-slate-100">
-                    <button type="button" @click="openAddModal = false" class="px-4 py-2.5 border border-slate-200 hover:bg-slate-50 text-slate-700 rounded-xl text-sm font-semibold transition-colors">Cancel</button>
-                    <button type="submit" class="px-5 py-2.5 bg-blue-600 hover:bg-blue-700 text-white rounded-xl text-sm font-semibold transition-colors shadow-sm shadow-blue-500/10">Save Garage</button>
+                <button @click="openAddModal = false" class="w-8 h-8 flex items-center justify-center rounded-lg text-slate-400 hover:text-slate-700 hover:bg-slate-100 transition-colors text-lg leading-none">&times;</button>
+            </div>
+
+            {{-- Scrollable Body --}}
+            <form action="{{ route('super_admin.store_workshop') }}" method="POST" class="flex-1 overflow-y-auto">
+                @csrf
+
+                {{-- Garage Info --}}
+                <div class="px-5 pt-5 pb-4">
+                    <p class="text-xs font-bold text-blue-600 uppercase tracking-widest mb-3">Garage Details</p>
+                    <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                        <div class="sm:col-span-2">
+                            <label class="block text-xs font-semibold text-slate-600 mb-1">Garage Name <span class="text-rose-500">*</span></label>
+                            <input type="text" name="name" required
+                                   class="w-full border border-slate-200 bg-slate-50 rounded-lg px-3 py-2.5 text-slate-800 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500/25 focus:border-blue-400 focus:bg-white transition-all"
+                                   placeholder="e.g. Suhaim Auto Garage">
+                            @error('name') <p class="text-rose-500 text-xs mt-1">{{ $message }}</p> @enderror
+                        </div>
+                        <div>
+                            <label class="block text-xs font-semibold text-slate-600 mb-1">Phone <span class="text-rose-500">*</span></label>
+                            <input type="text" name="phone" required
+                                   class="w-full border border-slate-200 bg-slate-50 rounded-lg px-3 py-2.5 text-slate-800 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500/25 focus:border-blue-400 focus:bg-white transition-all"
+                                   placeholder="e.g. 9876543210">
+                        </div>
+                        <div>
+                            <label class="block text-xs font-semibold text-slate-600 mb-1">Email</label>
+                            <input type="email" name="email"
+                                   class="w-full border border-slate-200 bg-slate-50 rounded-lg px-3 py-2.5 text-slate-800 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500/25 focus:border-blue-400 focus:bg-white transition-all"
+                                   placeholder="info@garage.com">
+                        </div>
+                        <div>
+                            <label class="block text-xs font-semibold text-slate-600 mb-1">Status <span class="text-rose-500">*</span></label>
+                            <select name="subscription_status"
+                                    class="w-full border border-slate-200 bg-slate-50 rounded-lg px-3 py-2.5 text-slate-800 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500/25 focus:border-blue-400 focus:bg-white transition-all cursor-pointer">
+                                <option value="training">Training</option>
+                                <option value="trial">Trial</option>
+                                <option value="active">Active</option>
+                                <option value="suspended">Suspended</option>
+                                <option value="fix">Fix</option>
+                            </select>
+                        </div>
+                        <div>
+                            <label class="block text-xs font-semibold text-slate-600 mb-1">Trial / Training Ends At</label>
+                            <input type="datetime-local" name="trial_ends_at"
+                                   class="w-full border border-slate-200 bg-slate-50 rounded-lg px-3 py-2.5 text-slate-800 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500/25 focus:border-blue-400 focus:bg-white transition-all">
+                        </div>
+                    </div>
+                </div>
+
+                {{-- Admin Account --}}
+                <div class="px-5 py-4 border-t border-slate-100 bg-slate-50/60">
+                    <p class="text-xs font-bold text-emerald-600 uppercase tracking-widest mb-3">Administrator Account</p>
+                    <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                        <div>
+                            <label class="block text-xs font-semibold text-slate-600 mb-1">Admin Name</label>
+                            <input type="text" name="admin_name"
+                                   class="w-full border border-slate-200 bg-white rounded-lg px-3 py-2.5 text-slate-800 text-sm focus:outline-none focus:ring-2 focus:ring-emerald-500/25 focus:border-emerald-400 transition-all"
+                                   placeholder="e.g. John Doe">
+                        </div>
+                        <div>
+                            <label class="block text-xs font-semibold text-slate-600 mb-1">Admin Email</label>
+                            <input type="email" name="admin_email"
+                                   class="w-full border border-slate-200 bg-white rounded-lg px-3 py-2.5 text-slate-800 text-sm focus:outline-none focus:ring-2 focus:ring-emerald-500/25 focus:border-emerald-400 transition-all"
+                                   placeholder="admin@garage.com">
+                        </div>
+                        <div class="sm:col-span-2">
+                            <label class="block text-xs font-semibold text-slate-600 mb-1">Password <span class="text-slate-400 font-normal">(min. 8 chars)</span></label>
+                            <input type="password" name="admin_password"
+                                   class="w-full border border-slate-200 bg-white rounded-lg px-3 py-2.5 text-slate-800 text-sm focus:outline-none focus:ring-2 focus:ring-emerald-500/25 focus:border-emerald-400 transition-all"
+                                   placeholder="Set a secure password">
+                        </div>
+                    </div>
+                </div>
+
+                {{-- Footer Actions --}}
+                <div class="flex items-center justify-end gap-2 px-5 py-4 border-t border-slate-100">
+                    <button type="button" @click="openAddModal = false"
+                            class="px-4 py-2 text-sm font-semibold text-slate-600 bg-slate-100 hover:bg-slate-200 rounded-lg transition-colors">Cancel</button>
+                    <button type="submit"
+                            class="px-5 py-2 text-sm font-semibold text-white bg-blue-600 hover:bg-blue-700 rounded-lg transition-colors shadow-sm">
+                        + Save Garage
+                    </button>
                 </div>
             </form>
         </div>
     </div>
 
     {{-- Edit Workshop Modal --}}
-    <div x-show="openEditModal" x-cloak class="fixed inset-0 z-50 flex items-center justify-center p-4 bg-slate-900/40 backdrop-blur-sm"
-         x-transition:enter="transition ease-out duration-300" x-transition:enter-start="opacity-0" x-transition:enter-end="opacity-100"
-         x-transition:leave="transition ease-in duration-200" x-transition:leave-start="opacity-100" x-transition:leave-end="opacity-0">
-        <div class="bg-white rounded-2xl shadow-xl w-full max-w-2xl max-h-[90vh] overflow-hidden flex flex-col border border-slate-100"
-             x-show="openEditModal" x-transition:enter="transition ease-out duration-300 transform" x-transition:enter-start="scale-95 translate-y-4" x-transition:enter-end="scale-100 translate-y-0">
-            <div class="p-6 border-b border-slate-100 flex justify-between items-center bg-slate-50/50">
-                <div>
-                    <h3 class="text-lg font-bold text-slate-900 font-outfit">Edit Garage Settings</h3>
-                    <p class="text-xs text-slate-500 mt-0.5">Update workspace details, warnings, and administrative access.</p>
+    <div x-show="openEditModal" x-cloak
+         class="fixed inset-0 z-50 flex items-end sm:items-center justify-center p-0 sm:p-4 bg-slate-900/50 backdrop-blur-sm"
+         x-transition:enter="transition ease-out duration-200" x-transition:enter-start="opacity-0" x-transition:enter-end="opacity-100"
+         x-transition:leave="transition ease-in duration-150" x-transition:leave-start="opacity-100" x-transition:leave-end="opacity-0"
+         @click.self="openEditModal = false">
+        <div class="bg-white w-full sm:rounded-2xl sm:max-w-lg max-h-[95vh] flex flex-col rounded-t-2xl shadow-2xl"
+             x-transition:enter="transition ease-out duration-200 transform" x-transition:enter-start="translate-y-4 sm:scale-95" x-transition:enter-end="translate-y-0 sm:scale-100">
+
+            {{-- Header --}}
+            <div class="flex items-center justify-between px-5 py-4 border-b border-slate-100">
+                <div class="flex items-center gap-3">
+                    <div class="w-9 h-9 bg-amber-50 rounded-xl flex items-center justify-center">
+                        <svg class="w-5 h-5 text-amber-500" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z"/></svg>
+                    </div>
+                    <div>
+                        <h3 class="text-base font-bold text-slate-900" x-text="'Edit: ' + activeWorkshop.name">Edit Garage</h3>
+                        <p class="text-xs text-slate-400">Update details &amp; admin access</p>
+                    </div>
                 </div>
-                <button @click="openEditModal = false" class="text-slate-400 hover:text-slate-600 bg-white hover:bg-slate-100 p-1.5 rounded-lg border border-slate-200 transition-colors">&times;</button>
+                <button @click="openEditModal = false" class="w-8 h-8 flex items-center justify-center rounded-lg text-slate-400 hover:text-slate-700 hover:bg-slate-100 transition-colors text-lg leading-none">&times;</button>
             </div>
-            <form :action="`/super-admin/workshops/${activeWorkshop.id}`" method="POST" class="flex-1 overflow-y-auto p-6 space-y-6" x-show="activeWorkshop.id">
+
+            {{-- Scrollable Body --}}
+            <form :action="`/super-admin/workshops/${activeWorkshop.id}`" method="POST" class="flex-1 overflow-y-auto" x-show="activeWorkshop.id">
                 @csrf @method('PUT')
                 <input type="hidden" name="admin_user_id" x-model="activeWorkshop.admin_user_id">
-                <div class="grid grid-cols-1 sm:grid-cols-2 gap-5">
-                    
-                    <div class="sm:col-span-2 font-bold text-slate-900 text-sm border-b border-slate-100 pb-2">Garage Details</div>
-                    <div>
-                        <label class="block text-xs font-bold text-slate-500 uppercase tracking-wider mb-1.5">Garage Name <span class="text-rose-500">*</span></label>
-                        <input type="text" name="name" x-model="activeWorkshop.name" required class="w-full border border-slate-200 rounded-xl px-3 py-2 text-slate-800 focus:outline-none focus:ring-2 focus:ring-blue-500/20 focus:border-blue-500 text-sm transition-all">
-                    </div>
-                    <div>
-                        <label class="block text-xs font-bold text-slate-500 uppercase tracking-wider mb-1.5">Phone Number <span class="text-rose-500">*</span></label>
-                        <input type="text" name="phone" x-model="activeWorkshop.phone" required class="w-full border border-slate-200 rounded-xl px-3 py-2 text-slate-800 focus:outline-none focus:ring-2 focus:ring-blue-500/20 focus:border-blue-500 text-sm transition-all">
-                    </div>
-                    <div>
-                        <label class="block text-xs font-bold text-slate-500 uppercase tracking-wider mb-1.5">Email Address</label>
-                        <input type="email" name="email" x-model="activeWorkshop.email" class="w-full border border-slate-200 rounded-xl px-3 py-2 text-slate-800 focus:outline-none focus:ring-2 focus:ring-blue-500/20 focus:border-blue-500 text-sm transition-all">
-                    </div>
-                    <div>
-                        <label class="block text-xs font-bold text-slate-500 uppercase tracking-wider mb-1.5">Subscription Status <span class="text-rose-500">*</span></label>
-                        <select name="subscription_status" x-model="activeWorkshop.subscription_status" class="w-full border border-slate-200 rounded-xl px-3 py-2 text-slate-800 focus:outline-none focus:ring-2 focus:ring-blue-500/20 focus:border-blue-500 text-sm transition-all bg-white cursor-pointer">
-                            <option value="training">Training</option>
-                            <option value="trial">Trial</option>
-                            <option value="active">Active</option>
-                            <option value="suspended">Suspended</option>
-                            <option value="fix">Fix</option>
-                        </select>
-                    </div>
-                    <div class="sm:col-span-2">
-                        <label class="block text-xs font-bold text-slate-500 uppercase tracking-wider mb-1.5">Training / Trial Ends At</label>
-                        <input type="datetime-local" name="trial_ends_at" x-model="activeWorkshop.trial_ends_at" class="w-full border border-slate-200 rounded-xl px-3 py-2 text-slate-800 focus:outline-none focus:ring-2 focus:ring-blue-500/20 focus:border-blue-500 text-sm transition-all">
-                    </div>
 
-                    <div class="sm:col-span-2 font-bold text-slate-900 text-sm border-b border-slate-100 pb-2 mt-2">Warning Notification Banner</div>
-                    <div>
-                        <label class="block text-xs font-bold text-slate-500 uppercase tracking-wider mb-1.5">Warning Message</label>
-                        <input type="text" name="alert_message" x-model="activeWorkshop.alert_message" placeholder="e.g. Your subscription is expiring soon!" class="w-full border border-slate-200 rounded-xl px-3 py-2 text-slate-800 focus:outline-none focus:ring-2 focus:ring-blue-500/20 focus:border-blue-500 text-sm transition-all">
-                    </div>
-                    <div>
-                        <label class="block text-xs font-bold text-slate-500 uppercase tracking-wider mb-1.5">Warning Expires At</label>
-                        <input type="datetime-local" name="alert_expires_at" x-model="activeWorkshop.alert_expires_at" class="w-full border border-slate-200 rounded-xl px-3 py-2 text-slate-800 focus:outline-none focus:ring-2 focus:ring-blue-500/20 focus:border-blue-500 text-sm transition-all">
-                    </div>
-
-                    <div class="sm:col-span-2 font-bold text-slate-900 text-sm border-b border-slate-100 pb-2 mt-2">Administrator Access</div>
-                    <div>
-                        <label class="block text-xs font-bold text-slate-500 uppercase tracking-wider mb-1.5">Admin Name</label>
-                        <input type="text" name="admin_name" x-model="activeWorkshop.admin_name" class="w-full border border-slate-200 rounded-xl px-3 py-2 text-slate-800 focus:outline-none focus:ring-2 focus:ring-blue-500/20 focus:border-blue-500 text-sm transition-all">
-                    </div>
-                    <div>
-                        <label class="block text-xs font-bold text-slate-500 uppercase tracking-wider mb-1.5">Admin Email</label>
-                        <input type="email" name="admin_email" x-model="activeWorkshop.admin_email" class="w-full border border-slate-200 rounded-xl px-3 py-2 text-slate-800 focus:outline-none focus:ring-2 focus:ring-blue-500/20 focus:border-blue-500 text-sm transition-all">
-                    </div>
-                    <div class="sm:col-span-2">
-                        <label class="block text-xs font-bold text-slate-500 uppercase tracking-wider mb-1.5">Reset Password <span class="text-slate-400 font-normal lowercase">(leave blank to keep current)</span></label>
-                        <input type="password" name="admin_password" class="w-full border border-slate-200 rounded-xl px-3 py-2 text-slate-800 focus:outline-none focus:ring-2 focus:ring-blue-500/20 focus:border-blue-500 text-sm transition-all" placeholder="Enter new password">
+                {{-- Garage Info --}}
+                <div class="px-5 pt-5 pb-4">
+                    <p class="text-xs font-bold text-amber-500 uppercase tracking-widest mb-3">Garage Details</p>
+                    <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                        <div class="sm:col-span-2">
+                            <label class="block text-xs font-semibold text-slate-600 mb-1">Garage Name <span class="text-rose-500">*</span></label>
+                            <input type="text" name="name" x-model="activeWorkshop.name" required
+                                   class="w-full border border-slate-200 bg-slate-50 rounded-lg px-3 py-2.5 text-slate-800 text-sm focus:outline-none focus:ring-2 focus:ring-amber-400/25 focus:border-amber-400 focus:bg-white transition-all">
+                        </div>
+                        <div>
+                            <label class="block text-xs font-semibold text-slate-600 mb-1">Phone <span class="text-rose-500">*</span></label>
+                            <input type="text" name="phone" x-model="activeWorkshop.phone" required
+                                   class="w-full border border-slate-200 bg-slate-50 rounded-lg px-3 py-2.5 text-slate-800 text-sm focus:outline-none focus:ring-2 focus:ring-amber-400/25 focus:border-amber-400 focus:bg-white transition-all">
+                        </div>
+                        <div>
+                            <label class="block text-xs font-semibold text-slate-600 mb-1">Email</label>
+                            <input type="email" name="email" x-model="activeWorkshop.email"
+                                   class="w-full border border-slate-200 bg-slate-50 rounded-lg px-3 py-2.5 text-slate-800 text-sm focus:outline-none focus:ring-2 focus:ring-amber-400/25 focus:border-amber-400 focus:bg-white transition-all">
+                        </div>
+                        <div>
+                            <label class="block text-xs font-semibold text-slate-600 mb-1">Status <span class="text-rose-500">*</span></label>
+                            <select name="subscription_status" x-model="activeWorkshop.subscription_status"
+                                    class="w-full border border-slate-200 bg-slate-50 rounded-lg px-3 py-2.5 text-slate-800 text-sm focus:outline-none focus:ring-2 focus:ring-amber-400/25 focus:border-amber-400 focus:bg-white transition-all cursor-pointer">
+                                <option value="training">Training</option>
+                                <option value="trial">Trial</option>
+                                <option value="active">Active</option>
+                                <option value="suspended">Suspended</option>
+                                <option value="fix">Fix</option>
+                            </select>
+                        </div>
+                        <div>
+                            <label class="block text-xs font-semibold text-slate-600 mb-1">Trial / Training Ends At</label>
+                            <input type="datetime-local" name="trial_ends_at" x-model="activeWorkshop.trial_ends_at"
+                                   class="w-full border border-slate-200 bg-slate-50 rounded-lg px-3 py-2.5 text-slate-800 text-sm focus:outline-none focus:ring-2 focus:ring-amber-400/25 focus:border-amber-400 focus:bg-white transition-all">
+                        </div>
+                        <div>
+                            <label class="block text-xs font-semibold text-slate-600 mb-1">Warning Message</label>
+                            <input type="text" name="alert_message" x-model="activeWorkshop.alert_message"
+                                   class="w-full border border-slate-200 bg-slate-50 rounded-lg px-3 py-2.5 text-slate-800 text-sm focus:outline-none focus:ring-2 focus:ring-amber-400/25 focus:border-amber-400 focus:bg-white transition-all"
+                                   placeholder="Subscription expiring soon...">
+                        </div>
+                        <div>
+                            <label class="block text-xs font-semibold text-slate-600 mb-1">Warning Expires At</label>
+                            <input type="datetime-local" name="alert_expires_at" x-model="activeWorkshop.alert_expires_at"
+                                   class="w-full border border-slate-200 bg-slate-50 rounded-lg px-3 py-2.5 text-slate-800 text-sm focus:outline-none focus:ring-2 focus:ring-amber-400/25 focus:border-amber-400 focus:bg-white transition-all">
+                        </div>
                     </div>
                 </div>
-                <div class="flex justify-end gap-3 pt-6 border-t border-slate-100">
-                    <button type="button" @click="openEditModal = false" class="px-4 py-2.5 border border-slate-200 hover:bg-slate-50 text-slate-700 rounded-xl text-sm font-semibold transition-colors">Cancel</button>
-                    <button type="submit" class="px-5 py-2.5 bg-blue-600 hover:bg-blue-700 text-white rounded-xl text-sm font-semibold transition-colors shadow-sm shadow-blue-500/10">Save Changes</button>
+
+                {{-- Admin Account --}}
+                <div class="px-5 py-4 border-t border-slate-100 bg-slate-50/60">
+                    <p class="text-xs font-bold text-violet-600 uppercase tracking-widest mb-3">Administrator Access</p>
+                    <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                        <div>
+                            <label class="block text-xs font-semibold text-slate-600 mb-1">Admin Name <span class="text-rose-500">*</span></label>
+                            <input type="text" name="admin_name" x-model="activeWorkshop.admin_name" required
+                                   class="w-full border border-slate-200 bg-white rounded-lg px-3 py-2.5 text-slate-800 text-sm focus:outline-none focus:ring-2 focus:ring-violet-400/25 focus:border-violet-400 transition-all">
+                        </div>
+                        <div>
+                            <label class="block text-xs font-semibold text-slate-600 mb-1">Admin Email <span class="text-rose-500">*</span></label>
+                            <input type="email" name="admin_email" x-model="activeWorkshop.admin_email" required
+                                   class="w-full border border-slate-200 bg-white rounded-lg px-3 py-2.5 text-slate-800 text-sm focus:outline-none focus:ring-2 focus:ring-violet-400/25 focus:border-violet-400 transition-all">
+                        </div>
+                        <div class="sm:col-span-2">
+                            <label class="block text-xs font-semibold text-slate-600 mb-1">New Password <span class="text-slate-400 font-normal">(leave blank to keep current)</span></label>
+                            <input type="password" name="admin_password"
+                                   class="w-full border border-slate-200 bg-white rounded-lg px-3 py-2.5 text-slate-800 text-sm focus:outline-none focus:ring-2 focus:ring-violet-400/25 focus:border-violet-400 transition-all"
+                                   placeholder="Enter new password">
+                        </div>
+                    </div>
+                </div>
+
+                {{-- Footer Actions --}}
+                <div class="flex items-center justify-end gap-2 px-5 py-4 border-t border-slate-100">
+                    <button type="button" @click="openEditModal = false"
+                            class="px-4 py-2 text-sm font-semibold text-slate-600 bg-slate-100 hover:bg-slate-200 rounded-lg transition-colors">Cancel</button>
+                    <button type="submit"
+                            class="px-5 py-2 text-sm font-semibold text-white bg-amber-500 hover:bg-amber-600 rounded-lg transition-colors shadow-sm">
+                        Save Changes
+                    </button>
                 </div>
             </form>
         </div>
