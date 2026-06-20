@@ -860,7 +860,7 @@
             $workshop = auth()->user()->workshop;
             $trialEnds = \Carbon\Carbon::parse($workshop->trial_ends_at);
             // Calculate days left, making sure it shows 0 if it expires today
-            $daysLeftDisplay = max(0, floor(now()->startOfDay()->diffInDays($trialEnds->startOfDay(), false)));
+            $daysLeftDisplay = max(0, floor(now()->startOfDay()->diffInDays($trialEnds->copy()->startOfDay(), false)));
             $isTraining = $workshop->subscription_status === 'training';
         @endphp
         <div x-data="{ openLicenseActivationModal: false }">
@@ -885,8 +885,8 @@
 
             <script>
             (function() {
-                // Expiry from server — ISO string in UTC for accurate countdown
-                var expiryISO = '{{ $trialEnds->toIso8601String() }}';
+                // Expiry from server — ISO string WITHOUT timezone, so JS parses it as local time
+                var expiryISO = '{{ $trialEnds->format("Y-m-d\TH:i:s") }}';
                 var expiryDate = new Date(expiryISO);
                 
                 // Formatted string exactly as it appears in dashboard (server-rendered)
