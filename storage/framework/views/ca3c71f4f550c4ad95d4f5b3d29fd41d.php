@@ -1,6 +1,6 @@
-@extends('layouts.app')
 
-@php
+
+<?php
     $user = auth()->user();
     $workshop = null;
     if ($user) {
@@ -10,39 +10,39 @@
             $workshop = $user->workshop;
         }
     }
-@endphp
+?>
 
-@section('title', 'Dashboard')
-@section('page-title', 'Overview')
-@section('page-subtitle', 'Workshop Performance & Operations')
+<?php $__env->startSection('title', 'Dashboard'); ?>
+<?php $__env->startSection('page-title', 'Overview'); ?>
+<?php $__env->startSection('page-subtitle', 'Workshop Performance & Operations'); ?>
 
-@section('content')
-@if($workshop)
+<?php $__env->startSection('content'); ?>
+<?php if($workshop): ?>
 <div x-data="subscriptionManager({
-    status: '{{ $workshop ? $workshop->subscription_status : 'N/A' }}',
-    expiry: '{{ $workshop && $workshop->trial_ends_at ? ($workshop->trial_ends_at->isToday() ? "Today, " . $workshop->trial_ends_at->format("h:i A") : ($workshop->trial_ends_at->isTomorrow() ? "Tomorrow, " . $workshop->trial_ends_at->format("h:i A") : $workshop->trial_ends_at->format("d M Y, h:i A"))) : "Never (Lifetime)" }}',
-    daysRemaining: {{ $workshop && $workshop->trial_ends_at ? $workshop->getTrialDaysRemaining() : 0 }},
-    totalDuration: {{ $workshop && $workshop->trial_ends_at ? $workshop->getTotalDurationDays() : 0 }},
-    subscriptionDay: {{ $workshop ? $workshop->getSubscriptionDay() : 0 }},
-    isExpired: {{ $workshop && $workshop->trial_ends_at && $workshop->isTrialExpired() ? 'true' : 'false' }},
-    hasExpiry: {{ $workshop && $workshop->trial_ends_at ? 'true' : 'false' }},
+    status: '<?php echo e($workshop ? $workshop->subscription_status : 'N/A'); ?>',
+    expiry: '<?php echo e($workshop && $workshop->trial_ends_at ? ($workshop->trial_ends_at->isToday() ? "Today, " . $workshop->trial_ends_at->format("h:i A") : ($workshop->trial_ends_at->isTomorrow() ? "Tomorrow, " . $workshop->trial_ends_at->format("h:i A") : $workshop->trial_ends_at->format("d M Y, h:i A"))) : "Never (Lifetime)"); ?>',
+    daysRemaining: <?php echo e($workshop && $workshop->trial_ends_at ? $workshop->getTrialDaysRemaining() : 0); ?>,
+    totalDuration: <?php echo e($workshop && $workshop->trial_ends_at ? $workshop->getTotalDurationDays() : 0); ?>,
+    subscriptionDay: <?php echo e($workshop ? $workshop->getSubscriptionDay() : 0); ?>,
+    isExpired: <?php echo e($workshop && $workshop->trial_ends_at && $workshop->isTrialExpired() ? 'true' : 'false'); ?>,
+    hasExpiry: <?php echo e($workshop && $workshop->trial_ends_at ? 'true' : 'false'); ?>,
     keys: [
-        @if($workshop)
-            @foreach($workshop->productKeys()->orderBy('used_at', 'desc')->get() as $key)
-                @php
+        <?php if($workshop): ?>
+            <?php $__currentLoopData = $workshop->productKeys()->orderBy('used_at', 'desc')->get(); $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $key): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); ?>
+                <?php
                     $parts = explode('-', $key->key);
                     $masked = (count($parts) >= 3) ? ($parts[0] . '-XXXX-XXXX-' . end($parts)) : (substr($key->key, 0, 8) . '...');
-                @endphp
+                ?>
                 {
-                    key: '{{ $masked }}',
-                    duration: {{ $key->duration_days }},
-                    used_at: '{{ $key->used_at ? $key->used_at->format('d M Y, h:i A') : $key->updated_at->format('d M Y, h:i A') }}'
+                    key: '<?php echo e($masked); ?>',
+                    duration: <?php echo e($key->duration_days); ?>,
+                    used_at: '<?php echo e($key->used_at ? $key->used_at->format('d M Y, h:i A') : $key->updated_at->format('d M Y, h:i A')); ?>'
                 },
-            @endforeach
-        @endif
+            <?php endforeach; $__env->popLoop(); $loop = $__env->getLastLoop(); ?>
+        <?php endif; ?>
     ]
 })">
-@endif
+<?php endif; ?>
 <div class="max-w-7xl mx-auto space-y-5 animate-fade-in-up">
 
     <!-- Removed redundant banner -->
@@ -64,39 +64,39 @@
         </div>
         
         <div class="w-full xl:w-auto flex flex-col xl:flex-row items-start xl:items-center z-10 gap-3 mt-4 md:mt-0">
-            <form method="GET" action="{{ route('dashboard') }}" class="w-full flex flex-col xl:flex-row items-start xl:items-center gap-3">
+            <form method="GET" action="<?php echo e(route('dashboard')); ?>" class="w-full flex flex-col xl:flex-row items-start xl:items-center gap-3">
                 <div class="relative w-full xl:w-48">
                     <div class="pointer-events-none absolute inset-y-0 left-0 flex items-center pl-3">
                         <svg class="w-4 h-4 text-slate-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"/></svg>
                     </div>
                     <select name="filter" onchange="if(this.value === 'custom') { document.getElementById('custom-date-container').classList.remove('hidden'); document.getElementById('custom-date-container').classList.add('flex'); } else { this.form.submit(); }" class="block w-full appearance-none bg-slate-50 border border-slate-200 text-slate-700 py-2.5 pl-10 pr-8 rounded-xl text-sm font-semibold shadow-sm hover:bg-slate-100 transition-colors focus:outline-none focus:ring-2 focus:ring-primary-500 focus:border-primary-500 cursor-pointer">
-                        <option value="today" @if(($filter ?? 'today') === 'today') selected @endif>Today</option>
-                        <option value="yesterday" @if(($filter ?? 'today') === 'yesterday') selected @endif>Yesterday</option>
-                        <option value="week" @if(($filter ?? 'today') === 'week') selected @endif>Last 7 Days</option>
-                        <option value="month" @if(($filter ?? 'today') === 'month') selected @endif>This Month</option>
-                        <option value="all" @if(($filter ?? 'today') === 'all') selected @endif>All Time</option>
-                        <option value="custom" @if(($filter ?? 'today') === 'custom') selected @endif>Custom Range</option>
+                        <option value="today" <?php if(($filter ?? 'today') === 'today'): ?> selected <?php endif; ?>>Today</option>
+                        <option value="yesterday" <?php if(($filter ?? 'today') === 'yesterday'): ?> selected <?php endif; ?>>Yesterday</option>
+                        <option value="week" <?php if(($filter ?? 'today') === 'week'): ?> selected <?php endif; ?>>Last 7 Days</option>
+                        <option value="month" <?php if(($filter ?? 'today') === 'month'): ?> selected <?php endif; ?>>This Month</option>
+                        <option value="all" <?php if(($filter ?? 'today') === 'all'): ?> selected <?php endif; ?>>All Time</option>
+                        <option value="custom" <?php if(($filter ?? 'today') === 'custom'): ?> selected <?php endif; ?>>Custom Range</option>
                     </select>
                     <div class="pointer-events-none absolute inset-y-0 right-0 flex items-center pr-3">
                         <svg class="w-4 h-4 text-slate-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"/></svg>
                     </div>
                 </div>
                 
-                <div id="custom-date-container" class="{{ ($filter ?? '') === 'custom' ? 'flex' : 'hidden' }} flex-col sm:flex-row items-center gap-2 w-full xl:w-auto">
-                    <input type="date" name="start_date" value="{{ request('start_date') }}" class="block w-full sm:w-auto appearance-none bg-slate-50 border border-slate-200 text-slate-700 py-2.5 px-3 rounded-xl text-sm font-semibold shadow-sm focus:outline-none focus:ring-2 focus:ring-primary-500">
+                <div id="custom-date-container" class="<?php echo e(($filter ?? '') === 'custom' ? 'flex' : 'hidden'); ?> flex-col sm:flex-row items-center gap-2 w-full xl:w-auto">
+                    <input type="date" name="start_date" value="<?php echo e(request('start_date')); ?>" class="block w-full sm:w-auto appearance-none bg-slate-50 border border-slate-200 text-slate-700 py-2.5 px-3 rounded-xl text-sm font-semibold shadow-sm focus:outline-none focus:ring-2 focus:ring-primary-500">
                     <span class="text-slate-500 text-sm font-medium hidden sm:block">to</span>
-                    <input type="date" name="end_date" value="{{ request('end_date') }}" class="block w-full sm:w-auto appearance-none bg-slate-50 border border-slate-200 text-slate-700 py-2.5 px-3 rounded-xl text-sm font-semibold shadow-sm focus:outline-none focus:ring-2 focus:ring-primary-500">
+                    <input type="date" name="end_date" value="<?php echo e(request('end_date')); ?>" class="block w-full sm:w-auto appearance-none bg-slate-50 border border-slate-200 text-slate-700 py-2.5 px-3 rounded-xl text-sm font-semibold shadow-sm focus:outline-none focus:ring-2 focus:ring-primary-500">
                     <div class="flex items-center gap-2 w-full sm:w-auto">
                         <button type="submit" class="btn-primary !py-2.5 !px-4 text-sm whitespace-nowrap flex-1 sm:flex-none justify-center">Apply</button>
-                        @if(($filter ?? '') === 'custom')
-                            <a href="{{ route('dashboard') }}" class="btn-secondary !py-2.5 !px-4 text-sm whitespace-nowrap flex-1 sm:flex-none justify-center text-center">Clear</a>
-                        @else
+                        <?php if(($filter ?? '') === 'custom'): ?>
+                            <a href="<?php echo e(route('dashboard')); ?>" class="btn-secondary !py-2.5 !px-4 text-sm whitespace-nowrap flex-1 sm:flex-none justify-center text-center">Clear</a>
+                        <?php else: ?>
                             <button type="button" onclick="document.getElementById('custom-date-container').classList.add('hidden'); document.getElementById('custom-date-container').classList.remove('flex'); document.querySelector('select[name=\'filter\']').value='today';" class="btn-secondary !py-2.5 !px-4 text-sm whitespace-nowrap flex-1 sm:flex-none justify-center">Cancel</button>
-                        @endif
+                        <?php endif; ?>
                     </div>
                 </div>
             </form>
-            <a href="{{ route('bills.create') }}" class="btn-primary shadow-sm !py-2.5 !px-5 text-sm w-full xl:w-auto justify-center text-center whitespace-nowrap">
+            <a href="<?php echo e(route('bills.create')); ?>" class="btn-primary shadow-sm !py-2.5 !px-5 text-sm w-full xl:w-auto justify-center text-center whitespace-nowrap">
                 <svg class="w-4 h-4 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"/></svg>
                 Create Invoice
             </a>
@@ -113,12 +113,12 @@
                     <span class="text-xs font-bold text-slate-400 uppercase tracking-widest">Total Income</span>
                     <span class="badge badge-success">Paid</span>
                 </div>
-                <p class="text-2xl sm:text-3xl font-extrabold text-slate-900 font-outfit truncate animate-count-up" title="₹{{ number_format($totalIncome, 2) }}">₹{{ number_format($totalIncome, 2) }}</p>
+                <p class="text-2xl sm:text-3xl font-extrabold text-slate-900 font-outfit truncate animate-count-up" title="₹<?php echo e(number_format($totalIncome, 2)); ?>">₹<?php echo e(number_format($totalIncome, 2)); ?></p>
             </div>
             <div class="mt-4 pt-3 border-t border-slate-100 flex flex-wrap items-center justify-between gap-x-2 gap-y-1 text-xs text-slate-500 font-medium">
-                <span>UPI: ₹{{ number_format($upiPayments, 0) }}</span>
+                <span>UPI: ₹<?php echo e(number_format($upiPayments, 0)); ?></span>
                 <span class="hidden xs:inline text-slate-300">•</span>
-                <span>Cash: ₹{{ number_format($cashPayments, 0) }}</span>
+                <span>Cash: ₹<?php echo e(number_format($cashPayments, 0)); ?></span>
             </div>
         </div>
 
@@ -129,12 +129,12 @@
                     <span class="text-xs font-bold text-slate-400 uppercase tracking-widest">Outflow</span>
                     <span class="badge badge-danger">Expenses</span>
                 </div>
-                <p class="text-2xl sm:text-3xl font-extrabold text-slate-900 font-outfit truncate animate-count-up" title="₹{{ number_format($totalExpensesAll, 2) }}">₹{{ number_format($totalExpensesAll, 2) }}</p>
+                <p class="text-2xl sm:text-3xl font-extrabold text-slate-900 font-outfit truncate animate-count-up" title="₹<?php echo e(number_format($totalExpensesAll, 2)); ?>">₹<?php echo e(number_format($totalExpensesAll, 2)); ?></p>
             </div>
             <div class="mt-4 pt-3 border-t border-slate-100 flex flex-wrap items-center justify-between gap-x-2 gap-y-1 text-xs text-slate-500 font-medium">
-                <span>Shop: ₹{{ number_format($totalExpenses, 0) }}</span>
+                <span>Shop: ₹<?php echo e(number_format($totalExpenses, 0)); ?></span>
                 <span class="hidden xs:inline text-slate-300">•</span>
-                <span>Salaries: ₹{{ number_format($totalSalaries, 0) }}</span>
+                <span>Salaries: ₹<?php echo e(number_format($totalSalaries, 0)); ?></span>
             </div>
         </div>
 
@@ -145,8 +145,9 @@
                     <span class="text-xs font-bold text-slate-400 uppercase tracking-widest">Net Profit</span>
                     <span class="badge badge-purple">Margin</span>
                 </div>
-                <p class="text-2xl sm:text-3xl font-extrabold font-outfit truncate animate-count-up {{ $totalProfit < 0 ? 'text-rose-600' : 'text-slate-900' }}" title="₹{{ number_format($totalProfit, 2) }}">
-                    ₹{{ number_format($totalProfit, 2) }}
+                <p class="text-2xl sm:text-3xl font-extrabold font-outfit truncate animate-count-up <?php echo e($totalProfit < 0 ? 'text-rose-600' : 'text-slate-900'); ?>" title="₹<?php echo e(number_format($totalProfit, 2)); ?>">
+                    ₹<?php echo e(number_format($totalProfit, 2)); ?>
+
                 </p>
             </div>
             <div class="mt-4 pt-3 border-t border-slate-100 text-xs text-slate-500 font-medium">
@@ -161,12 +162,12 @@
                     <span class="text-xs font-bold text-slate-400 uppercase tracking-widest">Job Queue</span>
                     <span class="badge badge-info">Operations</span>
                 </div>
-                <p class="text-2xl sm:text-3xl font-extrabold text-slate-900 font-outfit truncate animate-count-up">{{ $totalWorkOrders }}</p>
+                <p class="text-2xl sm:text-3xl font-extrabold text-slate-900 font-outfit truncate animate-count-up"><?php echo e($totalWorkOrders); ?></p>
             </div>
             <div class="mt-4 pt-3 border-t border-slate-100 flex flex-wrap items-center justify-between gap-x-2 gap-y-1 text-xs text-slate-500 font-medium">
-                <span class="text-amber-600 font-semibold">{{ $pendingWorkOrders }} Pending</span>
+                <span class="text-amber-600 font-semibold"><?php echo e($pendingWorkOrders); ?> Pending</span>
                 <span class="hidden xs:inline text-slate-300">•</span>
-                <span>{{ $totalServices }} Services Offered</span>
+                <span><?php echo e($totalServices); ?> Services Offered</span>
             </div>
         </div>
 
@@ -180,7 +181,7 @@
             </div>
             <div>
                 <p class="text-xs font-bold text-slate-500 uppercase tracking-wider">Active Warranties</p>
-                <p class="text-2xl font-black text-slate-800">{{ $activeWarranties }}</p>
+                <p class="text-2xl font-black text-slate-800"><?php echo e($activeWarranties); ?></p>
             </div>
         </div>
         <div class="glass-card flex items-center gap-4 p-5">
@@ -189,7 +190,7 @@
             </div>
             <div>
                 <p class="text-xs font-bold text-slate-500 uppercase tracking-wider">Total Customers</p>
-                <p class="text-2xl font-black text-slate-800">{{ $totalCustomers }}</p>
+                <p class="text-2xl font-black text-slate-800"><?php echo e($totalCustomers); ?></p>
             </div>
         </div>
         <div class="glass-card flex items-center gap-4 p-5">
@@ -198,7 +199,7 @@
             </div>
             <div>
                 <p class="text-xs font-bold text-slate-500 uppercase tracking-wider">Registered Vehicles</p>
-                <p class="text-2xl font-black text-slate-800">{{ $totalVehicles }}</p>
+                <p class="text-2xl font-black text-slate-800"><?php echo e($totalVehicles); ?></p>
             </div>
         </div>
         <div class="glass-card flex items-center gap-4 p-5">
@@ -207,7 +208,7 @@
             </div>
             <div>
                 <p class="text-xs font-bold text-slate-500 uppercase tracking-wider">Active Staff</p>
-                <p class="text-2xl font-black text-slate-800">{{ $totalEmployees }}</p>
+                <p class="text-2xl font-black text-slate-800"><?php echo e($totalEmployees); ?></p>
             </div>
         </div>
     </div>
@@ -222,9 +223,9 @@
             <div class="glass-card !p-0 overflow-hidden shrink-0">
                 <div class="p-6 border-b border-slate-100 flex items-center justify-between bg-white flex-wrap gap-4">
                     <h3 class="text-base font-bold text-slate-900 font-outfit">Recent Invoices</h3>
-                    <a href="{{ route('bills.index') }}" class="text-sm font-semibold text-primary-600 hover:text-primary-700 transition-colors">View All Bills →</a>
+                    <a href="<?php echo e(route('bills.index')); ?>" class="text-sm font-semibold text-primary-600 hover:text-primary-700 transition-colors">View All Bills →</a>
                 </div>
-                @if($recentBills->count())
+                <?php if($recentBills->count()): ?>
                 <div class="overflow-x-auto table-scroll-wrapper">
                     <table class="data-table">
                         <thead>
@@ -238,44 +239,47 @@
                             </tr>
                         </thead>
                         <tbody>
-                            @foreach($recentBills as $index => $bill)
+                            <?php $__currentLoopData = $recentBills; $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $index => $bill): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); ?>
                             <tr>
-                                <td data-label="Sl No" class="font-semibold text-slate-500">{{ $loop->iteration }}</td>
+                                <td data-label="Sl No" class="font-semibold text-slate-500"><?php echo e($loop->iteration); ?></td>
                                 <td data-label="Invoice No" class="font-mono font-bold text-primary-600">
-                                    {{ $bill->bill_number }}
+                                    <?php echo e($bill->bill_number); ?>
+
                                 </td>
-                                <td data-label="Customer" class="font-bold text-slate-800">{{ $bill->customer->name }}</td>
-                                <td data-label="Total" class="font-bold text-slate-900">₹{{ number_format($bill->total, 2) }}</td>
+                                <td data-label="Customer" class="font-bold text-slate-800"><?php echo e($bill->customer->name); ?></td>
+                                <td data-label="Total" class="font-bold text-slate-900">₹<?php echo e(number_format($bill->total, 2)); ?></td>
                                 <td data-label="Method">
-                                    <span class="badge {{ $bill->payment_method === 'upi' ? 'badge-info' : 'badge-warning' }}">
-                                        {{ strtoupper($bill->payment_method) }}
+                                    <span class="badge <?php echo e($bill->payment_method === 'upi' ? 'badge-info' : 'badge-warning'); ?>">
+                                        <?php echo e(strtoupper($bill->payment_method)); ?>
+
                                     </span>
                                 </td>
                                 <td data-label="Status">
-                                    <span class="badge {{ $bill->payment_status === 'paid' ? 'badge-success' : ($bill->payment_status === 'partial' ? 'badge-warning' : 'badge-danger') }}">
-                                        {{ ucfirst($bill->payment_status) }}
+                                    <span class="badge <?php echo e($bill->payment_status === 'paid' ? 'badge-success' : ($bill->payment_status === 'partial' ? 'badge-warning' : 'badge-danger')); ?>">
+                                        <?php echo e(ucfirst($bill->payment_status)); ?>
+
                                     </span>
                                 </td>
                             </tr>
-                            @endforeach
+                            <?php endforeach; $__env->popLoop(); $loop = $__env->getLastLoop(); ?>
                         </tbody>
                     </table>
                 </div>
-                @else
+                <?php else: ?>
                 <div class="text-center py-8 px-6">
                     <svg class="w-12 h-12 text-slate-300 mx-auto mb-3" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M9 14l6-6m-5.5.5h.01m4.99 5h.01M19 21V5a2 2 0 00-2 2v16l3.5-2 3.5 2 3.5-2 3.5 2z"/></svg>
-                    <p class="text-slate-500 font-semibold">No invoices recorded yet. <a href="{{ route('bills.create') }}" class="text-primary-600 hover:underline">Generate a bill</a></p>
+                    <p class="text-slate-500 font-semibold">No invoices recorded yet. <a href="<?php echo e(route('bills.create')); ?>" class="text-primary-600 hover:underline">Generate a bill</a></p>
                 </div>
-                @endif
+                <?php endif; ?>
             </div>
 
             <!-- Active Work Orders Card -->
             <div class="glass-card !p-0 overflow-hidden flex flex-col flex-1">
                 <div class="p-6 border-b border-slate-100 flex items-center justify-between bg-white flex-wrap gap-4 shrink-0">
                     <h3 class="text-base font-bold text-slate-900 font-outfit">Active Shop Jobs</h3>
-                    <a href="{{ route('work-orders.index') }}" class="text-sm font-semibold text-primary-600 hover:text-primary-700 transition-colors">View All Jobs →</a>
+                    <a href="<?php echo e(route('work-orders.index')); ?>" class="text-sm font-semibold text-primary-600 hover:text-primary-700 transition-colors">View All Jobs →</a>
                 </div>
-                @if($pendingOrders->count())
+                <?php if($pendingOrders->count()): ?>
                 <div class="overflow-x-auto table-scroll-wrapper flex-1">
                     <table class="data-table">
                         <thead>
@@ -287,32 +291,33 @@
                             </tr>
                         </thead>
                         <tbody>
-                            @foreach($pendingOrders as $order)
+                            <?php $__currentLoopData = $pendingOrders; $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $order): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); ?>
                             <tr>
                                 <td data-label="Order No" class="font-mono font-bold text-primary-600">
-                                    <a href="{{ route('work-orders.show', $order) }}" class="hover:underline">{{ $order->order_number }}</a>
+                                    <a href="<?php echo e(route('work-orders.show', $order)); ?>" class="hover:underline"><?php echo e($order->order_number); ?></a>
                                 </td>
                                 <td data-label="Customer & Vehicle">
-                                    <p class="font-bold text-slate-800">{{ $order->customer->name }}</p>
-                                    <p class="text-xs text-slate-400 font-semibold">{{ $order->vehicle ? $order->vehicle->plate_number : '—' }}</p>
+                                    <p class="font-bold text-slate-800"><?php echo e($order->customer->name); ?></p>
+                                    <p class="text-xs text-slate-400 font-semibold"><?php echo e($order->vehicle ? $order->vehicle->plate_number : '—'); ?></p>
                                 </td>
-                                <td data-label="Assigned Mechanic" class="font-semibold text-slate-600">{{ $order->employee ? $order->employee->name : 'Unassigned' }}</td>
+                                <td data-label="Assigned Mechanic" class="font-semibold text-slate-600"><?php echo e($order->employee ? $order->employee->name : 'Unassigned'); ?></td>
                                 <td data-label="Status">
-                                    <span class="badge {{ $order->status === 'pending' ? 'badge-warning' : 'badge-info' }}">
-                                        {{ ucfirst(str_replace('_', ' ', $order->status)) }}
+                                    <span class="badge <?php echo e($order->status === 'pending' ? 'badge-warning' : 'badge-info'); ?>">
+                                        <?php echo e(ucfirst(str_replace('_', ' ', $order->status))); ?>
+
                                     </span>
                                 </td>
                             </tr>
-                            @endforeach
+                            <?php endforeach; $__env->popLoop(); $loop = $__env->getLastLoop(); ?>
                         </tbody>
                     </table>
                 </div>
-                @else
+                <?php else: ?>
                 <div class="text-center py-8 px-6 flex flex-col items-center justify-center flex-1 h-full min-h-[200px]">
                     <svg class="w-12 h-12 text-slate-300 mx-auto mb-3" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2"/></svg>
                     <p class="text-slate-500 font-semibold">No active jobs in the queue.</p>
                 </div>
-                @endif
+                <?php endif; ?>
             </div>
 
         </div>
@@ -324,15 +329,15 @@
             <div class="glass-card space-y-4 md:col-span-2 lg:col-span-1">
                 <h3 class="text-sm font-bold text-slate-900 uppercase tracking-wider">Quick Actions</h3>
                 <div class="grid grid-cols-1 sm:grid-cols-3 lg:grid-cols-1 gap-3">
-                    <a href="{{ route('bills.create') }}" class="btn-primary !justify-start !py-3 w-full shadow-sm text-sm">
+                    <a href="<?php echo e(route('bills.create')); ?>" class="btn-primary !justify-start !py-3 w-full shadow-sm text-sm">
                         <svg class="w-4 h-4 mr-2 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"/></svg>
                         <span class="truncate">Create New Invoice</span>
                     </a>
-                    <a href="{{ route('work-orders.create') }}" class="btn-secondary !justify-start !py-3 w-full text-sm">
+                    <a href="<?php echo e(route('work-orders.create')); ?>" class="btn-secondary !justify-start !py-3 w-full text-sm">
                         <svg class="w-4 h-4 mr-2 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2"/></svg>
                         <span class="truncate">Log Repair Order</span>
                     </a>
-                    <a href="{{ route('customers.create') }}" class="btn-secondary !justify-start !py-3 w-full text-sm">
+                    <a href="<?php echo e(route('customers.create')); ?>" class="btn-secondary !justify-start !py-3 w-full text-sm">
                         <svg class="w-4 h-4 mr-2 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M18 9v3m0 0v3m0-3h3m-3 0h-3m-2-5a4 4 0 11-8 0 4 4 0 018 0zM3 20a6 6 0 0112 0v1H3v-1z"/></svg>
                         <span class="truncate">New Customer</span>
                     </a>
@@ -343,35 +348,35 @@
             <div class="glass-card">
                 <div class="flex items-center justify-between mb-4">
                     <h3 class="text-sm font-bold text-slate-900 uppercase tracking-wider">Low Stock Alerts</h3>
-                    <span class="badge badge-danger">{{ $lowStockProducts->count() }}</span>
+                    <span class="badge badge-danger"><?php echo e($lowStockProducts->count()); ?></span>
                 </div>
-                @if($lowStockProducts->count())
+                <?php if($lowStockProducts->count()): ?>
                 <div class="space-y-3">
-                    @foreach($lowStockProducts->take(5) as $product)
+                    <?php $__currentLoopData = $lowStockProducts->take(5); $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $product): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); ?>
                     <div class="flex items-center justify-between p-3 bg-red-50 border border-red-100 rounded-xl">
                         <div class="min-w-0 flex-1 pr-2">
-                            <p class="text-sm font-semibold text-slate-800 truncate" title="{{ $product->name }}">{{ $product->name }}</p>
-                            <p class="text-xs text-slate-500 font-medium">Min: {{ $product->min_stock }} {{ $product->unit }}</p>
+                            <p class="text-sm font-semibold text-slate-800 truncate" title="<?php echo e($product->name); ?>"><?php echo e($product->name); ?></p>
+                            <p class="text-xs text-slate-500 font-medium">Min: <?php echo e($product->min_stock); ?> <?php echo e($product->unit); ?></p>
                         </div>
-                        <span class="text-base font-extrabold text-red-600 shrink-0">{{ $product->stock_qty }}</span>
+                        <span class="text-base font-extrabold text-red-600 shrink-0"><?php echo e($product->stock_qty); ?></span>
                     </div>
-                    @endforeach
+                    <?php endforeach; $__env->popLoop(); $loop = $__env->getLastLoop(); ?>
                 </div>
-                @else
+                <?php else: ?>
                 <p class="text-sm text-slate-500 text-center py-4 font-semibold">All inventory levels healthy ✓</p>
-                @endif
+                <?php endif; ?>
             </div>
 
             <!-- Subscription & Trial (Moved back to Right Sidebar) -->
-            @if($workshop)
+            <?php if($workshop): ?>
             <div>
                 <div class="glass-card">
                 <h3 class="text-sm font-bold text-slate-900 uppercase tracking-wider mb-4 flex items-center justify-between">
-                    <span>{{ $workshop && $workshop->subscription_status === 'training' ? 'Training Status' : 'Subscription & Trial' }}</span>
+                    <span><?php echo e($workshop && $workshop->subscription_status === 'training' ? 'Training Status' : 'Subscription & Trial'); ?></span>
                     <span class="badge uppercase text-[10px]" :class="status === 'active' || status === 'fix' || status === 'fixed' ? 'badge-success' : 'badge-danger'" x-text="status"></span>
                 </h3>
                 <div class="space-y-3">
-                    @if($workshop)
+                    <?php if($workshop): ?>
                         <div class="flex justify-between items-center text-xs pb-1.5 border-b border-slate-100">
                             <span class="text-slate-500 font-semibold">Account Status</span>
                             <span class="font-bold uppercase tracking-wider text-xs" :class="status === 'active' || status === 'fix' || status === 'fixed' ? 'text-emerald-600' : 'text-rose-600'" x-text="status"></span>
@@ -406,16 +411,16 @@
                         <button @click="showModal = true" class="mt-3 w-full bg-primary-600 hover:bg-primary-700 text-white font-semibold py-2 px-4 rounded-xl transition-colors text-sm">
                             Activate License
                         </button>
-                    @endif
+                    <?php endif; ?>
                 </div>
                 </div> <!-- End of glass-card -->
             </div>
-            @endif
+            <?php endif; ?>
         </div>
     </div>
 </div>
 
-@if($workshop)
+<?php if($workshop): ?>
 <!-- Activation Modal -->
 <div x-show="showModal" class="fixed inset-0 z-[100] overflow-y-auto" x-cloak>
     <div class="flex items-end justify-center min-h-screen pt-4 px-4 pb-20 text-center sm:block sm:p-0">
@@ -474,13 +479,13 @@
     </div>
 </div>
 </div>
-@endif
+<?php endif; ?>
     </div>
 </div>
 
-@endsection
+<?php $__env->stopSection(); ?>
 
-@push('scripts')
+<?php $__env->startPush('scripts'); ?>
 <script>
     function subscriptionManager(initialData) {
         return {
@@ -498,7 +503,6 @@
             keys: initialData.keys || [],
             
             formatKey() {
-                this.serverError = '';
                 var raw = this.productKey.replace(/[^A-Za-z0-9]/g, '').toUpperCase().slice(0, 16);
                 var fmt = '';
                 for (var i = 0; i < raw.length; i++) {
@@ -517,7 +521,7 @@
                 
                 this.submitting = true;
                 
-                axios.post('{{ route('activate_license') }}', {
+                axios.post('<?php echo e(route('activate_license')); ?>', {
                     product_key: this.productKey
                 }, {
                     headers: {
@@ -570,4 +574,6 @@
         }
     }
 </script>
-@endpush
+<?php $__env->stopPush(); ?>
+
+<?php echo $__env->make('layouts.app', array_diff_key(get_defined_vars(), ['__data' => 1, '__path' => 1]))->render(); ?><?php /**PATH E:\Suhaim Soft Work Shop\suhaimsoftworkshop\resources\views/dashboard.blade.php ENDPATH**/ ?>

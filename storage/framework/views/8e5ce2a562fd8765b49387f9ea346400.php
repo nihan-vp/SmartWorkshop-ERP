@@ -4,13 +4,10 @@
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=0">
 
-    {{-- ══════════════════════════════════════════════
-         ADVANCED SEO SYSTEM — Suhaim Soft Work Shop
-         Each page can override via @section('seo-*')
-    ══════════════════════════════════════════════ --}}
+    
 
-    {{-- Core Title (Pages override with @section('title')) --}}
-    @php
+    
+    <?php
         $seoTitle      = trim(View::yieldContent('seo-title', View::yieldContent('title', 'Dashboard')));
         $siteName      = 'Suhaim Soft Work Shop';
         $fullTitle     = $seoTitle . ' — ' . $siteName;
@@ -21,82 +18,82 @@
         $seoRobots     = trim(View::yieldContent('seo-robots', 'index, follow'));
         $seoType       = trim(View::yieldContent('seo-type', 'website'));
         $seoLocale     = 'en_US';
-    @endphp
+    ?>
 
-    {{-- ── Primary Meta Tags ── --}}
-    <title>{{ $fullTitle }}</title>
-    <meta name="title"           content="{{ $fullTitle }}">
-    <meta name="description"     content="{{ $seoDesc }}">
-    <meta name="keywords"        content="{{ $seoKeywords }}">
-    <meta name="robots"          content="{{ $seoRobots }}">
+    
+    <title><?php echo e($fullTitle); ?></title>
+    <meta name="title"           content="<?php echo e($fullTitle); ?>">
+    <meta name="description"     content="<?php echo e($seoDesc); ?>">
+    <meta name="keywords"        content="<?php echo e($seoKeywords); ?>">
+    <meta name="robots"          content="<?php echo e($seoRobots); ?>">
     <meta name="author"          content="Suhaim Soft">
-    <meta name="copyright"       content="© {{ date('Y') }} Suhaim Soft Work Shop">
+    <meta name="copyright"       content="© <?php echo e(date('Y')); ?> Suhaim Soft Work Shop">
     <meta name="generator"       content="Suhaim Soft Workshop Manager">
     <meta name="language"        content="English">
     <meta name="revisit-after"   content="7 days">
     <meta name="rating"          content="general">
-    <link rel="canonical"        href="{{ $canonicalUrl }}">
+    <link rel="canonical"        href="<?php echo e($canonicalUrl); ?>">
 
-    {{-- ── Open Graph / Facebook / LinkedIn ── --}}
-    <meta property="og:type"         content="{{ $seoType }}">
-    <meta property="og:url"          content="{{ $canonicalUrl }}">
-    <meta property="og:title"        content="{{ $fullTitle }}">
-    <meta property="og:description"  content="{{ $seoDesc }}">
-    @if($seoImage)<meta property="og:image"        content="{{ $seoImage }}">@endif
-    <meta property="og:image:alt"    content="{{ $siteName }} Logo">
-    <meta property="og:site_name"    content="{{ $siteName }}">
-    <meta property="og:locale"       content="{{ $seoLocale }}">
+    
+    <meta property="og:type"         content="<?php echo e($seoType); ?>">
+    <meta property="og:url"          content="<?php echo e($canonicalUrl); ?>">
+    <meta property="og:title"        content="<?php echo e($fullTitle); ?>">
+    <meta property="og:description"  content="<?php echo e($seoDesc); ?>">
+    <?php if($seoImage): ?><meta property="og:image"        content="<?php echo e($seoImage); ?>"><?php endif; ?>
+    <meta property="og:image:alt"    content="<?php echo e($siteName); ?> Logo">
+    <meta property="og:site_name"    content="<?php echo e($siteName); ?>">
+    <meta property="og:locale"       content="<?php echo e($seoLocale); ?>">
 
-    {{-- ── Twitter Card ── --}}
+    
     <meta name="twitter:card"        content="summary">
-    <meta name="twitter:title"       content="{{ $fullTitle }}">
-    <meta name="twitter:description" content="{{ $seoDesc }}">
-    <meta name="twitter:image"       content="{{ $seoImage }}">
-    <meta name="twitter:image:alt"   content="{{ $siteName }}">
+    <meta name="twitter:title"       content="<?php echo e($fullTitle); ?>">
+    <meta name="twitter:description" content="<?php echo e($seoDesc); ?>">
+    <meta name="twitter:image"       content="<?php echo e($seoImage); ?>">
+    <meta name="twitter:image:alt"   content="<?php echo e($siteName); ?>">
 
-    {{-- ── JSON-LD Structured Data ── --}}
+    
     <script type="application/ld+json">
     {
-        "@@context": "https://schema.org",
-        "@@graph": [
+        "@context": "https://schema.org",
+        "@graph": [
             {
-                "@@type": "Organization",
-                "@@id": "{{ url('/') }}/#organization",
-                "name": "{{ $siteName }}",
-                "url": "{{ url('/') }}",
+                "@type": "Organization",
+                "@id": "<?php echo e(url('/')); ?>/#organization",
+                "name": "<?php echo e($siteName); ?>",
+                "url": "<?php echo e(url('/')); ?>",
                 "logo": {
-                    "@@type": "ImageObject",
+                    "@type": "ImageObject",
                     "url": ""
                 },
                 "description": "Cloud-based workshop management system for auto repair shops and garages.",
                 "contactPoint": {
-                    "@@type": "ContactPoint",
+                    "@type": "ContactPoint",
                     "email": "infosuhaimsoft@gmail.com",
                     "contactType": "customer support"
                 }
             },
             {
-                "@@type": "WebSite",
-                "@@id": "{{ url('/') }}/#website",
-                "url": "{{ url('/') }}",
-                "name": "{{ $siteName }}",
-                "publisher": { "@@id": "{{ url('/') }}/#organization" }
+                "@type": "WebSite",
+                "@id": "<?php echo e(url('/')); ?>/#website",
+                "url": "<?php echo e(url('/')); ?>",
+                "name": "<?php echo e($siteName); ?>",
+                "publisher": { "@id": "<?php echo e(url('/')); ?>/#organization" }
             },
             {
-                "@@type": "WebPage",
-                "@@id": "{{ $canonicalUrl }}/#webpage",
-                "url": "{{ $canonicalUrl }}",
-                "name": "{{ $fullTitle }}",
-                "description": "{{ $seoDesc }}",
-                "isPartOf": { "@@id": "{{ url('/') }}/#website" },
+                "@type": "WebPage",
+                "@id": "<?php echo e($canonicalUrl); ?>/#webpage",
+                "url": "<?php echo e($canonicalUrl); ?>",
+                "name": "<?php echo e($fullTitle); ?>",
+                "description": "<?php echo e($seoDesc); ?>",
+                "isPartOf": { "@id": "<?php echo e(url('/')); ?>/#website" },
                 "inLanguage": "en-US",
-                "dateModified": "{{ now()->toIso8601String() }}"
+                "dateModified": "<?php echo e(now()->toIso8601String()); ?>"
             }
         ]
     }
     </script>
 
-    {{-- ── PWA Config ── --}}
+    
     <link rel="manifest" href="/manifest.json?v=3">
     <meta name="theme-color" content="#1d4ed8">
     <meta name="mobile-web-app-capable" content="yes">
@@ -109,7 +106,7 @@
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
-    <meta name="csrf-token" content="{{ csrf_token() }}">
+    <meta name="csrf-token" content="<?php echo e(csrf_token()); ?>">
     <script>
         // Suppress Tailwind CSS production warning
         (function() {
@@ -445,7 +442,7 @@
     <script src="https://cdn.jsdelivr.net/npm/alpinejs@3.x.x/dist/cdn.min.js" defer></script>
     <style>[x-cloak] { display: none !important; }</style>
 
-    {{-- ── Page Loading Overlay Styles ── --}}
+    
     <style>
         #page-loader {
             position: fixed;
@@ -535,9 +532,9 @@
         }
     </style>
 </head>
-<body class="min-h-screen {{ Auth::check() ? 'bg-slate-50' : 'bg-gradient-to-br from-blue-50/50 via-white to-slate-50 relative flex flex-col items-center justify-center py-8 px-4' }}">
+<body class="min-h-screen <?php echo e(Auth::check() ? 'bg-slate-50' : 'bg-gradient-to-br from-blue-50/50 via-white to-slate-50 relative flex flex-col items-center justify-center py-8 px-4'); ?>">
 
-    {{-- ══ FULL PAGE LOADING OVERLAY ══ --}}
+    
     <div id="page-loader" role="status" aria-label="Loading page...">
         <div class="loader-ring">
             <svg viewBox="0 0 72 72" xmlns="http://www.w3.org/2000/svg">
@@ -607,19 +604,19 @@
             });
         })();
     </script>
-    @guest
-    {{-- Decorative Background Gradients for login --}}
+    <?php if(auth()->guard()->guest()): ?>
+    
     <div class="absolute top-[-20%] left-[-10%] w-[50%] h-[50%] rounded-full bg-blue-400/10 blur-[120px] pointer-events-none"></div>
     <div class="absolute bottom-[-20%] right-[-10%] w-[50%] h-[50%] rounded-full bg-indigo-400/10 blur-[120px] pointer-events-none"></div>
-    @endguest
+    <?php endif; ?>
 
-    @auth
-    @php
+    <?php if(auth()->guard()->check()): ?>
+    <?php
         $jwtToken = session('jwt_token') ?? \App\Helpers\JwtHelper::generateToken(Auth::user());
-    @endphp
+    ?>
     <script>
         // Inject JWT Token for API requests
-        window.jwtToken = '{{ $jwtToken }}';
+        window.jwtToken = '<?php echo e($jwtToken); ?>';
         if (window.axios) {
             window.axios.defaults.headers.common['Authorization'] = 'Bearer ' + window.jwtToken;
         }
@@ -654,13 +651,13 @@
         };
     </script>
 
-    {{-- Mobile Overlay --}}
+    
     <div id="sidebar-overlay" class="fixed inset-0 bg-black/40 backdrop-blur-sm z-40 hidden lg:hidden" onclick="toggleSidebar()"></div>
 
-    {{-- Sidebar --}}
+    
     <aside id="sidebar" class="fixed top-0 left-0 z-50 h-full w-72 bg-white border-r border-blue-100 
                                transform -translate-x-full lg:translate-x-0 transition-transform duration-300 ease-out flex flex-col shadow-sm">
-        {{-- Logo --}}
+        
         <div class="p-6 border-b border-blue-100">
             <div class="flex items-center gap-3">
                 <div class="w-12 h-12 rounded-xl bg-gradient-to-br from-blue-600 to-blue-500 flex items-center justify-center shadow-lg shadow-blue-500/30 shrink-0">
@@ -671,178 +668,183 @@
 
                 <div>
                     <h1 class="text-lg font-bold text-blue-900 leading-tight">
-                        {{ (Auth::user()->isSuperAdmin() && session()->has('active_workshop_id')) ? session('active_workshop_name') : (Auth::user()->isSuperAdmin() ? Auth::user()->name : (Auth::user()->workshop->name ?? 'Suhaim Soft')) }}
+                        <?php echo e((Auth::user()->isSuperAdmin() && session()->has('active_workshop_id')) ? session('active_workshop_name') : (Auth::user()->isSuperAdmin() ? Auth::user()->name : (Auth::user()->workshop->name ?? 'Suhaim Soft'))); ?>
+
                     </h1>
-                    @if(!Auth::user()->isSuperAdmin() || session()->has('active_workshop_id'))
+                    <?php if(!Auth::user()->isSuperAdmin() || session()->has('active_workshop_id')): ?>
                     <p class="text-xs text-slate-500 font-semibold mt-0.5">
-                        {{ session()->has('active_workshop_id') ? session('active_workshop_admin_name', \App\Models\User::where('workshop_id', session('active_workshop_id'))->where('role', 'admin')->first()?->name ?? 'Workshop Admin') : Auth::user()->name }}
+                        <?php echo e(session()->has('active_workshop_id') ? session('active_workshop_admin_name', \App\Models\User::where('workshop_id', session('active_workshop_id'))->where('role', 'admin')->first()?->name ?? 'Workshop Admin') : Auth::user()->name); ?>
+
                     </p>
-                    @endif
-                    @if((!Auth::user()->isSuperAdmin() || session()->has('active_workshop_id')) && Auth::user()->workshop && Auth::user()->workshop->phone)
+                    <?php endif; ?>
+                    <?php if((!Auth::user()->isSuperAdmin() || session()->has('active_workshop_id')) && Auth::user()->workshop && Auth::user()->workshop->phone): ?>
                     <p class="text-xs text-blue-500 font-medium mt-0.5">
-                        {{ Auth::user()->workshop->phone }}
+                        <?php echo e(Auth::user()->workshop->phone); ?>
+
                     </p>
-                    @endif
+                    <?php endif; ?>
                     <p class="text-xs text-blue-600 font-bold tracking-wider uppercase mt-1">
-                        {{ (Auth::user()->isSuperAdmin() && session()->has('active_workshop_id')) ? 'Workshop Owner' : (Auth::user()->isSuperAdmin() ? 'Suhaim Soft Super Admin' : (Auth::user()->role === 'admin' ? 'Workshop Owner' : 'Staff')) }}
+                        <?php echo e((Auth::user()->isSuperAdmin() && session()->has('active_workshop_id')) ? 'Workshop Owner' : (Auth::user()->isSuperAdmin() ? 'Suhaim Soft Super Admin' : (Auth::user()->role === 'admin' ? 'Workshop Owner' : 'Staff'))); ?>
+
                     </p>
                 </div>
             </div>
         </div>
 
-        {{-- Navigation --}}
+        
         <nav class="flex-1 overflow-y-auto p-4 space-y-1">
-            @if(Auth::user()->isSuperAdmin() && session()->has('active_workshop_id'))
-            <a href="{{ route('super_admin.dashboard') }}" class="sidebar-link !bg-indigo-50 !text-indigo-700 hover:!bg-indigo-100 hover:!text-indigo-900 font-bold border border-indigo-200 rounded-xl mb-4" id="nav-back-to-admin">
+            <?php if(Auth::user()->isSuperAdmin() && session()->has('active_workshop_id')): ?>
+            <a href="<?php echo e(route('super_admin.dashboard')); ?>" class="sidebar-link !bg-indigo-50 !text-indigo-700 hover:!bg-indigo-100 hover:!text-indigo-900 font-bold border border-indigo-200 rounded-xl mb-4" id="nav-back-to-admin">
                 <svg class="w-5 h-5 text-indigo-600" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 15l-3-3m0 0l3-3m-3 3h8M3 12a9 9 0 1118 0 9 9 0 0118 0z"/></svg>
                 Exit Inspection
             </a>
-            @endif
+            <?php endif; ?>
 
-            @if(Auth::user()->isSuperAdmin() && !session()->has('active_workshop_id'))
-            <a href="{{ route('super_admin.dashboard', ['tab' => 'dashboard']) }}" class="sidebar-link {{ request()->routeIs('super_admin.dashboard') && request('tab', 'dashboard') === 'dashboard' ? 'active' : '' }}" id="nav-super-dashboard">
+            <?php if(Auth::user()->isSuperAdmin() && !session()->has('active_workshop_id')): ?>
+            <a href="<?php echo e(route('super_admin.dashboard', ['tab' => 'dashboard'])); ?>" class="sidebar-link <?php echo e(request()->routeIs('super_admin.dashboard') && request('tab', 'dashboard') === 'dashboard' ? 'active' : ''); ?>" id="nav-super-dashboard">
                 <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6"/></svg>
                 Dashboard
             </a>
-            <a href="{{ route('super_admin.dashboard', ['tab' => 'workshops']) }}" class="sidebar-link {{ request()->routeIs('super_admin.dashboard') && request('tab') === 'workshops' ? 'active' : '' }}" id="nav-workshops">
+            <a href="<?php echo e(route('super_admin.dashboard', ['tab' => 'workshops'])); ?>" class="sidebar-link <?php echo e(request()->routeIs('super_admin.dashboard') && request('tab') === 'workshops' ? 'active' : ''); ?>" id="nav-workshops">
                 <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16l3.5-2 3.5 2 3.5-2 3.5 2z"/></svg>
                 Garages / Workshops
             </a>
-            <a href="{{ route('super_admin.dashboard', ['tab' => 'keys']) }}" class="sidebar-link {{ request()->routeIs('super_admin.dashboard') && request('tab') === 'keys' ? 'active' : '' }}" id="nav-keys">
+            <a href="<?php echo e(route('super_admin.dashboard', ['tab' => 'keys'])); ?>" class="sidebar-link <?php echo e(request()->routeIs('super_admin.dashboard') && request('tab') === 'keys' ? 'active' : ''); ?>" id="nav-keys">
                 <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M15 7a2 2 0 012 2m-9 8a2 2 0 012-2m7-3a6 6 0 11-12 0 6 6 0 0112 0z"/></svg>
                 Product Keys
             </a>
-            <a href="{{ route('super_admin.dashboard', ['tab' => 'settings']) }}" class="sidebar-link {{ request()->routeIs('super_admin.dashboard') && request('tab') === 'settings' ? 'active' : '' }}" id="nav-settings">
+            <a href="<?php echo e(route('super_admin.dashboard', ['tab' => 'settings'])); ?>" class="sidebar-link <?php echo e(request()->routeIs('super_admin.dashboard') && request('tab') === 'settings' ? 'active' : ''); ?>" id="nav-settings">
                 <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.066 2.573c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.573 1.066c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 00-1.065-2.572c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31 2.37-2.37.996.608 2.296.07 2.572-1.065z"/><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"/></svg>
                 System Settings
             </a>
-            <a href="{{ route('super_admin.dashboard', ['tab' => 'logs']) }}" class="sidebar-link {{ request()->routeIs('super_admin.dashboard') && request('tab') === 'logs' ? 'active' : '' }}" id="nav-logs">
+            <a href="<?php echo e(route('super_admin.dashboard', ['tab' => 'logs'])); ?>" class="sidebar-link <?php echo e(request()->routeIs('super_admin.dashboard') && request('tab') === 'logs' ? 'active' : ''); ?>" id="nav-logs">
                 <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 12h6m-6 4h6"/></svg>
                 Activity Logs
             </a>
 
-            @endif
+            <?php endif; ?>
 
-            @if(!Auth::user()->isSuperAdmin() || session()->has('active_workshop_id'))
-            <a href="{{ route('dashboard') }}" class="sidebar-link {{ request()->routeIs('dashboard') ? 'active' : '' }}" id="nav-dashboard">
+            <?php if(!Auth::user()->isSuperAdmin() || session()->has('active_workshop_id')): ?>
+            <a href="<?php echo e(route('dashboard')); ?>" class="sidebar-link <?php echo e(request()->routeIs('dashboard') ? 'active' : ''); ?>" id="nav-dashboard">
                 <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6"/></svg>
                 Dashboard
             </a>
             
 
-            <a href="{{ route('bills.index') }}" class="sidebar-link {{ request()->routeIs('bills.*') && !request()->routeIs('bills.create') ? 'active' : '' }}" id="nav-bills">
+            <a href="<?php echo e(route('bills.index')); ?>" class="sidebar-link <?php echo e(request()->routeIs('bills.*') && !request()->routeIs('bills.create') ? 'active' : ''); ?>" id="nav-bills">
                 <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M9 14l6-6m-5.5.5h.01m4.99 5h.01M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16l3.5-2 3.5 2 3.5-2 3.5 2z"/></svg>
                 Invoices
             </a>
 
-            <a href="{{ route('bill-templates.index') }}" class="sidebar-link {{ request()->routeIs('bill-templates.*') ? 'active' : '' }}" id="nav-bill-templates">
+            <a href="<?php echo e(route('bill-templates.index')); ?>" class="sidebar-link <?php echo e(request()->routeIs('bill-templates.*') ? 'active' : ''); ?>" id="nav-bill-templates">
                 <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M19 11H5m14 0a2 2 0 012 2v6a2 2 0 01-2 2H5a2 2 0 01-2-2v-6a2 2 0 012-2m14 0V9a2 2 0 00-2-2M5 11V9a2 2 0 012-2m0 0V5a2 2 0 012-2h6a2 2 0 012 2v2M7 7h10"/></svg>
                 Bill Templates
             </a>
 
-            <a href="{{ route('customers.index') }}" class="sidebar-link {{ request()->routeIs('customers.*') ? 'active' : '' }}" id="nav-customers">
+            <a href="<?php echo e(route('customers.index')); ?>" class="sidebar-link <?php echo e(request()->routeIs('customers.*') ? 'active' : ''); ?>" id="nav-customers">
                 <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z"/></svg>
                 Customers
             </a>
 
-            <a href="{{ route('vehicles.index') }}" class="sidebar-link {{ request()->routeIs('vehicles.*') ? 'active' : '' }}" id="nav-vehicles">
+            <a href="<?php echo e(route('vehicles.index')); ?>" class="sidebar-link <?php echo e(request()->routeIs('vehicles.*') ? 'active' : ''); ?>" id="nav-vehicles">
                 <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M8 17h8M8 17v4H6v-4m2 0H4.5A1.5 1.5 0 013 15.5v-3.194a1.5 1.5 0 01.138-.632L5 8h14l1.862 3.674c.09.2.138.416.138.632V15.5a1.5 1.5 0 01-1.5 1.5H16m0 0v4h-2v-4m0 0H8M7 11h.01M17 11h.01"/></svg>
                 Vehicles
             </a>
 
-            <a href="{{ route('services.index') }}" class="sidebar-link {{ request()->routeIs('services.*') ? 'active' : '' }}" id="nav-services">
+            <a href="<?php echo e(route('services.index')); ?>" class="sidebar-link <?php echo e(request()->routeIs('services.*') ? 'active' : ''); ?>" id="nav-services">
                 <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.066 2.573c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.573 1.066c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 00-1.065-2.572c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31 2.37-2.37.996.608 2.296.07 2.572-1.065z"/><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"/></svg>
                 Services
             </a>
 
-            <a href="{{ route('products.index') }}" class="sidebar-link {{ request()->routeIs('products.*') ? 'active' : '' }}" id="nav-products">
+            <a href="<?php echo e(route('products.index')); ?>" class="sidebar-link <?php echo e(request()->routeIs('products.*') ? 'active' : ''); ?>" id="nav-products">
                 <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M20 7l-8-4-8 4m16 0l-8 4m8-4v10l-8 4m0-10L4 7m8 4v10M4 7v10l8 4"/></svg>
                 Products / Stock
             </a>
 
-            <a href="{{ route('expenses.index') }}" class="sidebar-link {{ request()->routeIs('expenses.*') ? 'active' : '' }}" id="nav-expenses">
+            <a href="<?php echo e(route('expenses.index')); ?>" class="sidebar-link <?php echo e(request()->routeIs('expenses.*') ? 'active' : ''); ?>" id="nav-expenses">
                 <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
                 Expenses
             </a>
 
-            <a href="{{ route('purchases.index') }}" class="sidebar-link {{ request()->routeIs('purchases.*') ? 'active' : '' }}" id="nav-purchases">
+            <a href="<?php echo e(route('purchases.index')); ?>" class="sidebar-link <?php echo e(request()->routeIs('purchases.*') ? 'active' : ''); ?>" id="nav-purchases">
                 <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M3 3h2l.4 2M7 13h10l4-8H5.4M7 13L5.4 5M7 13l-2.293 2.293c-.63.63-.184 1.707.707 1.707H17m0 0a2 2 0 100 4 2 2 0 000-4zm-8 2a2 2 0 11-4 0 2 2 0 014 0z"/></svg>
                 Purchases
             </a>
 
-            <a href="{{ route('salaries.index') }}" class="sidebar-link {{ request()->routeIs('salaries.*') ? 'active' : '' }}" id="nav-salaries">
+            <a href="<?php echo e(route('salaries.index')); ?>" class="sidebar-link <?php echo e(request()->routeIs('salaries.*') ? 'active' : ''); ?>" id="nav-salaries">
                 <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M17 9V7a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2m2 4h10a2 2 0 002-2v-6a2 2 0 00-2-2H9a2 2 0 00-2 2v6a2 2 0 002 2zm7-5a2 2 0 11-4 0 2 2 0 014 0z"/></svg>
                 Salaries
             </a>
 
-            <a href="{{ route('employees.index') }}" class="sidebar-link {{ request()->routeIs('employees.*') ? 'active' : '' }}" id="nav-employees">
+            <a href="<?php echo e(route('employees.index')); ?>" class="sidebar-link <?php echo e(request()->routeIs('employees.*') ? 'active' : ''); ?>" id="nav-employees">
                 <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"/></svg>
                 Staff
             </a>
 
-            <a href="{{ route('work-orders.index') }}" class="sidebar-link {{ request()->routeIs('work-orders.*') ? 'active' : '' }}" id="nav-work-orders">
+            <a href="<?php echo e(route('work-orders.index')); ?>" class="sidebar-link <?php echo e(request()->routeIs('work-orders.*') ? 'active' : ''); ?>" id="nav-work-orders">
                 <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2m-6 9l2 2 4-4"/></svg>
                 Work Orders
             </a>
 
-            <a href="{{ route('warranties.index') }}" class="sidebar-link {{ request()->routeIs('warranties.*') ? 'active' : '' }}" id="nav-warranties">
+            <a href="<?php echo e(route('warranties.index')); ?>" class="sidebar-link <?php echo e(request()->routeIs('warranties.*') ? 'active' : ''); ?>" id="nav-warranties">
                 <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z"/></svg>
                 Warranty
             </a>
 
 
 
-            @if(Auth::user()->role === 'admin' || session()->has('active_workshop_id'))
-            <a href="{{ route('system.index') }}" class="sidebar-link {{ request()->routeIs('system.*') ? 'active' : '' }}" id="nav-system-tenant">
+            <?php if(Auth::user()->role === 'admin' || session()->has('active_workshop_id')): ?>
+            <a href="<?php echo e(route('system.index')); ?>" class="sidebar-link <?php echo e(request()->routeIs('system.*') ? 'active' : ''); ?>" id="nav-system-tenant">
                 <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.066 2.573c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.573 1.066c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 00-1.066-2.573c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31 2.37-2.37.996.608 2.296.07 2.572-1.065z"/><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"/></svg>
                 System Settings
             </a>
-            @endif
-            @endif
+            <?php endif; ?>
+            <?php endif; ?>
         </nav>
 
     </aside>
-    @endauth
+    <?php endif; ?>
 
-    {{-- Main Content --}}
-    <div class="{{ Auth::check() ? 'lg:ml-72 justify-start' : 'w-full max-w-md mx-auto' }} {{ Auth::check() ? 'min-h-screen' : '' }} flex flex-col">
-        @auth
-        {{-- Top Bar --}}
+    
+    <div class="<?php echo e(Auth::check() ? 'lg:ml-72 justify-start' : 'w-full max-w-md mx-auto'); ?> <?php echo e(Auth::check() ? 'min-h-screen' : ''); ?> flex flex-col">
+        <?php if(auth()->guard()->check()): ?>
+        
         <header class="sticky top-0 z-30 bg-white/80 backdrop-blur-md border-b border-slate-200/60 no-print">
             <div class="flex items-center justify-between px-4 sm:px-6 lg:px-8 h-16 gap-4">
                 <div class="flex items-center gap-3 min-w-0">
-                    {{-- Mobile Menu Toggle --}}
+                    
                     <button onclick="toggleSidebar()" class="lg:hidden p-2 -ml-2 rounded-xl hover:bg-slate-50 text-slate-500 hover:text-slate-950 transition-colors shrink-0" id="menu-toggle">
                         <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"/></svg>
                     </button>
 
-                    {{-- Page Title --}}
+                    
                     <div class="flex flex-col justify-center min-w-0">
-                        <h2 class="text-base sm:text-lg font-bold text-slate-900 leading-tight truncate">@yield('page-title', 'Dashboard')</h2>
+                        <h2 class="text-base sm:text-lg font-bold text-slate-900 leading-tight truncate"><?php echo $__env->yieldContent('page-title', 'Dashboard'); ?></h2>
                         <p class="hidden sm:block text-[10px] sm:text-xs text-slate-500 mt-0.5 truncate">
-                            Welcome to {{ (Auth::user()->isSuperAdmin() && session()->has('active_workshop_id')) ? 'Garage Inspection' : (Auth::user()->isSuperAdmin() ? 'Suhaim Soft Control Panel' : (Auth::user()->workshop->name ?? 'Suhaim Soft Work Shop')) }}
+                            Welcome to <?php echo e((Auth::user()->isSuperAdmin() && session()->has('active_workshop_id')) ? 'Garage Inspection' : (Auth::user()->isSuperAdmin() ? 'Suhaim Soft Control Panel' : (Auth::user()->workshop->name ?? 'Suhaim Soft Work Shop'))); ?>
+
                         </p>
                     </div>
                 </div>
 
-                {{-- Right side --}}
+                
                 <div class="flex items-center gap-2 sm:gap-4 shrink-0">
 
 
                     <div class="flex items-center gap-1 sm:gap-2 px-2 py-1.5 sm:px-4 sm:py-2 bg-slate-50 rounded-lg sm:rounded-xl border border-slate-200 overflow-hidden text-ellipsis whitespace-nowrap min-w-0">
                         <svg class="hidden sm:block w-3.5 h-3.5 sm:w-4 sm:h-4 text-slate-400 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"/></svg>
-                        <span id="live-clock" class="text-[9px] sm:text-xs text-slate-600 font-semibold truncate tracking-tighter sm:tracking-normal">{{ now()->format('d M Y h:i A') }}</span>
+                        <span id="live-clock" class="text-[9px] sm:text-xs text-slate-600 font-semibold truncate tracking-tighter sm:tracking-normal"><?php echo e(now()->format('d M Y h:i A')); ?></span>
                     </div>
                     
                     <div class="flex items-center gap-1.5 sm:gap-2 shrink-0">
-                        @if(Auth::user()->isSuperAdmin() || Auth::user()->workshop)
+                        <?php if(Auth::user()->isSuperAdmin() || Auth::user()->workshop): ?>
                         <button onclick="window.location.reload()" class="hidden sm:flex items-center gap-1.5 px-2.5 py-1.5 sm:px-4 sm:py-2 bg-slate-50 rounded-lg sm:rounded-xl border border-slate-200 hover:bg-slate-100 transition-all active:scale-95" title="Reload Page">
                             <svg class="w-3.5 h-3.5 sm:w-4 sm:h-4 text-slate-500 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15"/></svg>
                             <span class="hidden sm:inline text-xs text-slate-600 font-semibold">Reload</span>
                         </button>
-                        @endif
-                        <form action="{{ route('logout') }}" method="POST" class="inline m-0">
-                            @csrf
+                        <?php endif; ?>
+                        <form action="<?php echo e(route('logout')); ?>" method="POST" class="inline m-0">
+                            <?php echo csrf_field(); ?>
                             <button type="submit" class="inline-flex items-center justify-center gap-1.5 p-2 sm:px-4 sm:py-2 text-[10px] sm:text-xs font-semibold text-rose-600 bg-rose-50 border border-rose-100 hover:bg-rose-100/60 rounded-lg sm:rounded-xl transition-all active:scale-95" title="Sign Out">
                                 <svg class="w-5 h-5 sm:w-4 sm:h-4 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1"/></svg>
                                 <span class="hidden sm:inline">Sign Out</span>
@@ -852,11 +854,11 @@
                 </div>
             </div>
         </header>
-        @endauth
+        <?php endif; ?>
 
-        @auth
-        @if(auth()->user()->workshop && in_array(auth()->user()->workshop->subscription_status, ['trial', 'training']))
-        @php
+        <?php if(auth()->guard()->check()): ?>
+        <?php if(auth()->user()->workshop && in_array(auth()->user()->workshop->subscription_status, ['trial', 'training'])): ?>
+        <?php
             $workshop = auth()->user()->workshop;
             $trialEnds = \Carbon\Carbon::parse($workshop->trial_ends_at);
             // Calculate days left, making sure it shows 0 if it expires today
@@ -868,15 +870,13 @@
                 : ($trialEnds->isTomorrow() 
                     ? 'Tomorrow, ' . $trialEnds->format('h:i A') 
                     : $trialEnds->format('d M Y, h:i A'));
-        @endphp
+        ?>
         <div x-data="{ 
-            openLicenseActivationModal: {{ session('error') ? 'true' : 'false' }},
-            hideSessionError: false,
+            openLicenseActivationModal: <?php echo e(session('error') ? 'true' : 'false'); ?>,
             productKey: '',
             validationError: '',
             submitting: false,
             formatKey() {
-                this.hideSessionError = true;
                 var raw = this.productKey.replace(/[^A-Za-z0-9]/g, '').toUpperCase().slice(0, 16);
                 var fmt = '';
                 for (var i = 0; i < raw.length; i++) {
@@ -900,12 +900,12 @@
                     <div class="flex items-center gap-3">
                         <svg class="w-5 h-5 text-amber-600 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"/></svg>
                         <p class="text-sm font-semibold text-amber-800">
-                            {{ $isTraining ? 'Training' : 'Trial' }} Status:
+                            <?php echo e($isTraining ? 'Training' : 'Trial'); ?> Status:
                             <span id="trial-countdown" class="font-bold">Loading...</span>
                             <span class="text-xs text-amber-700 font-medium ml-1">(Expires: <span id="trial-expiry-display"></span>)</span>
-                            @if($workshop->isTrialExpired() && $workshop->restrict_features_on_expiry)
+                            <?php if($workshop->isTrialExpired() && $workshop->restrict_features_on_expiry): ?>
                                 <span class="ml-2 text-rose-700 bg-rose-100/80 px-2 py-0.5 rounded border border-rose-200 text-xs font-bold whitespace-nowrap">Write actions restricted</span>
-                            @endif
+                            <?php endif; ?>
                         </p>
                     </div>
                     <button type="button" @click="openLicenseActivationModal = true" class="inline-flex items-center justify-center px-4 py-1.5 text-xs font-bold text-amber-900 bg-amber-200/50 hover:bg-amber-300/60 rounded-lg transition-colors border border-amber-300/80 shrink-0">
@@ -917,13 +917,13 @@
             <script>
             (function() {
                 // Expiry from server — ISO string WITHOUT timezone, so JS parses it as local time
-                var expiryISO = '{{ $trialEnds->format("Y-m-d\TH:i:s") }}';
+                var expiryISO = '<?php echo e($trialEnds->format("Y-m-d\TH:i:s")); ?>';
                 var expiryDate = new Date(expiryISO);
                 
                 // Formatted string exactly as it appears in dashboard (server-rendered)
-                var formattedExpiryStr = '{{ $formattedExpiryDate }}';
+                var formattedExpiryStr = '<?php echo e($formattedExpiryDate); ?>';
                 
-                var isTraining = {{ $isTraining ? 'true' : 'false' }};
+                var isTraining = <?php echo e($isTraining ? 'true' : 'false'); ?>;
                 var label = isTraining ? 'Training' : 'Trial';
 
                 function pad(n) { return String(n).padStart(2, '0'); }
@@ -971,7 +971,7 @@
             })();
             </script>
 
-            {{-- ══ Activation Modal (Admin Side) — New UI ══ --}}
+            
             <div x-show="openLicenseActivationModal" x-cloak
                  class="fixed inset-0 z-[100] flex items-end sm:items-center justify-center p-4 sm:p-0"
                  role="dialog" aria-modal="true"
@@ -982,10 +982,10 @@
                  x-transition:leave-start="opacity-100"
                  x-transition:leave-end="opacity-0">
 
-                {{-- Backdrop --}}
+                
                 <div class="absolute inset-0 bg-slate-800/60 transition-opacity" @click="openLicenseActivationModal = false"></div>
 
-                {{-- Simple Modal Card --}}
+                
                 <div class="relative w-full sm:max-w-lg z-10 bg-white rounded-2xl shadow-xl overflow-hidden"
                      x-transition:enter="transition ease-out duration-200 transform"
                      x-transition:enter-start="translate-y-4 sm:translate-y-0 sm:scale-95 opacity-0"
@@ -994,28 +994,25 @@
                      x-transition:leave-start="translate-y-0 sm:scale-100 opacity-100"
                      x-transition:leave-end="translate-y-4 sm:translate-y-0 sm:scale-95 opacity-0">
 
-                    <form action="{{ route('activate_license') }}" method="POST" @submit.prevent="validate() && $el.submit()">
-                        @csrf
+                    <form action="<?php echo e(route('activate_license')); ?>" method="POST" @submit.prevent="validate() && $el.submit()">
+                        <?php echo csrf_field(); ?>
                         
                         <div class="px-6 pt-6 pb-6 sm:px-8 sm:pt-8">
-                            {{-- Header --}}
+                            
                             <div class="mb-5">
                                 <h3 class="text-xl font-bold text-slate-900 font-outfit">Activate License</h3>
                                 <p class="text-sm text-slate-500 mt-1.5">Redeem your product key to activate or extend subscription</p>
                             </div>
 
-                            {{-- Session error --}}
-                            @if(session('error'))
-                            <div x-show="!hideSessionError" class="mb-5 bg-red-50 border border-red-200 rounded-lg p-3 flex items-start gap-2">
+                            
+                            <?php if(session('error')): ?>
+                            <div class="mb-5 bg-red-50 border border-red-200 rounded-lg p-3 flex items-start gap-2">
                                 <svg class="w-5 h-5 text-red-500 shrink-0 mt-0.5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M12 8v4m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
-                                <div>
-                                    <h4 class="text-sm font-bold text-red-800">Activation Error</h4>
-                                    <span class="text-sm font-medium text-red-700">{{ session('error') }}</span>
-                                </div>
+                                <span class="text-sm font-medium text-red-700"><?php echo e(session('error')); ?></span>
                             </div>
-                            @endif
+                            <?php endif; ?>
 
-                            {{-- Key Input --}}
+                            
                             <div>
                                 <label class="block text-sm font-semibold text-slate-700 mb-2">License Key <span class="text-red-500">*</span></label>
                                 <input type="text" name="product_key" x-model="productKey" @input="formatKey()" required autocomplete="off" spellcheck="false" maxlength="19" class="w-full px-4 py-3 bg-white border rounded-xl font-mono text-base tracking-[0.1em] text-slate-900 placeholder-slate-400 focus:outline-none focus:ring-1 transition-colors" :class="validationError ? 'border-red-500 focus:border-red-500 focus:ring-red-500' : 'border-slate-300 focus:border-blue-500 focus:ring-blue-500'" placeholder="XXXX-XXXX-XXXX-XXXX">
@@ -1023,7 +1020,7 @@
                             </div>
                         </div>
 
-                        {{-- Footer with buttons --}}
+                        
                         <div class="bg-white px-6 py-4 sm:px-8 sm:pb-8 flex flex-col-reverse sm:flex-row sm:items-center justify-between gap-4 rounded-b-2xl">
                             <div class="text-sm text-slate-500 text-center sm:text-left">
                                 Need a key? Contact Suhaim Soft<br>
@@ -1048,9 +1045,9 @@
 
         </div>
 
-        @endif
+        <?php endif; ?>
         
-        @php
+        <?php
             $alertUser = auth()->user();
             $alertWorkshop = null;
             if ($alertUser) {
@@ -1060,12 +1057,12 @@
                     $alertWorkshop = $alertUser->workshop;
                 }
             }
-        @endphp
+        ?>
         
-        @if($alertWorkshop && $alertWorkshop->alert_message)
-            @if(!$alertWorkshop->alert_expires_at || now()->lessThan($alertWorkshop->alert_expires_at))
+        <?php if($alertWorkshop && $alertWorkshop->alert_message): ?>
+            <?php if(!$alertWorkshop->alert_expires_at || now()->lessThan($alertWorkshop->alert_expires_at)): ?>
             <div x-data="{ openSystemAlert: false }" x-init="
-                    const alertKey = 'admin_alert_' + {{ $alertWorkshop->id }} + '_' + '{{ md5($alertWorkshop->alert_message) }}';
+                    const alertKey = 'admin_alert_' + <?php echo e($alertWorkshop->id); ?> + '_' + '<?php echo e(md5($alertWorkshop->alert_message)); ?>';
                     if (!sessionStorage.getItem(alertKey)) {
                         openSystemAlert = true;
                         sessionStorage.setItem(alertKey, 'true');
@@ -1089,7 +1086,7 @@
                     }
                 ">
                 
-                {{-- Modal Overlay --}}
+                
                 <div x-show="openSystemAlert" x-cloak class="fixed inset-0 z-[100] flex items-center justify-center p-4 bg-slate-900/60 backdrop-blur-sm">
                     <div class="bg-white rounded-2xl shadow-2xl w-full max-w-md overflow-hidden transform transition-all"
                          @click.away="openSystemAlert = false"
@@ -1107,7 +1104,7 @@
                             <h3 class="text-xl font-extrabold text-amber-900">Message from System Admin</h3>
                         </div>
                         <div class="p-6 text-center">
-                            <p class="text-base font-medium text-slate-700 whitespace-pre-wrap break-words">{{ $alertWorkshop->alert_message }}</p>
+                            <p class="text-base font-medium text-slate-700 whitespace-pre-wrap break-words"><?php echo e($alertWorkshop->alert_message); ?></p>
                         </div>
                         <div class="p-4 bg-slate-50 border-t border-slate-100 flex justify-center">
                             <button @click="openSystemAlert = false" type="button" class="px-6 py-2.5 bg-amber-600 hover:bg-amber-700 text-white font-bold rounded-xl shadow-sm transition-colors w-full sm:w-auto">
@@ -1117,22 +1114,22 @@
                     </div>
                 </div>
             </div>
-            @endif
-        @endif
-        @endauth
+            <?php endif; ?>
+        <?php endif; ?>
+        <?php endif; ?>
 
 
 
 
 
-        {{-- Page Content --}}
-        <main class="{{ Auth::check() ? 'p-4 sm:p-6 lg:p-8' : '' }}">
+        
+        <main class="<?php echo e(Auth::check() ? 'p-4 sm:p-6 lg:p-8' : ''); ?>">
 
-            @yield('content')
+            <?php echo $__env->yieldContent('content'); ?>
         </main>
     </div>
 
-    {{-- Sidebar Toggle Script --}}
+    
     <script>
         function toggleSidebar() {
             const sidebar = document.getElementById('sidebar');
@@ -1161,7 +1158,7 @@
         }
         setInterval(updateClock, 1000);
     </script>
-    {{-- PWA Service Worker Registration & Custom Install Banner --}}
+    
     <script>
         let deferredAppPrompt;
         const installAppContainer = document.getElementById('pwa-install-container');
@@ -1214,7 +1211,7 @@
         });
     </script>
 
-    {{-- Global Toast Notifications --}}
+    
     <div x-data="globalToastManager()" x-init="init()" class="fixed top-4 right-4 z-[9999] flex flex-col gap-2 max-w-sm w-full pointer-events-none" x-cloak>
         <template x-for="t in toasts" :key="t.id">
             <div x-show="t.show"
@@ -1250,14 +1247,14 @@
             return {
                 toasts: [],
                 init() {
-                    @if(session('success'))
-                        this.add('success', 'Success', "{{ session('success') }}");
-                    @endif
-                    @if(session('error'))
-                        @if(session('error') !== 'Incorrect activation key. Please enter a valid product key.')
-                            this.add('error', 'Error', "{{ session('error') }}");
-                        @endif
-                    @endif
+                    <?php if(session('success')): ?>
+                        this.add('success', 'Success', "<?php echo e(session('success')); ?>");
+                    <?php endif; ?>
+                    <?php if(session('error')): ?>
+                        <?php if(session('error') !== 'Incorrect activation key. Please enter a valid product key.'): ?>
+                            this.add('error', 'Error', "<?php echo e(session('error')); ?>");
+                        <?php endif; ?>
+                    <?php endif; ?>
                     
                     window.addEventListener('toast', (e) => {
                         this.add(e.detail.type, e.detail.title, e.detail.message);
@@ -1302,7 +1299,8 @@
             }
         };
     </script>
-    @stack('modals')
-    @stack('scripts')
+    <?php echo $__env->yieldPushContent('modals'); ?>
+    <?php echo $__env->yieldPushContent('scripts'); ?>
 </body>
 </html>
+<?php /**PATH E:\Suhaim Soft Work Shop\suhaimsoftworkshop\resources\views/layouts/app.blade.php ENDPATH**/ ?>
