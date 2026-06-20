@@ -1,62 +1,36 @@
-# Suhaim Soft Workshop Management System
+# Suhaim Soft Workshop
 
-A robust and secure workshop management platform built with Laravel, designed to run in a local environment.
+This project uses a custom directory structure where the Laravel backend is placed inside the `server/` directory, while the `public/` directory remains at the root level for easy shared-hosting deployment.
 
-## Local Development Setup
+## How to Run the Application Locally
 
-To run this application locally:
+Because the `artisan` file is located inside the `server/` folder, you cannot run `php artisan` commands from the root directory.
 
-1. **Configure Environment**: Copy `.env.example` to `.env` (if not already present) and configure your database settings (`DB_DATABASE`, `DB_USERNAME`, `DB_PASSWORD`).
-2. **Install Dependencies**:
+### Option 1: Using `php artisan serve` (Recommended)
+1. Open your terminal.
+2. Navigate into the `server` directory:
    ```bash
-   composer install
-   npm install
+   cd server
    ```
-3. **Database Migration & Seed**:
+3. Run the artisan serve command:
    ```bash
-   php artisan migrate --seed
-   ```
-4. **Compile Assets & Start Servers**:
-   ```bash
-   npm run dev
    php artisan serve
    ```
-   The application will be accessible locally at `http://127.0.0.1:8000`.
+4. Access the application in your browser at `http://127.0.0.1:8000`.
 
----
+### Option 2: Using PHP's Built-in Server
+If you prefer to serve the application directly from the root folder using the `public` directory:
+1. Open your terminal in the root directory (`suhaimsoftworkshop`).
+2. Run the following command:
+   ```bash
+   php -S localhost:8000 -t public
+   ```
+3. Access the application in your browser at `http://localhost:8000`.
 
-## 🔐 Super Admin Credentials
-
-Login URL: `http://127.0.0.1:8000/login`
-
-### Super Admin 1
-| Field    | Value                        |
-|----------|------------------------------|
-| Name     | Suhaim Soft Super Admin      |
-| Email    | `infosuhaimsoft@gmail.com`   |
-| Password | `12345678`                   |
-
-### Super Admin 2
-| Field    | Value                        |
-|----------|------------------------------|
-| Name     | Super Admin 2                |
-| Email    | `admin2@suhaimsoft.com`      |
-| Password | `admin2@123`                 |
-
-> ⚠️ **Important:** Change these passwords in a production environment.
-
----
-
-## 🔄 Reset Super Admin
-
-To reset or recreate a super admin account, run:
+## Running Artisan Commands
+Any time you need to run an artisan command (such as `migrate`, `optimize`, or `tinker`), you **must** first change your directory to the `server` folder:
 
 ```bash
-php artisan super-admin:reset
-```
-
-Or use the secure web route (requires `ADMIN_RESET_KEY` env variable):
-
-```
-http://127.0.0.1:8000/run-migrations?key=YOUR_SECRET_KEY
+cd server
+php artisan migrate
 ```
