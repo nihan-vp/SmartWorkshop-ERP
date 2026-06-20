@@ -417,45 +417,108 @@
 
 @if($workshop)
 <!-- Activation Modal -->
-<div x-show="showModal" class="fixed inset-0 z-[100] overflow-y-auto" x-cloak>
-    <div class="flex items-end justify-center min-h-screen pt-4 px-4 pb-20 text-center sm:block sm:p-0">
-        <div x-show="showModal" x-transition.opacity class="fixed inset-0 transition-opacity" aria-hidden="true" @click="showModal = false">
-            <div class="absolute inset-0 bg-slate-900 opacity-75"></div>
-        </div>
-        <span class="hidden sm:inline-block sm:align-middle sm:h-screen" aria-hidden="true">&#8203;</span>
-        <div x-show="showModal" x-transition class="inline-block align-bottom bg-white rounded-2xl text-left overflow-hidden shadow-xl transform transition-all sm:my-8 sm:align-middle sm:max-w-lg sm:w-full">
-            <div class="bg-white px-4 pt-5 pb-4 sm:p-6 sm:pb-4">
-                <div class="sm:flex sm:items-start">
-                    <div class="mt-3 text-center sm:mt-0 sm:text-left w-full">
-                        <h3 class="text-lg leading-6 font-bold text-slate-900 font-outfit" id="modal-title">
-                            Activate License
-                        </h3>
-                        <div class="mt-2">
-                            <p class="text-sm text-slate-500 mb-4">
-                                Redeem your product key to activate or extend subscription
-                            </p>
-                            <div class="space-y-4">
-                                <div>
-                                    <label class="block text-sm font-semibold text-slate-700 mb-1">License Key <span class="text-rose-500">*</span></label>
-                                    <input type="text" x-model="productKey" class="block w-full border border-slate-300 rounded-xl px-4 py-2 text-slate-900 focus:ring-primary-500 focus:border-primary-500 sm:text-sm font-mono" placeholder="XXXX-XXXX-XXXX-XXXX">
-                                </div>
-                            </div>
-                        </div>
+<div x-show="showModal" x-cloak
+     class="fixed inset-0 z-[100] flex items-end sm:items-center justify-center p-0 sm:p-4"
+     role="dialog" aria-modal="true"
+     x-transition:enter="transition ease-out duration-200"
+     x-transition:enter-start="opacity-0"
+     x-transition:enter-end="opacity-100"
+     x-transition:leave="transition ease-in duration-150"
+     x-transition:leave-start="opacity-100"
+     x-transition:leave-end="opacity-0">
+
+    {{-- Backdrop --}}
+    <div class="absolute inset-0" style="background:rgba(2,6,23,0.55);backdrop-filter:blur(6px);"
+         @click="showModal = false"></div>
+
+    {{-- Card --}}
+    <div class="relative w-full sm:max-w-sm z-10 rounded-t-3xl sm:rounded-3xl overflow-hidden shadow-2xl"
+         style="background:#fff;"
+         x-transition:enter="transition ease-out duration-250 transform"
+         x-transition:enter-start="translate-y-8 sm:translate-y-0 sm:scale-95 opacity-0"
+         x-transition:enter-end="translate-y-0 sm:scale-100 opacity-100"
+         x-transition:leave="transition ease-in duration-200 transform"
+         x-transition:leave-start="translate-y-0 sm:scale-100 opacity-100"
+         x-transition:leave-end="translate-y-8 sm:translate-y-0 sm:scale-95 opacity-0">
+
+        {{-- Top gradient bar --}}
+        <div style="height:4px;background:linear-gradient(90deg,#6366f1,#2563eb,#0ea5e9);"></div>
+
+        <div class="px-6 pt-6 pb-5">
+            {{-- Header --}}
+            <div class="flex items-start justify-between mb-5">
+                <div class="flex items-center gap-3">
+                    <div style="width:42px;height:42px;border-radius:14px;background:linear-gradient(135deg,#ede9fe,#dbeafe);display:flex;align-items:center;justify-content:center;flex-shrink:0;">
+                        <svg width="20" height="20" fill="none" stroke="#4f46e5" stroke-width="2" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" d="M15 7a2 2 0 012 2m4 0a6 6 0 01-7.743 5.743L11 17H9v2H7v2H4a1 1 0 01-1-1v-2.586a1 1 0 01.293-.707l5.964-5.964A6 6 0 1121 9z"/>
+                        </svg>
+                    </div>
+                    <div>
+                        <h3 style="font-size:1rem;font-weight:800;color:#0f172a;line-height:1.2;">Activate License</h3>
+                        <p style="font-size:0.72rem;color:#64748b;margin-top:2px;">Enter your key to unlock full access</p>
                     </div>
                 </div>
-            </div>
-            <div class="bg-slate-50 px-4 py-3 sm:px-6 sm:flex sm:flex-row-reverse rounded-b-2xl">
-                <button type="button" @click="redeemKey()" :disabled="submitting || !productKey.trim()" class="w-full inline-flex justify-center rounded-xl border border-transparent shadow-sm px-4 py-2 bg-primary-600 text-base font-semibold text-white hover:bg-primary-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-primary-500 sm:ml-3 sm:w-auto sm:text-sm disabled:opacity-50 disabled:cursor-not-allowed">
-                    <span x-show="!submitting">Activate License</span>
-                    <span x-show="submitting">Activating...</span>
+                <button type="button" @click="showModal = false"
+                        style="width:32px;height:32px;border-radius:10px;display:flex;align-items:center;justify-content:center;color:#94a3b8;border:1px solid #e2e8f0;background:#fff;cursor:pointer;transition:all .15s;"
+                        onmouseover="this.style.background='#f1f5f9';this.style.color='#0f172a';"
+                        onmouseout="this.style.background='#fff';this.style.color='#94a3b8';">
+                    <svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12"/></svg>
                 </button>
-                <button type="button" @click="showModal = false" class="mt-3 w-full inline-flex justify-center rounded-xl border border-slate-300 shadow-sm px-4 py-2 bg-white text-base font-semibold text-slate-700 hover:bg-slate-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-slate-500 sm:mt-0 sm:ml-3 sm:w-auto sm:text-sm">
+            </div>
+
+            {{-- Key Input --}}
+            <div style="margin-bottom:6px;">
+                <label style="display:block;font-size:0.68rem;font-weight:700;color:#475569;text-transform:uppercase;letter-spacing:.08em;margin-bottom:8px;">
+                    License Key
+                </label>
+                <input type="text" x-model="productKey" @input="formatKey" @keydown.backspace="handleBackspace"
+                       autocomplete="off" spellcheck="false" maxlength="19"
+                       placeholder="XXXX-XXXX-XXXX-XXXX"
+                       style="width:100%;box-sizing:border-box;padding:14px 16px;background:#f8fafc;border:1.5px solid #e2e8f0;border-radius:14px;font-family:'Courier New',monospace;font-size:1.05rem;font-weight:700;letter-spacing:.15em;text-align:center;text-transform:uppercase;color:#0f172a;outline:none;transition:all .2s;"
+                       onfocus="this.style.borderColor='#6366f1';this.style.background='#fff';this.style.boxShadow='0 0 0 4px rgba(99,102,241,0.12)';"
+                       onblur="this.style.borderColor='#e2e8f0';this.style.background='#f8fafc';this.style.boxShadow='none';">
+            </div>
+
+            {{-- Segment progress dots --}}
+            <div style="display:flex;gap:6px;margin-bottom:18px;">
+                <div style="flex:1;height:3px;border-radius:999px;transition:background .25s;" :style="productKey.length >= 4 ? 'background:linear-gradient(90deg,#6366f1,#2563eb)' : 'background:#e2e8f0'"></div>
+                <div style="flex:1;height:3px;border-radius:999px;transition:background .25s;" :style="productKey.length >= 9 ? 'background:linear-gradient(90deg,#6366f1,#2563eb)' : 'background:#e2e8f0'"></div>
+                <div style="flex:1;height:3px;border-radius:999px;transition:background .25s;" :style="productKey.length >= 14 ? 'background:linear-gradient(90deg,#6366f1,#2563eb)' : 'background:#e2e8f0'"></div>
+                <div style="flex:1;height:3px;border-radius:999px;transition:background .25s;" :style="productKey.length >= 19 ? 'background:linear-gradient(90deg,#6366f1,#2563eb)' : 'background:#e2e8f0'"></div>
+            </div>
+
+            {{-- Buttons --}}
+            <div style="display:flex;gap:10px;">
+                <button type="button" @click="showModal = false"
+                        style="flex:1;padding:12px;border-radius:14px;border:1.5px solid #e2e8f0;background:#fff;font-size:0.875rem;font-weight:700;color:#475569;cursor:pointer;transition:all .15s;"
+                        onmouseover="this.style.background='#f8fafc';" onmouseout="this.style.background='#fff';">
                     Cancel
                 </button>
+                <button type="button" @click="redeemKey()" :disabled="submitting || !productKey.trim()"
+                        style="flex:2;padding:12px;border-radius:14px;border:none;background:linear-gradient(135deg,#4f46e5,#2563eb);color:#fff;font-size:0.875rem;font-weight:700;cursor:pointer;display:flex;align-items:center;justify-content:center;gap:8px;transition:all .2s;box-shadow:0 4px 14px rgba(79,70,229,0.35);"
+                        onmouseover="if(!this.disabled) { this.style.transform='translateY(-1px)';this.style.boxShadow='0 6px 20px rgba(79,70,229,0.45)'; }"
+                        onmouseout="if(!this.disabled) { this.style.transform='translateY(0)';this.style.boxShadow='0 4px 14px rgba(79,70,229,0.35)'; }">
+                    
+                    <svg x-show="!submitting" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" d="M8 11V7a4 4 0 118 0m-4 8v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2z"/>
+                    </svg>
+                    <span x-show="!submitting">Activate Now</span>
+                    
+                    <svg x-show="submitting" class="animate-spin" width="16" height="16" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" style="display:none;">
+                        <circle cx="12" cy="12" r="10" stroke="currentColor" stroke-opacity="0.25" stroke-width="4"></circle>
+                        <path fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+                    </svg>
+                    <span x-show="submitting" style="display:none;">Activating...</span>
+                </button>
+            </div>
+            
+            <div class="mt-4 text-center">
+                <p style="font-size:0.75rem;color:#64748b;font-weight:500;">
+                    Need a key? Call <a href="tel:8891479505" style="color:#4f46e5;font-weight:800;text-decoration:none;">8891479505</a>
+                </p>
             </div>
         </div>
     </div>
-</div>
 </div>
 @endif
     </div>
@@ -478,6 +541,23 @@
             isExpired: initialData.isExpired,
             hasExpiry: initialData.hasExpiry,
             keys: initialData.keys || [],
+            
+            formatKey() {
+                let raw = this.productKey.replace(/[^A-Za-z0-9]/g, '').toUpperCase().slice(0, 16);
+                let fmt = '';
+                for (let i = 0; i < raw.length; i++) {
+                    if (i > 0 && i % 4 === 0) fmt += '-';
+                    fmt += raw[i];
+                }
+                this.productKey = fmt;
+            },
+            handleBackspace(e) {
+                if (this.productKey.slice(-1) === '-') {
+                    e.preventDefault();
+                    this.productKey = this.productKey.slice(0, -2);
+                    this.formatKey();
+                }
+            },
             
             redeemKey() {
                 if (!this.productKey.trim()) return;
