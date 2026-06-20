@@ -658,35 +658,33 @@
     <aside id="sidebar" class="fixed top-0 left-0 z-50 h-full w-72 bg-white border-r border-blue-100 
                                transform -translate-x-full lg:translate-x-0 transition-transform duration-300 ease-out flex flex-col shadow-sm">
         
-        <div class="p-6 border-b border-blue-100">
-            <div class="flex items-center gap-3">
-                <div class="w-12 h-12 rounded-xl bg-gradient-to-br from-blue-600 to-blue-500 flex items-center justify-center shadow-lg shadow-blue-500/30 shrink-0">
-                    <svg width="24" height="24" viewBox="0 0 512 512" fill="currentColor" class="text-white">
-                        <path d="M 334 165 C 334 165 298 140 256 140 C 214 140 178 165 178 210 C 178 260 230 275 270 285 C 300 292 342 308 342 355 C 342 410 290 432 256 432 C 210 432 170 410 170 410 L 182 355 C 182 355 220 380 256 380 C 300 380 342 360 342 315 C 342 265 285 245 242 235 C 208 227 170 205 170 160 C 170 100 226 80 256 80 C 306 80 342 105 342 105 Z" />
-                    </svg>
-                </div>
+        <div class="p-4 border-b border-blue-100 bg-slate-50/50">
+            <div class="space-y-1">
+                <h1 class="text-sm font-extrabold text-slate-900 tracking-tight leading-tight truncate" title="<?php echo e((Auth::user()->isSuperAdmin() && session()->has('active_workshop_id')) ? session('active_workshop_name') : (Auth::user()->isSuperAdmin() ? Auth::user()->name : (Auth::user()->workshop->name ?? 'Suhaim Soft'))); ?>">
+                    <?php echo e((Auth::user()->isSuperAdmin() && session()->has('active_workshop_id')) ? session('active_workshop_name') : (Auth::user()->isSuperAdmin() ? Auth::user()->name : (Auth::user()->workshop->name ?? 'Suhaim Soft'))); ?>
 
-                <div>
-                    <h1 class="text-lg font-bold text-blue-900 leading-tight">
-                        <?php echo e((Auth::user()->isSuperAdmin() && session()->has('active_workshop_id')) ? session('active_workshop_name') : (Auth::user()->isSuperAdmin() ? Auth::user()->name : (Auth::user()->workshop->name ?? 'Suhaim Soft'))); ?>
+                </h1>
+                
+                <?php if(!Auth::user()->isSuperAdmin() || session()->has('active_workshop_id')): ?>
+                <p class="text-[11px] text-slate-500 font-semibold truncate">
+                    <?php echo e(session()->has('active_workshop_id') ? session('active_workshop_admin_name', \App\Models\User::where('workshop_id', session('active_workshop_id'))->where('role', 'admin')->first()?->name ?? 'Workshop Admin') : Auth::user()->name); ?>
 
-                    </h1>
-                    <?php if(!Auth::user()->isSuperAdmin() || session()->has('active_workshop_id')): ?>
-                    <p class="text-xs text-slate-500 font-semibold mt-0.5">
-                        <?php echo e(session()->has('active_workshop_id') ? session('active_workshop_admin_name', \App\Models\User::where('workshop_id', session('active_workshop_id'))->where('role', 'admin')->first()?->name ?? 'Workshop Admin') : Auth::user()->name); ?>
+                </p>
+                <?php endif; ?>
+                
+                <?php if((!Auth::user()->isSuperAdmin() || session()->has('active_workshop_id')) && Auth::user()->workshop && Auth::user()->workshop->phone): ?>
+                <p class="text-[11px] text-blue-600 font-semibold flex items-center gap-1">
+                    <svg class="w-3 h-3 text-blue-500 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 5a2 2 0 012-2h3.28a1 1 0 01.94.725l.548 2.2a1 1 0 01-.321.988l-1.305.98a10.582 10.582 0 004.872 4.872l.98-1.305a1 1 0 01.988-.321l2.2.548a1 1 0 01.725.94V19a2 2 0 01-2 2h-1C9.716 21 3 14.284 3 6V5z"/></svg>
+                    <?php echo e(Auth::user()->workshop->phone); ?>
 
-                    </p>
-                    <?php endif; ?>
-                    <?php if((!Auth::user()->isSuperAdmin() || session()->has('active_workshop_id')) && Auth::user()->workshop && Auth::user()->workshop->phone): ?>
-                    <p class="text-xs text-blue-500 font-medium mt-0.5">
-                        <?php echo e(Auth::user()->workshop->phone); ?>
+                </p>
+                <?php endif; ?>
 
-                    </p>
-                    <?php endif; ?>
-                    <p class="text-xs text-blue-600 font-bold tracking-wider uppercase mt-1">
-                        <?php echo e((Auth::user()->isSuperAdmin() && session()->has('active_workshop_id')) ? 'Workshop Owner' : (Auth::user()->isSuperAdmin() ? 'Suhaim Soft Super Admin' : (Auth::user()->role === 'admin' ? 'Workshop Owner' : 'Staff'))); ?>
+                <div class="pt-1">
+                    <span class="inline-flex items-center px-2 py-0.5 rounded-md text-[9px] font-extrabold uppercase tracking-wider bg-blue-50 text-blue-700 border border-blue-100 shadow-sm">
+                        <?php echo e((Auth::user()->isSuperAdmin() && session()->has('active_workshop_id')) ? 'Workshop Owner' : (Auth::user()->isSuperAdmin() ? 'Super Admin' : (Auth::user()->role === 'admin' ? 'Workshop Owner' : 'Staff'))); ?>
 
-                    </p>
+                    </span>
                 </div>
             </div>
         </div>
