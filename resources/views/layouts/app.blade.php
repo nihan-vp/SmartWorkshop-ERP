@@ -885,28 +885,22 @@
 
             <script>
             (function() {
-                // Expiry from server — ISO string in UTC
+                // Expiry from server — ISO string in UTC for accurate countdown
                 var expiryISO = '{{ $trialEnds->toIso8601String() }}';
                 var expiryDate = new Date(expiryISO);
+                
+                // Formatted string exactly as it appears in dashboard (server-rendered)
+                var formattedExpiryStr = '{{ $trialEnds->format("d M Y, h:i A") }}';
+                
                 var isTraining = {{ $isTraining ? 'true' : 'false' }};
                 var label = isTraining ? 'Training' : 'Trial';
 
                 function pad(n) { return String(n).padStart(2, '0'); }
 
-                // Format expiry as local time
-                function formatExpiry(d) {
-                    var months = ['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'];
-                    var h = d.getHours();
-                    var ampm = h >= 12 ? 'PM' : 'AM';
-                    h = h % 12 || 12;
-                    return pad(d.getDate()) + ' ' + months[d.getMonth()] + ' ' + d.getFullYear() +
-                           ', ' + h + ':' + pad(d.getMinutes()) + ' ' + ampm;
-                }
-
                 var expiryEl   = document.getElementById('trial-expiry-display');
                 var countdownEl = document.getElementById('trial-countdown');
 
-                if (expiryEl) expiryEl.textContent = formatExpiry(expiryDate);
+                if (expiryEl) expiryEl.textContent = formattedExpiryStr;
 
                 function updateCountdown() {
                     var now  = new Date();
