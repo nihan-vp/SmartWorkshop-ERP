@@ -338,7 +338,7 @@
 
             <!-- Subscription & Trial (Moved back to Right Sidebar) -->
             @if($workshop)
-            <div class="glass-card" x-data="subscriptionManager({
+            <div x-data="subscriptionManager({
                 status: '{{ $workshop ? $workshop->subscription_status : 'N/A' }}',
                 expiry: '{{ $workshop && $workshop->trial_ends_at ? $workshop->trial_ends_at->format('d M Y, h:i A') : 'Never (Lifetime)' }}',
                 daysRemaining: {{ $workshop && $workshop->trial_ends_at ? $workshop->getTrialDaysRemaining() : 0 }},
@@ -362,41 +362,44 @@
                     @endif
                 ]
             })">
+                <div class="glass-card">
                 <h3 class="text-sm font-bold text-slate-900 uppercase tracking-wider mb-4 flex items-center justify-between">
                     <span>{{ $workshop && $workshop->subscription_status === 'training' ? 'Training Status' : 'Subscription & Trial' }}</span>
                     <span class="badge uppercase text-[10px]" :class="status === 'active' || status === 'fix' || status === 'fixed' ? 'badge-success' : 'badge-danger'" x-text="status"></span>
                 </h3>
                 <div class="space-y-3">
                     @if($workshop)
-                        <div class="flex justify-between items-center text-xs pb-1.5 border-b border-slate-100">
+                        <div class="flex flex-wrap justify-between items-center text-xs pb-1.5 border-b border-slate-100 gap-2">
                             <span class="text-slate-500 font-semibold">Account Status</span>
-                            <span class="font-bold uppercase tracking-wider text-xs" :class="status === 'active' || status === 'fix' || status === 'fixed' ? 'text-emerald-600' : 'text-rose-600'" x-text="status"></span>
+                            <span class="font-bold uppercase tracking-wider text-xs text-right" :class="status === 'active' || status === 'fix' || status === 'fixed' ? 'text-emerald-600' : 'text-rose-600'" x-text="status"></span>
                         </div>
 
-                        <div class="flex justify-between items-center text-xs pb-1.5 border-b border-slate-100">
+                        <div class="flex flex-wrap justify-between items-center text-xs pb-1.5 border-b border-slate-100 gap-2">
                             <span class="text-slate-500 font-semibold">Expiration Date</span>
-                            <span class="font-bold text-slate-700" x-text="expiry"></span>
+                            <span class="font-bold text-slate-700 text-right" x-text="expiry"></span>
                         </div>
 
-                        <div class="flex justify-between items-center text-xs pb-1.5 border-b border-slate-100">
+                        <div class="flex flex-wrap justify-between items-center text-xs pb-1.5 border-b border-slate-100 gap-2">
                             <span class="text-slate-500 font-semibold">Time Remaining</span>
-                            <span x-show="isExpired" class="text-rose-600 font-bold bg-rose-50 px-2 py-0.5 rounded border border-rose-100 animate-pulse">Expired</span>
-                            <span x-show="!isExpired" class="text-slate-700 font-bold bg-blue-50 text-blue-700 px-2 py-0.5 rounded border border-blue-100">
-                                <span x-text="hasExpiry ? daysRemaining + ' Days Left' : 'Active &amp; Unlimited'"></span>
-                            </span>
+                            <div class="text-right">
+                                <span x-show="isExpired" class="text-rose-600 font-bold bg-rose-50 px-2 py-0.5 rounded border border-rose-100 animate-pulse inline-block">Expired</span>
+                                <span x-show="!isExpired" class="text-slate-700 font-bold bg-blue-50 text-blue-700 px-2 py-0.5 rounded border border-blue-100 inline-block mt-0.5 sm:mt-0">
+                                    <span x-text="hasExpiry ? daysRemaining + ' Days Left' : 'Active &amp; Unlimited'"></span>
+                                </span>
+                            </div>
                         </div>
-                        <div class="flex justify-between items-center text-xs pb-1.5 border-b border-slate-100">
+                        <div class="flex flex-wrap justify-between items-center text-xs pb-1.5 border-b border-slate-100 gap-2">
                             <span class="text-slate-500 font-semibold">Total Duration</span>
-                            <span class="font-bold text-slate-700" x-text="totalDuration + ' Days'"></span>
+                            <span class="font-bold text-slate-700 text-right" x-text="totalDuration + ' Days'"></span>
                         </div>
 
-                        <div class="flex justify-between items-center text-xs pb-1.5 border-b border-slate-100">
+                        <div class="flex flex-wrap justify-between items-center text-xs pb-1.5 border-b border-slate-100 gap-2">
                             <span class="text-slate-500 font-semibold">Operating Time</span>
-                            <span class="font-bold text-slate-700" x-text="'Day ' + subscriptionDay"></span>
+                            <span class="font-bold text-slate-700 text-right" x-text="'Day ' + subscriptionDay"></span>
                         </div>
 
                         <div class="mt-4 p-3 bg-red-50 border border-red-100 rounded-xl text-center text-xs">
-                            <p class="font-bold text-red-700">Please contact Suhaims Soft at 889147905 for an active key.</p>
+                            <p class="font-bold text-red-700">Please contact Suhaim Soft at 8891479505 for an active key.</p>
                         </div>
                         
                         <button @click="showModal = true" class="mt-3 w-full bg-primary-600 hover:bg-primary-700 text-white font-semibold py-2 px-4 rounded-xl transition-colors text-sm">
@@ -404,9 +407,10 @@
                         </button>
                     @endif
                 </div>
+                </div> <!-- End of glass-card -->
 
                 <!-- Activation Modal -->
-                <div x-show="showModal" class="fixed inset-0 z-50 overflow-y-auto" style="display: none;" x-cloak>
+                <div x-show="showModal" class="fixed inset-0 z-[100] overflow-y-auto" x-cloak>
                     <div class="flex items-end justify-center min-h-screen pt-4 px-4 pb-20 text-center sm:block sm:p-0">
                         <div x-show="showModal" x-transition.opacity class="fixed inset-0 transition-opacity" aria-hidden="true" @click="showModal = false">
                             <div class="absolute inset-0 bg-slate-900 opacity-75"></div>

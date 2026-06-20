@@ -949,7 +949,7 @@
             {{-- ══ Activation Modal (Admin Side) — New UI ══ --}}
             <div x-show="openLicenseActivationModal" x-cloak
                  class="fixed inset-0 z-[100] flex items-end sm:items-center justify-center p-0 sm:p-4"
-                 style="display:none;" role="dialog" aria-modal="true"
+                 role="dialog" aria-modal="true"
                  x-transition:enter="transition ease-out duration-200"
                  x-transition:enter-start="opacity-0"
                  x-transition:enter-end="opacity-100"
@@ -966,7 +966,10 @@
                      style="background:#fff;"
                      x-transition:enter="transition ease-out duration-250 transform"
                      x-transition:enter-start="translate-y-8 sm:translate-y-0 sm:scale-95 opacity-0"
-                     x-transition:enter-end="translate-y-0 sm:scale-100 opacity-100">
+                     x-transition:enter-end="translate-y-0 sm:scale-100 opacity-100"
+                     x-transition:leave="transition ease-in duration-200 transform"
+                     x-transition:leave-start="translate-y-0 sm:scale-100 opacity-100"
+                     x-transition:leave-end="translate-y-8 sm:translate-y-0 sm:scale-95 opacity-0">
 
                     {{-- Top gradient bar --}}
                     <div style="height:4px;background:linear-gradient(90deg,#6366f1,#2563eb,#0ea5e9);"></div>

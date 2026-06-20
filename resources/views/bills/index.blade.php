@@ -102,8 +102,7 @@
 
 {{-- Record Payment Modal --}}
 <div x-show="paymentModalOpen" 
-     class="fixed inset-0 z-50 flex items-center justify-center p-4 bg-slate-900/50 backdrop-blur-sm"
-     style="display: none;"
+     class="fixed inset-0 z-[100] flex items-center justify-center p-4 bg-slate-900/50 backdrop-blur-sm"
      x-cloak>
     <div class="bg-white w-full max-w-md rounded-2xl overflow-hidden shadow-2xl border border-slate-200 transition-all duration-300 transform"
          @click.away="paymentModalOpen = false"
