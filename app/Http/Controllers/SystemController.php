@@ -38,6 +38,7 @@ class SystemController extends Controller
         $dbSizeResult = DB::select("SELECT SUM(data_length + index_length) AS size FROM information_schema.TABLES WHERE table_schema = ?", [$dbName]);
         $databaseSize = $dbSizeResult[0]->size ?? 0;
 
+        $logDir = storage_path('logs');
         $logSize = 0;
         if (File::exists($logDir)) {
             foreach (File::files($logDir) as $file) {
