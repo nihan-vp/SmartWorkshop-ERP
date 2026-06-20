@@ -17,6 +17,32 @@
 @section('page-subtitle', 'Workshop Performance & Operations')
 
 @section('content')
+@if($workshop)
+<div x-data="subscriptionManager({
+    status: '{{ $workshop ? $workshop->subscription_status : 'N/A' }}',
+    expiry: '{{ $workshop && $workshop->trial_ends_at ? $workshop->trial_ends_at->format('d M Y, h:i A') : 'Never (Lifetime)' }}',
+    daysRemaining: {{ $workshop && $workshop->trial_ends_at ? $workshop->getTrialDaysRemaining() : 0 }},
+    totalDuration: {{ $workshop && $workshop->trial_ends_at ? $workshop->getTotalDurationDays() : 0 }},
+    subscriptionDay: {{ $workshop ? $workshop->getSubscriptionDay() : 0 }},
+    isExpired: {{ $workshop && $workshop->trial_ends_at && $workshop->isTrialExpired() ? 'true' : 'false' }},
+    hasExpiry: {{ $workshop && $workshop->trial_ends_at ? 'true' : 'false' }},
+    keys: [
+        @if($workshop)
+            @foreach($workshop->productKeys()->orderBy('used_at', 'desc')->get() as $key)
+                @php
+                    $parts = explode('-', $key->key);
+                    $masked = (count($parts) >= 3) ? ($parts[0] . '-XXXX-XXXX-' . end($parts)) : (substr($key->key, 0, 8) . '...');
+                @endphp
+                {
+                    key: '{{ $masked }}',
+                    duration: {{ $key->duration_days }},
+                    used_at: '{{ $key->used_at ? $key->used_at->format('d M Y, h:i A') : $key->updated_at->format('d M Y, h:i A') }}'
+                },
+            @endforeach
+        @endif
+    ]
+})">
+@endif
 <div class="max-w-7xl mx-auto space-y-5 animate-fade-in-up">
 
     <!-- Removed redundant banner -->
@@ -338,30 +364,7 @@
 
             <!-- Subscription & Trial (Moved back to Right Sidebar) -->
             @if($workshop)
-            <div x-data="subscriptionManager({
-                status: '{{ $workshop ? $workshop->subscription_status : 'N/A' }}',
-                expiry: '{{ $workshop && $workshop->trial_ends_at ? $workshop->trial_ends_at->format('d M Y, h:i A') : 'Never (Lifetime)' }}',
-                daysRemaining: {{ $workshop && $workshop->trial_ends_at ? $workshop->getTrialDaysRemaining() : 0 }},
-                totalDuration: {{ $workshop && $workshop->trial_ends_at ? $workshop->getTotalDurationDays() : 0 }},
-                subscriptionDay: {{ $workshop ? $workshop->getSubscriptionDay() : 0 }},
-                isExpired: {{ $workshop && $workshop->trial_ends_at && $workshop->isTrialExpired() ? 'true' : 'false' }},
-                hasExpiry: {{ $workshop && $workshop->trial_ends_at ? 'true' : 'false' }},
-                keys: [
-                    @if($workshop)
-                        @foreach($workshop->productKeys()->orderBy('used_at', 'desc')->get() as $key)
-                            @php
-                                $parts = explode('-', $key->key);
-                                $masked = (count($parts) >= 3) ? ($parts[0] . '-XXXX-XXXX-' . end($parts)) : (substr($key->key, 0, 8) . '...');
-                            @endphp
-                            {
-                                key: '{{ $masked }}',
-                                duration: {{ $key->duration_days }},
-                                used_at: '{{ $key->used_at ? $key->used_at->format('d M Y, h:i A') : $key->updated_at->format('d M Y, h:i A') }}'
-                            },
-                        @endforeach
-                    @endif
-                ]
-            })">
+            <div>
                 <div class="glass-card">
                 <h3 class="text-sm font-bold text-slate-900 uppercase tracking-wider mb-4 flex items-center justify-between">
                     <span>{{ $workshop && $workshop->subscription_status === 'training' ? 'Training Status' : 'Subscription & Trial' }}</span>
@@ -406,52 +409,55 @@
                     @endif
                 </div>
                 </div> <!-- End of glass-card -->
+            </div>
+            @endif
+        </div>
+    </div>
+</div>
 
-                <!-- Activation Modal -->
-                <template x-teleport="body">
-                <div x-show="showModal" class="fixed inset-0 z-[100] overflow-y-auto" x-cloak>
-                    <div class="flex items-end justify-center min-h-screen pt-4 px-4 pb-20 text-center sm:block sm:p-0">
-                        <div x-show="showModal" x-transition.opacity class="fixed inset-0 transition-opacity" aria-hidden="true" @click="showModal = false">
-                            <div class="absolute inset-0 bg-slate-900 opacity-75"></div>
-                        </div>
-                        <span class="hidden sm:inline-block sm:align-middle sm:h-screen" aria-hidden="true">&#8203;</span>
-                        <div x-show="showModal" x-transition class="inline-block align-bottom bg-white rounded-2xl text-left overflow-hidden shadow-xl transform transition-all sm:my-8 sm:align-middle sm:max-w-lg sm:w-full">
-                            <div class="bg-white px-4 pt-5 pb-4 sm:p-6 sm:pb-4">
-                                <div class="sm:flex sm:items-start">
-                                    <div class="mt-3 text-center sm:mt-0 sm:text-left w-full">
-                                        <h3 class="text-lg leading-6 font-bold text-slate-900 font-outfit" id="modal-title">
-                                            Activate License
-                                        </h3>
-                                        <div class="mt-2">
-                                            <p class="text-sm text-slate-500 mb-4">
-                                                Redeem your product key to activate or extend subscription
-                                            </p>
-                                            <div class="space-y-4">
-                                                <div>
-                                                    <label class="block text-sm font-semibold text-slate-700 mb-1">License Key <span class="text-rose-500">*</span></label>
-                                                    <input type="text" x-model="productKey" class="block w-full border border-slate-300 rounded-xl px-4 py-2 text-slate-900 focus:ring-primary-500 focus:border-primary-500 sm:text-sm font-mono" placeholder="XXXX-XXXX-XXXX-XXXX">
-                                                </div>
-                                            </div>
-                                        </div>
-                                    </div>
+@if($workshop)
+<!-- Activation Modal -->
+<div x-show="showModal" class="fixed inset-0 z-[100] overflow-y-auto" x-cloak>
+    <div class="flex items-end justify-center min-h-screen pt-4 px-4 pb-20 text-center sm:block sm:p-0">
+        <div x-show="showModal" x-transition.opacity class="fixed inset-0 transition-opacity" aria-hidden="true" @click="showModal = false">
+            <div class="absolute inset-0 bg-slate-900 opacity-75"></div>
+        </div>
+        <span class="hidden sm:inline-block sm:align-middle sm:h-screen" aria-hidden="true">&#8203;</span>
+        <div x-show="showModal" x-transition class="inline-block align-bottom bg-white rounded-2xl text-left overflow-hidden shadow-xl transform transition-all sm:my-8 sm:align-middle sm:max-w-lg sm:w-full">
+            <div class="bg-white px-4 pt-5 pb-4 sm:p-6 sm:pb-4">
+                <div class="sm:flex sm:items-start">
+                    <div class="mt-3 text-center sm:mt-0 sm:text-left w-full">
+                        <h3 class="text-lg leading-6 font-bold text-slate-900 font-outfit" id="modal-title">
+                            Activate License
+                        </h3>
+                        <div class="mt-2">
+                            <p class="text-sm text-slate-500 mb-4">
+                                Redeem your product key to activate or extend subscription
+                            </p>
+                            <div class="space-y-4">
+                                <div>
+                                    <label class="block text-sm font-semibold text-slate-700 mb-1">License Key <span class="text-rose-500">*</span></label>
+                                    <input type="text" x-model="productKey" class="block w-full border border-slate-300 rounded-xl px-4 py-2 text-slate-900 focus:ring-primary-500 focus:border-primary-500 sm:text-sm font-mono" placeholder="XXXX-XXXX-XXXX-XXXX">
                                 </div>
-                            </div>
-                            <div class="bg-slate-50 px-4 py-3 sm:px-6 sm:flex sm:flex-row-reverse rounded-b-2xl">
-                                <button type="button" @click="redeemKey()" :disabled="submitting || !productKey.trim()" class="w-full inline-flex justify-center rounded-xl border border-transparent shadow-sm px-4 py-2 bg-primary-600 text-base font-semibold text-white hover:bg-primary-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-primary-500 sm:ml-3 sm:w-auto sm:text-sm disabled:opacity-50 disabled:cursor-not-allowed">
-                                    <span x-show="!submitting">Activate License</span>
-                                    <span x-show="submitting">Activating...</span>
-                                </button>
-                                <button type="button" @click="showModal = false" class="mt-3 w-full inline-flex justify-center rounded-xl border border-slate-300 shadow-sm px-4 py-2 bg-white text-base font-semibold text-slate-700 hover:bg-slate-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-slate-500 sm:mt-0 sm:ml-3 sm:w-auto sm:text-sm">
-                                    Cancel
-                                </button>
                             </div>
                         </div>
                     </div>
                 </div>
-                </template>
             </div>
-            @endif
+            <div class="bg-slate-50 px-4 py-3 sm:px-6 sm:flex sm:flex-row-reverse rounded-b-2xl">
+                <button type="button" @click="redeemKey()" :disabled="submitting || !productKey.trim()" class="w-full inline-flex justify-center rounded-xl border border-transparent shadow-sm px-4 py-2 bg-primary-600 text-base font-semibold text-white hover:bg-primary-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-primary-500 sm:ml-3 sm:w-auto sm:text-sm disabled:opacity-50 disabled:cursor-not-allowed">
+                    <span x-show="!submitting">Activate License</span>
+                    <span x-show="submitting">Activating...</span>
+                </button>
+                <button type="button" @click="showModal = false" class="mt-3 w-full inline-flex justify-center rounded-xl border border-slate-300 shadow-sm px-4 py-2 bg-white text-base font-semibold text-slate-700 hover:bg-slate-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-slate-500 sm:mt-0 sm:ml-3 sm:w-auto sm:text-sm">
+                    Cancel
+                </button>
+            </div>
         </div>
+    </div>
+</div>
+</div>
+@endif
     </div>
 </div>
 
