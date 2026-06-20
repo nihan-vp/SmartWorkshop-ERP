@@ -29,16 +29,29 @@ self.addEventListener('activate', event => {
 
 // Fetch Event - Network-first for views, cache-first for static assets
 self.addEventListener('fetch', event => {
-  // Only handle local GET requests
-  if (event.request.method !== 'GET' || !event.request.url.startsWith(self.location.origin)) {
+  // Only handle GET requests
+  if (event.request.method !== 'GET') {
     return;
   }
 
-  // Define static asset patterns
+  // Define static asset patterns (includes external CDNs)
   const isStaticAsset = event.request.url.match(/\.(css|js|png|jpg|jpeg|svg|woff2|woff|ttf|ico|json)$/) ||
                         event.request.url.includes('fonts.googleapis.com') ||
                         event.request.url.includes('fonts.gstatic.com') ||
                         event.request.url.includes('cdn.tailwindcss.com');
+
+  // Helper function to retry fetch to handle transient ERR_NETWORK_CHANGED
+  const fetchWithRetry = async (request, retries = 2, delay = 500) => {
+    for (let i = 0; i < retries; i++) {
+      try {
+        const response = await fetch(request);
+        return response;
+      } catch (error) {
+        if (i === retries - 1) throw error;
+        await new Promise(resolve => setTimeout(resolve, delay));
+      }
+    }
+  };
 
   if (isStaticAsset) {
     // Cache First with Network Fallback
@@ -47,8 +60,9 @@ self.addEventListener('fetch', event => {
         if (cachedResponse) {
           return cachedResponse;
         }
-        return fetch(event.request).then(networkResponse => {
-          if (networkResponse.status === 200) {
+        return fetchWithRetry(event.request).then(networkResponse => {
+          // Cache valid responses (200) and opaque responses (0) for CORS
+          if (networkResponse && (networkResponse.status === 200 || networkResponse.status === 0)) {
             const responseClone = networkResponse.clone();
             caches.open(CACHE_NAME).then(cache => cache.put(event.request, responseClone));
           }
@@ -57,12 +71,18 @@ self.addEventListener('fetch', event => {
       })
     );
   } else {
+    // Only apply the offline fallback to local origin requests
+    if (!event.request.url.startsWith(self.location.origin)) {
+      event.respondWith(fetchWithRetry(event.request));
+      return;
+    }
+
     // Network First with Cache Fallback for dynamic pages
     event.respondWith(
-      fetch(event.request)
+      fetchWithRetry(event.request)
         .then(networkResponse => {
           // Cache the offline shell/homepage if it's the root path
-          if (networkResponse.status === 200 && new URL(event.request.url).pathname === '/') {
+          if (networkResponse && networkResponse.status === 200 && new URL(event.request.url).pathname === '/') {
             const responseClone = networkResponse.clone();
             caches.open(CACHE_NAME).then(cache => cache.put(event.request, responseClone));
           }
