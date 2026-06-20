@@ -354,9 +354,6 @@
             
             <div class="flex-shrink-0 flex items-center justify-between px-5 py-4 border-b border-slate-100 bg-white">
                 <div class="flex items-center gap-3">
-                    <div class="w-9 h-9 bg-blue-50 rounded-xl flex items-center justify-center flex-shrink-0">
-                        <svg class="w-5 h-5 text-blue-600" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4"/></svg>
-                    </div>
                     <div>
                         <h3 class="text-base font-bold text-slate-900">Add New Garage</h3>
                         <p class="text-xs text-slate-400">Register workshop &amp; admin account</p>
@@ -374,7 +371,6 @@
                     
                     <div class="px-5 pt-5 pb-5">
                         <div class="flex items-center gap-2 mb-4">
-                            <span class="w-5 h-5 bg-blue-100 text-blue-600 rounded-md flex items-center justify-center text-xs">🏠</span>
                             <p class="text-xs font-bold text-blue-600 uppercase tracking-widest">Garage Details</p>
                         </div>
                         <div class="space-y-4">
@@ -430,7 +426,6 @@ unset($__errorArgs, $__bag); ?>
                     
                     <div class="px-5 py-5 border-t border-slate-100 bg-orange-50/40">
                         <div class="flex items-center gap-2 mb-4">
-                            <span class="text-sm">⚠️</span>
                             <p class="text-xs font-bold text-orange-600 uppercase tracking-widest">Warning Notification</p>
                         </div>
                         <div class="space-y-4">
@@ -451,7 +446,6 @@ unset($__errorArgs, $__bag); ?>
                     
                     <div class="px-5 py-5 border-t border-slate-100 bg-emerald-50/30">
                         <div class="flex items-center gap-2 mb-4">
-                            <span class="text-sm">👤</span>
                             <p class="text-xs font-bold text-emerald-600 uppercase tracking-widest">Administrator Account</p>
                         </div>
                         <div class="space-y-4">
