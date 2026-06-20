@@ -15,6 +15,8 @@ $app = Application::configure(basePath: dirname(__DIR__))
             \App\Http\Middleware\JwtAuthentication::class,
         ]);
 
+        $middleware->append(\App\Http\Middleware\SecurityHeaders::class);
+
         // Trust all proxies (Netlify, load balancers) so HTTPS is detected correctly
         if (isset($_SERVER['REMOTE_ADDR'])) {
             $middleware->trustProxies(at: '*');
