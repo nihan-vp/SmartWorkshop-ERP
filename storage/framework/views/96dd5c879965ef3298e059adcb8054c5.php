@@ -1,11 +1,9 @@
-@extends('layouts.app')
+<?php $__env->startSection('title', 'Super Admin Dashboard'); ?>
+<?php $__env->startSection('page-title', 'Control Panel'); ?>
+<?php $__env->startSection('page-subtitle', 'System management'); ?>
 
-@section('title', 'Super Admin Dashboard')
-@section('page-title', 'Control Panel')
-@section('page-subtitle', 'System management')
-
-@section('content')
-@php
+<?php $__env->startSection('content'); ?>
+<?php
     $workshopFormFields = ['name', 'phone', 'email', 'address', 'gstin', 'trial_days', 'subscription_status', 'trial_ends_at', 'admin_name', 'admin_email', 'admin_password'];
     $showAddWorkshopModal = $errors->hasAny($workshopFormFields) && !old('_method');
     $showEditWorkshopModal = $errors->hasAny($workshopFormFields) && old('_method') === 'PUT';
@@ -26,12 +24,12 @@
             'admin_email' => old('admin_email'),
         ];
     }
-@endphp
+?>
 
 <div x-data="workshopAdminPanel()">
     <div class="max-w-7xl mx-auto space-y-6">
         
-        {{-- Hero Header --}}
+        
         <div class="bg-white rounded-xl shadow-sm border border-slate-200 p-6 flex flex-col md:flex-row md:items-center justify-between gap-4">
             <div>
                 <h1 class="text-2xl font-bold text-slate-800">System Control Panel</h1>
@@ -47,9 +45,9 @@
             </div>
         </div>
 
-        {{-- Navigation Tabs --}}
+        
         <div class="flex flex-wrap gap-2 border-b border-slate-200">
-            @php
+            <?php
                 $tabs = [
                     ['id' => 'dashboard', 'label' => 'Dashboard'],
                     ['id' => 'workshops', 'label' => 'Garages'],
@@ -57,92 +55,94 @@
                     ['id' => 'settings', 'label' => 'Settings'],
                     ['id' => 'logs', 'label' => 'Activity Logs'],
                 ];
-            @endphp
-            @foreach($tabs as $tab)
-            <button @click="activeTab = '{{ $tab['id'] }}'; window.history.replaceState(null, null, '?tab={{ $tab['id'] }}')"
-                :class="activeTab === '{{ $tab['id'] }}' ? 'border-blue-600 text-blue-600' : 'border-transparent text-slate-500 hover:text-slate-700'"
+            ?>
+            <?php $__currentLoopData = $tabs; $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $tab): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); ?>
+            <button @click="activeTab = '<?php echo e($tab['id']); ?>'; window.history.replaceState(null, null, '?tab=<?php echo e($tab['id']); ?>')"
+                :class="activeTab === '<?php echo e($tab['id']); ?>' ? 'border-blue-600 text-blue-600' : 'border-transparent text-slate-500 hover:text-slate-700'"
                 class="px-4 py-2 text-sm font-semibold border-b-2 transition-colors">
-                {{ $tab['label'] }}
+                <?php echo e($tab['label']); ?>
+
             </button>
-            @endforeach
+            <?php endforeach; $__env->popLoop(); $loop = $__env->getLastLoop(); ?>
         </div>
 
-        {{-- DASHBOARD TAB --}}
+        
         <div x-show="activeTab === 'dashboard'" x-cloak class="space-y-6">
             <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-5 gap-4">
                 <div class="bg-white p-5 rounded-xl border border-slate-200 shadow-sm flex flex-col items-center justify-center">
                     <p class="text-slate-500 text-xs font-semibold uppercase tracking-wide">Garages</p>
-                    <p class="text-3xl font-bold text-slate-800 mt-2">{{ $totalWorkshops }}</p>
+                    <p class="text-3xl font-bold text-slate-800 mt-2"><?php echo e($totalWorkshops); ?></p>
                 </div>
                 <div class="bg-white p-5 rounded-xl border border-slate-200 shadow-sm flex flex-col items-center justify-center">
                     <p class="text-slate-500 text-xs font-semibold uppercase tracking-wide">Users</p>
-                    <p class="text-3xl font-bold text-slate-800 mt-2">{{ $totalUsers }}</p>
+                    <p class="text-3xl font-bold text-slate-800 mt-2"><?php echo e($totalUsers); ?></p>
                 </div>
                 <div class="bg-white p-5 rounded-xl border border-slate-200 shadow-sm flex flex-col items-center justify-center">
                     <p class="text-slate-500 text-xs font-semibold uppercase tracking-wide">Super Admins</p>
-                    <p class="text-3xl font-bold text-slate-800 mt-2">{{ $totalSuperAdmins }}</p>
+                    <p class="text-3xl font-bold text-slate-800 mt-2"><?php echo e($totalSuperAdmins); ?></p>
                 </div>
                 <div class="bg-white p-5 rounded-xl border border-slate-200 shadow-sm flex flex-col items-center justify-center">
                     <p class="text-slate-500 text-xs font-semibold uppercase tracking-wide">Available Keys</p>
-                    <p class="text-3xl font-bold text-emerald-600 mt-2">{{ $unusedProductKeys }}</p>
+                    <p class="text-3xl font-bold text-emerald-600 mt-2"><?php echo e($unusedProductKeys); ?></p>
                 </div>
                 <div class="bg-white p-5 rounded-xl border border-slate-200 shadow-sm flex flex-col items-center justify-center">
                     <p class="text-slate-500 text-xs font-semibold uppercase tracking-wide">Keys Redeemed</p>
-                    <p class="text-3xl font-bold text-blue-600 mt-2">{{ $usedProductKeys }}</p>
+                    <p class="text-3xl font-bold text-blue-600 mt-2"><?php echo e($usedProductKeys); ?></p>
                 </div>
             </div>
 
             <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
-                {{-- Recent Garages --}}
+                
                 <div class="bg-white rounded-xl border border-slate-200 shadow-sm">
                     <div class="p-4 border-b border-slate-200 flex justify-between items-center">
                         <h3 class="font-bold text-slate-800">Recent Garages</h3>
                         <button @click="activeTab='workshops'" class="text-sm text-blue-600 hover:underline">View All</button>
                     </div>
                     <div class="divide-y divide-slate-100">
-                        @forelse($workshops as $w)
+                        <?php $__empty_1 = true; $__currentLoopData = $workshops; $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $w): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); $__empty_1 = false; ?>
                         <div class="p-4 flex justify-between items-center">
                             <div>
-                                <p class="font-semibold text-slate-800">{{ $w->name }}</p>
-                                <p class="text-xs text-slate-500">{{ $w->phone }} | {{ $w->email }}</p>
+                                <p class="font-semibold text-slate-800"><?php echo e($w->name); ?></p>
+                                <p class="text-xs text-slate-500"><?php echo e($w->phone); ?> | <?php echo e($w->email); ?></p>
                             </div>
-                            <span class="px-2 py-1 text-xs font-medium rounded-full {{ $w->subscription_status === 'active' ? 'bg-emerald-100 text-emerald-800' : 'bg-slate-100 text-slate-800' }}">
-                                {{ ucfirst($w->subscription_status) }}
+                            <span class="px-2 py-1 text-xs font-medium rounded-full <?php echo e($w->subscription_status === 'active' ? 'bg-emerald-100 text-emerald-800' : 'bg-slate-100 text-slate-800'); ?>">
+                                <?php echo e(ucfirst($w->subscription_status)); ?>
+
                             </span>
                         </div>
-                        @empty
+                        <?php endforeach; $__env->popLoop(); $loop = $__env->getLastLoop(); if ($__empty_1): ?>
                         <p class="p-4 text-sm text-slate-500">No garages found.</p>
-                        @endforelse
+                        <?php endif; ?>
                     </div>
                 </div>
 
-                {{-- Recent Activity --}}
+                
                 <div class="bg-white rounded-xl border border-slate-200 shadow-sm">
                     <div class="p-4 border-b border-slate-200 flex justify-between items-center">
                         <h3 class="font-bold text-slate-800">Recent Activity</h3>
                         <button @click="activeTab='logs'" class="text-sm text-blue-600 hover:underline">View All</button>
                     </div>
                     <div class="divide-y divide-slate-100">
-                        @forelse($activityLogs as $log)
+                        <?php $__empty_1 = true; $__currentLoopData = $activityLogs; $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $log): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); $__empty_1 = false; ?>
                         <div class="p-4">
-                            <p class="text-sm text-slate-800">{{ $log->description }}</p>
-                            <p class="text-xs text-slate-400 mt-1">{{ $log->created_at->diffForHumans() }}</p>
+                            <p class="text-sm text-slate-800"><?php echo e($log->description); ?></p>
+                            <p class="text-xs text-slate-400 mt-1"><?php echo e($log->created_at->diffForHumans()); ?></p>
                         </div>
-                        @empty
+                        <?php endforeach; $__env->popLoop(); $loop = $__env->getLastLoop(); if ($__empty_1): ?>
                         <p class="p-4 text-sm text-slate-500">No activity yet.</p>
-                        @endforelse
+                        <?php endif; ?>
                     </div>
                 </div>
             </div>
         </div>
 
-        {{-- WORKSHOPS TAB --}}
+        
         <div x-show="activeTab === 'workshops'" x-cloak>
             <div class="bg-white rounded-xl border border-slate-200 shadow-sm overflow-hidden">
                 <div class="p-4 border-b border-slate-200 flex flex-col sm:flex-row justify-between items-center gap-4">
                     <form method="GET" class="flex flex-col sm:flex-row items-center gap-2 w-full sm:w-auto">
                         <input type="hidden" name="tab" value="workshops">
-                        <input type="text" name="search" value="{{ request('search') }}" placeholder="Search garages..." class="w-full sm:w-64 px-4 py-2 border border-slate-300 rounded-lg text-sm focus:ring-blue-500 focus:border-blue-500">
+                        <input type="text" name="search" value="<?php echo e(request('search')); ?>" placeholder="Search garages..." class="w-full sm:w-64 px-4 py-2 border border-slate-300 rounded-lg text-sm focus:ring-blue-500 focus:border-blue-500">
                         <button type="submit" class="px-4 py-2 bg-slate-100 hover:bg-slate-200 border border-slate-300 rounded-lg text-sm font-semibold transition-colors">Search</button>
                     </form>
                 </div>
@@ -158,34 +158,35 @@
                             </tr>
                         </thead>
                         <tbody class="divide-y divide-slate-100">
-                            @forelse($workshops as $workshop)
+                            <?php $__empty_1 = true; $__currentLoopData = $workshops; $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $workshop): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); $__empty_1 = false; ?>
                             <tr class="hover:bg-slate-50">
-                                <td class="px-4 py-3 font-medium text-slate-800">{{ $workshop->name }}</td>
-                                <td class="px-4 py-3 text-slate-600">{{ $workshop->phone }}<br><span class="text-xs text-slate-400">{{ $workshop->email }}</span></td>
+                                <td class="px-4 py-3 font-medium text-slate-800"><?php echo e($workshop->name); ?></td>
+                                <td class="px-4 py-3 text-slate-600"><?php echo e($workshop->phone); ?><br><span class="text-xs text-slate-400"><?php echo e($workshop->email); ?></span></td>
                                 <td class="px-4 py-3">
-                                    <span class="px-2 py-1 text-xs font-medium rounded-full {{ $workshop->subscription_status === 'active' ? 'bg-emerald-100 text-emerald-800' : 'bg-slate-100 text-slate-800' }}">
-                                        {{ ucfirst($workshop->subscription_status) }}
+                                    <span class="px-2 py-1 text-xs font-medium rounded-full <?php echo e($workshop->subscription_status === 'active' ? 'bg-emerald-100 text-emerald-800' : 'bg-slate-100 text-slate-800'); ?>">
+                                        <?php echo e(ucfirst($workshop->subscription_status)); ?>
+
                                     </span>
                                 </td>
                                 <td class="px-4 py-3 text-slate-600">
-                                    @if($workshop->users->first())
-                                        {{ $workshop->users->first()->name }}<br>
-                                        <span class="text-xs text-slate-400">{{ $workshop->users->first()->email }}</span>
-                                    @else
+                                    <?php if($workshop->users->first()): ?>
+                                        <?php echo e($workshop->users->first()->name); ?><br>
+                                        <span class="text-xs text-slate-400"><?php echo e($workshop->users->first()->email); ?></span>
+                                    <?php else: ?>
                                         -
-                                    @endif
+                                    <?php endif; ?>
                                 </td>
                                 <td class="px-4 py-3 text-right space-x-2">
-                                    <button @click="openActivateModal(@js(['id'=>$workshop->id,'name'=>$workshop->name]))" class="text-emerald-600 hover:underline text-xs font-semibold">License</button>
-                                    <button @click="openEdit(@js(['id'=>$workshop->id,'name'=>$workshop->name,'phone'=>$workshop->phone,'email'=>$workshop->email,'gstin'=>$workshop->gstin,'address'=>$workshop->address,'subscription_status'=>$workshop->subscription_status,'trial_ends_at'=>$workshop->trial_ends_at?$workshop->trial_ends_at->format('Y-m-d\TH:i'):'','alert_message'=>$workshop->alert_message,'alert_expires_at'=>$workshop->alert_expires_at?$workshop->alert_expires_at->format('Y-m-d\TH:i'):'','admin_user_id'=>$workshop->users->first()?->id,'admin_name'=>$workshop->users->first()?->name,'admin_email'=>$workshop->users->first()?->email]))" class="text-slate-600 hover:underline text-xs font-semibold">Edit</button>
-                                    <form action="{{ route('super_admin.destroy_workshop', $workshop) }}" method="POST" class="inline" onsubmit="return confirm('Are you sure you want to delete this garage and all its associated data?');">
-                                        @csrf
-                                        @method('DELETE')
+                                    <button @click="openActivateModal(<?php echo \Illuminate\Support\Js::from(['id'=>$workshop->id,'name'=>$workshop->name])->toHtml() ?>)" class="text-emerald-600 hover:underline text-xs font-semibold">License</button>
+                                    <button @click="openEdit(<?php echo \Illuminate\Support\Js::from(['id'=>$workshop->id,'name'=>$workshop->name,'phone'=>$workshop->phone,'email'=>$workshop->email,'gstin'=>$workshop->gstin,'address'=>$workshop->address,'subscription_status'=>$workshop->subscription_status,'trial_ends_at'=>$workshop->trial_ends_at?$workshop->trial_ends_at->format('Y-m-d\TH:i'):'','alert_message'=>$workshop->alert_message,'alert_expires_at'=>$workshop->alert_expires_at?$workshop->alert_expires_at->format('Y-m-d\TH:i'):'','admin_user_id'=>$workshop->users->first()?->id,'admin_name'=>$workshop->users->first()?->name,'admin_email'=>$workshop->users->first()?->email])->toHtml() ?>)" class="text-slate-600 hover:underline text-xs font-semibold">Edit</button>
+                                    <form action="<?php echo e(route('super_admin.destroy_workshop', $workshop)); ?>" method="POST" class="inline" onsubmit="return confirm('Are you sure you want to delete this garage and all its associated data?');">
+                                        <?php echo csrf_field(); ?>
+                                        <?php echo method_field('DELETE'); ?>
                                         <button type="submit" class="text-rose-600 hover:underline text-xs font-semibold">Delete</button>
                                     </form>
                                 </td>
                             </tr>
-                            @empty
+                            <?php endforeach; $__env->popLoop(); $loop = $__env->getLastLoop(); if ($__empty_1): ?>
                             <tr>
                                 <td colspan="5" class="px-4 py-12 text-center text-slate-500">
                                     <svg class="w-12 h-12 mx-auto text-slate-300 mb-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -195,17 +196,18 @@
                                     <p class="text-sm mt-1">Click "+ Add Workshop" to create one.</p>
                                 </td>
                             </tr>
-                            @endforelse
+                            <?php endif; ?>
                         </tbody>
                     </table>
                 </div>
                 <div class="p-4 border-t border-slate-200">
-                    {{ $workshops->links() }}
+                    <?php echo e($workshops->links()); ?>
+
                 </div>
             </div>
         </div>
 
-        {{-- KEYS TAB --}}
+        
         <div x-show="activeTab === 'keys'" x-cloak>
             <div class="bg-white rounded-xl border border-slate-200 shadow-sm overflow-hidden">
                 <div class="p-4 border-b border-slate-200 flex justify-between items-center">
@@ -224,30 +226,31 @@
                             </tr>
                         </thead>
                         <tbody class="divide-y divide-slate-100">
-                            @forelse($productKeys as $key)
+                            <?php $__empty_1 = true; $__currentLoopData = $productKeys; $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $key): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); $__empty_1 = false; ?>
                             <tr class="hover:bg-slate-50">
-                                <td class="px-4 py-3 font-mono font-medium text-slate-800">{{ $key->key }}</td>
-                                <td class="px-4 py-3 text-slate-600">{{ $key->duration_days }}</td>
+                                <td class="px-4 py-3 font-mono font-medium text-slate-800"><?php echo e($key->key); ?></td>
+                                <td class="px-4 py-3 text-slate-600"><?php echo e($key->duration_days); ?></td>
                                 <td class="px-4 py-3">
-                                    <span class="px-2 py-1 text-xs font-medium rounded-full {{ $key->status === 'unused' ? 'bg-emerald-100 text-emerald-800' : 'bg-slate-100 text-slate-800' }}">
-                                        {{ ucfirst($key->status) }}
+                                    <span class="px-2 py-1 text-xs font-medium rounded-full <?php echo e($key->status === 'unused' ? 'bg-emerald-100 text-emerald-800' : 'bg-slate-100 text-slate-800'); ?>">
+                                        <?php echo e(ucfirst($key->status)); ?>
+
                                     </span>
                                 </td>
-                                <td class="px-4 py-3 text-slate-600">{{ $key->workshop ? $key->workshop->name : '-' }}</td>
-                                <td class="px-4 py-3 text-slate-600">{{ $key->created_at->format('M d, Y') }}</td>
+                                <td class="px-4 py-3 text-slate-600"><?php echo e($key->workshop ? $key->workshop->name : '-'); ?></td>
+                                <td class="px-4 py-3 text-slate-600"><?php echo e($key->created_at->format('M d, Y')); ?></td>
                                 <td class="px-4 py-3 text-right space-x-2">
-                                    @if($key->status === 'unused')
-                                        <button @click="openEditKeyModalFn(@js(['id'=>$key->id,'duration_days'=>$key->duration_days,'key'=>$key->key]))" class="text-blue-600 hover:underline text-xs font-semibold">Edit</button>
-                                        <form action="{{ route('super_admin.destroy_product_key', $key) }}" method="POST" class="inline" onsubmit="return confirm('Delete this license key?');">
-                                            @csrf @method('DELETE')
+                                    <?php if($key->status === 'unused'): ?>
+                                        <button @click="openEditKeyModalFn(<?php echo \Illuminate\Support\Js::from(['id'=>$key->id,'duration_days'=>$key->duration_days,'key'=>$key->key])->toHtml() ?>)" class="text-blue-600 hover:underline text-xs font-semibold">Edit</button>
+                                        <form action="<?php echo e(route('super_admin.destroy_product_key', $key)); ?>" method="POST" class="inline" onsubmit="return confirm('Delete this license key?');">
+                                            <?php echo csrf_field(); ?> <?php echo method_field('DELETE'); ?>
                                             <button class="text-red-600 hover:underline text-xs font-semibold">Delete</button>
                                         </form>
-                                    @else
+                                    <?php else: ?>
                                         <span class="text-xs text-slate-400">N/A</span>
-                                    @endif
+                                    <?php endif; ?>
                                 </td>
                             </tr>
-                            @empty
+                            <?php endforeach; $__env->popLoop(); $loop = $__env->getLastLoop(); if ($__empty_1): ?>
                             <tr>
                                 <td colspan="6" class="px-4 py-12 text-center text-slate-500">
                                     <svg class="w-12 h-12 mx-auto text-slate-300 mb-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -257,65 +260,67 @@
                                     <p class="text-sm mt-1">Generate new keys to see them here.</p>
                                 </td>
                             </tr>
-                            @endforelse
+                            <?php endif; ?>
                         </tbody>
                     </table>
                 </div>
                 <div class="p-4 border-t border-slate-200">
-                    {{ $productKeys->links() }}
+                    <?php echo e($productKeys->links()); ?>
+
                 </div>
             </div>
         </div>
 
-        {{-- SETTINGS TAB --}}
+        
         <div x-show="activeTab === 'settings'" x-cloak>
             <div class="bg-white rounded-xl border border-slate-200 shadow-sm p-6">
                 <h3 class="font-bold text-slate-800 mb-4">System Settings</h3>
-                <form action="{{ route('super_admin.update_settings') }}" method="POST" class="max-w-md space-y-4">
-                    @csrf
+                <form action="<?php echo e(route('super_admin.update_settings')); ?>" method="POST" class="max-w-md space-y-4">
+                    <?php echo csrf_field(); ?>
                     <div>
                         <label class="block text-sm font-semibold text-slate-700 mb-1">Default Trial Duration (Days)</label>
-                        <input type="number" name="default_trial_duration" value="{{ $defaultTrialDuration }}" min="0" class="w-full px-4 py-2 border border-slate-300 rounded-lg text-sm focus:ring-blue-500 focus:border-blue-500">
+                        <input type="number" name="default_trial_duration" value="<?php echo e($defaultTrialDuration); ?>" min="0" class="w-full px-4 py-2 border border-slate-300 rounded-lg text-sm focus:ring-blue-500 focus:border-blue-500">
                     </div>
                     <button type="submit" class="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded-lg text-sm font-semibold transition-colors">Save Settings</button>
                 </form>
             </div>
         </div>
 
-        {{-- LOGS TAB --}}
+        
         <div x-show="activeTab === 'logs'" x-cloak>
             <div class="bg-white rounded-xl border border-slate-200 shadow-sm overflow-hidden">
                 <div class="p-4 border-b border-slate-200 flex justify-between items-center">
                     <h3 class="font-bold text-slate-800">Activity Logs</h3>
-                    <form action="{{ route('super_admin.clear_logs') }}" method="POST" onsubmit="return confirm('Clear all logs?');">
-                        @csrf @method('DELETE')
+                    <form action="<?php echo e(route('super_admin.clear_logs')); ?>" method="POST" onsubmit="return confirm('Clear all logs?');">
+                        <?php echo csrf_field(); ?> <?php echo method_field('DELETE'); ?>
                         <button type="submit" class="text-sm text-red-600 hover:underline">Clear Logs</button>
                     </form>
                 </div>
                 <div class="divide-y divide-slate-100">
-                    @forelse($activityLogs as $log)
+                    <?php $__empty_1 = true; $__currentLoopData = $activityLogs; $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $log): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); $__empty_1 = false; ?>
                     <div class="p-4 flex flex-col sm:flex-row sm:items-center justify-between gap-2">
                         <div>
-                            <p class="text-sm font-medium text-slate-800">{{ $log->description }}</p>
-                            <p class="text-xs text-slate-500">{{ $log->action }} | By: {{ $log->user ? $log->user->name : 'System' }}</p>
+                            <p class="text-sm font-medium text-slate-800"><?php echo e($log->description); ?></p>
+                            <p class="text-xs text-slate-500"><?php echo e($log->action); ?> | By: <?php echo e($log->user ? $log->user->name : 'System'); ?></p>
                         </div>
-                        <span class="text-xs text-slate-400 whitespace-nowrap">{{ $log->created_at->format('M d, Y H:i') }}</span>
+                        <span class="text-xs text-slate-400 whitespace-nowrap"><?php echo e($log->created_at->format('M d, Y H:i')); ?></span>
                     </div>
-                    @empty
+                    <?php endforeach; $__env->popLoop(); $loop = $__env->getLastLoop(); if ($__empty_1): ?>
                     <p class="p-4 text-sm text-slate-500">No activity logs found.</p>
-                    @endforelse
+                    <?php endif; ?>
                 </div>
                 <div class="p-4 border-t border-slate-200">
-                    {{ $activityLogs->links() }}
+                    <?php echo e($activityLogs->links()); ?>
+
                 </div>
             </div>
         </div>
 
     </div>
 
-    {{-- MODALS --}}
+    
 
-    {{-- Add Workshop Modal --}}
+    
     <div x-show="openAddModal" x-cloak
          class="fixed inset-0 z-50 flex items-end sm:items-center justify-center bg-slate-900/50 backdrop-blur-sm"
          x-transition:enter="transition ease-out duration-200" x-transition:enter-start="opacity-0" x-transition:enter-end="opacity-100"
@@ -324,7 +329,7 @@
         <div class="bg-white w-full h-full sm:h-auto sm:rounded-2xl sm:max-w-xl sm:max-h-[92vh] flex flex-col shadow-2xl"
              x-transition:enter="transition ease-out duration-200 transform" x-transition:enter-start="translate-y-full sm:translate-y-4 sm:scale-95" x-transition:enter-end="translate-y-0 sm:scale-100">
 
-            {{-- Sticky Header --}}
+            
             <div class="flex-shrink-0 flex items-center justify-between px-5 py-4 border-b border-slate-100 bg-white">
                 <div class="flex items-center gap-3">
                     <div class="w-9 h-9 bg-blue-50 rounded-xl flex items-center justify-center flex-shrink-0">
@@ -339,12 +344,12 @@
                         class="w-9 h-9 flex items-center justify-center rounded-xl text-slate-400 hover:text-slate-700 hover:bg-slate-100 transition-colors text-xl leading-none flex-shrink-0">&times;</button>
             </div>
 
-            {{-- Scrollable Body --}}
-            <form action="{{ route('super_admin.store_workshop') }}" method="POST" class="flex-1 flex flex-col min-h-0">
-                @csrf
+            
+            <form action="<?php echo e(route('super_admin.store_workshop')); ?>" method="POST" class="flex-1 flex flex-col min-h-0">
+                <?php echo csrf_field(); ?>
                 <div class="flex-1 overflow-y-auto">
 
-                    {{-- Garage Details --}}
+                    
                     <div class="px-5 pt-5 pb-5">
                         <div class="flex items-center gap-2 mb-4">
                             <span class="w-5 h-5 bg-blue-100 text-blue-600 rounded-md flex items-center justify-center text-xs">🏠</span>
@@ -356,7 +361,14 @@
                                 <input type="text" name="name" required
                                        class="w-full border border-slate-200 bg-slate-50 rounded-xl px-4 py-3 text-slate-800 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500/20 focus:border-blue-400 focus:bg-white transition-all placeholder-slate-400"
                                        placeholder="e.g. Suhaim Auto Garage">
-                                @error('name') <p class="text-rose-500 text-xs mt-1.5">{{ $message }}</p> @enderror
+                                <?php $__errorArgs = ['name'];
+$__bag = $errors->getBag($__errorArgs[1] ?? 'default');
+if ($__bag->has($__errorArgs[0])) :
+if (isset($message)) { $__messageOriginal = $message; }
+$message = $__bag->first($__errorArgs[0]); ?> <p class="text-rose-500 text-xs mt-1.5"><?php echo e($message); ?></p> <?php unset($message);
+if (isset($__messageOriginal)) { $message = $__messageOriginal; }
+endif;
+unset($__errorArgs, $__bag); ?>
                             </div>
                             <div class="grid grid-cols-2 gap-3">
                                 <div>
@@ -393,7 +405,7 @@
                         </div>
                     </div>
 
-                    {{-- Warning Banner --}}
+                    
                     <div class="px-5 py-5 border-t border-slate-100 bg-orange-50/40">
                         <div class="flex items-center gap-2 mb-4">
                             <span class="text-sm">⚠️</span>
@@ -414,7 +426,7 @@
                         </div>
                     </div>
 
-                    {{-- Administrator Account --}}
+                    
                     <div class="px-5 py-5 border-t border-slate-100 bg-emerald-50/30">
                         <div class="flex items-center gap-2 mb-4">
                             <span class="text-sm">👤</span>
@@ -444,9 +456,9 @@
                         </div>
                     </div>
 
-                </div>{{-- end overflow body --}}
+                </div>
 
-                {{-- Sticky Footer --}}
+                
                 <div class="flex-shrink-0 bg-white border-t border-slate-100 flex items-center justify-between gap-3 px-5 py-4">
                     <p class="text-xs text-slate-400"><span class="text-rose-500 font-bold">*</span> required fields</p>
                     <div class="flex gap-2">
@@ -464,7 +476,7 @@
         </div>
     </div>
 
-    {{-- Edit Workshop Modal --}}
+    
     <div x-show="openEditModal" x-cloak
          class="fixed inset-0 z-50 flex items-end sm:items-center justify-center p-0 sm:p-4 bg-slate-900/50 backdrop-blur-sm"
          x-transition:enter="transition ease-out duration-200" x-transition:enter-start="opacity-0" x-transition:enter-end="opacity-100"
@@ -473,7 +485,7 @@
         <div class="bg-white w-full sm:rounded-2xl sm:max-w-lg max-h-[95vh] flex flex-col rounded-t-2xl shadow-2xl"
              x-transition:enter="transition ease-out duration-200 transform" x-transition:enter-start="translate-y-4 sm:scale-95" x-transition:enter-end="translate-y-0 sm:scale-100">
 
-            {{-- Header --}}
+            
             <div class="flex-shrink-0 flex items-center justify-between px-5 py-4 border-b border-slate-100">
                 <div class="flex items-center gap-3">
                     <div class="w-9 h-9 bg-amber-50 rounded-xl flex items-center justify-center">
@@ -487,12 +499,12 @@
                 <button @click="openEditModal = false" class="w-8 h-8 flex items-center justify-center rounded-lg text-slate-400 hover:text-slate-700 hover:bg-slate-100 transition-colors text-lg leading-none">&times;</button>
             </div>
 
-            {{-- Scrollable Body — form always visible, no x-show --}}
+            
             <form :action="`/super-admin/workshops/${activeWorkshop.id}`" method="POST" class="flex-1 overflow-y-auto min-h-0">
-                @csrf @method('PUT')
+                <?php echo csrf_field(); ?> <?php echo method_field('PUT'); ?>
                 <input type="hidden" name="admin_user_id" x-model="activeWorkshop.admin_user_id">
 
-                {{-- Garage Info --}}
+                
                 <div class="px-5 pt-5 pb-4">
                     <p class="text-xs font-bold text-amber-500 uppercase tracking-widest mb-3">Garage Details</p>
                     <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
@@ -541,7 +553,7 @@
                     </div>
                 </div>
 
-                {{-- Admin Account --}}
+                
                 <div class="px-5 py-4 border-t border-slate-100 bg-slate-50/60">
                     <p class="text-xs font-bold text-violet-600 uppercase tracking-widest mb-3">Administrator Access</p>
                     <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
@@ -564,7 +576,7 @@
                     </div>
                 </div>
 
-                {{-- Footer Actions --}}
+                
                 <div class="flex-shrink-0 flex items-center justify-end gap-2 px-5 py-4 border-t border-slate-100 bg-white">
                     <button type="button" @click="openEditModal = false"
                             class="px-4 py-2 text-sm font-semibold text-slate-600 bg-slate-100 hover:bg-slate-200 rounded-lg transition-colors">Cancel</button>
@@ -576,7 +588,7 @@
             </form>
         </div>
     </div>
-    {{-- Generate Keys Modal --}}
+    
 
     <div x-show="openGenerateKeysModal" x-cloak class="fixed inset-0 z-50 flex items-center justify-center p-4 bg-slate-900/40 backdrop-blur-sm"
          x-transition:enter="transition ease-out duration-300" x-transition:enter-start="opacity-0" x-transition:enter-end="opacity-100"
@@ -590,8 +602,8 @@
                 </div>
                 <button @click="openGenerateKeysModal = false" class="text-slate-400 hover:text-slate-600 bg-white hover:bg-slate-100 p-1.5 rounded-lg border border-slate-200 transition-colors">&times;</button>
             </div>
-            <form action="{{ route('super_admin.store_product_key') }}" method="POST" class="p-6 space-y-4">
-                @csrf
+            <form action="<?php echo e(route('super_admin.store_product_key')); ?>" method="POST" class="p-6 space-y-4">
+                <?php echo csrf_field(); ?>
                 <div>
                     <label class="block text-xs font-bold text-slate-500 uppercase tracking-wider mb-1.5">Key Duration <span class="text-rose-500">*</span></label>
                     <select name="duration_days" class="w-full border border-slate-200 rounded-xl px-3 py-2 text-slate-800 focus:outline-none focus:ring-2 focus:ring-blue-500/20 focus:border-blue-500 text-sm transition-all bg-white cursor-pointer">
@@ -611,7 +623,7 @@
         </div>
     </div>
 
-    {{-- Activate License Modal --}}
+    
     <div x-show="openActivateLicenseModal" x-cloak class="fixed inset-0 z-50 flex items-center justify-center p-4 bg-slate-900/40 backdrop-blur-sm"
          x-transition:enter="transition ease-out duration-300" x-transition:enter-start="opacity-0" x-transition:enter-end="opacity-100"
          x-transition:leave="transition ease-in duration-200" x-transition:leave-start="opacity-100" x-transition:leave-end="opacity-0">
@@ -625,7 +637,7 @@
                 <button @click="openActivateLicenseModal = false" class="text-slate-400 hover:text-slate-600 bg-white hover:bg-slate-100 p-1.5 rounded-lg border border-slate-200 transition-colors">&times;</button>
             </div>
             <form :action="`/super-admin/workshops/${activeWorkshopToActivate.id}/activate-license`" method="POST" class="p-6 space-y-4">
-                @csrf
+                <?php echo csrf_field(); ?>
                 <div>
                     <label class="block text-xs font-bold text-slate-500 uppercase tracking-wider mb-1.5">Auto-Generate &amp; Activate License</label>
                     <select name="duration_days" class="w-full border border-slate-200 rounded-xl px-3 py-2 text-slate-800 focus:outline-none focus:ring-2 focus:ring-blue-500/20 focus:border-blue-500 text-sm transition-all bg-white cursor-pointer">
@@ -655,7 +667,7 @@
         </div>
     </div>
 
-    {{-- Edit License Key Modal --}}
+    
     <div x-show="openEditKeyModal" x-cloak class="fixed inset-0 z-50 flex items-center justify-center p-4 bg-slate-900/40 backdrop-blur-sm"
          x-transition:enter="transition ease-out duration-300" x-transition:enter-start="opacity-0" x-transition:enter-end="opacity-100"
          x-transition:leave="transition ease-in duration-200" x-transition:leave-start="opacity-100" x-transition:leave-end="opacity-0">
@@ -669,7 +681,7 @@
                 <button @click="openEditKeyModal = false" class="text-slate-400 hover:text-slate-600 bg-white hover:bg-slate-100 p-1.5 rounded-lg border border-slate-200 transition-colors">&times;</button>
             </div>
             <form :action="`/super-admin/product-keys/${activeKey.id}`" method="POST" class="p-6 space-y-4" x-show="activeKey.id">
-                @csrf @method('PUT')
+                <?php echo csrf_field(); ?> <?php echo method_field('PUT'); ?>
                 <div>
                     <label class="block text-xs font-bold text-slate-500 uppercase tracking-wider mb-1.5">Key Value <span class="text-rose-500">*</span></label>
                     <input type="text" name="key" x-model="activeKey.key" class="w-full border border-slate-200 rounded-xl px-3 py-2 text-slate-800 focus:outline-none focus:ring-2 focus:ring-blue-500/20 focus:border-blue-500 text-sm font-mono transition-all" required>
@@ -712,12 +724,12 @@ document.addEventListener('alpine:init', () => {
     Alpine.data('workshopAdminPanel', () => ({
         activeTab: new URLSearchParams(window.location.search).get('tab') || 'dashboard',
         searchWorkshopQuery: '',
-        openAddModal: {{ $showAddWorkshopModal ? 'true' : 'false' }},
-        openEditModal: {{ $showEditWorkshopModal ? 'true' : 'false' }},
+        openAddModal: <?php echo e($showAddWorkshopModal ? 'true' : 'false'); ?>,
+        openEditModal: <?php echo e($showEditWorkshopModal ? 'true' : 'false'); ?>,
         openGenerateKeysModal: false,
         openEditKeyModal: false,
         openActivateLicenseModal: false,
-        activeWorkshop: @json($initialActiveWorkshop ?: ['id'=>'']),
+        activeWorkshop: <?php echo json_encode($initialActiveWorkshop ?: ['id'=>''], 15, 512) ?>,
         activeWorkshopToActivate: { id: '', name: '' },
         activeKey: { id: '', duration_days: '', key: '' },
 
@@ -760,4 +772,6 @@ document.addEventListener('alpine:init', () => {
     }));
 });
 </script>
-@endsection
+<?php $__env->stopSection(); ?>
+
+<?php echo $__env->make('layouts.app', array_diff_key(get_defined_vars(), ['__data' => 1, '__path' => 1]))->render(); ?><?php /**PATH E:\Suhaim Soft Work Shop\suhaimsoftworkshop\resources\views/super_admin/dashboard.blade.php ENDPATH**/ ?>

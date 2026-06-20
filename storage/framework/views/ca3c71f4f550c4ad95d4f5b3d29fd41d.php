@@ -352,7 +352,7 @@
                 </div>
                 <?php if($lowStockProducts->count()): ?>
                 <div class="space-y-3">
-                    <?php $__currentLoopData = $lowStockProducts->take(5); $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $product): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); ?>
+                    <?php $__currentLoopData = $lowStockProducts; $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $product): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); ?>
                     <div class="flex items-center justify-between p-3 bg-red-50 border border-red-100 rounded-xl">
                         <div class="min-w-0 flex-1 pr-2">
                             <p class="text-sm font-semibold text-slate-800 truncate" title="<?php echo e($product->name); ?>"><?php echo e($product->name); ?></p>

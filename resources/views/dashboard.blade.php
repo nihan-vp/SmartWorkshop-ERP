@@ -347,7 +347,7 @@
                 </div>
                 @if($lowStockProducts->count())
                 <div class="space-y-3">
-                    @foreach($lowStockProducts->take(5) as $product)
+                    @foreach($lowStockProducts as $product)
                     <div class="flex items-center justify-between p-3 bg-red-50 border border-red-100 rounded-xl">
                         <div class="min-w-0 flex-1 pr-2">
                             <p class="text-sm font-semibold text-slate-800 truncate" title="{{ $product->name }}">{{ $product->name }}</p>

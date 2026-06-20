@@ -57,10 +57,10 @@ class DashboardController extends Controller
         $totalWorkOrders = $queryDate(WorkOrder::query())->count();
         $pendingWorkOrders = $queryDate(WorkOrder::where('status', 'pending'))->count();
 
-        $recentBills = Bill::with('customer')->latest()->take(5)->get();
-        $recentExpenses = Expense::latest()->take(5)->get();
+        $recentBills = Bill::with('customer')->latest()->get();
+        $recentExpenses = Expense::latest()->get();
         $lowStockProducts = Product::whereColumn('stock_qty', '<=', 'min_stock')->get();
-        $pendingOrders = WorkOrder::with('customer', 'vehicle')->where('status', '!=', 'completed')->latest()->take(5)->get();
+        $pendingOrders = WorkOrder::with('customer', 'vehicle')->where('status', '!=', 'completed')->latest()->get();
         
         $activeWarranties = $queryDate(Warranty::where('status', 'active'))->count();
         $totalProducts = Product::count();

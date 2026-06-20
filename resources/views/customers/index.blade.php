@@ -36,13 +36,9 @@
     <div class="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 mb-6">
         <form method="GET" class="flex items-center gap-2 w-full sm:w-auto">
             <input type="text" name="search" value="{{ request('search') }}" placeholder="Search customers..." class="form-input sm:w-72" id="search-customers">
-        <select name="limit" onchange="this.form.submit()" class="form-input sm:w-24" title="Rows per page">
-            <option value="15" {{ request('limit') == 15 ? 'selected' : '' }}>15 / page</option>
-            <option value="25" {{ request('limit') == 25 ? 'selected' : '' }}>25 / page</option>
-            <option value="50" {{ request('limit') == 50 ? 'selected' : '' }}>50 / page</option>
-            <option value="100" {{ request('limit') == 100 ? 'selected' : '' }}>100 / page</option>
-        </select>
-            <button type="submit" class="btn-secondary">Search</button>
+        <button type="submit" class="btn-secondary whitespace-nowrap px-4 py-2">
+            <svg class="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"/></svg> Search
+        </button>
         </form>
         <button @click="openCreate()" class="btn-primary animate-pulse-glow" id="btn-add-customer">
             <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"/></svg>

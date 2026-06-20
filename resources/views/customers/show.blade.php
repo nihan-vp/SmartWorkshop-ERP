@@ -48,7 +48,7 @@
             <table class="data-table">
                 <thead><tr><th>Sl No</th><th>Invoice No</th><th>Date</th><th>Total</th><th>Status</th></tr></thead>
                 <tbody>
-                    @foreach($customer->bills->take(10) as $index => $bill)
+                    @foreach($customer->bills as $index => $bill)
                     <tr>
                         <td class="font-semibold text-slate-500">{{ $loop->iteration }}</td>
                         <td class="text-slate-800 font-semibold">{{ $bill->bill_number }}</td>
