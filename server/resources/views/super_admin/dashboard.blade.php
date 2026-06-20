@@ -105,6 +105,17 @@
                             <div>
                                 <p class="font-semibold text-slate-800">{{ $w->name }}</p>
                                 <p class="text-xs text-slate-500">{{ $w->phone }} | {{ $w->email }}</p>
+                                @if(in_array($w->subscription_status, ['trial', 'training']) && $w->trial_ends_at)
+                                <div class="mt-1.5 text-xs font-medium text-slate-600 bg-slate-50 border border-slate-100 rounded-lg p-2 shadow-sm max-w-xs">
+                                    <span class="font-bold text-amber-800">
+                                        {{ $w->subscription_status === 'training' ? 'Training' : 'Trial' }} Status:
+                                    </span>
+                                    <span data-countdown-id="{{ $w->id }}" class="font-semibold text-slate-700">Loading...</span>
+                                    <span class="text-[10px] text-slate-400 block mt-0.5">
+                                        (Expires: <span data-expiry-id="{{ $w->id }}"></span>)
+                                    </span>
+                                </div>
+                                @endif
                             </div>
                             <span class="px-2 py-1 text-xs font-medium rounded-full {{ $w->subscription_status === 'active' ? 'bg-emerald-100 text-emerald-800' : 'bg-slate-100 text-slate-800' }}">
                                 {{ ucfirst($w->subscription_status) }}
@@ -166,6 +177,17 @@
                                     <span class="px-2 py-1 text-xs font-medium rounded-full {{ $workshop->subscription_status === 'active' ? 'bg-emerald-100 text-emerald-800' : 'bg-slate-100 text-slate-800' }}">
                                         {{ ucfirst($workshop->subscription_status) }}
                                     </span>
+                                    @if(in_array($workshop->subscription_status, ['trial', 'training']) && $workshop->trial_ends_at)
+                                    <div class="mt-1.5 text-xs font-medium text-slate-600 bg-slate-50 border border-slate-100 rounded-lg p-2 max-w-xs shadow-sm">
+                                        <p class="font-bold text-amber-800">
+                                            {{ $workshop->subscription_status === 'training' ? 'Training' : 'Trial' }} Status:
+                                        </p>
+                                        <p data-countdown-id="{{ $workshop->id }}" class="font-semibold text-slate-700 mt-0.5">Loading...</p>
+                                        <p class="text-[10px] text-slate-400 mt-0.5">
+                                            (Expires: <span data-expiry-id="{{ $workshop->id }}"></span>)
+                                        </p>
+                                    </div>
+                                    @endif
                                 </td>
                                 <td class="px-4 py-3 text-slate-600">
                                     @if($workshop->users->first())
@@ -759,5 +781,73 @@ document.addEventListener('alpine:init', () => {
         }
     }));
 });
+</script>
+
+<script>
+(function() {
+    const countdownWorkshops = [
+        @foreach($workshops as $w)
+            @if(in_array($w->subscription_status, ['trial', 'training']) && $w->trial_ends_at)
+            {
+                id: {{ $w->id }},
+                expiryISO: '{{ $w->trial_ends_at->format("Y-m-d\TH:i:s") }}',
+                formattedExpiryStr: '{{ $w->trial_ends_at->isToday() ? "Today, " . $w->trial_ends_at->format("h:i A") : ($w->trial_ends_at->isTomorrow() ? "Tomorrow, " . $w->trial_ends_at->format("h:i A") : $w->trial_ends_at->format("d M Y, h:i A")) }}'
+            },
+            @endif
+        @endforeach
+    ];
+
+    function pad(n) { return String(n).padStart(2, '0'); }
+
+    function updateAllCountdowns() {
+        const now = new Date();
+        countdownWorkshops.forEach(w => {
+            const expiryDate = new Date(w.expiryISO);
+            const diff = expiryDate - now;
+
+            const countdownEls = document.querySelectorAll(`[data-countdown-id="${w.id}"]`);
+            const expiryEls = document.querySelectorAll(`[data-expiry-id="${w.id}"]`);
+
+            expiryEls.forEach(el => {
+                if (el.textContent !== w.formattedExpiryStr) {
+                    el.textContent = w.formattedExpiryStr;
+                }
+            });
+
+            countdownEls.forEach(el => {
+                if (diff <= 0) {
+                    el.textContent = 'Expired';
+                    el.style.color = '#be123c';
+                    return;
+                }
+
+                const totalSecs = Math.floor(diff / 1000);
+                const days = Math.floor(totalSecs / 86400);
+                const hours = Math.floor((totalSecs % 86400) / 3600);
+                const mins = Math.floor((totalSecs % 3600) / 60);
+                const secs = totalSecs % 60;
+
+                let text;
+                if (days > 1) {
+                    text = days + ' Days Left ' + pad(hours) + 'h ' + pad(mins) + 'm';
+                } else if (days === 1) {
+                    text = '1 Day Left ' + pad(hours) + 'h ' + pad(mins) + 'm';
+                } else if (hours > 0) {
+                    text = '0 Days Left ' + pad(hours) + 'h ' + pad(mins) + 'm ' + pad(secs) + 's';
+                } else {
+                    text = '0 Days Left 0h ' + pad(mins) + 'm ' + pad(secs) + 's';
+                    el.style.color = '#dc2626'; // urgent red
+                }
+
+                el.textContent = text;
+            });
+        });
+    }
+
+    if (countdownWorkshops.length > 0) {
+        updateAllCountdowns();
+        setInterval(updateAllCountdowns, 1000);
+    }
+})();
 </script>
 @endsection

@@ -104,6 +104,17 @@
                             <div>
                                 <p class="font-semibold text-slate-800"><?php echo e($w->name); ?></p>
                                 <p class="text-xs text-slate-500"><?php echo e($w->phone); ?> | <?php echo e($w->email); ?></p>
+                                <?php if(in_array($w->subscription_status, ['trial', 'training']) && $w->trial_ends_at): ?>
+                                <div class="mt-1.5 text-xs font-medium text-slate-600 bg-slate-50 border border-slate-100 rounded-lg p-2 shadow-sm max-w-xs">
+                                    <span class="font-bold text-amber-800">
+                                        <?php echo e($w->subscription_status === 'training' ? 'Training' : 'Trial'); ?> Status:
+                                    </span>
+                                    <span data-countdown-id="<?php echo e($w->id); ?>" class="font-semibold text-slate-700">Loading...</span>
+                                    <span class="text-[10px] text-slate-400 block mt-0.5">
+                                        (Expires: <span data-expiry-id="<?php echo e($w->id); ?>"></span>)
+                                    </span>
+                                </div>
+                                <?php endif; ?>
                             </div>
                             <span class="px-2 py-1 text-xs font-medium rounded-full <?php echo e($w->subscription_status === 'active' ? 'bg-emerald-100 text-emerald-800' : 'bg-slate-100 text-slate-800'); ?>">
                                 <?php echo e(ucfirst($w->subscription_status)); ?>
@@ -167,6 +178,17 @@
                                         <?php echo e(ucfirst($workshop->subscription_status)); ?>
 
                                     </span>
+                                    <?php if(in_array($workshop->subscription_status, ['trial', 'training']) && $workshop->trial_ends_at): ?>
+                                    <div class="mt-1.5 text-xs font-medium text-slate-600 bg-slate-50 border border-slate-100 rounded-lg p-2 max-w-xs shadow-sm">
+                                        <p class="font-bold text-amber-800">
+                                            <?php echo e($workshop->subscription_status === 'training' ? 'Training' : 'Trial'); ?> Status:
+                                        </p>
+                                        <p data-countdown-id="<?php echo e($workshop->id); ?>" class="font-semibold text-slate-700 mt-0.5">Loading...</p>
+                                        <p class="text-[10px] text-slate-400 mt-0.5">
+                                            (Expires: <span data-expiry-id="<?php echo e($workshop->id); ?>"></span>)
+                                        </p>
+                                    </div>
+                                    <?php endif; ?>
                                 </td>
                                 <td class="px-4 py-3 text-slate-600">
                                     <?php if($workshop->users->first()): ?>
@@ -771,6 +793,74 @@ document.addEventListener('alpine:init', () => {
         }
     }));
 });
+</script>
+
+<script>
+(function() {
+    const countdownWorkshops = [
+        <?php $__currentLoopData = $workshops; $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $w): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); ?>
+            <?php if(in_array($w->subscription_status, ['trial', 'training']) && $w->trial_ends_at): ?>
+            {
+                id: <?php echo e($w->id); ?>,
+                expiryISO: '<?php echo e($w->trial_ends_at->format("Y-m-d\TH:i:s")); ?>',
+                formattedExpiryStr: '<?php echo e($w->trial_ends_at->isToday() ? "Today, " . $w->trial_ends_at->format("h:i A") : ($w->trial_ends_at->isTomorrow() ? "Tomorrow, " . $w->trial_ends_at->format("h:i A") : $w->trial_ends_at->format("d M Y, h:i A"))); ?>'
+            },
+            <?php endif; ?>
+        <?php endforeach; $__env->popLoop(); $loop = $__env->getLastLoop(); ?>
+    ];
+
+    function pad(n) { return String(n).padStart(2, '0'); }
+
+    function updateAllCountdowns() {
+        const now = new Date();
+        countdownWorkshops.forEach(w => {
+            const expiryDate = new Date(w.expiryISO);
+            const diff = expiryDate - now;
+
+            const countdownEls = document.querySelectorAll(`[data-countdown-id="${w.id}"]`);
+            const expiryEls = document.querySelectorAll(`[data-expiry-id="${w.id}"]`);
+
+            expiryEls.forEach(el => {
+                if (el.textContent !== w.formattedExpiryStr) {
+                    el.textContent = w.formattedExpiryStr;
+                }
+            });
+
+            countdownEls.forEach(el => {
+                if (diff <= 0) {
+                    el.textContent = 'Expired';
+                    el.style.color = '#be123c';
+                    return;
+                }
+
+                const totalSecs = Math.floor(diff / 1000);
+                const days = Math.floor(totalSecs / 86400);
+                const hours = Math.floor((totalSecs % 86400) / 3600);
+                const mins = Math.floor((totalSecs % 3600) / 60);
+                const secs = totalSecs % 60;
+
+                let text;
+                if (days > 1) {
+                    text = days + ' Days Left ' + pad(hours) + 'h ' + pad(mins) + 'm';
+                } else if (days === 1) {
+                    text = '1 Day Left ' + pad(hours) + 'h ' + pad(mins) + 'm';
+                } else if (hours > 0) {
+                    text = '0 Days Left ' + pad(hours) + 'h ' + pad(mins) + 'm ' + pad(secs) + 's';
+                } else {
+                    text = '0 Days Left 0h ' + pad(mins) + 'm ' + pad(secs) + 's';
+                    el.style.color = '#dc2626'; // urgent red
+                }
+
+                el.textContent = text;
+            });
+        });
+    }
+
+    if (countdownWorkshops.length > 0) {
+        updateAllCountdowns();
+        setInterval(updateAllCountdowns, 1000);
+    }
+})();
 </script>
 <?php $__env->stopSection(); ?>
 

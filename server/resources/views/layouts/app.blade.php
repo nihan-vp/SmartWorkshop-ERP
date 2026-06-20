@@ -855,9 +855,17 @@
         @endauth
 
         @auth
-        @if(auth()->user()->workshop && in_array(auth()->user()->workshop->subscription_status, ['trial', 'training']))
         @php
-            $workshop = auth()->user()->workshop;
+            $layoutWorkshop = null;
+            if (auth()->user()->isSuperAdmin() && session()->has('active_workshop_id')) {
+                $layoutWorkshop = \App\Models\Workshop::find(session('active_workshop_id'));
+            } else {
+                $layoutWorkshop = auth()->user()->workshop;
+            }
+        @endphp
+        @if($layoutWorkshop && in_array($layoutWorkshop->subscription_status, ['trial', 'training']))
+        @php
+            $workshop = $layoutWorkshop;
             $trialEnds = \Carbon\Carbon::parse($workshop->trial_ends_at);
             // Calculate days left, making sure it shows 0 if it expires today
             $daysLeftDisplay = max(0, floor(now()->startOfDay()->diffInDays($trialEnds->copy()->startOfDay(), false)));
