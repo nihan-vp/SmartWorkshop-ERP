@@ -862,6 +862,12 @@
             // Calculate days left, making sure it shows 0 if it expires today
             $daysLeftDisplay = max(0, floor(now()->startOfDay()->diffInDays($trialEnds->copy()->startOfDay(), false)));
             $isTraining = $workshop->subscription_status === 'training';
+            
+            $formattedExpiryDate = $trialEnds->isToday() 
+                ? 'Today, ' . $trialEnds->format('h:i A') 
+                : ($trialEnds->isTomorrow() 
+                    ? 'Tomorrow, ' . $trialEnds->format('h:i A') 
+                    : $trialEnds->format('d M Y, h:i A'));
         @endphp
         <div x-data="{ openLicenseActivationModal: false }">
             <div class="bg-amber-50 border-b border-amber-200 px-4 py-3 sm:px-6 lg:px-8 no-print shadow-sm">
@@ -890,7 +896,7 @@
                 var expiryDate = new Date(expiryISO);
                 
                 // Formatted string exactly as it appears in dashboard (server-rendered)
-                var formattedExpiryStr = '{{ $trialEnds->format("d M Y, h:i A") }}';
+                var formattedExpiryStr = '{{ $formattedExpiryDate }}';
                 
                 var isTraining = {{ $isTraining ? 'true' : 'false' }};
                 var label = isTraining ? 'Training' : 'Trial';
@@ -922,13 +928,13 @@
 
                     var text;
                     if (days > 1) {
-                        text = days + ' day' + (days !== 1 ? 's' : '') + ' ' + pad(hours) + 'h ' + pad(mins) + 'm remaining';
+                        text = days + ' Days Left ' + pad(hours) + 'h ' + pad(mins) + 'm';
                     } else if (days === 1) {
-                        text = '1 day ' + pad(hours) + 'h ' + pad(mins) + 'm remaining';
+                        text = '1 Day Left ' + pad(hours) + 'h ' + pad(mins) + 'm';
                     } else if (hours > 0) {
-                        text = pad(hours) + 'h ' + pad(mins) + 'm ' + pad(secs) + 's remaining';
+                        text = '0 Days Left ' + pad(hours) + 'h ' + pad(mins) + 'm ' + pad(secs) + 's';
                     } else {
-                        text = pad(mins) + 'm ' + pad(secs) + 's remaining';
+                        text = '0 Days Left 0h ' + pad(mins) + 'm ' + pad(secs) + 's';
                         countdownEl.style.color = '#dc2626'; // urgent red
                     }
 

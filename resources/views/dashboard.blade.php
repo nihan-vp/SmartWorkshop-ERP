@@ -20,7 +20,7 @@
 @if($workshop)
 <div x-data="subscriptionManager({
     status: '{{ $workshop ? $workshop->subscription_status : 'N/A' }}',
-    expiry: '{{ $workshop && $workshop->trial_ends_at ? $workshop->trial_ends_at->format('d M Y, h:i A') : 'Never (Lifetime)' }}',
+    expiry: '{{ $workshop && $workshop->trial_ends_at ? ($workshop->trial_ends_at->isToday() ? "Today, " . $workshop->trial_ends_at->format("h:i A") : ($workshop->trial_ends_at->isTomorrow() ? "Tomorrow, " . $workshop->trial_ends_at->format("h:i A") : $workshop->trial_ends_at->format("d M Y, h:i A"))) : "Never (Lifetime)" }}',
     daysRemaining: {{ $workshop && $workshop->trial_ends_at ? $workshop->getTrialDaysRemaining() : 0 }},
     totalDuration: {{ $workshop && $workshop->trial_ends_at ? $workshop->getTotalDurationDays() : 0 }},
     subscriptionDay: {{ $workshop ? $workshop->getSubscriptionDay() : 0 }},
