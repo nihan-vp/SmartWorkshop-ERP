@@ -101,6 +101,7 @@
 
 
 {{-- Record Payment Modal --}}
+<template x-teleport="body">
 <div x-show="paymentModalOpen" 
      class="fixed inset-0 z-[100] flex items-center justify-center p-4 bg-slate-900/50 backdrop-blur-sm"
      x-cloak>
@@ -165,5 +166,6 @@
         </form>
     </div>
 </div>
+</template>
 </div>
 @endsection

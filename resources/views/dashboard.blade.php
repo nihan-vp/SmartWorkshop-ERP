@@ -369,33 +369,31 @@
                 </h3>
                 <div class="space-y-3">
                     @if($workshop)
-                        <div class="flex flex-wrap justify-between items-center text-xs pb-1.5 border-b border-slate-100 gap-2">
+                        <div class="flex justify-between items-center text-xs pb-1.5 border-b border-slate-100">
                             <span class="text-slate-500 font-semibold">Account Status</span>
-                            <span class="font-bold uppercase tracking-wider text-xs text-right" :class="status === 'active' || status === 'fix' || status === 'fixed' ? 'text-emerald-600' : 'text-rose-600'" x-text="status"></span>
+                            <span class="font-bold uppercase tracking-wider text-xs" :class="status === 'active' || status === 'fix' || status === 'fixed' ? 'text-emerald-600' : 'text-rose-600'" x-text="status"></span>
                         </div>
 
-                        <div class="flex flex-wrap justify-between items-center text-xs pb-1.5 border-b border-slate-100 gap-2">
+                        <div class="flex justify-between items-center text-xs pb-1.5 border-b border-slate-100">
                             <span class="text-slate-500 font-semibold">Expiration Date</span>
-                            <span class="font-bold text-slate-700 text-right" x-text="expiry"></span>
+                            <span class="font-bold text-slate-700" x-text="expiry"></span>
                         </div>
 
-                        <div class="flex flex-wrap justify-between items-center text-xs pb-1.5 border-b border-slate-100 gap-2">
+                        <div class="flex justify-between items-center text-xs pb-1.5 border-b border-slate-100">
                             <span class="text-slate-500 font-semibold">Time Remaining</span>
-                            <div class="text-right">
-                                <span x-show="isExpired" class="text-rose-600 font-bold bg-rose-50 px-2 py-0.5 rounded border border-rose-100 animate-pulse inline-block">Expired</span>
-                                <span x-show="!isExpired" class="text-slate-700 font-bold bg-blue-50 text-blue-700 px-2 py-0.5 rounded border border-blue-100 inline-block mt-0.5 sm:mt-0">
-                                    <span x-text="hasExpiry ? daysRemaining + ' Days Left' : 'Active &amp; Unlimited'"></span>
-                                </span>
-                            </div>
+                            <span x-show="isExpired" class="text-rose-600 font-bold bg-rose-50 px-2 py-0.5 rounded border border-rose-100 animate-pulse">Expired</span>
+                            <span x-show="!isExpired" class="text-slate-700 font-bold bg-blue-50 text-blue-700 px-2 py-0.5 rounded border border-blue-100">
+                                <span x-text="hasExpiry ? daysRemaining + ' Days Left' : 'Active &amp; Unlimited'"></span>
+                            </span>
                         </div>
-                        <div class="flex flex-wrap justify-between items-center text-xs pb-1.5 border-b border-slate-100 gap-2">
+                        <div class="flex justify-between items-center text-xs pb-1.5 border-b border-slate-100">
                             <span class="text-slate-500 font-semibold">Total Duration</span>
-                            <span class="font-bold text-slate-700 text-right" x-text="totalDuration + ' Days'"></span>
+                            <span class="font-bold text-slate-700" x-text="totalDuration + ' Days'"></span>
                         </div>
 
-                        <div class="flex flex-wrap justify-between items-center text-xs pb-1.5 border-b border-slate-100 gap-2">
+                        <div class="flex justify-between items-center text-xs pb-1.5 border-b border-slate-100">
                             <span class="text-slate-500 font-semibold">Operating Time</span>
-                            <span class="font-bold text-slate-700 text-right" x-text="'Day ' + subscriptionDay"></span>
+                            <span class="font-bold text-slate-700" x-text="'Day ' + subscriptionDay"></span>
                         </div>
 
                         <div class="mt-4 p-3 bg-red-50 border border-red-100 rounded-xl text-center text-xs">
@@ -410,6 +408,7 @@
                 </div> <!-- End of glass-card -->
 
                 <!-- Activation Modal -->
+                <template x-teleport="body">
                 <div x-show="showModal" class="fixed inset-0 z-[100] overflow-y-auto" x-cloak>
                     <div class="flex items-end justify-center min-h-screen pt-4 px-4 pb-20 text-center sm:block sm:p-0">
                         <div x-show="showModal" x-transition.opacity class="fixed inset-0 transition-opacity" aria-hidden="true" @click="showModal = false">
@@ -449,6 +448,7 @@
                         </div>
                     </div>
                 </div>
+                </template>
             </div>
             @endif
         </div>
