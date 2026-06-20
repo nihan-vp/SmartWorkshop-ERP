@@ -503,6 +503,7 @@
             keys: initialData.keys || [],
             
             formatKey() {
+                this.serverError = '';
                 var raw = this.productKey.replace(/[^A-Za-z0-9]/g, '').toUpperCase().slice(0, 16);
                 var fmt = '';
                 for (var i = 0; i < raw.length; i++) {

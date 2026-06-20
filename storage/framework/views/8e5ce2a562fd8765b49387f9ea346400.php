@@ -873,10 +873,12 @@
         ?>
         <div x-data="{ 
             openLicenseActivationModal: <?php echo e(session('error') ? 'true' : 'false'); ?>,
+            hideSessionError: false,
             productKey: '',
             validationError: '',
             submitting: false,
             formatKey() {
+                this.hideSessionError = true;
                 var raw = this.productKey.replace(/[^A-Za-z0-9]/g, '').toUpperCase().slice(0, 16);
                 var fmt = '';
                 for (var i = 0; i < raw.length; i++) {
@@ -1006,9 +1008,12 @@
 
                             
                             <?php if(session('error')): ?>
-                            <div class="mb-5 bg-red-50 border border-red-200 rounded-lg p-3 flex items-start gap-2">
+                            <div x-show="!hideSessionError" class="mb-5 bg-red-50 border border-red-200 rounded-lg p-3 flex items-start gap-2">
                                 <svg class="w-5 h-5 text-red-500 shrink-0 mt-0.5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M12 8v4m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
-                                <span class="text-sm font-medium text-red-700"><?php echo e(session('error')); ?></span>
+                                <div>
+                                    <h4 class="text-sm font-bold text-red-800">Activation Error</h4>
+                                    <span class="text-sm font-medium text-red-700"><?php echo e(session('error')); ?></span>
+                                </div>
                             </div>
                             <?php endif; ?>
 
