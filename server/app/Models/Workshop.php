@@ -69,13 +69,13 @@ class Workshop extends Model
      */
     public function getSubscriptionDay(): int
     {
-        return (int) $this->created_at->startOfDay()->diffInDays(now()->startOfDay()) + 1;
+        return max(0, (int) $this->created_at->startOfDay()->diffInDays(now()->startOfDay()));
     }
 
     /**
      * Returns the total duration in days of the CURRENT subscription period.
      * Calculated from the last key activation date to trial_ends_at.
-     * Falls back to now() if no key activation date is available.
+     * Falls back to created_at if no key activation date is available.
      */
     public function getTotalDurationDays(): int
     {
@@ -84,8 +84,8 @@ class Workshop extends Model
         }
         // Use the most recently activated key's date as the subscription start
         $lastKey = $this->productKeys()->orderBy('used_at', 'desc')->first();
-        $start = $lastKey?->used_at ?? now();
-        return max(1, (int) $start->startOfDay()->diffInDays($this->trial_ends_at->startOfDay()));
+        $start = $lastKey?->used_at ?? $this->created_at;
+        return max(0, (int) $start->startOfDay()->diffInDays($this->trial_ends_at->startOfDay()));
     }
 
     public function users(): HasMany
