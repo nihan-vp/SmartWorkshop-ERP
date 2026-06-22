@@ -46,7 +46,9 @@ class EnsureWorkshopSelected
                     if ($request->expectsJson()) {
                         return response()->json([
                             'error' => 'trial_expired',
-                            'message' => 'Your free trial has expired. Please contact support to upgrade to an active subscription.'
+                            'message' => $workshop->subscription_status === 'active' 
+                                ? 'Your subscription has expired. Please contact support to renew.' 
+                                : 'Your free trial has expired. Please contact support to upgrade to an active subscription.'
                         ], 403);
                     }
 
