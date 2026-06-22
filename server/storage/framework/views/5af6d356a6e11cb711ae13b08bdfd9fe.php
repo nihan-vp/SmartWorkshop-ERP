@@ -994,7 +994,7 @@
                         text = '0 Days Left ' + pad(hours) + 'h ' + pad(mins) + 'm ' + pad(secs) + 's';
                     } else {
                         text = '0 Days Left 0h ' + pad(mins) + 'm ' + pad(secs) + 's';
-                        countdownEl.style.color = '#dc2626';
+                        countdownEl.style.color = '#dc2626'; // urgent red
                     }
 
                     countdownEl.textContent = text;
@@ -1005,214 +1005,93 @@
             })();
             </script>
 
-        <?php
-            $alertUser = auth()->user();
-            $alertWorkshop = null;
-            if ($alertUser) {
-                if ($alertUser->isSuperAdmin() && session()->has('active_workshop_id')) {
-                    $alertWorkshop = \App\Models\Workshop::find(session('active_workshop_id'));
-                } else {
-                    $alertWorkshop = $alertUser->workshop;
-                }
-            }
-            $personalId = $alertWorkshop ? str_pad($alertWorkshop->id, 6, '0', STR_PAD_LEFT) : '888217';
-        ?>
-
-        
-        <div x-show="openLicenseActivationModal" x-cloak
-             class="fixed inset-0 z-[100] flex items-center justify-center p-4 sm:p-0"
-             role="dialog" aria-modal="true"
-             x-transition:enter="transition ease-out duration-300"
-             x-transition:enter-start="opacity-0"
-             x-transition:enter-end="opacity-100"
-             x-transition:leave="transition ease-in duration-200"
-             x-transition:leave-start="opacity-100"
-             x-transition:leave-end="opacity-0">
-
             
-            <div class="absolute inset-0 bg-slate-900/70 backdrop-blur-sm transition-opacity" @click="openLicenseActivationModal = false"></div>
-
-            
-            <div class="relative w-full max-w-2xl z-10 bg-white/95 backdrop-blur-md rounded-[2rem] shadow-2xl overflow-hidden border border-white/20"
-                 x-transition:enter="transition ease-out duration-300 transform"
-                 x-transition:enter-start="translate-y-8 sm:translate-y-0 sm:scale-95 opacity-0"
-                 x-transition:enter-end="translate-y-0 sm:scale-100 opacity-100"
-                 x-transition:leave="transition ease-in duration-200 transform"
-                 x-transition:leave-start="translate-y-0 sm:scale-100 opacity-100"
-                 x-transition:leave-end="translate-y-8 sm:translate-y-0 sm:scale-95 opacity-0">
+            <div x-show="openLicenseActivationModal" x-cloak
+                 class="fixed inset-0 z-[100] flex items-end sm:items-center justify-center p-4 sm:p-0"
+                 role="dialog" aria-modal="true"
+                 x-transition:enter="transition ease-out duration-200"
+                 x-transition:enter-start="opacity-0"
+                 x-transition:enter-end="opacity-100"
+                 x-transition:leave="transition ease-in duration-150"
+                 x-transition:leave-start="opacity-100"
+                 x-transition:leave-end="opacity-0">
 
                 
-                <div class="absolute top-0 left-0 w-full h-40 bg-gradient-to-br from-blue-600 to-indigo-800 -z-10"></div>
-                <div class="absolute top-10 right-10 w-32 h-32 bg-white/10 rounded-full blur-2xl -z-10"></div>
-                <div class="absolute -top-10 -left-10 w-40 h-40 bg-blue-400/20 rounded-full blur-2xl -z-10"></div>
+                <div class="absolute inset-0 bg-slate-800/60 transition-opacity" @click="openLicenseActivationModal = false"></div>
 
-                <form id="layout-modal-logout-form" action="<?php echo e(route('logout')); ?>" method="POST" class="hidden">
-                    <?php echo csrf_field(); ?>
-                </form>
+                
+                <div class="relative w-full sm:max-w-lg z-10 bg-white rounded-2xl shadow-xl overflow-hidden"
+                     x-transition:enter="transition ease-out duration-200 transform"
+                     x-transition:enter-start="translate-y-4 sm:translate-y-0 sm:scale-95 opacity-0"
+                     x-transition:enter-end="translate-y-0 sm:scale-100 opacity-100"
+                     x-transition:leave="transition ease-in duration-150 transform"
+                     x-transition:leave-start="translate-y-0 sm:scale-100 opacity-100"
+                     x-transition:leave-end="translate-y-4 sm:translate-y-0 sm:scale-95 opacity-0">
 
-                <form action="<?php echo e(route('activate_license')); ?>" method="POST" @submit.prevent="validate() && $el.submit()">
-                    <?php echo csrf_field(); ?>
-                    
-                    <input type="hidden" name="product_key" x-model="productKey">
-                    
-                    
-                    <div class="px-8 pt-8 pb-6 text-white">
-                        <div class="flex items-center justify-between">
-                            <h2 class="text-2xl font-bold font-outfit tracking-wide flex items-center gap-3">
-                                <svg class="w-8 h-8 text-blue-200" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z"/></svg>
-                                Suhaim Soft Registration
-                            </h2>
-                            <button type="button" @click="openLicenseActivationModal = false" class="text-white/70 hover:text-white transition-colors focus:outline-none">
-                                <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/></svg>
-                            </button>
-                        </div>
-                    </div>
+                    <form id="layout-modal-logout-form" action="<?php echo e(route('logout')); ?>" method="POST" class="hidden">
+                        <?php echo csrf_field(); ?>
+                    </form>
 
-                    
-                    <div class="px-8 py-6 bg-white rounded-t-3xl -mt-6">
+                    <form action="<?php echo e(route('activate_license')); ?>" method="POST" @submit.prevent="validate() && $el.submit()">
+                        <?php echo csrf_field(); ?>
                         
-                        
-                        <div class="mb-8 space-y-2">
-                            <h3 class="text-xl font-semibold text-slate-800">Dear Customer, <span class="text-blue-600 font-bold uppercase"><?php echo e($alertWorkshop->name ?? 'Valued Customer'); ?></span></h3>
-                            <p class="text-slate-600 font-medium">Suhaim Soft Invites you to be a part of our customer Group.</p>
-                            <div class="inline-flex items-center gap-2 px-4 py-2 mt-2 bg-blue-50 text-blue-800 rounded-lg font-medium text-sm border border-blue-100">
-                                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 5a2 2 0 012-2h3.28a1 1 0 01.948.684l1.498 4.493a1 1 0 01-.502 1.21l-2.257 1.13a11.042 11.042 0 005.516 5.516l1.13-2.257a1 1 0 011.21-.502l4.493 1.498a1 1 0 01.684.949V19a2 2 0 01-2 2h-1C9.716 21 3 14.284 3 6V5z"/></svg>
-                                Please Contact our Office: <span class="font-bold">8891479505, 7736708566</span>
+                        <div class="px-6 pt-6 pb-6 sm:px-8 sm:pt-8">
+                            
+                            <div class="mb-5">
+                                <h3 class="text-xl font-bold text-slate-900 font-outfit">Activate License</h3>
+                                <p class="text-sm text-slate-500 mt-1.5">Redeem your product key to activate or extend subscription</p>
                             </div>
-                        </div>
 
-                        
-                        <?php if(session('error')): ?>
-                        <div x-show="!hideSessionError" class="mb-6 bg-red-50/80 border-l-4 border-red-500 rounded-r-lg p-4 flex items-start gap-3">
-                            <svg class="w-6 h-6 text-red-500 shrink-0" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M12 8v4m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
+                            
+                            <?php if(session('error')): ?>
+                            <div x-show="!hideSessionError" class="mb-5 bg-red-50 border border-red-200 rounded-lg p-3 flex items-start gap-2">
+                                <svg class="w-5 h-5 text-red-500 shrink-0 mt-0.5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M12 8v4m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
+                                <div>
+                                    <h4 class="text-sm font-bold text-red-800">Activation Error</h4>
+                                    <span class="text-sm font-medium text-red-700"><?php echo e(session('error')); ?></span>
+                                </div>
+                            </div>
+                            <?php endif; ?>
+
+                            
                             <div>
-                                <h4 class="text-base font-bold text-red-800">Activation Error</h4>
-                                <span class="text-sm font-medium text-red-700"><?php echo e(session('error')); ?></span>
+                                <input type="text" name="product_key" x-model="productKey" @input="formatKey()" required autocomplete="off" spellcheck="false" maxlength="27" class="w-full px-4 py-3 bg-white border rounded-xl font-mono text-base tracking-[0.1em] text-slate-900 placeholder-slate-400 focus:outline-none focus:ring-1 transition-colors" :class="validationError ? 'border-red-500 focus:border-red-500 focus:ring-red-500' : 'border-slate-300 focus:border-blue-500 focus:ring-blue-500'" placeholder="SUHAIM-XXXX-XXXX-XXXX-XXXX">
+                                <div x-show="validationError" x-text="validationError" class="mt-2 text-sm font-medium text-red-600" x-cloak></div>
                             </div>
                         </div>
-                        <?php endif; ?>
 
                         
-                        <div class="bg-slate-50 border border-slate-200 rounded-2xl p-6 shadow-sm relative overflow-hidden"
-                             x-data="{
-                                segments: ['', '', '', '', ''],
-                                get computedKey() { return this.segments.filter(s => s.length > 0).join('-'); },
-                                syncKey() { 
-                                    this.productKey = this.computedKey; 
-                                    this.validationError = ''; 
-                                },
-                                handleInput(e, idx) {
-                                    let val = e.target.value.toUpperCase().replace(/[^A-Z0-9]/g, '');
-                                    let max = (idx === 0) ? 6 : 4;
-                                    this.segments[idx] = val.substring(0, max);
-                                    
-                                    if (val.length >= max && idx < 4) {
-                                        this.$refs['seg' + (idx + 1)].focus();
-                                    }
-                                    this.syncKey();
-                                },
-                                handlePaste(e) {
-                                    e.preventDefault();
-                                    let pasted = (e.clipboardData || window.clipboardData).getData('text').toUpperCase().replace(/[^A-Z0-9]/g, '');
-                                    if (!pasted) return;
-                                    
-                                    if (pasted.startsWith('SUHAIM')) {
-                                        this.segments[0] = pasted.substring(0, 6);
-                                        this.segments[1] = pasted.substring(6, 10);
-                                        this.segments[2] = pasted.substring(10, 14);
-                                        this.segments[3] = pasted.substring(14, 18);
-                                        this.segments[4] = pasted.substring(18, 22);
-                                    } else {
-                                        // Auto-distribute custom keys
-                                        let i = 0;
-                                        while(i < 5 && pasted.length > 0) {
-                                            let max = (i === 0) ? 6 : 4;
-                                            this.segments[i] = pasted.substring(0, max);
-                                            pasted = pasted.substring(max);
-                                            i++;
-                                        }
-                                    }
-                                    this.syncKey();
-                                },
-                                handleBackspace(e, idx) {
-                                    if (e.target.value === '' && idx > 0) {
-                                        this.$refs['seg' + (idx - 1)].focus();
-                                    }
-                                    this.syncKey();
-                                }
-                             }"
-                             x-init="syncKey()">
-                            
-                            
-                            <div class="absolute -right-8 -bottom-8 opacity-[0.03] pointer-events-none">
-                                <svg class="w-48 h-48" fill="currentColor" viewBox="0 0 24 24"><path d="M12 2L2 7l10 5 10-5-10-5zM2 17l10 5 10-5M2 12l10 5 10-5"/></svg>
+                        <div class="bg-white px-6 py-4 sm:px-8 sm:pb-8 flex flex-col-reverse sm:flex-row sm:items-center justify-between gap-4 rounded-b-2xl">
+                            <div class="text-sm text-slate-500 text-center sm:text-left">
+                                Need a key? Contact Suhaim Soft<br>
+                                <a href="tel:8891479505" class="text-blue-500 font-semibold hover:underline">8891479505</a> or 
+                                <a href="tel:7736708566" class="text-blue-500 font-semibold hover:underline">7736708566</a>
                             </div>
-
-                            <div class="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-6 relative z-10">
-                                
-                                
-                                <div class="flex-shrink-0">
-                                    <span class="block text-xs font-bold text-slate-400 uppercase tracking-wider mb-1">Personal ID</span>
-                                    <div class="px-4 py-2 bg-white border border-slate-200 rounded-lg font-mono font-bold text-slate-700 tracking-widest shadow-sm inline-block">
-                                        <?php echo e($personalId); ?>
-
-                                    </div>
-                                </div>
-
-                                
-                                <div class="w-full">
-                                    <div class="flex items-center justify-between mb-2">
-                                        <span class="block text-xs font-bold text-slate-400 uppercase tracking-wider">Serial No</span>
-                                    </div>
-                                    <div class="flex flex-wrap sm:flex-nowrap items-center gap-2">
-                                        <template x-for="(seg, idx) in segments" :key="idx">
-                                            <div class="flex items-center gap-2">
-                                                <input type="text"
-                                                       x-model="segments[idx]"
-                                                       :ref="'seg' + idx"
-                                                       @input="handleInput($event, idx)"
-                                                       @paste="handlePaste"
-                                                       @keydown.backspace="handleBackspace($event, idx)"
-                                                       :maxlength="idx === 0 ? 6 : 4"
-                                                       class="w-full sm:w-[5.5rem] px-2 py-3 bg-white border rounded-xl font-mono text-base sm:text-lg font-bold text-center tracking-widest text-slate-800 placeholder-slate-300 focus:outline-none focus:ring-2 focus:ring-blue-500 transition-shadow uppercase shadow-sm"
-                                                       :class="validationError ? 'border-red-400' : 'border-slate-300'"
-                                                       :placeholder="idx === 0 ? 'SUHAIM' : 'XXXX'"
-                                                       autocomplete="off" spellcheck="false">
-                                                <span x-show="idx < 4" class="hidden sm:block text-slate-300 font-bold">-</span>
-                                            </div>
-                                        </template>
-                                    </div>
-                                    <div x-show="validationError" x-text="validationError" class="mt-2 text-sm font-medium text-red-500" x-cloak></div>
-                                </div>
+                            <div class="flex flex-col sm:flex-row items-stretch sm:items-center justify-end gap-3 w-full sm:w-auto">
+                                <button type="button" onclick="document.getElementById('layout-modal-logout-form').submit();"
+                                        class="px-5 py-2.5 w-full sm:w-auto rounded-xl border border-rose-200 bg-rose-50 hover:bg-rose-100 text-sm font-semibold text-rose-600 transition-colors flex items-center justify-center gap-2 focus:outline-none focus:ring-2 focus:ring-rose-200"
+                                        title="Sign Out">
+                                    <svg class="w-4 h-4 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1"/></svg>
+                                    Sign Out
+                                </button>
+                                <button type="button" @click="openLicenseActivationModal = false"
+                                        class="px-5 py-2.5 w-full sm:w-auto rounded-xl border border-slate-300 bg-white text-sm font-semibold text-slate-700 hover:bg-slate-50 transition-colors focus:outline-none focus:ring-2 focus:ring-slate-200">
+                                    Cancel
+                                </button>
+                                <button type="submit" :disabled="submitting"
+                                        class="px-5 py-2.5 w-full sm:w-auto rounded-xl bg-blue-500 hover:bg-blue-600 text-white text-sm font-semibold transition-colors flex items-center justify-center gap-2 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-1">
+                                    <div x-show="submitting" class="w-4 h-4 border-2 border-white/30 border-t-white rounded-full animate-spin" x-cloak></div>
+                                    <span x-text="submitting ? 'Activating...' : 'Activate License'"></span>
+                                </button>
                             </div>
                         </div>
-
-                    </div>
-
-                    
-                    <div class="bg-slate-50 border-t border-slate-100 px-8 py-5 flex flex-col-reverse sm:flex-row items-center justify-between gap-4 rounded-b-[2rem]">
-                        <button type="button" onclick="document.getElementById('layout-modal-logout-form').submit();"
-                                class="px-6 py-3 w-full sm:w-auto rounded-xl text-slate-600 hover:bg-rose-50 hover:text-rose-600 font-semibold transition-colors flex items-center justify-center gap-2 focus:outline-none"
-                                title="Sign Out">
-                            <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1"/></svg>
-                            Sign Out
-                        </button>
-                        
-                        <div class="flex flex-col sm:flex-row items-stretch sm:items-center justify-end gap-3 w-full sm:w-auto">
-                            <button type="button" @click="openLicenseActivationModal = false"
-                                    class="px-6 py-3 w-full sm:w-auto rounded-xl border-2 border-slate-200 bg-white text-slate-600 font-bold hover:bg-slate-100 hover:border-slate-300 transition-all focus:outline-none focus:ring-4 focus:ring-slate-100">
-                                Exit
-                            </button>
-                            <button type="submit" :disabled="submitting || productKey.length < 8"
-                                    class="px-8 py-3 w-full sm:w-auto rounded-xl bg-gradient-to-r from-blue-600 to-indigo-600 hover:from-blue-700 hover:to-indigo-700 text-white font-bold tracking-wide shadow-lg shadow-blue-500/30 transition-all flex items-center justify-center gap-2 focus:outline-none focus:ring-4 focus:ring-blue-500/50 disabled:opacity-70 disabled:cursor-not-allowed">
-                                <div x-show="submitting" class="w-5 h-5 border-2 border-white/30 border-t-white rounded-full animate-spin" x-cloak></div>
-                                <span x-text="submitting ? 'Registering...' : 'Register'"></span>
-                            </button>
-                        </div>
-                    </div>
-                </form>
+                    </form>
+                </div>
             </div>
+
         </div>
+
+        <?php endif; ?>
         
         <?php
             $alertUser = auth()->user();
