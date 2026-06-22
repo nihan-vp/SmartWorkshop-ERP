@@ -116,6 +116,7 @@ Route::middleware('auth')->group(function () {
         Route::post('/workshops', [SuperAdminController::class, 'storeWorkshop'])->name('super_admin.store_workshop');
         Route::post('/workshops/{workshop}/impersonate', [SuperAdminController::class, 'impersonate'])->name('super_admin.impersonate');
         Route::put('/workshops/{workshop}', [SuperAdminController::class, 'updateWorkshop'])->name('super_admin.update_workshop');
+        Route::patch('/workshops/{workshop}/status', [SuperAdminController::class, 'updateStatus'])->name('super_admin.update_status');
         Route::delete('/workshops/{workshop}', [SuperAdminController::class, 'destroyWorkshop'])->name('super_admin.destroy_workshop');
 
         Route::post('/settings', [SuperAdminController::class, 'updateSettings'])->name('super_admin.update_settings');

@@ -91,6 +91,7 @@ class SuperAdminController extends Controller
             'admin_extend_allowed' => 'nullable|boolean',
             'alert_message' => 'nullable|string|max:1000',
             'alert_expires_at' => 'nullable|date',
+            'client_notes' => 'nullable|string',
             // Admin user details
             'admin_name' => 'nullable|string|max:255',
             'admin_email' => 'nullable|email|max:255|unique:users,email',
@@ -113,6 +114,7 @@ class SuperAdminController extends Controller
                 'alert_message' => $validated['alert_message'] ?? null,
                 'alert_expires_at' => $validated['alert_expires_at'] ?? null,
                 'alert_dismissed' => false,
+                'client_notes' => $validated['client_notes'] ?? null,
             ]);
 
             if (!empty($validated['admin_email'])) {
@@ -148,6 +150,7 @@ class SuperAdminController extends Controller
             'admin_extend_allowed' => 'nullable|boolean',
             'alert_message' => 'nullable|string|max:1000',
             'alert_expires_at' => 'nullable|date',
+            'client_notes' => 'nullable|string',
             // Admin user details
             'admin_name' => 'required|string|max:255',
             'admin_email' => [
@@ -178,6 +181,7 @@ class SuperAdminController extends Controller
                 'alert_message' => $validated['alert_message'] ?? null,
                 'alert_expires_at' => $validated['alert_expires_at'] ?? null,
                 'alert_dismissed' => false,
+                'client_notes' => $validated['client_notes'] ?? null,
             ]);
 
             $adminUser = $workshop->users()->where('role', 'admin')->first();
@@ -206,8 +210,25 @@ class SuperAdminController extends Controller
         });
 
         return redirect()
-            ->route('super_admin.dashboard')
             ->with('success', 'Workshop and administrator updated successfully!');
+    }
+
+    public function updateStatus(Request $request, Workshop $workshop)
+    {
+        $validated = $request->validate([
+            'subscription_status' => 'required|in:trial,active,suspended,fix,fixed,training,traing',
+        ]);
+
+        $oldStatus = $workshop->subscription_status;
+        $workshop->update(['subscription_status' => $validated['subscription_status']]);
+
+        \App\Models\ActivityLog::log('workshop_status_update', "Updated status of {$workshop->name} from '{$oldStatus}' to '{$validated['subscription_status']}'.", null, $workshop->id);
+
+        return response()->json([
+            'success' => true,
+            'message' => 'Status updated successfully!',
+            'status' => $validated['subscription_status'],
+        ]);
     }
 
     public function destroyWorkshop(Workshop $workshop)

@@ -24,6 +24,7 @@
             'admin_user_id' => old('admin_user_id'),
             'admin_name' => old('admin_name'),
             'admin_email' => old('admin_email'),
+            'client_notes' => old('client_notes'),
         ];
     }
 @endphp
@@ -164,6 +165,7 @@
                                 <th class="px-4 py-3">Garage Name</th>
                                 <th class="px-4 py-3">Contact</th>
                                 <th class="px-4 py-3">Status</th>
+                                <th class="px-4 py-3">Client Notes</th>
                                 <th class="px-4 py-3">Admin</th>
                                 <th class="px-4 py-3 text-right">Actions</th>
                             </tr>
@@ -174,9 +176,18 @@
                                 <td class="px-4 py-3 font-medium text-slate-800">{{ $workshop->name }}</td>
                                 <td class="px-4 py-3 text-slate-600">{{ $workshop->phone }}<br><span class="text-xs text-slate-400">{{ $workshop->email }}</span></td>
                                 <td class="px-4 py-3">
-                                    <span class="px-2 py-1 text-xs font-medium rounded-full {{ $workshop->subscription_status === 'active' ? 'bg-emerald-100 text-emerald-800' : 'bg-slate-100 text-slate-800' }}">
-                                        {{ ucfirst($workshop->subscription_status) }}
-                                    </span>
+                                    <div class="relative">
+                                        <select @change="updateStatus({{ $workshop->id }}, $event.target.value)" class="pl-2 pr-6 py-1 text-xs font-semibold rounded-full focus:outline-none focus:ring-2 focus:ring-blue-500/30 appearance-none bg-slate-100 text-slate-800 transition-colors" :class="{'bg-emerald-100 text-emerald-800': '{{ $workshop->subscription_status }}' === 'active', 'bg-amber-100 text-amber-800': ['trial', 'training'].includes('{{ $workshop->subscription_status }}')}">
+                                            <option value="training" {{ $workshop->subscription_status === 'training' ? 'selected' : '' }}>Training</option>
+                                            <option value="trial" {{ $workshop->subscription_status === 'trial' ? 'selected' : '' }}>Trial</option>
+                                            <option value="active" {{ $workshop->subscription_status === 'active' ? 'selected' : '' }}>Active</option>
+                                            <option value="suspended" {{ $workshop->subscription_status === 'suspended' ? 'selected' : '' }}>Suspended</option>
+                                            <option value="fix" {{ $workshop->subscription_status === 'fix' ? 'selected' : '' }}>Fix</option>
+                                        </select>
+                                        <div class="pointer-events-none absolute inset-y-0 right-0 flex items-center px-2 text-slate-500">
+                                            <svg class="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"/></svg>
+                                        </div>
+                                    </div>
                                     @if(in_array($workshop->subscription_status, ['trial', 'training']) && $workshop->trial_ends_at)
                                     <div class="mt-1.5 text-xs font-medium text-slate-600 bg-slate-50 border border-slate-100 rounded-lg p-2 max-w-xs shadow-sm">
                                         <p class="font-bold text-amber-800">
@@ -189,6 +200,11 @@
                                     </div>
                                     @endif
                                 </td>
+                                <td class="px-4 py-3 text-slate-600 text-xs">
+                                    <div class="truncate max-w-[150px]" title="{{ $workshop->client_notes }}">
+                                        {{ $workshop->client_notes ?: '-' }}
+                                    </div>
+                                </td>
                                 <td class="px-4 py-3 text-slate-600">
                                     @if($workshop->users->first())
                                         {{ $workshop->users->first()->name }}<br>
@@ -198,7 +214,7 @@
                                     @endif
                                 </td>
                                 <td class="px-4 py-3 text-right space-x-2">
-                                    <button @click="openEdit(@js(['id'=>$workshop->id,'name'=>$workshop->name,'phone'=>$workshop->phone,'email'=>$workshop->email,'gstin'=>$workshop->gstin,'address'=>$workshop->address,'subscription_status'=>$workshop->subscription_status,'trial_ends_at'=>$workshop->trial_ends_at?$workshop->trial_ends_at->format('Y-m-d\TH:i'):'','alert_message'=>$workshop->alert_message,'alert_expires_at'=>$workshop->alert_expires_at?$workshop->alert_expires_at->format('Y-m-d\TH:i'):'','admin_user_id'=>$workshop->users->first()?->id,'admin_name'=>$workshop->users->first()?->name,'admin_email'=>$workshop->users->first()?->email]))" class="text-slate-600 hover:underline text-xs font-semibold">Edit</button>
+                                    <button @click="openEdit(@js(['id'=>$workshop->id,'name'=>$workshop->name,'phone'=>$workshop->phone,'email'=>$workshop->email,'gstin'=>$workshop->gstin,'address'=>$workshop->address,'subscription_status'=>$workshop->subscription_status,'trial_ends_at'=>$workshop->trial_ends_at?$workshop->trial_ends_at->format('Y-m-d\TH:i'):'','alert_message'=>$workshop->alert_message,'alert_expires_at'=>$workshop->alert_expires_at?$workshop->alert_expires_at->format('Y-m-d\TH:i'):'','admin_user_id'=>$workshop->users->first()?->id,'admin_name'=>$workshop->users->first()?->name,'admin_email'=>$workshop->users->first()?->email,'client_notes'=>$workshop->client_notes]))" class="text-slate-600 hover:underline text-xs font-semibold">Edit</button>
                                     <form action="{{ route('super_admin.destroy_workshop', $workshop) }}" method="POST" class="inline" onsubmit="return confirm('Are you sure you want to delete this garage and all its associated data?');">
                                         @csrf
                                         @method('DELETE')
@@ -440,6 +456,18 @@
                         </div>
                     </div>
 
+                    {{-- Client Notes --}}
+                    <div class="px-5 py-5 border-t border-slate-100 bg-blue-50/30">
+                        <div class="flex items-center gap-2 mb-4">
+                            <p class="text-xs font-bold text-blue-600 uppercase tracking-widest">Client Notes (After Payment)</p>
+                        </div>
+                        <div>
+                            <textarea name="client_notes" x-model="newWorkshop.client_notes" rows="2"
+                                   class="w-full border border-slate-200 bg-white rounded-xl px-4 py-3 text-slate-800 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500/20 focus:border-blue-400 transition-all placeholder-slate-400 resize-y"
+                                   placeholder="Add any notes about payment, discussions, etc..."></textarea>
+                        </div>
+                    </div>
+
                     {{-- Administrator Account --}}
                     <div class="px-5 py-5 border-t border-slate-100 bg-emerald-50/30">
                         <div class="flex items-center gap-2 mb-4">
@@ -577,6 +605,16 @@
                                    :class="activeWorkshop.alert_type !== 'custom' ? 'bg-slate-100 border-slate-200 text-slate-500 pointer-events-none' : 'bg-white border-slate-200 focus:ring-2 focus:ring-amber-400/25 focus:border-amber-400'"
                                    :readonly="activeWorkshop.alert_type !== 'custom'"></textarea>
                         </div>
+                    </div>
+                </div>
+
+                {{-- Client Notes --}}
+                <div class="px-5 py-4 border-t border-slate-100 bg-blue-50/20">
+                    <p class="text-xs font-bold text-blue-600 uppercase tracking-widest mb-3">Client Notes (After Payment)</p>
+                    <div>
+                        <textarea name="client_notes" x-model="activeWorkshop.client_notes" rows="2"
+                               class="w-full border border-slate-200 bg-white rounded-lg px-3 py-2.5 text-slate-800 text-sm focus:outline-none focus:ring-2 focus:ring-blue-400/25 focus:border-blue-400 transition-all resize-y"
+                               placeholder="Add any notes about payment, discussions, etc..."></textarea>
                     </div>
                 </div>
 
@@ -764,7 +802,8 @@ document.addEventListener('alpine:init', () => {
             trial_ends_at: '',
             alert_message: '',
             alert_expires_at: '',
-            alert_type: 'none'
+            alert_type: 'none',
+            client_notes: ''
         },
 
         openAdd() {
@@ -777,6 +816,33 @@ document.addEventListener('alpine:init', () => {
             this.newWorkshop.alert_type = 'none';
             this.newWorkshop.alert_message = '';
             this.newWorkshop.alert_expires_at = trialEnds;
+            this.newWorkshop.client_notes = '';
+        },
+
+        async updateStatus(workshopId, status) {
+            try {
+                const response = await fetch(`/super-admin/workshops/${workshopId}/status`, {
+                    method: 'PATCH',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').getAttribute('content'),
+                        'Accept': 'application/json'
+                    },
+                    body: JSON.stringify({ subscription_status: status })
+                });
+                
+                const data = await response.json();
+                
+                if (response.ok && data.success) {
+                    // Force page reload to reflect state if needed, or just let the table select stay updated
+                    // We'll just show a native alert or toast for now
+                } else {
+                    alert(data.message || 'Error updating status');
+                }
+            } catch (error) {
+                console.error(error);
+                alert('Error connecting to server.');
+            }
         },
 
         updateAlertFields(endsAtDate, modalType) {
