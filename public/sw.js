@@ -34,6 +34,11 @@ self.addEventListener('fetch', event => {
     return;
   }
 
+  // Only handle http and https requests to prevent scheme errors (e.g., chrome-extension://)
+  if (!event.request.url.startsWith('http://') && !event.request.url.startsWith('https://')) {
+    return;
+  }
+
   // Define static asset patterns (includes external CDNs)
   const isStaticAsset = event.request.url.match(/\.(css|js|png|jpg|jpeg|svg|woff2|woff|ttf|ico|json)$/) ||
                         event.request.url.includes('fonts.googleapis.com') ||

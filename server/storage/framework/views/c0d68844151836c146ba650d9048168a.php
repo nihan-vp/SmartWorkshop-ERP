@@ -400,7 +400,7 @@ unset($__errorArgs, $__bag); ?>
                             <div class="grid grid-cols-2 gap-3">
                                 <div>
                                     <label class="block text-xs font-semibold text-slate-600 mb-1.5">Status <span class="text-rose-500">*</span></label>
-                                    <select name="subscription_status" @change="handleStatusChange($event, 'Add')"
+                                    <select name="subscription_status" x-model="newWorkshop.subscription_status" @change="handleStatusChange($event, 'Add')"
                                             class="w-full border border-slate-200 bg-slate-50 rounded-xl px-4 py-3 text-slate-800 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500/20 focus:border-blue-400 focus:bg-white transition-all cursor-pointer">
                                         <option value="training">Training</option>
                                         <option value="trial">Trial</option>
@@ -411,7 +411,7 @@ unset($__errorArgs, $__bag); ?>
                                 </div>
                                 <div>
                                     <label class="block text-xs font-semibold text-slate-600 mb-1.5">Ends At</label>
-                                    <input type="datetime-local" name="trial_ends_at" @input="handleDateChange($event, 'Add')"
+                                    <input type="datetime-local" name="trial_ends_at" x-model="newWorkshop.trial_ends_at" @input="handleDateChange($event, 'Add')"
                                            class="w-full border border-slate-200 bg-slate-50 rounded-xl px-4 py-3 text-slate-800 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500/20 focus:border-blue-400 focus:bg-white transition-all">
                                 </div>
                             </div>
@@ -426,13 +426,13 @@ unset($__errorArgs, $__bag); ?>
                         <div class="space-y-4">
                             <div>
                                 <label class="block text-xs font-semibold text-slate-600 mb-1.5">Warning Message</label>
-                                <input type="text" name="alert_message"
+                                <input type="text" name="alert_message" x-model="newWorkshop.alert_message"
                                        class="w-full border border-orange-200 bg-white rounded-xl px-4 py-3 text-slate-800 text-sm focus:outline-none focus:ring-2 focus:ring-orange-400/20 focus:border-orange-400 transition-all placeholder-slate-400"
                                        placeholder="e.g. Your subscription is expiring soon!">
                             </div>
                             <div>
                                 <label class="block text-xs font-semibold text-slate-600 mb-1.5">Warning Expires At</label>
-                                <input type="datetime-local" name="alert_expires_at"
+                                <input type="datetime-local" name="alert_expires_at" x-model="newWorkshop.alert_expires_at"
                                        class="w-full border border-orange-200 bg-white rounded-xl px-4 py-3 text-slate-800 text-sm focus:outline-none focus:ring-2 focus:ring-orange-400/20 focus:border-orange-400 transition-all">
                             </div>
                         </div>
@@ -687,18 +687,31 @@ function localFuture(days) {
 // ── Helper: Format a datetime-local value ('YYYY-MM-DDTHH:mm') into a friendly string '22 Jul 2026, 04:40 AM'
 function formatFriendlyDatetime(val) {
     if (!val) return '';
-    const d = new Date(val);
-    if (isNaN(d.getTime())) return '';
-    const months = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
-    const pad = n => String(n).padStart(2, '0');
+    const parts = val.split('T');
+    if (parts.length !== 2) return '';
+    const datePart = parts[0]; // '2026-07-22'
+    const timePart = parts[1]; // '04:40'
     
-    let hours = d.getHours();
+    const dateElements = datePart.split('-');
+    if (dateElements.length !== 3) return '';
+    const year = parseInt(dateElements[0]);
+    const monthIndex = parseInt(dateElements[1]) - 1;
+    const day = parseInt(dateElements[2]);
+    
+    const timeElements = timePart.split(':');
+    if (timeElements.length < 2) return '';
+    let hours = parseInt(timeElements[0]);
+    const minutes = timeElements[1].substring(0, 2).padStart(2, '0');
+    
+    const months = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
+    const monthName = months[monthIndex] || '';
+    
     const ampm = hours >= 12 ? 'PM' : 'AM';
     hours = hours % 12;
     hours = hours ? hours : 12; // the hour '0' should be '12'
-    const minutes = pad(d.getMinutes());
+    const formattedHours = String(hours).padStart(2, '0');
     
-    return `${d.getDate()} ${months[d.getMonth()]} ${d.getFullYear()}, ${pad(hours)}:${minutes} ${ampm}`;
+    return `${day} ${monthName} ${year}, ${formattedHours}:${minutes} ${ampm}`;
 }
 
 // ── Helper: Fix a datetime-local value — if time is 00:00 (midnight / 12:00 AM bug), replace with current time
@@ -723,25 +736,21 @@ document.addEventListener('alpine:init', () => {
         openEditKeyModal: false,
         activeWorkshop: <?php echo json_encode($initialActiveWorkshop ?: ['id'=>''], 15, 512) ?>,
         activeKey: { id: '', duration_days: '', key: '' },
+        newWorkshop: {
+            subscription_status: 'training',
+            trial_ends_at: '',
+            alert_message: '',
+            alert_expires_at: ''
+        },
 
         openAdd() {
             this.openAddModal = true;
-            // ── Auto-calculate and auto-fill Ends At date based on default trial duration setting
-            this.$nextTick(() => {
-                const statusSelect = document.querySelector('[x-show="openAddModal"] select[name="subscription_status"]');
-                const status = statusSelect ? statusSelect.value : 'trial';
-                const defaultDays = <?php echo e((int) $defaultTrialDuration); ?>;
-                let duration = defaultDays;
-                if (status === 'training') duration = 7;
-                else if (status === 'active') duration = 365;
-                else if (status === 'suspended' || status === 'fix') duration = 0;
-
-                const trialEnds = localFuture(duration);
-                const trialInput = document.querySelector('[x-show="openAddModal"] input[name="trial_ends_at"]');
-                if (trialInput && !trialInput.value) trialInput.value = trialEnds;
-
-                this.updateAlertFields(trialEnds, 'Add');
-            });
+            const defaultDays = <?php echo e((int) $defaultTrialDuration); ?>;
+            const duration = 7; // training default
+            const trialEnds = localFuture(duration);
+            this.newWorkshop.subscription_status = 'training';
+            this.newWorkshop.trial_ends_at = trialEnds;
+            this.updateAlertFields(trialEnds, 'Add');
         },
 
         updateAlertFields(endsAtDate, modalType) {

@@ -13,7 +13,7 @@ return new class extends Migration
     {
         Schema::table('workshops', function (Blueprint $table) {
             if (!Schema::hasColumn('workshops', 'alert_message')) {
-                $table->text('alert_message')->nullable()->after('gateway_config');
+                $table->text('alert_message')->nullable()->after('logo');
             }
             if (!Schema::hasColumn('workshops', 'alert_expires_at')) {
                 $table->timestamp('alert_expires_at')->nullable()->after('alert_message');
