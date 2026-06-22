@@ -861,13 +861,14 @@
                 $layoutWorkshop = auth()->user()->workshop;
             }
         @endphp
-        @if($layoutWorkshop && in_array($layoutWorkshop->subscription_status, ['trial', 'training']))
+        @if($layoutWorkshop && in_array($layoutWorkshop->subscription_status, ['trial', 'training', 'active']))
         @php
             $workshop = $layoutWorkshop;
             $trialEnds = \Carbon\Carbon::parse($workshop->trial_ends_at);
             // Calculate days left, making sure it shows 0 if it expires today
             $daysLeftDisplay = max(0, floor(now()->startOfDay()->diffInDays($trialEnds->copy()->startOfDay(), false)));
             $isTraining = $workshop->subscription_status === 'training';
+            $isActive = $workshop->subscription_status === 'active';
             
             $formattedExpiryDate = $trialEnds->isToday() 
                 ? 'Today, ' . $trialEnds->format('h:i A') 
@@ -933,7 +934,7 @@
                         <svg class="w-5 h-5 text-amber-600 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"/></svg>
                         <div class="text-sm font-semibold text-amber-800 flex flex-col sm:flex-row sm:items-center gap-1 sm:gap-2">
                             <div>
-                                {{ $isTraining ? 'Training' : 'Trial' }} Status:
+                                {{ $isActive ? 'Subscription' : ($isTraining ? 'Training' : 'Trial') }} Status:
                                 <span id="trial-countdown" class="font-bold">Loading...</span>
                             </div>
                             <div class="text-xs text-amber-700 font-medium">
