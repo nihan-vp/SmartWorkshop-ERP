@@ -75,6 +75,7 @@ Route::middleware('auth')->group(function () {
     // Tenant-scoped Routes
     Route::middleware(['workshop', 'check.trial'])->group(function () {
         Route::get('/dashboard', [DashboardController::class, 'index'])->name('dashboard');
+        Route::post('/workshop/dismiss-alert', [DashboardController::class, 'dismissAlert'])->name('workshop.dismiss_alert');
         Route::resource('customers', CustomerController::class);
         Route::resource('vehicles', VehicleController::class);
         Route::resource('products', ProductController::class);

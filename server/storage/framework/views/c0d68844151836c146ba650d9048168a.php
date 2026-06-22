@@ -425,15 +425,29 @@ unset($__errorArgs, $__bag); ?>
                         </div>
                         <div class="space-y-4">
                             <div>
+                                <label class="block text-xs font-semibold text-slate-600 mb-1.5">Warning Template</label>
+                                <select x-model="newWorkshop.alert_type" @change="handleAlertTypeChange($event, 'Add')"
+                                        class="w-full border border-orange-200 bg-white rounded-xl px-4 py-3 text-slate-800 text-sm focus:outline-none focus:ring-2 focus:ring-orange-400/20 focus:border-orange-400 transition-all cursor-pointer">
+                                    <option value="none">No Warning Alert (None)</option>
+                                    <option value="expiry">Subscription Expiring Alert</option>
+                                    <option value="update">Software Updating Alert</option>
+                                    <option value="custom">Custom Message Alert</option>
+                                </select>
+                            </div>
+                            <div>
                                 <label class="block text-xs font-semibold text-slate-600 mb-1.5">Warning Message</label>
                                 <input type="text" name="alert_message" x-model="newWorkshop.alert_message"
-                                       class="w-full border border-orange-200 bg-white rounded-xl px-4 py-3 text-slate-800 text-sm focus:outline-none focus:ring-2 focus:ring-orange-400/20 focus:border-orange-400 transition-all placeholder-slate-400"
-                                       placeholder="e.g. Your subscription is expiring soon!">
+                                       class="w-full border rounded-xl px-4 py-3 text-slate-800 text-sm focus:outline-none transition-all placeholder-slate-400"
+                                       :class="newWorkshop.alert_type !== 'custom' ? 'bg-slate-100 border-slate-200 text-slate-500 pointer-events-none' : 'bg-white border-orange-200 focus:ring-2 focus:ring-orange-400/20 focus:border-orange-400'"
+                                       placeholder="e.g. Your subscription is expiring soon!"
+                                       :readonly="newWorkshop.alert_type !== 'custom'">
                             </div>
                             <div>
                                 <label class="block text-xs font-semibold text-slate-600 mb-1.5">Warning Expires At</label>
                                 <input type="datetime-local" name="alert_expires_at" x-model="newWorkshop.alert_expires_at"
-                                       class="w-full border border-orange-200 bg-white rounded-xl px-4 py-3 text-slate-800 text-sm focus:outline-none focus:ring-2 focus:ring-orange-400/20 focus:border-orange-400 transition-all">
+                                       class="w-full border rounded-xl px-4 py-3 text-slate-800 text-sm focus:outline-none transition-all"
+                                       :class="newWorkshop.alert_type === 'none' ? 'bg-slate-100 border-slate-200 text-slate-500 pointer-events-none' : 'bg-white border-orange-200 focus:ring-2 focus:ring-orange-400/20 focus:border-orange-400'"
+                                       :readonly="newWorkshop.alert_type === 'none'">
                             </div>
                         </div>
                     </div>
@@ -551,15 +565,29 @@ unset($__errorArgs, $__bag); ?>
                                    class="w-full border border-slate-200 bg-slate-50 rounded-lg px-3 py-2.5 text-slate-800 text-sm focus:outline-none focus:ring-2 focus:ring-amber-400/25 focus:border-amber-400 focus:bg-white transition-all">
                         </div>
                         <div>
-                            <label class="block text-xs font-semibold text-slate-600 mb-1">Warning Message</label>
-                            <input type="text" name="alert_message" x-model="activeWorkshop.alert_message"
-                                   class="w-full border border-slate-200 bg-slate-50 rounded-lg px-3 py-2.5 text-slate-800 text-sm focus:outline-none focus:ring-2 focus:ring-amber-400/25 focus:border-amber-400 focus:bg-white transition-all"
-                                   placeholder="Subscription expiring soon...">
+                            <label class="block text-xs font-semibold text-slate-600 mb-1">Warning Template</label>
+                            <select x-model="activeWorkshop.alert_type" @change="handleAlertTypeChange($event, 'Edit')"
+                                    class="w-full border border-slate-200 bg-slate-50 rounded-lg px-3 py-2.5 text-slate-800 text-sm focus:outline-none focus:ring-2 focus:ring-amber-400/25 focus:border-amber-400 focus:bg-white transition-all cursor-pointer">
+                                <option value="none">No Warning Alert (None)</option>
+                                <option value="expiry">Subscription Expiring Alert</option>
+                                <option value="update">Software Updating Alert</option>
+                                <option value="custom">Custom Message Alert</option>
+                            </select>
                         </div>
                         <div>
                             <label class="block text-xs font-semibold text-slate-600 mb-1">Warning Expires At</label>
                             <input type="datetime-local" name="alert_expires_at" x-model="activeWorkshop.alert_expires_at"
-                                   class="w-full border border-slate-200 bg-slate-50 rounded-lg px-3 py-2.5 text-slate-800 text-sm focus:outline-none focus:ring-2 focus:ring-amber-400/25 focus:border-amber-400 focus:bg-white transition-all">
+                                   class="w-full border rounded-lg px-3 py-2.5 text-slate-800 text-sm focus:outline-none transition-all"
+                                   :class="activeWorkshop.alert_type === 'none' ? 'bg-slate-100 border-slate-200 text-slate-500 pointer-events-none' : 'bg-white border-slate-200 focus:ring-2 focus:ring-amber-400/25 focus:border-amber-400'"
+                                   :readonly="activeWorkshop.alert_type === 'none'">
+                        </div>
+                        <div class="sm:col-span-2">
+                            <label class="block text-xs font-semibold text-slate-600 mb-1">Warning Message</label>
+                            <input type="text" name="alert_message" x-model="activeWorkshop.alert_message"
+                                   class="w-full border rounded-lg px-3 py-2.5 text-slate-800 text-sm focus:outline-none transition-all"
+                                   placeholder="Subscription expiring soon..."
+                                   :class="activeWorkshop.alert_type !== 'custom' ? 'bg-slate-100 border-slate-200 text-slate-500 pointer-events-none' : 'bg-white border-slate-200 focus:ring-2 focus:ring-amber-400/25 focus:border-amber-400'"
+                                   :readonly="activeWorkshop.alert_type !== 'custom'">
                         </div>
                     </div>
                 </div>
@@ -740,7 +768,8 @@ document.addEventListener('alpine:init', () => {
             subscription_status: 'training',
             trial_ends_at: '',
             alert_message: '',
-            alert_expires_at: ''
+            alert_expires_at: '',
+            alert_type: 'none'
         },
 
         openAdd() {
@@ -750,19 +779,51 @@ document.addEventListener('alpine:init', () => {
             const trialEnds = localFuture(duration);
             this.newWorkshop.subscription_status = 'training';
             this.newWorkshop.trial_ends_at = trialEnds;
-            this.updateAlertFields(trialEnds, 'Add');
+            this.newWorkshop.alert_type = 'none';
+            this.newWorkshop.alert_message = '';
+            this.newWorkshop.alert_expires_at = trialEnds;
         },
 
         updateAlertFields(endsAtDate, modalType) {
             if (!endsAtDate) return;
             const formattedDate = formatFriendlyDatetime(endsAtDate);
-            const msg = `Your subscription is expiring on ${formattedDate}. Please contact Suhaim Soft at 8891479505 for an active key.`;
+            
+            let alertType = 'none';
+            if (modalType === 'Add') {
+                alertType = this.newWorkshop.alert_type || 'none';
+            } else if (modalType === 'Edit') {
+                alertType = this.activeWorkshop.alert_type || 'none';
+            }
+
+            if (alertType === 'none' || alertType === 'custom') {
+                if (alertType === 'none') {
+                    if (modalType === 'Add') {
+                        this.newWorkshop.alert_message = '';
+                        this.newWorkshop.alert_expires_at = endsAtDate;
+                    } else if (modalType === 'Edit') {
+                        this.activeWorkshop.alert_message = '';
+                        this.activeWorkshop.alert_expires_at = endsAtDate;
+                    }
+                } else {
+                    if (modalType === 'Add') {
+                        this.newWorkshop.alert_expires_at = endsAtDate;
+                    } else if (modalType === 'Edit') {
+                        this.activeWorkshop.alert_expires_at = endsAtDate;
+                    }
+                }
+                return;
+            }
+
+            let msg = '';
+            if (alertType === 'expiry') {
+                msg = `Your subscription is expiring on ${formattedDate}. Please contact Suhaim Soft at 8891479505 for an active key.`;
+            } else if (alertType === 'update') {
+                msg = `Software is updating on ${formattedDate}. Please save your work.`;
+            }
             
             if (modalType === 'Add') {
-                const messageInput = document.querySelector('[x-show="openAddModal"] input[name="alert_message"]');
-                const expiresInput = document.querySelector('[x-show="openAddModal"] input[name="alert_expires_at"]');
-                if (messageInput) messageInput.value = msg;
-                if (expiresInput) expiresInput.value = endsAtDate;
+                this.newWorkshop.alert_message = msg;
+                this.newWorkshop.alert_expires_at = endsAtDate;
             } else if (modalType === 'Edit') {
                 this.activeWorkshop.alert_message = msg;
                 this.activeWorkshop.alert_expires_at = endsAtDate;
@@ -785,13 +846,35 @@ document.addEventListener('alpine:init', () => {
             const futureDate = localFuture(duration);
 
             if (modalType === 'Add') {
-                const trialInput = document.querySelector('[x-show="openAddModal"] input[name="trial_ends_at"]');
-                if (trialInput) trialInput.value = futureDate;
+                this.newWorkshop.trial_ends_at = futureDate;
             } else if (modalType === 'Edit') {
                 this.activeWorkshop.trial_ends_at = futureDate;
             }
 
             this.updateAlertFields(futureDate, modalType);
+        },
+
+        handleAlertTypeChange(event, modalType) {
+            const type = event.target.value;
+            if (modalType === 'Add') {
+                this.newWorkshop.alert_type = type;
+                if (type === 'none') {
+                    this.newWorkshop.alert_message = '';
+                } else if (type === 'custom') {
+                    // Keep whatever was there or blank
+                } else {
+                    this.updateAlertFields(this.newWorkshop.trial_ends_at || localFuture(7), 'Add');
+                }
+            } else if (modalType === 'Edit') {
+                this.activeWorkshop.alert_type = type;
+                if (type === 'none') {
+                    this.activeWorkshop.alert_message = '';
+                } else if (type === 'custom') {
+                    // Keep whatever was there
+                } else {
+                    this.updateAlertFields(this.activeWorkshop.trial_ends_at || localFuture(365), 'Edit');
+                }
+            }
         },
 
         openEditKeyModalFn(keyObj) {
@@ -804,6 +887,18 @@ document.addEventListener('alpine:init', () => {
             // ── Fix 12:00 AM (00:00) bug: replace midnight time with current local time
             w.trial_ends_at   = fixDatetime(w.trial_ends_at);
             w.alert_expires_at = fixDatetime(w.alert_expires_at);
+
+            // Deduce alert type
+            if (!w.alert_message) {
+                w.alert_type = 'none';
+            } else if (w.alert_message.includes('expiring') || w.alert_message.includes('subscription')) {
+                w.alert_type = 'expiry';
+            } else if (w.alert_message.toLowerCase().includes('update') || w.alert_message.toLowerCase().includes('software')) {
+                w.alert_type = 'update';
+            } else {
+                w.alert_type = 'custom';
+            }
+
             this.activeWorkshop = w;
             this.openEditModal = true;
         },

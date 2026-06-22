@@ -111,6 +111,7 @@ class SuperAdminController extends Controller
                 'admin_extend_allowed' => $request->boolean('admin_extend_allowed'),
                 'alert_message' => $validated['alert_message'] ?? null,
                 'alert_expires_at' => $validated['alert_expires_at'] ?? null,
+                'alert_dismissed' => false,
             ]);
 
             if (!empty($validated['admin_email'])) {
@@ -175,6 +176,7 @@ class SuperAdminController extends Controller
                 'admin_extend_allowed' => $request->boolean('admin_extend_allowed'),
                 'alert_message' => $validated['alert_message'] ?? null,
                 'alert_expires_at' => $validated['alert_expires_at'] ?? null,
+                'alert_dismissed' => false,
             ]);
 
             $adminUser = $workshop->users()->where('role', 'admin')->first();

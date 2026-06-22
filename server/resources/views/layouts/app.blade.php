@@ -1103,31 +1103,26 @@
             }
         @endphp
         
-        @if($alertWorkshop && $alertWorkshop->alert_message)
+        @if($alertWorkshop && $alertWorkshop->alert_message && !$alertWorkshop->alert_dismissed)
             @if(!$alertWorkshop->alert_expires_at || now()->lessThan($alertWorkshop->alert_expires_at))
-            <div x-data="{ openSystemAlert: false }" x-init="
-                    const alertKey = 'admin_alert_' + {{ $alertWorkshop->id }} + '_' + '{{ md5($alertWorkshop->alert_message) }}';
-                    if (!sessionStorage.getItem(alertKey)) {
-                        openSystemAlert = true;
-                        sessionStorage.setItem(alertKey, 'true');
-                        try {
-                            const audioCtx = new (window.AudioContext || window.webkitAudioContext)();
-                            function playBeep(freq, time, type) {
-                                const osc = audioCtx.createOscillator();
-                                const gain = audioCtx.createGain();
-                                osc.type = type;
-                                osc.frequency.setValueAtTime(freq, audioCtx.currentTime);
-                                osc.connect(gain);
-                                gain.connect(audioCtx.destination);
-                                osc.start(audioCtx.currentTime + time);
-                                gain.gain.exponentialRampToValueAtTime(0.00001, audioCtx.currentTime + time + 0.3);
-                                osc.stop(audioCtx.currentTime + time + 0.4);
-                            }
-                            playBeep(523.25, 0.1, 'sine');
-                            playBeep(659.25, 0.25, 'sine');
-                            playBeep(783.99, 0.4, 'sine');
-                        } catch(e) {}
-                    }
+            <div x-data="{ openSystemAlert: true }" x-init="
+                    try {
+                        const audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+                        function playBeep(freq, time, type) {
+                            const osc = audioCtx.createOscillator();
+                            const gain = audioCtx.createGain();
+                            osc.type = type;
+                            osc.frequency.setValueAtTime(freq, audioCtx.currentTime);
+                            osc.connect(gain);
+                            gain.connect(audioCtx.destination);
+                            osc.start(audioCtx.currentTime + time);
+                            gain.gain.exponentialRampToValueAtTime(0.00001, audioCtx.currentTime + time + 0.3);
+                            osc.stop(audioCtx.currentTime + time + 0.4);
+                        }
+                        playBeep(523.25, 0.1, 'sine');
+                        playBeep(659.25, 0.25, 'sine');
+                        playBeep(783.99, 0.4, 'sine');
+                    } catch(e) {}
                 ">
                 
                 {{-- Modal Overlay --}}
@@ -1151,7 +1146,16 @@
                             <p class="text-base font-medium text-slate-700 whitespace-pre-wrap break-words">{{ $alertWorkshop->alert_message }}</p>
                         </div>
                         <div class="p-4 bg-slate-50 border-t border-slate-100 flex justify-center">
-                            <button @click="openSystemAlert = false" type="button" class="px-6 py-2.5 bg-amber-600 hover:bg-amber-700 text-white font-bold rounded-xl shadow-sm transition-colors w-full sm:w-auto">
+                            <button @click="
+                                fetch('{{ route('workshop.dismiss_alert') }}', {
+                                    method: 'POST',
+                                    headers: {
+                                        'Content-Type': 'application/json',
+                                        'X-CSRF-TOKEN': '{{ csrf_token() }}'
+                                    }
+                                });
+                                openSystemAlert = false;
+                            " type="button" class="px-6 py-2.5 bg-amber-600 hover:bg-amber-700 text-white font-bold rounded-xl shadow-sm transition-colors w-full sm:w-auto">
                                 I Understand
                             </button>
                         </div>

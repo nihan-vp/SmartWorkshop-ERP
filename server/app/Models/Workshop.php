@@ -21,6 +21,7 @@ class Workshop extends Model
         'restrict_features_on_expiry',
         'admin_extend_allowed',
         'trial_extended_count',
+        'alert_dismissed',
     ];
 
     protected $casts = [
@@ -28,6 +29,7 @@ class Workshop extends Model
         'alert_expires_at' => 'datetime',
         'restrict_features_on_expiry' => 'boolean',
         'admin_extend_allowed' => 'boolean',
+        'alert_dismissed' => 'boolean',
     ];
 
     public function isTrial(): bool

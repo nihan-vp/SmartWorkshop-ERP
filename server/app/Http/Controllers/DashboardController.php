@@ -74,4 +74,14 @@ class DashboardController extends Controller
             'activeWarranties', 'totalProducts'
         ));
     }
+
+    public function dismissAlert(Request $request)
+    {
+        $user = auth()->user();
+        if ($user && $user->workshop) {
+            $user->workshop->update(['alert_dismissed' => true]);
+            return response()->json(['success' => true]);
+        }
+        return response()->json(['success' => false], 403);
+    }
 }
