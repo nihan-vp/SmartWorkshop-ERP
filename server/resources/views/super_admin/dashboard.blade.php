@@ -675,18 +675,31 @@ function localFuture(days) {
 // ── Helper: Format a datetime-local value ('YYYY-MM-DDTHH:mm') into a friendly string '22 Jul 2026, 04:40 AM'
 function formatFriendlyDatetime(val) {
     if (!val) return '';
-    const d = new Date(val);
-    if (isNaN(d.getTime())) return '';
-    const months = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
-    const pad = n => String(n).padStart(2, '0');
+    const parts = val.split('T');
+    if (parts.length !== 2) return '';
+    const datePart = parts[0]; // '2026-07-22'
+    const timePart = parts[1]; // '04:40'
     
-    let hours = d.getHours();
+    const dateElements = datePart.split('-');
+    if (dateElements.length !== 3) return '';
+    const year = parseInt(dateElements[0]);
+    const monthIndex = parseInt(dateElements[1]) - 1;
+    const day = parseInt(dateElements[2]);
+    
+    const timeElements = timePart.split(':');
+    if (timeElements.length < 2) return '';
+    let hours = parseInt(timeElements[0]);
+    const minutes = timeElements[1].substring(0, 2).padStart(2, '0');
+    
+    const months = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
+    const monthName = months[monthIndex] || '';
+    
     const ampm = hours >= 12 ? 'PM' : 'AM';
     hours = hours % 12;
     hours = hours ? hours : 12; // the hour '0' should be '12'
-    const minutes = pad(d.getMinutes());
+    const formattedHours = String(hours).padStart(2, '0');
     
-    return `${d.getDate()} ${months[d.getMonth()]} ${d.getFullYear()}, ${pad(hours)}:${minutes} ${ampm}`;
+    return `${day} ${monthName} ${year}, ${formattedHours}:${minutes} ${ampm}`;
 }
 
 // ── Helper: Fix a datetime-local value — if time is 00:00 (midnight / 12:00 AM bug), replace with current time
