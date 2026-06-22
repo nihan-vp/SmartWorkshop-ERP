@@ -696,8 +696,15 @@ function localNow() {
 function localFuture(days) {
     const d = new Date();
     d.setDate(d.getDate() + parseInt(days || 0));
-    const pad = n => String(n).padStart(2, '0');
-    return `${d.getFullYear()}-${pad(d.getMonth()+1)}-${pad(d.getDate())}T${pad(d.getHours())}:${pad(d.getMinutes())}`;
+    
+    // Format as YYYY-MM-DDThh:mm in local time
+    const y = d.getFullYear();
+    const m = String(d.getMonth() + 1).padStart(2, '0');
+    const day = String(d.getDate()).padStart(2, '0');
+    const hh = String(d.getHours()).padStart(2, '0');
+    const mm = String(d.getMinutes()).padStart(2, '0');
+    
+    return `${y}-${m}-${day}T${hh}:${mm}`;
 }
 
 // ── Helper: Format a datetime-local value ('YYYY-MM-DDTHH:mm') into a friendly string '22 Jul 2026, 04:40 AM'

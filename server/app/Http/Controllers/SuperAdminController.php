@@ -53,7 +53,8 @@ class SuperAdminController extends Controller
         $usedProductKeys = \App\Models\ProductKey::where('status', 'used')->count();
 
         // System Settings
-        $defaultTrialDuration = (int) \App\Models\SystemSetting::getVal('default_trial_duration', 0);
+        $defaultTrialDuration = (int) \App\Models\SystemSetting::getVal('default_trial_duration', 14);
+        if ($defaultTrialDuration <= 0) $defaultTrialDuration = 14;
 
         // Activity Logs
         $activityLogs = \App\Models\ActivityLog::with(['user', 'workshop'])

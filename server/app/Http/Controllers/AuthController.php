@@ -95,7 +95,8 @@ class AuthController extends Controller
         ]);
 
         \Illuminate\Support\Facades\DB::transaction(function () use ($validated, &$user) {
-            $defaultTrialDays = (int) \App\Models\SystemSetting::getVal('default_trial_duration', 0);
+            $defaultTrialDays = (int) \App\Models\SystemSetting::getVal('default_trial_duration', 14);
+            if ($defaultTrialDays <= 0) $defaultTrialDays = 14;
             $trialEnds = now()->addDays($defaultTrialDays);
 
             $workshop = \App\Models\Workshop::create([
