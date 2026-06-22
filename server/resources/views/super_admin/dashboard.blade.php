@@ -388,7 +388,7 @@
                             <div class="grid grid-cols-2 gap-3">
                                 <div>
                                     <label class="block text-xs font-semibold text-slate-600 mb-1.5">Status <span class="text-rose-500">*</span></label>
-                                    <select name="subscription_status" @change="handleStatusChange($event, 'Add')"
+                                    <select name="subscription_status" x-model="newWorkshop.subscription_status" @change="handleStatusChange($event, 'Add')"
                                             class="w-full border border-slate-200 bg-slate-50 rounded-xl px-4 py-3 text-slate-800 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500/20 focus:border-blue-400 focus:bg-white transition-all cursor-pointer">
                                         <option value="training">Training</option>
                                         <option value="trial">Trial</option>
@@ -399,7 +399,7 @@
                                 </div>
                                 <div>
                                     <label class="block text-xs font-semibold text-slate-600 mb-1.5">Ends At</label>
-                                    <input type="datetime-local" name="trial_ends_at" @input="handleDateChange($event, 'Add')"
+                                    <input type="datetime-local" name="trial_ends_at" x-model="newWorkshop.trial_ends_at" @input="handleDateChange($event, 'Add')"
                                            class="w-full border border-slate-200 bg-slate-50 rounded-xl px-4 py-3 text-slate-800 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500/20 focus:border-blue-400 focus:bg-white transition-all">
                                 </div>
                             </div>
@@ -414,13 +414,13 @@
                         <div class="space-y-4">
                             <div>
                                 <label class="block text-xs font-semibold text-slate-600 mb-1.5">Warning Message</label>
-                                <input type="text" name="alert_message"
+                                <input type="text" name="alert_message" x-model="newWorkshop.alert_message"
                                        class="w-full border border-orange-200 bg-white rounded-xl px-4 py-3 text-slate-800 text-sm focus:outline-none focus:ring-2 focus:ring-orange-400/20 focus:border-orange-400 transition-all placeholder-slate-400"
                                        placeholder="e.g. Your subscription is expiring soon!">
                             </div>
                             <div>
                                 <label class="block text-xs font-semibold text-slate-600 mb-1.5">Warning Expires At</label>
-                                <input type="datetime-local" name="alert_expires_at"
+                                <input type="datetime-local" name="alert_expires_at" x-model="newWorkshop.alert_expires_at"
                                        class="w-full border border-orange-200 bg-white rounded-xl px-4 py-3 text-slate-800 text-sm focus:outline-none focus:ring-2 focus:ring-orange-400/20 focus:border-orange-400 transition-all">
                             </div>
                         </div>
@@ -711,25 +711,21 @@ document.addEventListener('alpine:init', () => {
         openEditKeyModal: false,
         activeWorkshop: @json($initialActiveWorkshop ?: ['id'=>'']),
         activeKey: { id: '', duration_days: '', key: '' },
+        newWorkshop: {
+            subscription_status: 'training',
+            trial_ends_at: '',
+            alert_message: '',
+            alert_expires_at: ''
+        },
 
         openAdd() {
             this.openAddModal = true;
-            // ── Auto-calculate and auto-fill Ends At date based on default trial duration setting
-            this.$nextTick(() => {
-                const statusSelect = document.querySelector('[x-show="openAddModal"] select[name="subscription_status"]');
-                const status = statusSelect ? statusSelect.value : 'trial';
-                const defaultDays = {{ (int) $defaultTrialDuration }};
-                let duration = defaultDays;
-                if (status === 'training') duration = 7;
-                else if (status === 'active') duration = 365;
-                else if (status === 'suspended' || status === 'fix') duration = 0;
-
-                const trialEnds = localFuture(duration);
-                const trialInput = document.querySelector('[x-show="openAddModal"] input[name="trial_ends_at"]');
-                if (trialInput && !trialInput.value) trialInput.value = trialEnds;
-
-                this.updateAlertFields(trialEnds, 'Add');
-            });
+            const defaultDays = {{ (int) $defaultTrialDuration }};
+            const duration = 7; // training default
+            const trialEnds = localFuture(duration);
+            this.newWorkshop.subscription_status = 'training';
+            this.newWorkshop.trial_ends_at = trialEnds;
+            this.updateAlertFields(trialEnds, 'Add');
         },
 
         updateAlertFields(endsAtDate, modalType) {
