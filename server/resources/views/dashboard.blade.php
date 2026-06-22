@@ -406,7 +406,7 @@
                             @if($unusedKey)
                                 <p class="font-bold text-emerald-800">
                                     Your activation key is ready: <br>
-                                    <span class="font-mono bg-white px-2 py-0.5 rounded border border-emerald-200 select-all font-extrabold tracking-wider text-sm block my-1.5">{{ $unusedKey->key }}</span>
+                                    <span class="font-mono bg-white px-2 py-0.5 rounded border border-emerald-200 select-all font-extrabold tracking-wider text-sm block my-1.5 break-all">{{ $unusedKey->key }}</span>
 
                                 </p>
                             @else
