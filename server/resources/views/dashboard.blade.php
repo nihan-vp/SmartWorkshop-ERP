@@ -407,7 +407,7 @@
                                 <p class="font-bold text-emerald-800">
                                     Your activation key is ready: <br>
                                     <span class="font-mono bg-white px-2 py-0.5 rounded border border-emerald-200 select-all font-extrabold tracking-wider text-sm block my-1.5">{{ $unusedKey->key }}</span>
-                                    <span class="text-[10px] text-emerald-600 font-semibold block mt-1">Copy this key, then click "Activate Subscription" at the top to paste and activate.</span>
+
                                 </p>
                             @else
                                 <p class="font-bold text-red-700">Please contact Suhaim Soft at 8891479505 for an active key.</p>

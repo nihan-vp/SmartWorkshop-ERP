@@ -940,9 +940,7 @@
                             @endif
                         </p>
                     </div>
-                    <button type="button" @click="openLicenseActivationModal = true" class="inline-flex items-center justify-center px-4 py-1.5 text-xs font-bold text-amber-900 bg-amber-200/50 hover:bg-amber-300/60 rounded-lg transition-colors border border-amber-300/80 shrink-0">
-                        Activate Subscription
-                    </button>
+
                 </div>
             </div>
 
