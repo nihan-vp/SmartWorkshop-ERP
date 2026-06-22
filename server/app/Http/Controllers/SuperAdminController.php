@@ -220,9 +220,23 @@ class SuperAdminController extends Controller
         ]);
 
         $oldStatus = $workshop->subscription_status;
-        $workshop->update(['subscription_status' => $validated['subscription_status']]);
+        $status = $validated['subscription_status'];
+        
+        $duration = (int) \App\Models\SystemSetting::getVal('default_trial_duration', 14);
+        if ($duration <= 0) $duration = 14;
+        
+        if ($status === 'training') $duration = 7;
+        elseif ($status === 'active') $duration = 365;
+        elseif (in_array($status, ['suspended', 'fix'])) $duration = 0;
 
-        \App\Models\ActivityLog::log('workshop_status_update', "Updated status of {$workshop->name} from '{$oldStatus}' to '{$validated['subscription_status']}'.", null, $workshop->id);
+        $updateData = ['subscription_status' => $status];
+        if ($duration > 0) {
+            $updateData['trial_ends_at'] = now()->addDays($duration);
+        }
+
+        $workshop->update($updateData);
+
+        \App\Models\ActivityLog::log('workshop_status_update', "Updated status of {$workshop->name} from '{$oldStatus}' to '{$status}'.", null, $workshop->id);
 
         return response()->json([
             'success' => true,

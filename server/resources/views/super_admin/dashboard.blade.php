@@ -188,10 +188,10 @@
                                             <svg class="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"/></svg>
                                         </div>
                                     </div>
-                                    @if(in_array($workshop->subscription_status, ['trial', 'training']) && $workshop->trial_ends_at)
+                                    @if(in_array($workshop->subscription_status, ['trial', 'training', 'active']) && $workshop->trial_ends_at)
                                     <div class="mt-1.5 text-xs font-medium text-slate-600 bg-slate-50 border border-slate-100 rounded-lg p-2 max-w-xs shadow-sm">
-                                        <p class="font-bold text-amber-800">
-                                            {{ $workshop->subscription_status === 'training' ? 'Training' : 'Trial' }} Status:
+                                        <p class="font-bold {{ $workshop->subscription_status === 'active' ? 'text-emerald-800' : 'text-amber-800' }}">
+                                            {{ ucfirst($workshop->subscription_status) }} Status:
                                         </p>
                                         <p data-countdown-id="{{ $workshop->id }}" class="font-semibold text-slate-700 mt-0.5">Loading...</p>
                                         <p class="text-[10px] text-slate-400 mt-0.5">
@@ -619,24 +619,30 @@
                 </div>
 
                 {{-- Admin Account --}}
-                <div class="px-5 py-4 border-t border-slate-100 bg-slate-50/60">
-                    <p class="text-xs font-bold text-violet-600 uppercase tracking-widest mb-3">Administrator Access</p>
-                    <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
-                        <div>
-                            <label class="block text-xs font-semibold text-slate-600 mb-1">Admin Name <span class="text-rose-500">*</span></label>
-                            <input type="text" name="admin_name" x-model="activeWorkshop.admin_name" required
-                                   class="w-full border border-slate-200 bg-white rounded-lg px-3 py-2.5 text-slate-800 text-sm focus:outline-none focus:ring-2 focus:ring-violet-400/25 focus:border-violet-400 transition-all">
+                <div class="px-5 py-5 border-t border-slate-100 bg-emerald-50/30">
+                    <div class="flex items-center gap-2 mb-4">
+                        <p class="text-xs font-bold text-emerald-600 uppercase tracking-widest">Administrator Account</p>
+                    </div>
+                    <div class="space-y-4">
+                        <div class="grid grid-cols-2 gap-3">
+                            <div>
+                                <label class="block text-xs font-semibold text-slate-600 mb-1.5">Admin Name</label>
+                                <input type="text" name="admin_name" x-model="activeWorkshop.admin_name" required
+                                       class="w-full border border-slate-200 bg-white rounded-xl px-4 py-3 text-slate-800 text-sm focus:outline-none focus:ring-2 focus:ring-emerald-500/20 focus:border-emerald-400 transition-all placeholder-slate-400"
+                                       placeholder="Full name">
+                            </div>
+                            <div>
+                                <label class="block text-xs font-semibold text-slate-600 mb-1.5">Admin Email</label>
+                                <input type="email" name="admin_email" x-model="activeWorkshop.admin_email" required
+                                       class="w-full border border-slate-200 bg-white rounded-xl px-4 py-3 text-slate-800 text-sm focus:outline-none focus:ring-2 focus:ring-emerald-500/20 focus:border-emerald-400 transition-all placeholder-slate-400"
+                                       placeholder="admin@garage.com">
+                            </div>
                         </div>
                         <div>
-                            <label class="block text-xs font-semibold text-slate-600 mb-1">Admin Email <span class="text-rose-500">*</span></label>
-                            <input type="email" name="admin_email" x-model="activeWorkshop.admin_email" required
-                                   class="w-full border border-slate-200 bg-white rounded-lg px-3 py-2.5 text-slate-800 text-sm focus:outline-none focus:ring-2 focus:ring-violet-400/25 focus:border-violet-400 transition-all">
-                        </div>
-                        <div class="sm:col-span-2">
-                            <label class="block text-xs font-semibold text-slate-600 mb-1">New Password <span class="text-slate-400 font-normal">(leave blank to keep current)</span></label>
+                            <label class="block text-xs font-semibold text-slate-600 mb-1.5">Password <span class="text-slate-400 font-normal">(min. 8 characters - leave blank to keep current)</span></label>
                             <input type="password" name="admin_password"
-                                   class="w-full border border-slate-200 bg-white rounded-lg px-3 py-2.5 text-slate-800 text-sm focus:outline-none focus:ring-2 focus:ring-violet-400/25 focus:border-violet-400 transition-all"
-                                   placeholder="Enter new password">
+                                   class="w-full border border-slate-200 bg-white rounded-xl px-4 py-3 text-slate-800 text-sm focus:outline-none focus:ring-2 focus:ring-emerald-500/20 focus:border-emerald-400 transition-all placeholder-slate-400"
+                                   placeholder="••••••••">
                         </div>
                     </div>
                 </div>
@@ -834,8 +840,7 @@ document.addEventListener('alpine:init', () => {
                 const data = await response.json();
                 
                 if (response.ok && data.success) {
-                    // Force page reload to reflect state if needed, or just let the table select stay updated
-                    // We'll just show a native alert or toast for now
+                    window.location.reload();
                 } else {
                     alert(data.message || 'Error updating status');
                 }
