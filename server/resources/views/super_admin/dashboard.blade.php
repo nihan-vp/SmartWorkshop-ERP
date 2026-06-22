@@ -424,11 +424,11 @@
                             </div>
                             <div>
                                 <label class="block text-xs font-semibold text-slate-600 mb-1.5">Warning Message</label>
-                                <input type="text" name="alert_message" x-model="newWorkshop.alert_message"
-                                       class="w-full border rounded-xl px-4 py-3 text-slate-800 text-sm focus:outline-none transition-all placeholder-slate-400"
+                                <textarea name="alert_message" x-model="newWorkshop.alert_message" rows="3"
+                                       class="w-full border rounded-xl px-4 py-3 text-slate-800 text-sm focus:outline-none transition-all placeholder-slate-400 resize-y min-h-[80px]"
                                        :class="newWorkshop.alert_type !== 'custom' ? 'bg-slate-100 border-slate-200 text-slate-500 pointer-events-none' : 'bg-white border-orange-200 focus:ring-2 focus:ring-orange-400/20 focus:border-orange-400'"
                                        placeholder="e.g. Your subscription is expiring soon!"
-                                       :readonly="newWorkshop.alert_type !== 'custom'">
+                                       :readonly="newWorkshop.alert_type !== 'custom'"></textarea>
                             </div>
                             <div>
                                 <label class="block text-xs font-semibold text-slate-600 mb-1.5">Warning Expires At</label>
@@ -571,11 +571,11 @@
                         </div>
                         <div class="sm:col-span-2">
                             <label class="block text-xs font-semibold text-slate-600 mb-1">Warning Message</label>
-                            <input type="text" name="alert_message" x-model="activeWorkshop.alert_message"
-                                   class="w-full border rounded-lg px-3 py-2.5 text-slate-800 text-sm focus:outline-none transition-all"
+                            <textarea name="alert_message" x-model="activeWorkshop.alert_message" rows="3"
+                                   class="w-full border rounded-lg px-3 py-2.5 text-slate-800 text-sm focus:outline-none transition-all resize-y min-h-[80px]"
                                    placeholder="Subscription expiring soon..."
                                    :class="activeWorkshop.alert_type !== 'custom' ? 'bg-slate-100 border-slate-200 text-slate-500 pointer-events-none' : 'bg-white border-slate-200 focus:ring-2 focus:ring-amber-400/25 focus:border-amber-400'"
-                                   :readonly="activeWorkshop.alert_type !== 'custom'">
+                                   :readonly="activeWorkshop.alert_type !== 'custom'"></textarea>
                         </div>
                     </div>
                 </div>
