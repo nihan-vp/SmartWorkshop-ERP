@@ -209,7 +209,7 @@ class SuperAdminController extends Controller
             \App\Models\ActivityLog::log('workshop_update', $changesDesc, null, $workshop->id);
         });
 
-        return redirect()
+        return redirect()->back()
             ->with('success', 'Workshop and administrator updated successfully!');
     }
 

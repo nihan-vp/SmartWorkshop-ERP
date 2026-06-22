@@ -188,10 +188,10 @@
                                             <svg class="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"/></svg>
                                         </div>
                                     </div>
-                                    @if(in_array($workshop->subscription_status, ['trial', 'training']) && $workshop->trial_ends_at)
+                                    @if(in_array($workshop->subscription_status, ['trial', 'training', 'active']) && $workshop->trial_ends_at)
                                     <div class="mt-1.5 text-xs font-medium text-slate-600 bg-slate-50 border border-slate-100 rounded-lg p-2 max-w-xs shadow-sm">
-                                        <p class="font-bold text-amber-800">
-                                            {{ $workshop->subscription_status === 'training' ? 'Training' : 'Trial' }} Status:
+                                        <p class="font-bold {{ $workshop->subscription_status === 'active' ? 'text-emerald-800' : 'text-amber-800' }}">
+                                            {{ ucfirst($workshop->subscription_status) }} Status:
                                         </p>
                                         <p data-countdown-id="{{ $workshop->id }}" class="font-semibold text-slate-700 mt-0.5">Loading...</p>
                                         <p class="text-[10px] text-slate-400 mt-0.5">
