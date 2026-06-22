@@ -16,29 +16,43 @@ class ProductKeyController extends Controller
     {
         $validated = $request->validate([
             'duration_days' => 'required|integer|min:1',
-            'quantity' => 'required|integer|min:1|max:100',
+            'quantity'      => 'required|integer|min:1|max:100',
+            'key'           => 'nullable|string|max:255|unique:product_keys,key',
         ]);
 
         $quantity = (int) $validated['quantity'];
         $durationDays = (int) $validated['duration_days'];
+        $customKey = !empty($validated['key']) ? strtoupper(trim($validated['key'])) : null;
 
-        DB::transaction(function () use ($quantity, $durationDays) {
+        DB::transaction(function () use ($quantity, $durationDays, $customKey) {
             // Delete any existing unused keys so there is only ever one unused key at a time
             ProductKey::where('status', 'unused')->delete();
 
-            for ($i = 0; $i < $quantity; $i++) {
-                $key = ProductKey::generateSecureKey();
+            if ($customKey) {
                 ProductKey::create([
-                    'key' => $key,
+                    'key'           => $customKey,
                     'duration_days' => $durationDays,
-                    'status' => 'unused',
+                    'status'        => 'unused',
                 ]);
+            } else {
+                for ($i = 0; $i < $quantity; $i++) {
+                    $key = ProductKey::generateSecureKey();
+                    ProductKey::create([
+                        'key'           => $key,
+                        'duration_days' => $durationDays,
+                        'status'        => 'unused',
+                    ]);
+                }
             }
         });
 
+        $message = $customKey 
+            ? "Successfully created product key '{$customKey}' of {$durationDays} days duration!"
+            : "Successfully generated {$quantity} new product keys of {$durationDays} days duration!";
+
         return redirect()
             ->back()
-            ->with('success', "Successfully generated {$quantity} new product keys of {$durationDays} days duration!");
+            ->with('success', $message);
     }
 
     /**
@@ -121,8 +135,13 @@ class ProductKeyController extends Controller
         }
 
         DB::transaction(function () use ($productKey, $workshop) {
-            // Always reset from NOW so the user gets exactly the key's duration
-            $newExpiration = now()->addDays($productKey->duration_days);
+            // Auto-calculate extension: if current trial_ends_at is in the future, extend it. Otherwise start from now.
+            $currentExpiry = $workshop->trial_ends_at;
+            if ($currentExpiry && $currentExpiry->isFuture()) {
+                $newExpiration = $currentExpiry->addDays($productKey->duration_days);
+            } else {
+                $newExpiration = now()->addDays($productKey->duration_days);
+            }
 
             // Update workshop
             $workshop->update([
@@ -176,18 +195,9 @@ class ProductKeyController extends Controller
      */
     public function update(Request $request, ProductKey $productKey)
     {
-        if ($productKey->isUsed()) {
-            if ($request->expectsJson() || $request->ajax()) {
-                return response()->json(['error' => 'Cannot edit a product key that has already been redeemed.'], 422);
-            }
-            return redirect()
-                ->back()
-                ->with('error', 'Cannot edit a product key that has already been redeemed.');
-        }
-
         $validated = $request->validate([
             'duration_days' => 'required|integer|min:1',
-            'key' => 'nullable|string|max:255|unique:product_keys,key,' . $productKey->id,
+            'key'           => 'nullable|string|max:255|unique:product_keys,key,' . $productKey->id,
         ]);
 
         $updates = [

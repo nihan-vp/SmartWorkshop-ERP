@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>{{ $workshop->name }} — System Inactive</title>
+    <title><?php echo e($workshop->name); ?> — System Inactive</title>
     <link rel="shortcut icon" href="/images/logo.png" type="image/png">
     <link rel="icon" href="/images/logo.png" type="image/png">
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
@@ -426,7 +426,7 @@
 </head>
 <body>
 
-    {{-- ── BLURRED BG MOCKUP ── --}}
+    
     <div class="bg-blur-mock">
         <div style="width:220px;background:#fff;border-right:1px solid #e2e8f0;display:flex;flex-direction:column;padding:1.25rem;gap:1rem;">
             <div style="display:flex;align-items:center;gap:8px;padding-bottom:1rem;border-bottom:1px solid #f1f5f9;">
@@ -434,44 +434,45 @@
                     <svg width="16" height="16" viewBox="0 0 512 512" fill="#fff"><path d="M 334 165 C 334 165 298 140 256 140 C 214 140 178 165 178 210 C 178 260 230 275 270 285 C 300 292 342 308 342 355 C 342 410 290 432 256 432 C 210 432 170 410 170 410 L 182 355 C 182 355 220 380 256 380 C 300 380 342 360 342 315 C 342 265 285 245 242 235 C 208 227 170 205 170 160 C 170 100 226 80 256 80 C 306 80 342 105 342 105 Z" /></svg>
                 </div>
                 <div>
-                    <div style="font-size:11px;font-weight:800;color:#1e293b;">{{ $workshop->name }}</div>
+                    <div style="font-size:11px;font-weight:800;color:#1e293b;"><?php echo e($workshop->name); ?></div>
                     <div style="font-size:9px;color:#94a3b8;font-weight:600;text-transform:uppercase;">Admin</div>
                 </div>
             </div>
-            @foreach(['Overview','Customers','Vehicles','Invoices','Expenses'] as $i => $nav)
-            <div style="font-size:11px;font-weight:{{ $i===0?'700':'500' }};color:{{ $i===0?'#2563eb':'#94a3b8' }};padding:6px 8px;border-radius:8px;background:{{ $i===0?'#eff6ff':'transparent' }};">{{ $nav }}</div>
-            @endforeach
+            <?php $__currentLoopData = ['Overview','Customers','Vehicles','Invoices','Expenses']; $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $i => $nav): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); ?>
+            <div style="font-size:11px;font-weight:<?php echo e($i===0?'700':'500'); ?>;color:<?php echo e($i===0?'#2563eb':'#94a3b8'); ?>;padding:6px 8px;border-radius:8px;background:<?php echo e($i===0?'#eff6ff':'transparent'); ?>;"><?php echo e($nav); ?></div>
+            <?php endforeach; $__env->popLoop(); $loop = $__env->getLastLoop(); ?>
         </div>
         <div style="flex:1;display:flex;flex-direction:column;">
             <div style="height:52px;background:#fff;border-bottom:1px solid #f1f5f9;display:flex;align-items:center;padding:0 1.5rem;">
                 <div style="width:120px;height:10px;border-radius:5px;background:#f1f5f9;"></div>
             </div>
             <div style="flex:1;padding:1.5rem;display:grid;grid-template-columns:repeat(3,1fr);gap:1rem;align-content:start;">
-                @foreach(['#6366f1','#10b981','#f59e0b'] as $clr)
+                <?php $__currentLoopData = ['#6366f1','#10b981','#f59e0b']; $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $clr): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); ?>
                 <div style="background:#fff;border-radius:14px;padding:1rem;border:1px solid #f1f5f9;">
                     <div style="width:60px;height:8px;border-radius:4px;background:#f1f5f9;margin-bottom:8px;"></div>
-                    <div style="width:80px;height:14px;border-radius:4px;background:{{ $clr }}20;"></div>
+                    <div style="width:80px;height:14px;border-radius:4px;background:<?php echo e($clr); ?>20;"></div>
                 </div>
-                @endforeach
+                <?php endforeach; $__env->popLoop(); $loop = $__env->getLastLoop(); ?>
                 <div style="grid-column:span 3;background:#fff;border-radius:14px;padding:1rem;border:1px solid #f1f5f9;height:80px;"></div>
             </div>
         </div>
     </div>
 
-    {{-- ── OVERLAY + MODAL ── --}}
+    
     <div class="overlay">
         <div class="card">
-            <a href="{{ route('login') }}" class="btn-close-modal" title="Go to login page">✕</a>
+            <a href="<?php echo e(route('login')); ?>" class="btn-close-modal" title="Go to login page">✕</a>
             <div class="card-top-bar"></div>
             <div class="card-body">
 
-                {{-- Badge --}}
+                
                 <div class="badge">
                     <svg width="10" height="10" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M5 9V7a5 5 0 0110 0v2a2 2 0 012 2v5a2 2 0 01-2 2H5a2 2 0 01-2-2v-5a2 2 0 012-2zm8-2v2H7V7a3 3 0 016 0z" clip-rule="evenodd"/></svg>
-                    {{ $isSuspended ? 'Access Suspended' : 'Trial Expired' }}
+                    <?php echo e($isSuspended ? 'Access Suspended' : 'Trial Expired'); ?>
+
                 </div>
 
-                {{-- Icon + Title --}}
+                
                 <div class="icon-wrap">
                     <svg width="24" height="24" fill="none" stroke="#fff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" viewBox="0 0 24 24">
                         <rect x="3" y="11" width="18" height="11" rx="2" ry="2"/>
@@ -479,23 +480,23 @@
                     </svg>
                 </div>
 
-                <h1>{{ $workshop->name }} is Inactive</h1>
+                <h1><?php echo e($workshop->name); ?> is Inactive</h1>
                 <p class="sub">Contact us at <strong style="color:#1e293b;">8891479505</strong> to activate your system, or enter your key below.</p>
 
-                {{-- Workshop Info --}}
+                
                 <div class="info-box">
-                    <div class="label">Registered Account · ID #{{ $workshop->id }}</div>
-                    <div class="name">{{ $workshop->name }}</div>
-                    @if($workshop->trial_ends_at)
+                    <div class="label">Registered Account · ID #<?php echo e($workshop->id); ?></div>
+                    <div class="name"><?php echo e($workshop->name); ?></div>
+                    <?php if($workshop->trial_ends_at): ?>
                     <div class="expiry">
                         <svg width="12" height="12" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><path d="M12 6v6l4 2"/></svg>
-                        Expired on: {{ $workshop->trial_ends_at->format('M d, Y h:i A') }} ({{ $workshop->trial_ends_at->diffForHumans() }})
+                        Expired on: <?php echo e($workshop->trial_ends_at->format('M d, Y h:i A')); ?> (<?php echo e($workshop->trial_ends_at->diffForHumans()); ?>)
                     </div>
-                    @endif
+                    <?php endif; ?>
                 </div>
 
-                {{-- Support Link --}}
-                <a href="{{ route('support') }}" class="btn-support">
+                
+                <a href="<?php echo e(route('support')); ?>" class="btn-support">
                     <div class="icon">
                         <svg width="16" height="16" fill="none" stroke="#2563eb" stroke-width="2" viewBox="0 0 24 24"><path d="M18.364 5.636l-3.536 3.536m0 5.656l3.536 3.536M9.172 9.172L5.636 5.636m3.536 9.192l-3.536 3.536M21 12a9 9 0 11-18 0 9 9 0 0118 0zm-5 0a4 4 0 11-8 0 4 4 0 018 0z"/></svg>
                     </div>
@@ -510,24 +511,23 @@
 
                 <hr class="divider">
 
-                {{-- Activation Key --}}
-                <form action="{{ route('activate_license') }}" method="POST">
-                    @csrf
+                
+                <form action="<?php echo e(route('activate_license')); ?>" method="POST">
+                    <?php echo csrf_field(); ?>
                     <div class="act-label">Have an Activation Key?</div>
                     <div class="input-row">
                         <input type="text" name="product_key" required
                                class="act-input"
-                               value="{{ \App\Models\ProductKey::where('status', 'unused')->first()?->key ?? '' }}"
-                               placeholder="SUHAIM-XXXX-XXXX-XXXX-XXXX">
+                               placeholder="SUHAIM-XXXX-XXXX-XXXX">
                         <button type="submit" class="btn-activate">Register</button>
                     </div>
                 </form>
 
-                {{-- Logout --}}
+                
                 <div class="logout-row" style="margin-bottom: 0.5rem;">
                     Logged in as Admin?&ensp;
-                    <form action="{{ route('logout') }}" method="POST" style="display:inline;">
-                        @csrf
+                    <form action="<?php echo e(route('logout')); ?>" method="POST" style="display:inline;">
+                        <?php echo csrf_field(); ?>
                         <button type="submit">Log Out</button>
                     </form>
                 </div>
@@ -536,7 +536,7 @@
         </div>
     </div>
 
-    {{-- ── TOAST NOTIFICATIONS ── --}}
+    
     <div x-data="toastManager()" x-init="init()" class="toast-wrap" x-cloak>
         <template x-for="t in toasts" :key="t.id">
             <div x-show="t.show"
@@ -570,12 +570,12 @@
             return {
                 toasts: [],
                 init() {
-                    @if(session('success'))
-                        this.add('success', 'Activation Successful', "{{ session('success') }}");
-                    @endif
-                    @if(session('error'))
-                        this.add('error', 'Activation Failed', "{{ session('error') }}");
-                    @endif
+                    <?php if(session('success')): ?>
+                        this.add('success', 'Activation Successful', "<?php echo e(session('success')); ?>");
+                    <?php endif; ?>
+                    <?php if(session('error')): ?>
+                        this.add('error', 'Activation Failed', "<?php echo e(session('error')); ?>");
+                    <?php endif; ?>
                 },
                 add(type, title, message) {
                     const id = Date.now();
@@ -590,3 +590,4 @@
     </script>
 </body>
 </html>
+<?php /**PATH E:\Suhaim Soft Work Shop\suhaimsoftworkshop\server\resources\views/errors/system_inactive.blade.php ENDPATH**/ ?>

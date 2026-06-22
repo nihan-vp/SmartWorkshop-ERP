@@ -52,7 +52,6 @@ class SubscriptionDashboardTest extends TestCase
         $response->assertSee('Trial');
         $response->assertSee('Account Status');
         $response->assertSee('Total Duration');
-        $response->assertSee('Update Subscription');
     }
 
     /**

@@ -40,7 +40,7 @@
                     + Add Workshop
                 </button>
                 <button x-show="activeTab === 'keys'" @click="openGenerateKeysModal = true" class="bg-emerald-600 hover:bg-emerald-700 text-white px-4 py-2 rounded-lg text-sm font-semibold transition-colors">
-                    + Generate Keys
+                    + Add Key
                 </button>
             </div>
         </div>
@@ -199,7 +199,6 @@
                                     <?php endif; ?>
                                 </td>
                                 <td class="px-4 py-3 text-right space-x-2">
-                                    <button @click="openActivateModal(<?php echo \Illuminate\Support\Js::from(['id'=>$workshop->id,'name'=>$workshop->name])->toHtml() ?>)" class="text-emerald-600 hover:underline text-xs font-semibold">License</button>
                                     <button @click="openEdit(<?php echo \Illuminate\Support\Js::from(['id'=>$workshop->id,'name'=>$workshop->name,'phone'=>$workshop->phone,'email'=>$workshop->email,'gstin'=>$workshop->gstin,'address'=>$workshop->address,'subscription_status'=>$workshop->subscription_status,'trial_ends_at'=>$workshop->trial_ends_at?$workshop->trial_ends_at->format('Y-m-d\TH:i'):'','alert_message'=>$workshop->alert_message,'alert_expires_at'=>$workshop->alert_expires_at?$workshop->alert_expires_at->format('Y-m-d\TH:i'):'','admin_user_id'=>$workshop->users->first()?->id,'admin_name'=>$workshop->users->first()?->name,'admin_email'=>$workshop->users->first()?->email])->toHtml() ?>)" class="text-slate-600 hover:underline text-xs font-semibold">Edit</button>
                                     <form action="<?php echo e(route('super_admin.destroy_workshop', $workshop)); ?>" method="POST" class="inline" onsubmit="return confirm('Are you sure you want to delete this garage and all its associated data?');">
                                         <?php echo csrf_field(); ?>
@@ -261,15 +260,11 @@
                                 <td class="px-4 py-3 text-slate-600"><?php echo e($key->workshop ? $key->workshop->name : '-'); ?></td>
                                 <td class="px-4 py-3 text-slate-600"><?php echo e($key->created_at->format('M d, Y')); ?></td>
                                 <td class="px-4 py-3 text-right space-x-2">
-                                    <?php if($key->status === 'unused'): ?>
-                                        <button @click="openEditKeyModalFn(<?php echo \Illuminate\Support\Js::from(['id'=>$key->id,'duration_days'=>$key->duration_days,'key'=>$key->key])->toHtml() ?>)" class="text-blue-600 hover:underline text-xs font-semibold">Edit</button>
-                                        <form action="<?php echo e(route('super_admin.destroy_product_key', $key)); ?>" method="POST" class="inline" onsubmit="return confirm('Delete this license key?');">
-                                            <?php echo csrf_field(); ?> <?php echo method_field('DELETE'); ?>
-                                            <button class="text-red-600 hover:underline text-xs font-semibold">Delete</button>
-                                        </form>
-                                    <?php else: ?>
-                                        <span class="text-xs text-slate-400">N/A</span>
-                                    <?php endif; ?>
+                                    <button @click="openEditKeyModalFn(<?php echo \Illuminate\Support\Js::from(['id'=>$key->id,'duration_days'=>$key->duration_days,'key'=>$key->key])->toHtml() ?>)" class="text-blue-600 hover:underline text-xs font-semibold">Edit</button>
+                                    <form action="<?php echo e(route('super_admin.destroy_product_key', $key)); ?>" method="POST" class="inline" onsubmit="return confirm('Delete this license key?');">
+                                        <?php echo csrf_field(); ?> <?php echo method_field('DELETE'); ?>
+                                        <button class="text-red-600 hover:underline text-xs font-semibold">Delete</button>
+                                    </form>
                                 </td>
                             </tr>
                             <?php endforeach; $__env->popLoop(); $loop = $__env->getLastLoop(); if ($__empty_1): ?>
@@ -405,7 +400,7 @@ unset($__errorArgs, $__bag); ?>
                             <div class="grid grid-cols-2 gap-3">
                                 <div>
                                     <label class="block text-xs font-semibold text-slate-600 mb-1.5">Status <span class="text-rose-500">*</span></label>
-                                    <select name="subscription_status"
+                                    <select name="subscription_status" @change="handleStatusChange($event, 'Add')"
                                             class="w-full border border-slate-200 bg-slate-50 rounded-xl px-4 py-3 text-slate-800 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500/20 focus:border-blue-400 focus:bg-white transition-all cursor-pointer">
                                         <option value="training">Training</option>
                                         <option value="trial">Trial</option>
@@ -416,7 +411,7 @@ unset($__errorArgs, $__bag); ?>
                                 </div>
                                 <div>
                                     <label class="block text-xs font-semibold text-slate-600 mb-1.5">Ends At</label>
-                                    <input type="datetime-local" name="trial_ends_at"
+                                    <input type="datetime-local" name="trial_ends_at" @input="handleDateChange($event, 'Add')"
                                            class="w-full border border-slate-200 bg-slate-50 rounded-xl px-4 py-3 text-slate-800 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500/20 focus:border-blue-400 focus:bg-white transition-all">
                                 </div>
                             </div>
@@ -541,7 +536,7 @@ unset($__errorArgs, $__bag); ?>
                         </div>
                         <div>
                             <label class="block text-xs font-semibold text-slate-600 mb-1">Status <span class="text-rose-500">*</span></label>
-                            <select name="subscription_status" x-model="activeWorkshop.subscription_status"
+                            <select name="subscription_status" x-model="activeWorkshop.subscription_status" @change="handleStatusChange($event, 'Edit')"
                                     class="w-full border border-slate-200 bg-slate-50 rounded-lg px-3 py-2.5 text-slate-800 text-sm focus:outline-none focus:ring-2 focus:ring-amber-400/25 focus:border-amber-400 focus:bg-white transition-all cursor-pointer">
                                 <option value="training">Training</option>
                                 <option value="trial">Trial</option>
@@ -552,7 +547,7 @@ unset($__errorArgs, $__bag); ?>
                         </div>
                         <div>
                             <label class="block text-xs font-semibold text-slate-600 mb-1">Trial / Training Ends At</label>
-                            <input type="datetime-local" name="trial_ends_at" x-model="activeWorkshop.trial_ends_at"
+                            <input type="datetime-local" name="trial_ends_at" x-model="activeWorkshop.trial_ends_at" @input="handleDateChange($event, 'Edit')"
                                    class="w-full border border-slate-200 bg-slate-50 rounded-lg px-3 py-2.5 text-slate-800 text-sm focus:outline-none focus:ring-2 focus:ring-amber-400/25 focus:border-amber-400 focus:bg-white transition-all">
                         </div>
                         <div>
@@ -613,75 +608,32 @@ unset($__errorArgs, $__bag); ?>
              x-show="openGenerateKeysModal" x-transition:enter="transition ease-out duration-300 transform" x-transition:enter-start="scale-95 translate-y-4" x-transition:enter-end="scale-100 translate-y-0">
             <div class="p-6 border-b border-slate-100 flex justify-between items-center bg-slate-50/50">
                 <div>
-                    <h3 class="text-lg font-bold text-slate-900 font-outfit">Generate License Key</h3>
-                    <p class="text-xs text-slate-500 mt-0.5">Create a new key to sell or activate subscription.</p>
+                    <h3 class="text-lg font-bold text-slate-900 font-outfit">Add / Generate License Key</h3>
+                    <p class="text-xs text-slate-500 mt-0.5">Create a custom key or auto-generate a secure key.</p>
                 </div>
                 <button @click="openGenerateKeysModal = false" class="text-slate-400 hover:text-slate-600 bg-white hover:bg-slate-100 p-1.5 rounded-lg border border-slate-200 transition-colors">&times;</button>
             </div>
             <form action="<?php echo e(route('super_admin.store_product_key')); ?>" method="POST" class="p-6 space-y-4">
                 <?php echo csrf_field(); ?>
                 <div>
-                    <label class="block text-xs font-bold text-slate-500 uppercase tracking-wider mb-1.5">Key Duration <span class="text-rose-500">*</span></label>
-                    <select name="duration_days" class="w-full border border-slate-200 rounded-xl px-3 py-2 text-slate-800 focus:outline-none focus:ring-2 focus:ring-blue-500/20 focus:border-blue-500 text-sm transition-all bg-white cursor-pointer">
-                        <option value="30">30 Days</option>
-                        <option value="90">90 Days</option>
-                        <option value="180">180 Days</option>
-                        <option value="365">365 Days</option>
-                    </select>
+                    <label class="block text-xs font-bold text-slate-500 uppercase tracking-wider mb-1.5">Key Value <span class="text-slate-400 font-normal">(Optional)</span></label>
+                    <input type="text" name="key" class="w-full border border-slate-200 rounded-xl px-3 py-2 text-slate-800 focus:outline-none focus:ring-2 focus:ring-blue-500/20 focus:border-blue-500 text-sm font-mono uppercase transition-all" placeholder="Leave blank to auto-generate">
+                </div>
+                <div>
+                    <label class="block text-xs font-bold text-slate-500 uppercase tracking-wider mb-1.5">Duration (Days) <span class="text-rose-500">*</span></label>
+                    <input type="number" name="duration_days" min="1" value="30" class="w-full border border-slate-200 rounded-xl px-3 py-2 text-slate-800 focus:outline-none focus:ring-2 focus:ring-blue-500/20 focus:border-blue-500 text-sm transition-all" required>
                 </div>
                 <!-- Quantity fixed to 1 -->
                 <input type="hidden" name="quantity" value="1">
                 <div class="flex justify-end gap-3 pt-4 border-t border-slate-100">
                     <button type="button" @click="openGenerateKeysModal = false" class="px-4 py-2.5 border border-slate-200 hover:bg-slate-50 text-slate-700 rounded-xl text-sm font-semibold transition-colors">Cancel</button>
-                    <button type="submit" class="px-5 py-2.5 bg-emerald-600 hover:bg-emerald-700 text-white rounded-xl text-sm font-semibold transition-colors shadow-sm shadow-emerald-500/10">Generate Key</button>
+                    <button type="submit" class="px-5 py-2.5 bg-emerald-600 hover:bg-emerald-700 text-white rounded-xl text-sm font-semibold transition-colors shadow-sm shadow-emerald-500/10">Add / Generate Key</button>
                 </div>
             </form>
         </div>
     </div>
 
-    
-    <div x-show="openActivateLicenseModal" x-cloak class="fixed inset-0 z-50 flex items-center justify-center p-4 bg-slate-900/40 backdrop-blur-sm"
-         x-transition:enter="transition ease-out duration-300" x-transition:enter-start="opacity-0" x-transition:enter-end="opacity-100"
-         x-transition:leave="transition ease-in duration-200" x-transition:leave-start="opacity-100" x-transition:leave-end="opacity-0">
-        <div class="bg-white rounded-2xl shadow-xl w-full max-w-md overflow-hidden border border-slate-100"
-             x-show="openActivateLicenseModal" x-transition:enter="transition ease-out duration-300 transform" x-transition:enter-start="scale-95 translate-y-4" x-transition:enter-end="scale-100 translate-y-0">
-            <div class="p-6 border-b border-slate-100 flex justify-between items-center bg-slate-50/50">
-                <div>
-                    <h3 class="text-lg font-bold text-slate-900 font-outfit truncate">Activate Garage License</h3>
-                    <p class="text-xs text-slate-500 mt-0.5" x-text="'Activating for ' + activeWorkshopToActivate.name"></p>
-                </div>
-                <button @click="openActivateLicenseModal = false" class="text-slate-400 hover:text-slate-600 bg-white hover:bg-slate-100 p-1.5 rounded-lg border border-slate-200 transition-colors">&times;</button>
-            </div>
-            <form :action="`/super-admin/workshops/${activeWorkshopToActivate.id}/activate-license`" method="POST" class="p-6 space-y-4">
-                <?php echo csrf_field(); ?>
-                <div>
-                    <label class="block text-xs font-bold text-slate-500 uppercase tracking-wider mb-1.5">Auto-Generate &amp; Activate License</label>
-                    <select name="duration_days" class="w-full border border-slate-200 rounded-xl px-3 py-2 text-slate-800 focus:outline-none focus:ring-2 focus:ring-blue-500/20 focus:border-blue-500 text-sm transition-all bg-white cursor-pointer">
-                        <option value="30">30 Days</option>
-                        <option value="90">90 Days</option>
-                        <option value="180">180 Days</option>
-                        <option value="365">365 Days</option>
-                    </select>
-                </div>
-                <div class="relative py-2">
-                    <div class="absolute inset-0 flex items-center" aria-hidden="true">
-                        <div class="w-full border-t border-slate-200"></div>
-                    </div>
-                    <div class="relative flex justify-center text-xs uppercase">
-                        <span class="bg-white px-2 text-slate-400 font-bold">OR</span>
-                    </div>
-                </div>
-                <div>
-                    <label class="block text-xs font-bold text-slate-500 uppercase tracking-wider mb-1.5">Redeem Existing License Key</label>
-                    <input type="text" name="product_key" class="w-full border border-slate-200 rounded-xl px-3 py-2 text-slate-800 focus:outline-none focus:ring-2 focus:ring-blue-500/20 focus:border-blue-500 text-sm font-mono uppercase transition-all" placeholder="XXXX-XXXX-XXXX-XXXX">
-                </div>
-                <div class="flex justify-end gap-3 pt-4 border-t border-slate-100">
-                    <button type="button" @click="openActivateLicenseModal = false" class="px-4 py-2.5 border border-slate-200 hover:bg-slate-50 text-slate-700 rounded-xl text-sm font-semibold transition-colors">Cancel</button>
-                    <button type="submit" class="px-5 py-2.5 bg-blue-600 hover:bg-blue-700 text-white rounded-xl text-sm font-semibold transition-colors shadow-sm shadow-blue-500/10">Activate License</button>
-                </div>
-            </form>
-        </div>
-    </div>
+
 
     
     <div x-show="openEditKeyModal" x-cloak class="fixed inset-0 z-50 flex items-center justify-center p-4 bg-slate-900/40 backdrop-blur-sm"
@@ -724,6 +676,31 @@ function localNow() {
     return `${d.getFullYear()}-${pad(d.getMonth()+1)}-${pad(d.getDate())}T${pad(d.getHours())}:${pad(d.getMinutes())}`;
 }
 
+// ── Helper: Calculate future local datetime in 'YYYY-MM-DDTHH:mm' format by adding days
+function localFuture(days) {
+    const d = new Date();
+    d.setDate(d.getDate() + parseInt(days || 0));
+    const pad = n => String(n).padStart(2, '0');
+    return `${d.getFullYear()}-${pad(d.getMonth()+1)}-${pad(d.getDate())}T${pad(d.getHours())}:${pad(d.getMinutes())}`;
+}
+
+// ── Helper: Format a datetime-local value ('YYYY-MM-DDTHH:mm') into a friendly string '22 Jul 2026, 04:40 AM'
+function formatFriendlyDatetime(val) {
+    if (!val) return '';
+    const d = new Date(val);
+    if (isNaN(d.getTime())) return '';
+    const months = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
+    const pad = n => String(n).padStart(2, '0');
+    
+    let hours = d.getHours();
+    const ampm = hours >= 12 ? 'PM' : 'AM';
+    hours = hours % 12;
+    hours = hours ? hours : 12; // the hour '0' should be '12'
+    const minutes = pad(d.getMinutes());
+    
+    return `${d.getDate()} ${months[d.getMonth()]} ${d.getFullYear()}, ${pad(hours)}:${minutes} ${ampm}`;
+}
+
 // ── Helper: Fix a datetime-local value — if time is 00:00 (midnight / 12:00 AM bug), replace with current time
 function fixDatetime(val) {
     if (!val) return '';
@@ -744,21 +721,68 @@ document.addEventListener('alpine:init', () => {
         openEditModal: <?php echo e($showEditWorkshopModal ? 'true' : 'false'); ?>,
         openGenerateKeysModal: false,
         openEditKeyModal: false,
-        openActivateLicenseModal: false,
         activeWorkshop: <?php echo json_encode($initialActiveWorkshop ?: ['id'=>''], 15, 512) ?>,
-        activeWorkshopToActivate: { id: '', name: '' },
         activeKey: { id: '', duration_days: '', key: '' },
 
         openAdd() {
             this.openAddModal = true;
-            // ── Auto-fill date inputs with current local time so they never default to 12:00 AM
+            // ── Auto-calculate and auto-fill Ends At date based on default trial duration setting
             this.$nextTick(() => {
-                const now = localNow();
+                const statusSelect = document.querySelector('[x-show="openAddModal"] select[name="subscription_status"]');
+                const status = statusSelect ? statusSelect.value : 'trial';
+                const defaultDays = <?php echo e((int) $defaultTrialDuration); ?>;
+                let duration = defaultDays;
+                if (status === 'training') duration = 7;
+                else if (status === 'active') duration = 365;
+                else if (status === 'suspended' || status === 'fix') duration = 0;
+
+                const trialEnds = localFuture(duration);
                 const trialInput = document.querySelector('[x-show="openAddModal"] input[name="trial_ends_at"]');
-                const alertInput = document.querySelector('[x-show="openAddModal"] input[name="alert_expires_at"]');
-                if (trialInput && !trialInput.value) trialInput.value = now;
-                if (alertInput && !alertInput.value) alertInput.value = now;
+                if (trialInput && !trialInput.value) trialInput.value = trialEnds;
+
+                this.updateAlertFields(trialEnds, 'Add');
             });
+        },
+
+        updateAlertFields(endsAtDate, modalType) {
+            if (!endsAtDate) return;
+            const formattedDate = formatFriendlyDatetime(endsAtDate);
+            const msg = `Your subscription is expiring on ${formattedDate}. Please contact Suhaim Soft at 8891479505 for an active key.`;
+            
+            if (modalType === 'Add') {
+                const messageInput = document.querySelector('[x-show="openAddModal"] input[name="alert_message"]');
+                const expiresInput = document.querySelector('[x-show="openAddModal"] input[name="alert_expires_at"]');
+                if (messageInput) messageInput.value = msg;
+                if (expiresInput) expiresInput.value = endsAtDate;
+            } else if (modalType === 'Edit') {
+                this.activeWorkshop.alert_message = msg;
+                this.activeWorkshop.alert_expires_at = endsAtDate;
+            }
+        },
+
+        handleDateChange(event, modalType) {
+            const endsAtDate = event.target.value;
+            this.updateAlertFields(endsAtDate, modalType);
+        },
+
+        handleStatusChange(event, modalType) {
+            const status = event.target.value;
+            const defaultDays = <?php echo e((int) $defaultTrialDuration); ?>;
+            let duration = defaultDays;
+            if (status === 'training') duration = 7;
+            else if (status === 'active') duration = 365;
+            else if (status === 'suspended' || status === 'fix') duration = 0;
+
+            const futureDate = localFuture(duration);
+
+            if (modalType === 'Add') {
+                const trialInput = document.querySelector('[x-show="openAddModal"] input[name="trial_ends_at"]');
+                if (trialInput) trialInput.value = futureDate;
+            } else if (modalType === 'Edit') {
+                this.activeWorkshop.trial_ends_at = futureDate;
+            }
+
+            this.updateAlertFields(futureDate, modalType);
         },
 
         openEditKeyModalFn(keyObj) {
@@ -775,10 +799,7 @@ document.addEventListener('alpine:init', () => {
             this.openEditModal = true;
         },
 
-        openActivateModal(workshop) {
-            this.activeWorkshopToActivate = { ...workshop };
-            this.openActivateLicenseModal = true;
-        },
+
 
         matchesWorkshopSearch(name, phone, email, adminName, adminEmail) {
             if (!this.searchWorkshopQuery) return true;

@@ -125,9 +125,6 @@ Route::middleware('auth')->group(function () {
         Route::delete('/product-keys/{productKey}', [App\Http\Controllers\ProductKeyController::class, 'destroy'])->name('super_admin.destroy_product_key');
         Route::delete('/product-keys', [App\Http\Controllers\ProductKeyController::class, 'destroyAll'])->name('super_admin.destroy_all_product_keys');
 
-        // License activation for a workshop (admin-initiated)
-        Route::post('/workshops/{workshop}/activate-license', [App\Http\Controllers\SuperAdminController::class, 'activateLicense'])->name('super_admin.activate_license');
-
         // Activity Logs management routes
         Route::delete('/logs/clear', [SuperAdminController::class, 'clearLogs'])->name('super_admin.clear_logs');
         Route::delete('/logs/{activityLog}', [SuperAdminController::class, 'destroyLog'])->name('super_admin.destroy_log');

@@ -4,99 +4,83 @@
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=0">
 
-    {{-- ══════════════════════════════════════════════
-         ADVANCED SEO SYSTEM — Suhaim Soft Work Shop
-         Each page can override via @section('seo-*')
-    ══════════════════════════════════════════════ --}}
+    
 
-    {{-- Core Title (Pages override with @section('title')) --}}
-    @php
-        $seoTitle      = trim(View::yieldContent('seo-title', View::yieldContent('title', 'Dashboard')));
-        $siteName      = 'Suhaim Soft Work Shop';
-        $fullTitle     = $seoTitle . ' — ' . $siteName;
-        $seoDesc       = trim(View::yieldContent('seo-description', 'Suhaim Soft Work Shop is a complete cloud-based workshop management system — manage work orders, invoices, customers, vehicles, and employees from one powerful dashboard.'));
-        $seoKeywords   = trim(View::yieldContent('seo-keywords', 'workshop management, work order system, auto repair software, garage management, invoice generator, customer vehicles, workshop dashboard, Suhaim Soft'));
-        $seoImage      = trim(View::yieldContent('seo-image', ''));
-        $canonicalUrl  = trim(View::yieldContent('seo-canonical', url()->current()));
-        $seoRobots     = trim(View::yieldContent('seo-robots', 'index, follow'));
-        $seoType       = trim(View::yieldContent('seo-type', 'website'));
-        $seoLocale     = 'en_US';
-    @endphp
-
-    {{-- ── Primary Meta Tags ── --}}
-    <title>{{ $fullTitle }}</title>
-    <meta name="title"           content="{{ $fullTitle }}">
-    <meta name="description"     content="{{ $seoDesc }}">
-    <meta name="keywords"        content="{{ $seoKeywords }}">
-    <meta name="robots"          content="{{ $seoRobots }}">
+    
+    
+    
+    <title>Dashboard — Suhaim Soft Work Shop</title>
+    <meta name="title"           content="Dashboard — Suhaim Soft Work Shop">
+    <meta name="description"     content="Suhaim Soft Work Shop is a complete cloud-based workshop management system — manage work orders, invoices, customers, vehicles, and employees from one powerful dashboard.">
+    <meta name="keywords"        content="workshop management, work order system, auto repair software, garage management, invoice generator, customer vehicles, workshop dashboard, Suhaim Soft">
+    <meta name="robots"          content="index, follow">
     <meta name="author"          content="Suhaim Soft">
-    <meta name="copyright"       content="© {{ date('Y') }} Suhaim Soft Work Shop">
+    <meta name="copyright"       content="© 2026 Suhaim Soft Work Shop">
     <meta name="generator"       content="Suhaim Soft Workshop Manager">
     <meta name="language"        content="English">
     <meta name="revisit-after"   content="7 days">
     <meta name="rating"          content="general">
-    <link rel="canonical"        href="{{ $canonicalUrl }}">
+    <link rel="canonical"        href="http://127.0.0.1:8000/dashboard">
 
-    {{-- ── Open Graph / Facebook / LinkedIn ── --}}
-    <meta property="og:type"         content="{{ $seoType }}">
-    <meta property="og:url"          content="{{ $canonicalUrl }}">
-    <meta property="og:title"        content="{{ $fullTitle }}">
-    <meta property="og:description"  content="{{ $seoDesc }}">
-    @if($seoImage)<meta property="og:image"        content="{{ $seoImage }}">@endif
-    <meta property="og:image:alt"    content="{{ $siteName }} Logo">
-    <meta property="og:site_name"    content="{{ $siteName }}">
-    <meta property="og:locale"       content="{{ $seoLocale }}">
+    
+    <meta property="og:type"         content="website">
+    <meta property="og:url"          content="http://127.0.0.1:8000/dashboard">
+    <meta property="og:title"        content="Dashboard — Suhaim Soft Work Shop">
+    <meta property="og:description"  content="Suhaim Soft Work Shop is a complete cloud-based workshop management system — manage work orders, invoices, customers, vehicles, and employees from one powerful dashboard.">
+        <meta property="og:image:alt"    content="Suhaim Soft Work Shop Logo">
+    <meta property="og:site_name"    content="Suhaim Soft Work Shop">
+    <meta property="og:locale"       content="en_US">
 
-    {{-- ── Twitter Card ── --}}
+    
     <meta name="twitter:card"        content="summary">
-    <meta name="twitter:title"       content="{{ $fullTitle }}">
-    <meta name="twitter:description" content="{{ $seoDesc }}">
-    <meta name="twitter:image"       content="{{ $seoImage }}">
-    <meta name="twitter:image:alt"   content="{{ $siteName }}">
+    <meta name="twitter:title"       content="Dashboard — Suhaim Soft Work Shop">
+    <meta name="twitter:description" content="Suhaim Soft Work Shop is a complete cloud-based workshop management system — manage work orders, invoices, customers, vehicles, and employees from one powerful dashboard.">
+    <meta name="twitter:image"       content="">
+    <meta name="twitter:image:alt"   content="Suhaim Soft Work Shop">
 
-    {{-- ── JSON-LD Structured Data ── --}}
+    
     <script type="application/ld+json">
     {
-        "@@context": "https://schema.org",
-        "@@graph": [
+        "@context": "https://schema.org",
+        "@graph": [
             {
-                "@@type": "Organization",
-                "@@id": "{{ url('/') }}/#organization",
-                "name": "{{ $siteName }}",
-                "url": "{{ url('/') }}",
+                "@type": "Organization",
+                "@id": "http://127.0.0.1:8000/#organization",
+                "name": "Suhaim Soft Work Shop",
+                "url": "http://127.0.0.1:8000",
                 "logo": {
-                    "@@type": "ImageObject",
+                    "@type": "ImageObject",
                     "url": ""
                 },
                 "description": "Cloud-based workshop management system for auto repair shops and garages.",
                 "contactPoint": {
-                    "@@type": "ContactPoint",
+                    "@type": "ContactPoint",
                     "email": "infosuhaimsoft@gmail.com",
                     "contactType": "customer support"
                 }
             },
             {
-                "@@type": "WebSite",
-                "@@id": "{{ url('/') }}/#website",
-                "url": "{{ url('/') }}",
-                "name": "{{ $siteName }}",
-                "publisher": { "@@id": "{{ url('/') }}/#organization" }
+                "@type": "WebSite",
+                "@id": "http://127.0.0.1:8000/#website",
+                "url": "http://127.0.0.1:8000",
+                "name": "Suhaim Soft Work Shop",
+                "publisher": { "@id": "http://127.0.0.1:8000/#organization" }
             },
             {
-                "@@type": "WebPage",
-                "@@id": "{{ $canonicalUrl }}/#webpage",
-                "url": "{{ $canonicalUrl }}",
-                "name": "{{ $fullTitle }}",
-                "description": "{{ $seoDesc }}",
-                "isPartOf": { "@@id": "{{ url('/') }}/#website" },
+                "@type": "WebPage",
+                "@id": "http://127.0.0.1:8000/dashboard/#webpage",
+                "url": "http://127.0.0.1:8000/dashboard",
+                "name": "Dashboard — Suhaim Soft Work Shop",
+                "description": "Suhaim Soft Work Shop is a complete cloud-based workshop management system — manage work orders, invoices, customers, vehicles, and employees from one powerful dashboard.",
+                "isPartOf": { "@id": "http://127.0.0.1:8000/#website" },
                 "inLanguage": "en-US",
-                "dateModified": "{{ now()->toIso8601String() }}"
+                "dateModified": "2026-06-22T05:24:15+00:00"
             }
         ]
     }
     </script>
 
-    {{-- ── PWA Config ── --}}
+    
     <link rel="manifest" href="/manifest.json?v=3">
     <meta name="theme-color" content="#1d4ed8">
     <meta name="mobile-web-app-capable" content="yes">
@@ -109,7 +93,7 @@
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
-    <meta name="csrf-token" content="{{ csrf_token() }}">
+    <meta name="csrf-token" content="SrDk6dNsTZ53azWe652WyMNepkUi7bSteZk6ibYF">
     <script>
         // Suppress Tailwind CSS production warning
         (function() {
@@ -445,7 +429,7 @@
     <script src="https://cdn.jsdelivr.net/npm/alpinejs@3.x.x/dist/cdn.min.js" defer></script>
     <style>[x-cloak] { display: none !important; }</style>
 
-    {{-- ── Page Loading Overlay Styles ── --}}
+    
     <style>
         #page-loader {
             position: fixed;
@@ -535,9 +519,9 @@
         }
     </style>
 </head>
-<body class="min-h-screen {{ Auth::check() ? 'bg-slate-50' : 'bg-gradient-to-br from-blue-50/50 via-white to-slate-50 relative flex flex-col items-center justify-center py-8 px-4' }}">
+<body class="min-h-screen bg-slate-50">
 
-    {{-- ══ FULL PAGE LOADING OVERLAY ══ --}}
+    
     <div id="page-loader" role="status" aria-label="Loading page...">
         <div class="loader-ring">
             <svg viewBox="0 0 72 72" xmlns="http://www.w3.org/2000/svg">
@@ -607,19 +591,10 @@
             });
         })();
     </script>
-    @guest
-    {{-- Decorative Background Gradients for login --}}
-    <div class="absolute top-[-20%] left-[-10%] w-[50%] h-[50%] rounded-full bg-blue-400/10 blur-[120px] pointer-events-none"></div>
-    <div class="absolute bottom-[-20%] right-[-10%] w-[50%] h-[50%] rounded-full bg-indigo-400/10 blur-[120px] pointer-events-none"></div>
-    @endguest
-
-    @auth
-    @php
-        $jwtToken = session('jwt_token') ?? \App\Helpers\JwtHelper::generateToken(Auth::user());
-    @endphp
-    <script>
+    
+            <script>
         // Inject JWT Token for API requests
-        window.jwtToken = '{{ $jwtToken }}';
+        window.jwtToken = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOjEsImVtYWlsIjoiY2xpbmljcHBtQGdtYWlsLmNvbSIsInJvbGUiOiJhZG1pbiIsImlhdCI6MTc4MjEwNTg1NSwiZXhwIjoxNzgyMTkyMjU1fQ.tmH_25jzRZgBDfOKy27-bPvSTkTwfHkgCQC1-CP0mT8';
         if (window.axios) {
             window.axios.defaults.headers.common['Authorization'] = 'Bearer ' + window.jwtToken;
         }
@@ -654,194 +629,152 @@
         };
     </script>
 
-    {{-- Mobile Overlay --}}
+    
     <div id="sidebar-overlay" class="fixed inset-0 bg-black/40 backdrop-blur-sm z-40 hidden lg:hidden" onclick="toggleSidebar()"></div>
 
-    {{-- Sidebar --}}
+    
     <aside id="sidebar" class="fixed top-0 left-0 z-50 h-full w-72 bg-white border-r border-blue-100 
                                transform -translate-x-full lg:translate-x-0 transition-transform duration-300 ease-out flex flex-col shadow-sm">
-        {{-- Logo/Header --}}
+        
         <div class="p-4 border-b border-blue-100 bg-slate-50/50">
             <div class="space-y-1">
-                <h1 class="text-sm font-extrabold text-slate-900 tracking-tight leading-tight truncate" title="{{ (Auth::user()->isSuperAdmin() && session()->has('active_workshop_id')) ? session('active_workshop_name') : (Auth::user()->isSuperAdmin() ? Auth::user()->name : (Auth::user()->workshop->name ?? 'Suhaim Soft')) }}">
-                    {{ (Auth::user()->isSuperAdmin() && session()->has('active_workshop_id')) ? session('active_workshop_name') : (Auth::user()->isSuperAdmin() ? Auth::user()->name : (Auth::user()->workshop->name ?? 'Suhaim Soft')) }}
+                <h1 class="text-sm font-extrabold text-slate-900 tracking-tight leading-tight truncate" title="Test Workshop">
+                    Test Workshop
                 </h1>
                 
-                @if(!Auth::user()->isSuperAdmin() || session()->has('active_workshop_id'))
-                <p class="text-[11px] text-slate-500 font-semibold truncate">
-                    {{ session()->has('active_workshop_id') ? session('active_workshop_admin_name', \App\Models\User::where('workshop_id', session('active_workshop_id'))->where('role', 'admin')->first()?->name ?? 'Workshop Admin') : Auth::user()->name }}
+                                <p class="text-[11px] text-slate-500 font-semibold truncate">
+                    Workshop Manager
                 </p>
-                @endif
-                
-                @if((!Auth::user()->isSuperAdmin() || session()->has('active_workshop_id')) && Auth::user()->workshop && Auth::user()->workshop->phone)
-                <p class="text-[11px] text-blue-600 font-semibold flex items-center gap-1">
+                                
+                                <p class="text-[11px] text-blue-600 font-semibold flex items-center gap-1">
                     <svg class="w-3 h-3 text-blue-500 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 5a2 2 0 012-2h3.28a1 1 0 01.94.725l.548 2.2a1 1 0 01-.321.988l-1.305.98a10.582 10.582 0 004.872 4.872l.98-1.305a1 1 0 01.988-.321l2.2.548a1 1 0 01.725.94V19a2 2 0 01-2 2h-1C9.716 21 3 14.284 3 6V5z"/></svg>
-                    {{ Auth::user()->workshop->phone }}
+                    1234567890
                 </p>
-                @endif
-
+                
                 <div class="pt-1">
                     <span class="inline-flex items-center px-2 py-0.5 rounded-md text-[9px] font-extrabold uppercase tracking-wider bg-blue-50 text-blue-700 border border-blue-100 shadow-sm">
-                        {{ (Auth::user()->isSuperAdmin() && session()->has('active_workshop_id')) ? 'Workshop Owner' : (Auth::user()->isSuperAdmin() ? 'Super Admin' : (Auth::user()->role === 'admin' ? 'Workshop Owner' : 'Staff')) }}
+                        Workshop Owner
                     </span>
                 </div>
             </div>
         </div>
 
-        {{-- Navigation --}}
+        
         <nav class="flex-1 overflow-y-auto p-4 space-y-1">
-            @if(Auth::user()->isSuperAdmin() && session()->has('active_workshop_id'))
-            <a href="{{ route('super_admin.dashboard') }}" class="sidebar-link !bg-indigo-50 !text-indigo-700 hover:!bg-indigo-100 hover:!text-indigo-900 font-bold border border-indigo-200 rounded-xl mb-4" id="nav-back-to-admin">
-                <svg class="w-5 h-5 text-indigo-600" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 15l-3-3m0 0l3-3m-3 3h8M3 12a9 9 0 1118 0 9 9 0 0118 0z"/></svg>
-                Exit Inspection
-            </a>
-            @endif
-
-            @if(Auth::user()->isSuperAdmin() && !session()->has('active_workshop_id'))
-            <a href="{{ route('super_admin.dashboard', ['tab' => 'dashboard']) }}" class="sidebar-link {{ request()->routeIs('super_admin.dashboard') && request('tab', 'dashboard') === 'dashboard' ? 'active' : '' }}" id="nav-super-dashboard">
-                <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6"/></svg>
-                Dashboard
-            </a>
-            <a href="{{ route('super_admin.dashboard', ['tab' => 'workshops']) }}" class="sidebar-link {{ request()->routeIs('super_admin.dashboard') && request('tab') === 'workshops' ? 'active' : '' }}" id="nav-workshops">
-                <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16l3.5-2 3.5 2 3.5-2 3.5 2z"/></svg>
-                Garages / Workshops
-            </a>
-            <a href="{{ route('super_admin.dashboard', ['tab' => 'keys']) }}" class="sidebar-link {{ request()->routeIs('super_admin.dashboard') && request('tab') === 'keys' ? 'active' : '' }}" id="nav-keys">
-                <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M15 7a2 2 0 012 2m-9 8a2 2 0 012-2m7-3a6 6 0 11-12 0 6 6 0 0112 0z"/></svg>
-                Product Keys
-            </a>
-            <a href="{{ route('super_admin.dashboard', ['tab' => 'settings']) }}" class="sidebar-link {{ request()->routeIs('super_admin.dashboard') && request('tab') === 'settings' ? 'active' : '' }}" id="nav-settings">
-                <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.066 2.573c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.573 1.066c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 00-1.065-2.572c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31 2.37-2.37.996.608 2.296.07 2.572-1.065z"/><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"/></svg>
-                System Settings
-            </a>
-            <a href="{{ route('super_admin.dashboard', ['tab' => 'logs']) }}" class="sidebar-link {{ request()->routeIs('super_admin.dashboard') && request('tab') === 'logs' ? 'active' : '' }}" id="nav-logs">
-                <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 12h6m-6 4h6"/></svg>
-                Activity Logs
-            </a>
-
-            @endif
-
-            @if(!Auth::user()->isSuperAdmin() || session()->has('active_workshop_id'))
-            <a href="{{ route('dashboard') }}" class="sidebar-link {{ request()->routeIs('dashboard') ? 'active' : '' }}" id="nav-dashboard">
+            
+            
+                        <a href="http://127.0.0.1:8000/dashboard" class="sidebar-link active" id="nav-dashboard">
                 <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6"/></svg>
                 Dashboard
             </a>
             
 
-            <a href="{{ route('bills.index') }}" class="sidebar-link {{ request()->routeIs('bills.*') && !request()->routeIs('bills.create') ? 'active' : '' }}" id="nav-bills">
+            <a href="http://127.0.0.1:8000/bills" class="sidebar-link " id="nav-bills">
                 <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M9 14l6-6m-5.5.5h.01m4.99 5h.01M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16l3.5-2 3.5 2 3.5-2 3.5 2z"/></svg>
                 Invoices
             </a>
 
-            <a href="{{ route('bill-templates.index') }}" class="sidebar-link {{ request()->routeIs('bill-templates.*') ? 'active' : '' }}" id="nav-bill-templates">
+            <a href="http://127.0.0.1:8000/bill-templates" class="sidebar-link " id="nav-bill-templates">
                 <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M19 11H5m14 0a2 2 0 012 2v6a2 2 0 01-2 2H5a2 2 0 01-2-2v-6a2 2 0 012-2m14 0V9a2 2 0 00-2-2M5 11V9a2 2 0 012-2m0 0V5a2 2 0 012-2h6a2 2 0 012 2v2M7 7h10"/></svg>
                 Bill Templates
             </a>
 
-            <a href="{{ route('customers.index') }}" class="sidebar-link {{ request()->routeIs('customers.*') ? 'active' : '' }}" id="nav-customers">
+            <a href="http://127.0.0.1:8000/customers" class="sidebar-link " id="nav-customers">
                 <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z"/></svg>
                 Customers
             </a>
 
-            <a href="{{ route('vehicles.index') }}" class="sidebar-link {{ request()->routeIs('vehicles.*') ? 'active' : '' }}" id="nav-vehicles">
+            <a href="http://127.0.0.1:8000/vehicles" class="sidebar-link " id="nav-vehicles">
                 <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M8 17h8M8 17v4H6v-4m2 0H4.5A1.5 1.5 0 013 15.5v-3.194a1.5 1.5 0 01.138-.632L5 8h14l1.862 3.674c.09.2.138.416.138.632V15.5a1.5 1.5 0 01-1.5 1.5H16m0 0v4h-2v-4m0 0H8M7 11h.01M17 11h.01"/></svg>
                 Vehicles
             </a>
 
-            <a href="{{ route('services.index') }}" class="sidebar-link {{ request()->routeIs('services.*') ? 'active' : '' }}" id="nav-services">
+            <a href="http://127.0.0.1:8000/services" class="sidebar-link " id="nav-services">
                 <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.066 2.573c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.573 1.066c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 00-1.065-2.572c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31 2.37-2.37.996.608 2.296.07 2.572-1.065z"/><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"/></svg>
                 Services
             </a>
 
-            <a href="{{ route('products.index') }}" class="sidebar-link {{ request()->routeIs('products.*') ? 'active' : '' }}" id="nav-products">
+            <a href="http://127.0.0.1:8000/products" class="sidebar-link " id="nav-products">
                 <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M20 7l-8-4-8 4m16 0l-8 4m8-4v10l-8 4m0-10L4 7m8 4v10M4 7v10l8 4"/></svg>
                 Products / Stock
             </a>
 
-            <a href="{{ route('expenses.index') }}" class="sidebar-link {{ request()->routeIs('expenses.*') ? 'active' : '' }}" id="nav-expenses">
+            <a href="http://127.0.0.1:8000/expenses" class="sidebar-link " id="nav-expenses">
                 <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
                 Expenses
             </a>
 
-            <a href="{{ route('purchases.index') }}" class="sidebar-link {{ request()->routeIs('purchases.*') ? 'active' : '' }}" id="nav-purchases">
+            <a href="http://127.0.0.1:8000/purchases" class="sidebar-link " id="nav-purchases">
                 <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M3 3h2l.4 2M7 13h10l4-8H5.4M7 13L5.4 5M7 13l-2.293 2.293c-.63.63-.184 1.707.707 1.707H17m0 0a2 2 0 100 4 2 2 0 000-4zm-8 2a2 2 0 11-4 0 2 2 0 014 0z"/></svg>
                 Purchases
             </a>
 
-            <a href="{{ route('salaries.index') }}" class="sidebar-link {{ request()->routeIs('salaries.*') ? 'active' : '' }}" id="nav-salaries">
+            <a href="http://127.0.0.1:8000/salaries" class="sidebar-link " id="nav-salaries">
                 <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M17 9V7a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2m2 4h10a2 2 0 002-2v-6a2 2 0 00-2-2H9a2 2 0 00-2 2v6a2 2 0 002 2zm7-5a2 2 0 11-4 0 2 2 0 014 0z"/></svg>
                 Salaries
             </a>
 
-            <a href="{{ route('employees.index') }}" class="sidebar-link {{ request()->routeIs('employees.*') ? 'active' : '' }}" id="nav-employees">
+            <a href="http://127.0.0.1:8000/employees" class="sidebar-link " id="nav-employees">
                 <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"/></svg>
                 Staff
             </a>
 
-            <a href="{{ route('work-orders.index') }}" class="sidebar-link {{ request()->routeIs('work-orders.*') ? 'active' : '' }}" id="nav-work-orders">
+            <a href="http://127.0.0.1:8000/work-orders" class="sidebar-link " id="nav-work-orders">
                 <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2m-6 9l2 2 4-4"/></svg>
                 Work Orders
             </a>
 
-            <a href="{{ route('warranties.index') }}" class="sidebar-link {{ request()->routeIs('warranties.*') ? 'active' : '' }}" id="nav-warranties">
+            <a href="http://127.0.0.1:8000/warranties" class="sidebar-link " id="nav-warranties">
                 <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z"/></svg>
                 Warranty
             </a>
 
 
 
-            @if(Auth::user()->role === 'admin' || session()->has('active_workshop_id'))
-            <a href="{{ route('system.index') }}" class="sidebar-link {{ request()->routeIs('system.*') ? 'active' : '' }}" id="nav-system-tenant">
+                        <a href="http://127.0.0.1:8000/system" class="sidebar-link " id="nav-system-tenant">
                 <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.066 2.573c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.573 1.066c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 00-1.066-2.573c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31 2.37-2.37.996.608 2.296.07 2.572-1.065z"/><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"/></svg>
                 System Settings
             </a>
-            @endif
-            @endif
-        </nav>
+                                </nav>
 
     </aside>
-    @endauth
-
-    {{-- Main Content --}}
-    <div class="{{ Auth::check() ? 'lg:ml-72 justify-start' : 'w-full max-w-md mx-auto' }} {{ Auth::check() ? 'min-h-screen' : '' }} flex flex-col">
-        @auth
-        {{-- Top Bar --}}
+    
+    
+    <div class="lg:ml-72 justify-start min-h-screen flex flex-col">
+                
         <header class="sticky top-0 z-30 bg-white/80 backdrop-blur-md border-b border-slate-200/60 no-print">
             <div class="flex items-center justify-between px-4 sm:px-6 lg:px-8 h-16 gap-4">
                 <div class="flex items-center gap-3 min-w-0">
-                    {{-- Mobile Menu Toggle --}}
+                    
                     <button onclick="toggleSidebar()" class="lg:hidden p-2 -ml-2 rounded-xl hover:bg-slate-50 text-slate-500 hover:text-slate-950 transition-colors shrink-0" id="menu-toggle">
                         <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"/></svg>
                     </button>
 
-                    {{-- Page Title --}}
+                    
                     <div class="flex flex-col justify-center min-w-0">
-                        <h2 class="text-base sm:text-lg font-bold text-slate-900 leading-tight truncate">@yield('page-title', 'Dashboard')</h2>
+                        <h2 class="text-base sm:text-lg font-bold text-slate-900 leading-tight truncate">Overview</h2>
                         <p class="hidden sm:block text-[10px] sm:text-xs text-slate-500 mt-0.5 truncate">
-                            Welcome to {{ (Auth::user()->isSuperAdmin() && session()->has('active_workshop_id')) ? 'Garage Inspection' : (Auth::user()->isSuperAdmin() ? 'Suhaim Soft Control Panel' : (Auth::user()->workshop->name ?? 'Suhaim Soft Work Shop')) }}
+                            Welcome to Test Workshop
                         </p>
                     </div>
                 </div>
 
-                {{-- Right side --}}
+                
                 <div class="flex items-center gap-2 sm:gap-4 shrink-0">
 
 
                     <div class="flex items-center gap-1 sm:gap-2 px-2 py-1.5 sm:px-4 sm:py-2 bg-slate-50 rounded-lg sm:rounded-xl border border-slate-200 overflow-hidden text-ellipsis whitespace-nowrap min-w-0">
                         <svg class="hidden sm:block w-3.5 h-3.5 sm:w-4 sm:h-4 text-slate-400 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"/></svg>
-                        <span id="live-clock" class="text-[9px] sm:text-xs text-slate-600 font-semibold truncate tracking-tighter sm:tracking-normal">{{ now()->format('d M Y h:i A') }}</span>
+                        <span id="live-clock" class="text-[9px] sm:text-xs text-slate-600 font-semibold truncate tracking-tighter sm:tracking-normal">22 Jun 2026 05:24 AM</span>
                     </div>
                     
                     <div class="flex items-center gap-1.5 sm:gap-2 shrink-0">
-                        @if(Auth::user()->isSuperAdmin() || Auth::user()->workshop)
-                        <button onclick="window.location.reload()" class="hidden sm:flex items-center gap-1.5 px-2.5 py-1.5 sm:px-4 sm:py-2 bg-slate-50 rounded-lg sm:rounded-xl border border-slate-200 hover:bg-slate-100 transition-all active:scale-95" title="Reload Page">
+                                                <button onclick="window.location.reload()" class="hidden sm:flex items-center gap-1.5 px-2.5 py-1.5 sm:px-4 sm:py-2 bg-slate-50 rounded-lg sm:rounded-xl border border-slate-200 hover:bg-slate-100 transition-all active:scale-95" title="Reload Page">
                             <svg class="w-3.5 h-3.5 sm:w-4 sm:h-4 text-slate-500 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15"/></svg>
                             <span class="hidden sm:inline text-xs text-slate-600 font-semibold">Reload</span>
                         </button>
-                        @endif
-                        <form action="{{ route('logout') }}" method="POST" class="inline m-0">
-                            @csrf
-                            <button type="submit" class="inline-flex items-center justify-center gap-1.5 p-2 sm:px-4 sm:py-2 text-[10px] sm:text-xs font-semibold text-rose-600 bg-rose-50 border border-rose-100 hover:bg-rose-100/60 rounded-lg sm:rounded-xl transition-all active:scale-95" title="Sign Out">
+                                                <form action="http://127.0.0.1:8000/logout" method="POST" class="inline m-0">
+                            <input type="hidden" name="_token" value="SrDk6dNsTZ53azWe652WyMNepkUi7bSteZk6ibYF" autocomplete="off">                            <button type="submit" class="inline-flex items-center justify-center gap-1.5 p-2 sm:px-4 sm:py-2 text-[10px] sm:text-xs font-semibold text-rose-600 bg-rose-50 border border-rose-100 hover:bg-rose-100/60 rounded-lg sm:rounded-xl transition-all active:scale-95" title="Sign Out">
                                 <svg class="w-5 h-5 sm:w-4 sm:h-4 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1"/></svg>
                                 <span class="hidden sm:inline">Sign Out</span>
                             </button>
@@ -850,330 +783,310 @@
                 </div>
             </div>
         </header>
-        @endauth
+        
+                                
+                
+                
 
-        @auth
-        @php
-            $layoutWorkshop = null;
-            if (auth()->user()->isSuperAdmin() && session()->has('active_workshop_id')) {
-                $layoutWorkshop = \App\Models\Workshop::find(session('active_workshop_id'));
-            } else {
-                $layoutWorkshop = auth()->user()->workshop;
-            }
-        @endphp
-        @if($layoutWorkshop && in_array($layoutWorkshop->subscription_status, ['trial', 'training']))
-        @php
-            $workshop = $layoutWorkshop;
-            $trialEnds = \Carbon\Carbon::parse($workshop->trial_ends_at);
-            // Calculate days left, making sure it shows 0 if it expires today
-            $daysLeftDisplay = max(0, floor(now()->startOfDay()->diffInDays($trialEnds->copy()->startOfDay(), false)));
-            $isTraining = $workshop->subscription_status === 'training';
-            
-            $formattedExpiryDate = $trialEnds->isToday() 
-                ? 'Today, ' . $trialEnds->format('h:i A') 
-                : ($trialEnds->isTomorrow() 
-                    ? 'Tomorrow, ' . $trialEnds->format('h:i A') 
-                    : $trialEnds->format('d M Y, h:i A'));
-            
-            // Prefill unused key if it exists
-            $unusedKey = \App\Models\ProductKey::where('status', 'unused')->first()?->key ?? '';
-        @endphp
-        <div x-data="{ 
-            openLicenseActivationModal: {{ session('error') ? 'true' : 'false' }},
-            hideSessionError: false,
-            productKey: '{{ $unusedKey }}',
-            validationError: '',
-            submitting: false,
-            formatKey() {
-                this.hideSessionError = true;
-                var raw = this.productKey.replace(/[^A-Za-z0-9]/g, '').toUpperCase();
-                if (raw.startsWith('SUHAIM')) {
-                    var rest = raw.slice(6, 22);
-                    var fmt = 'SUHAIM';
-                    if (rest.length > 0) {
-                        fmt += '-';
-                        for (var i = 0; i < rest.length; i++) {
-                            if (i > 0 && i % 4 === 0) fmt += '-';
-                            fmt += rest[i];
-                        }
-                    }
-                    this.productKey = fmt;
-                } else {
-                    var clean = raw.slice(0, 16);
-                    var fmt = '';
-                    for (var i = 0; i < clean.length; i++) {
-                        if (i > 0 && i % 4 === 0) fmt += '-';
-                        fmt += clean[i];
-                    }
-                    this.productKey = fmt;
-                }
-                this.validationError = '';
-            },
-            validate() {
-                if (!this.productKey.trim()) {
-                    this.validationError = 'Please enter a product key.';
-                    return false;
-                }
-                var raw = this.productKey.replace(/[^A-Za-z0-9]/g, '');
-                var expected = raw.startsWith('SUHAIM') ? 22 : 16;
-                if (raw.length < expected) {
-                    this.validationError = raw.startsWith('SUHAIM') 
-                        ? 'Please enter a complete 22-character license key (including SUHAIM prefix).'
-                        : 'Please enter a complete 16-character license key.';
-                    this.submitting = false;
-                    return false;
-                }
-                this.submitting = true;
-                return true;
-            }
-        }">
-            <div class="bg-amber-50 border-b border-amber-200 px-4 py-3 sm:px-6 lg:px-8 no-print shadow-sm">
-                <div class="flex items-center justify-between gap-4">
-                    <div class="flex items-center gap-3">
-                        <svg class="w-5 h-5 text-amber-600 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"/></svg>
-                        <p class="text-sm font-semibold text-amber-800">
-                            {{ $isTraining ? 'Training' : 'Trial' }} Status:
-                            <span id="trial-countdown" class="font-bold">Loading...</span>
-                            <span class="text-xs text-amber-700 font-medium ml-1">(Expires: <span id="trial-expiry-display"></span>)</span>
-                            @if($workshop->isTrialExpired() && $workshop->restrict_features_on_expiry)
-                                <span class="ml-2 text-rose-700 bg-rose-100/80 px-2 py-0.5 rounded border border-rose-200 text-xs font-bold whitespace-nowrap">Write actions restricted</span>
-                            @endif
-                        </p>
+
+
+
+        
+        <main class="p-4 sm:p-6 lg:p-8">
+
+            <div x-data="subscriptionManager({
+    status: 'active',
+    expiry: '02 Jul 2026, 05:24 AM',
+    daysRemaining: 10,
+    totalDuration: 10,
+    subscriptionDay: 1,
+    isExpired: false,
+    hasExpiry: true,
+    keys: [
+                                ]
+})">
+<div class="max-w-7xl mx-auto space-y-5 animate-fade-in-up">
+
+    <!-- Removed redundant banner -->
+
+    <!-- Welcome & Overview Banner with Filter -->
+    <div class="relative bg-white border border-slate-200/80 rounded-3xl p-6 lg:p-8 shadow-sm overflow-hidden flex flex-col md:flex-row items-start md:items-center justify-between gap-6">
+        <!-- Background decorative blur -->
+        <div class="absolute -right-16 -bottom-16 w-64 h-64 rounded-full bg-primary-100/20 filter blur-[30px] pointer-events-none"></div>
+        
+        <div class="space-y-1.5 z-10 flex-1">
+            <h3 class="text-xl font-bold font-outfit text-slate-900 flex items-center gap-2">
+                Welcome back, Workshop Manager!
+                <span class="relative flex h-2.5 w-2.5">
+                  <span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-emerald-400 opacity-75"></span>
+                  <span class="relative inline-flex rounded-full h-2.5 w-2.5 bg-emerald-500"></span>
+                </span>
+            </h3>
+            <p class="text-sm text-slate-500 font-medium">Here is a summary of your shop's operations and finances.</p>
+        </div>
+        
+        <div class="w-full xl:w-auto flex flex-col xl:flex-row items-start xl:items-center z-10 gap-3 mt-4 md:mt-0">
+            <form method="GET" action="http://127.0.0.1:8000/dashboard" class="w-full flex flex-col xl:flex-row items-start xl:items-center gap-3">
+                <div class="relative w-full xl:w-48">
+                    <div class="pointer-events-none absolute inset-y-0 left-0 flex items-center pl-3">
+                        <svg class="w-4 h-4 text-slate-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"/></svg>
                     </div>
-                    <button type="button" @click="openLicenseActivationModal = true" class="inline-flex items-center justify-center px-4 py-1.5 text-xs font-bold text-amber-900 bg-amber-200/50 hover:bg-amber-300/60 rounded-lg transition-colors border border-amber-300/80 shrink-0">
-                        Activate Subscription
-                    </button>
+                    <select name="filter" onchange="if(this.value === 'custom') { document.getElementById('custom-date-container').classList.remove('hidden'); document.getElementById('custom-date-container').classList.add('flex'); } else { this.form.submit(); }" class="block w-full appearance-none bg-slate-50 border border-slate-200 text-slate-700 py-2.5 pl-10 pr-8 rounded-xl text-sm font-semibold shadow-sm hover:bg-slate-100 transition-colors focus:outline-none focus:ring-2 focus:ring-primary-500 focus:border-primary-500 cursor-pointer">
+                        <option value="today"  selected >Today</option>
+                        <option value="yesterday" >Yesterday</option>
+                        <option value="week" >Last 7 Days</option>
+                        <option value="month" >This Month</option>
+                        <option value="all" >All Time</option>
+                        <option value="custom" >Custom Range</option>
+                    </select>
+                    <div class="pointer-events-none absolute inset-y-0 right-0 flex items-center pr-3">
+                        <svg class="w-4 h-4 text-slate-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"/></svg>
+                    </div>
                 </div>
-            </div>
-
-            <script>
-            (function() {
-                // Expiry from server — ISO string WITHOUT timezone, so JS parses it as local time
-                var expiryISO = '{{ $trialEnds->format("Y-m-d\TH:i:s") }}';
-                var expiryDate = new Date(expiryISO);
                 
-                // Formatted string exactly as it appears in dashboard (server-rendered)
-                var formattedExpiryStr = '{{ $formattedExpiryDate }}';
-                
-                var isTraining = {{ $isTraining ? 'true' : 'false' }};
-                var label = isTraining ? 'Training' : 'Trial';
-
-                function pad(n) { return String(n).padStart(2, '0'); }
-
-                var expiryEl   = document.getElementById('trial-expiry-display');
-                var countdownEl = document.getElementById('trial-countdown');
-
-                if (expiryEl) expiryEl.textContent = formattedExpiryStr;
-
-                function updateCountdown() {
-                    var now  = new Date();
-                    var diff = expiryDate - now; // ms
-
-                    if (!countdownEl) return;
-
-                    if (diff <= 0) {
-                        countdownEl.textContent = 'Expired';
-                        countdownEl.style.color = '#be123c';
-                        return;
-                    }
-
-                    var totalSecs = Math.floor(diff / 1000);
-                    var days  = Math.floor(totalSecs / 86400);
-                    var hours = Math.floor((totalSecs % 86400) / 3600);
-                    var mins  = Math.floor((totalSecs % 3600) / 60);
-                    var secs  = totalSecs % 60;
-
-                    var text;
-                    if (days > 1) {
-                        text = days + ' Days Left ' + pad(hours) + 'h ' + pad(mins) + 'm';
-                    } else if (days === 1) {
-                        text = '1 Day Left ' + pad(hours) + 'h ' + pad(mins) + 'm';
-                    } else if (hours > 0) {
-                        text = '0 Days Left ' + pad(hours) + 'h ' + pad(mins) + 'm ' + pad(secs) + 's';
-                    } else {
-                        text = '0 Days Left 0h ' + pad(mins) + 'm ' + pad(secs) + 's';
-                        countdownEl.style.color = '#dc2626'; // urgent red
-                    }
-
-                    countdownEl.textContent = text;
-                }
-
-                updateCountdown();
-                setInterval(updateCountdown, 1000);
-            })();
-            </script>
-
-            {{-- ══ Activation Modal (Admin Side) — New UI ══ --}}
-            <div x-show="openLicenseActivationModal" x-cloak
-                 class="fixed inset-0 z-[100] flex items-end sm:items-center justify-center p-4 sm:p-0"
-                 role="dialog" aria-modal="true"
-                 x-transition:enter="transition ease-out duration-200"
-                 x-transition:enter-start="opacity-0"
-                 x-transition:enter-end="opacity-100"
-                 x-transition:leave="transition ease-in duration-150"
-                 x-transition:leave-start="opacity-100"
-                 x-transition:leave-end="opacity-0">
-
-                {{-- Backdrop --}}
-                <div class="absolute inset-0 bg-slate-800/60 transition-opacity" @click="openLicenseActivationModal = false"></div>
-
-                {{-- Simple Modal Card --}}
-                <div class="relative w-full sm:max-w-lg z-10 bg-white rounded-2xl shadow-xl overflow-hidden"
-                     x-transition:enter="transition ease-out duration-200 transform"
-                     x-transition:enter-start="translate-y-4 sm:translate-y-0 sm:scale-95 opacity-0"
-                     x-transition:enter-end="translate-y-0 sm:scale-100 opacity-100"
-                     x-transition:leave="transition ease-in duration-150 transform"
-                     x-transition:leave-start="translate-y-0 sm:scale-100 opacity-100"
-                     x-transition:leave-end="translate-y-4 sm:translate-y-0 sm:scale-95 opacity-0">
-
-                    <form id="layout-modal-logout-form" action="{{ route('logout') }}" method="POST" class="hidden">
-                        @csrf
-                    </form>
-
-                    <form action="{{ route('activate_license') }}" method="POST" @submit.prevent="validate() && $el.submit()">
-                        @csrf
-                        
-                        <div class="px-6 pt-6 pb-6 sm:px-8 sm:pt-8">
-                            {{-- Header --}}
-                            <div class="mb-5">
-                                <h3 class="text-xl font-bold text-slate-900 font-outfit">Activate License</h3>
-                                <p class="text-sm text-slate-500 mt-1.5">Redeem your product key to activate or extend subscription</p>
-                            </div>
-
-                            {{-- Session error --}}
-                            @if(session('error'))
-                            <div x-show="!hideSessionError" class="mb-5 bg-red-50 border border-red-200 rounded-lg p-3 flex items-start gap-2">
-                                <svg class="w-5 h-5 text-red-500 shrink-0 mt-0.5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M12 8v4m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
-                                <div>
-                                    <h4 class="text-sm font-bold text-red-800">Activation Error</h4>
-                                    <span class="text-sm font-medium text-red-700">{{ session('error') }}</span>
-                                </div>
-                            </div>
-                            @endif
-
-                            {{-- Key Input --}}
-                            <div>
-                                <input type="text" name="product_key" x-model="productKey" @input="formatKey()" required autocomplete="off" spellcheck="false" maxlength="27" class="w-full px-4 py-3 bg-white border rounded-xl font-mono text-base tracking-[0.1em] text-slate-900 placeholder-slate-400 focus:outline-none focus:ring-1 transition-colors" :class="validationError ? 'border-red-500 focus:border-red-500 focus:ring-red-500' : 'border-slate-300 focus:border-blue-500 focus:ring-blue-500'" placeholder="SUHAIM-XXXX-XXXX-XXXX-XXXX">
-                                <div x-show="validationError" x-text="validationError" class="mt-2 text-sm font-medium text-red-600" x-cloak></div>
-                            </div>
-                        </div>
-
-                        {{-- Footer with buttons --}}
-                        <div class="bg-white px-6 py-4 sm:px-8 sm:pb-8 flex flex-col-reverse sm:flex-row sm:items-center justify-between gap-4 rounded-b-2xl">
-                            <div class="text-sm text-slate-500 text-center sm:text-left">
-                                Need a key? Contact Suhaim Soft<br>
-                                <a href="tel:8891479505" class="text-blue-500 font-semibold hover:underline">8891479505</a> or 
-                                <a href="tel:7736708566" class="text-blue-500 font-semibold hover:underline">7736708566</a>
-                            </div>
-                            <div class="flex flex-col sm:flex-row items-stretch sm:items-center justify-end gap-3 w-full sm:w-auto">
-                                <button type="button" onclick="document.getElementById('layout-modal-logout-form').submit();"
-                                        class="px-5 py-2.5 w-full sm:w-auto rounded-xl border border-rose-200 bg-rose-50 hover:bg-rose-100 text-sm font-semibold text-rose-600 transition-colors flex items-center justify-center gap-2 focus:outline-none focus:ring-2 focus:ring-rose-200"
-                                        title="Sign Out">
-                                    <svg class="w-4 h-4 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1"/></svg>
-                                    Sign Out
-                                </button>
-                                <button type="button" @click="openLicenseActivationModal = false"
-                                        class="px-5 py-2.5 w-full sm:w-auto rounded-xl border border-slate-300 bg-white text-sm font-semibold text-slate-700 hover:bg-slate-50 transition-colors focus:outline-none focus:ring-2 focus:ring-slate-200">
-                                    Cancel
-                                </button>
-                                <button type="submit" :disabled="submitting"
-                                        class="px-5 py-2.5 w-full sm:w-auto rounded-xl bg-blue-500 hover:bg-blue-600 text-white text-sm font-semibold transition-colors flex items-center justify-center gap-2 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-1">
-                                    <div x-show="submitting" class="w-4 h-4 border-2 border-white/30 border-t-white rounded-full animate-spin" x-cloak></div>
-                                    <span x-text="submitting ? 'Activating...' : 'Activate License'"></span>
-                                </button>
-                            </div>
-                        </div>
-                    </form>
+                <div id="custom-date-container" class="hidden flex-col sm:flex-row items-center gap-2 w-full xl:w-auto">
+                    <input type="date" name="start_date" value="" class="block w-full sm:w-auto appearance-none bg-slate-50 border border-slate-200 text-slate-700 py-2.5 px-3 rounded-xl text-sm font-semibold shadow-sm focus:outline-none focus:ring-2 focus:ring-primary-500">
+                    <span class="text-slate-500 text-sm font-medium hidden sm:block">to</span>
+                    <input type="date" name="end_date" value="" class="block w-full sm:w-auto appearance-none bg-slate-50 border border-slate-200 text-slate-700 py-2.5 px-3 rounded-xl text-sm font-semibold shadow-sm focus:outline-none focus:ring-2 focus:ring-primary-500">
+                    <div class="flex items-center gap-2 w-full sm:w-auto">
+                        <button type="submit" class="btn-primary !py-2.5 !px-4 text-sm whitespace-nowrap flex-1 sm:flex-none justify-center">Apply</button>
+                                                    <button type="button" onclick="document.getElementById('custom-date-container').classList.add('hidden'); document.getElementById('custom-date-container').classList.remove('flex'); document.querySelector('select[name=\'filter\']').value='today';" class="btn-secondary !py-2.5 !px-4 text-sm whitespace-nowrap flex-1 sm:flex-none justify-center">Cancel</button>
+                                            </div>
                 </div>
+            </form>
+            <a href="http://127.0.0.1:8000/bills/create" class="btn-primary shadow-sm !py-2.5 !px-5 text-sm w-full xl:w-auto justify-center text-center whitespace-nowrap">
+                <svg class="w-4 h-4 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"/></svg>
+                Create Invoice
+            </a>
+        </div>
+    </div>
+
+    <!-- Core Metrics (Spacious 4-Card Grid) -->
+    <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
+        
+        <!-- Metric 1: Total Revenue -->
+        <div class="glass-card flex flex-col justify-between border-l-4 border-l-emerald-500 relative overflow-hidden group hover:scale-[1.01] transition-transform duration-300">
+            <div>
+                <div class="flex items-center justify-between mb-4">
+                    <span class="text-xs font-bold text-slate-400 uppercase tracking-widest">Total Income</span>
+                    <span class="badge badge-success">Paid</span>
+                </div>
+                <p class="text-2xl sm:text-3xl font-extrabold text-slate-900 font-outfit truncate animate-count-up" title="₹0.00">₹0.00</p>
             </div>
+            <div class="mt-4 pt-3 border-t border-slate-100 flex flex-wrap items-center justify-between gap-x-2 gap-y-1 text-xs text-slate-500 font-medium">
+                <span>UPI: ₹0</span>
+                <span class="hidden xs:inline text-slate-300">•</span>
+                <span>Cash: ₹0</span>
+            </div>
+        </div>
+
+        <!-- Metric 2: Total Expenses -->
+        <div class="glass-card flex flex-col justify-between border-l-4 border-l-rose-500 relative overflow-hidden group hover:scale-[1.01] transition-transform duration-300">
+            <div>
+                <div class="flex items-center justify-between mb-4">
+                    <span class="text-xs font-bold text-slate-400 uppercase tracking-widest">Outflow</span>
+                    <span class="badge badge-danger">Expenses</span>
+                </div>
+                <p class="text-2xl sm:text-3xl font-extrabold text-slate-900 font-outfit truncate animate-count-up" title="₹0.00">₹0.00</p>
+            </div>
+            <div class="mt-4 pt-3 border-t border-slate-100 flex flex-wrap items-center justify-between gap-x-2 gap-y-1 text-xs text-slate-500 font-medium">
+                <span>Shop: ₹0</span>
+                <span class="hidden xs:inline text-slate-300">•</span>
+                <span>Salaries: ₹0</span>
+            </div>
+        </div>
+
+        <!-- Metric 3: Net Margin -->
+        <div class="glass-card flex flex-col justify-between border-l-4 border-l-violet-500 relative overflow-hidden group hover:scale-[1.01] transition-transform duration-300">
+            <div>
+                <div class="flex items-center justify-between mb-4">
+                    <span class="text-xs font-bold text-slate-400 uppercase tracking-widest">Net Profit</span>
+                    <span class="badge badge-purple">Margin</span>
+                </div>
+                <p class="text-2xl sm:text-3xl font-extrabold font-outfit truncate animate-count-up text-slate-900" title="₹0.00">
+                    ₹0.00
+                </p>
+            </div>
+            <div class="mt-4 pt-3 border-t border-slate-100 text-xs text-slate-500 font-medium">
+                <span>Total Shop Balance Margin</span>
+            </div>
+        </div>
+
+        <!-- Metric 4: Work Orders -->
+        <div class="glass-card flex flex-col justify-between border-l-4 border-l-sky-500 relative overflow-hidden group hover:scale-[1.01] transition-transform duration-300">
+            <div>
+                <div class="flex items-center justify-between mb-4">
+                    <span class="text-xs font-bold text-slate-400 uppercase tracking-widest">Job Queue</span>
+                    <span class="badge badge-info">Operations</span>
+                </div>
+                <p class="text-2xl sm:text-3xl font-extrabold text-slate-900 font-outfit truncate animate-count-up">0</p>
+            </div>
+            <div class="mt-4 pt-3 border-t border-slate-100 flex flex-wrap items-center justify-between gap-x-2 gap-y-1 text-xs text-slate-500 font-medium">
+                <span class="text-amber-600 font-semibold">0 Pending</span>
+                <span class="hidden xs:inline text-slate-300">•</span>
+                <span>0 Services Offered</span>
+            </div>
+        </div>
+
+    </div>
+
+    <!-- Top Statistics Row -->
+    <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-4 sm:gap-6">
+        <div class="glass-card flex items-center gap-4 p-5">
+            <div class="w-12 h-12 rounded-full bg-blue-50 text-blue-600 flex items-center justify-center shrink-0">
+                <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z"/></svg>
+            </div>
+            <div>
+                <p class="text-xs font-bold text-slate-500 uppercase tracking-wider">Active Warranties</p>
+                <p class="text-2xl font-black text-slate-800">0</p>
+            </div>
+        </div>
+        <div class="glass-card flex items-center gap-4 p-5">
+            <div class="w-12 h-12 rounded-full bg-emerald-50 text-emerald-600 flex items-center justify-center shrink-0">
+                <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z"/></svg>
+            </div>
+            <div>
+                <p class="text-xs font-bold text-slate-500 uppercase tracking-wider">Total Customers</p>
+                <p class="text-2xl font-black text-slate-800">0</p>
+            </div>
+        </div>
+        <div class="glass-card flex items-center gap-4 p-5">
+            <div class="w-12 h-12 rounded-full bg-violet-50 text-violet-600 flex items-center justify-center shrink-0">
+                <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7h12m0 0l-4-4m4 4l-4 4m0 6H4m0 0l4 4m-4-4l4-4"/></svg>
+            </div>
+            <div>
+                <p class="text-xs font-bold text-slate-500 uppercase tracking-wider">Registered Vehicles</p>
+                <p class="text-2xl font-black text-slate-800">0</p>
+            </div>
+        </div>
+        <div class="glass-card flex items-center gap-4 p-5">
+            <div class="w-12 h-12 rounded-full bg-amber-50 text-amber-600 flex items-center justify-center shrink-0">
+                <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 13.255A23.931 23.931 0 0112 15c-3.183 0-6.22-.62-9-1.745M16 6V4a2 2 0 00-2-2h-4a2 2 0 00-2 2v2m4 6h.01M5 20h14a2 2 0 002-2V8a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"/></svg>
+            </div>
+            <div>
+                <p class="text-xs font-bold text-slate-500 uppercase tracking-wider">Active Staff</p>
+                <p class="text-2xl font-black text-slate-800">0</p>
+            </div>
+        </div>
+    </div>
+
+    <!-- Main Content Layout Split (2:1 Column Split) -->
+    <div class="grid grid-cols-1 lg:grid-cols-12 gap-5">
+        
+        <!-- Left Side: Core Lists & Activity (Col-Span-8) -->
+        <div class="lg:col-span-8 flex flex-col gap-5">
+            
+            <!-- Recent Invoices / Bills Card -->
+            <div class="glass-card !p-0 overflow-hidden shrink-0">
+                <div class="p-6 border-b border-slate-100 flex items-center justify-between bg-white flex-wrap gap-4">
+                    <h3 class="text-base font-bold text-slate-900 font-outfit">Recent Invoices</h3>
+                    <a href="http://127.0.0.1:8000/bills" class="text-sm font-semibold text-primary-600 hover:text-primary-700 transition-colors">View All Bills →</a>
+                </div>
+                                <div class="text-center py-8 px-6">
+                    <svg class="w-12 h-12 text-slate-300 mx-auto mb-3" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M9 14l6-6m-5.5.5h.01m4.99 5h.01M19 21V5a2 2 0 00-2 2v16l3.5-2 3.5 2 3.5-2 3.5 2z"/></svg>
+                    <p class="text-slate-500 font-semibold">No invoices recorded yet. <a href="http://127.0.0.1:8000/bills/create" class="text-primary-600 hover:underline">Generate a bill</a></p>
+                </div>
+                            </div>
+
+            <!-- Active Work Orders Card -->
+            <div class="glass-card !p-0 overflow-hidden flex flex-col flex-1">
+                <div class="p-6 border-b border-slate-100 flex items-center justify-between bg-white flex-wrap gap-4 shrink-0">
+                    <h3 class="text-base font-bold text-slate-900 font-outfit">Active Shop Jobs</h3>
+                    <a href="http://127.0.0.1:8000/work-orders" class="text-sm font-semibold text-primary-600 hover:text-primary-700 transition-colors">View All Jobs →</a>
+                </div>
+                                <div class="text-center py-8 px-6 flex flex-col items-center justify-center flex-1 h-full min-h-[200px]">
+                    <svg class="w-12 h-12 text-slate-300 mx-auto mb-3" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2"/></svg>
+                    <p class="text-slate-500 font-semibold">No active jobs in the queue.</p>
+                </div>
+                            </div>
 
         </div>
 
-        @endif
-        
-        @php
-            $alertUser = auth()->user();
-            $alertWorkshop = null;
-            if ($alertUser) {
-                if ($alertUser->isSuperAdmin() && session()->has('active_workshop_id')) {
-                    $alertWorkshop = \App\Models\Workshop::find(session('active_workshop_id'));
-                } else {
-                    $alertWorkshop = $alertUser->workshop;
-                }
-            }
-        @endphp
-        
-        @if($alertWorkshop && $alertWorkshop->alert_message)
-            @if(!$alertWorkshop->alert_expires_at || now()->lessThan($alertWorkshop->alert_expires_at))
-            <div x-data="{ openSystemAlert: false }" x-init="
-                    const alertKey = 'admin_alert_' + {{ $alertWorkshop->id }} + '_' + '{{ md5($alertWorkshop->alert_message) }}';
-                    if (!sessionStorage.getItem(alertKey)) {
-                        openSystemAlert = true;
-                        sessionStorage.setItem(alertKey, 'true');
-                        try {
-                            const audioCtx = new (window.AudioContext || window.webkitAudioContext)();
-                            function playBeep(freq, time, type) {
-                                const osc = audioCtx.createOscillator();
-                                const gain = audioCtx.createGain();
-                                osc.type = type;
-                                osc.frequency.setValueAtTime(freq, audioCtx.currentTime);
-                                osc.connect(gain);
-                                gain.connect(audioCtx.destination);
-                                osc.start(audioCtx.currentTime + time);
-                                gain.gain.exponentialRampToValueAtTime(0.00001, audioCtx.currentTime + time + 0.3);
-                                osc.stop(audioCtx.currentTime + time + 0.4);
-                            }
-                            playBeep(523.25, 0.1, 'sine');
-                            playBeep(659.25, 0.25, 'sine');
-                            playBeep(783.99, 0.4, 'sine');
-                        } catch(e) {}
-                    }
-                ">
-                
-                {{-- Modal Overlay --}}
-                <div x-show="openSystemAlert" x-cloak class="fixed inset-0 z-[100] flex items-center justify-center p-4 bg-slate-900/60 backdrop-blur-sm">
-                    <div class="bg-white rounded-2xl shadow-2xl w-full max-w-md overflow-hidden transform transition-all"
-                         @click.away="openSystemAlert = false"
-                         x-transition:enter="ease-out duration-300"
-                         x-transition:enter-start="opacity-0 translate-y-4 sm:translate-y-0 sm:scale-95"
-                         x-transition:enter-end="opacity-100 translate-y-0 sm:scale-100"
-                         x-transition:leave="ease-in duration-200"
-                         x-transition:leave-start="opacity-100 translate-y-0 sm:scale-100"
-                         x-transition:leave-end="opacity-0 translate-y-4 sm:translate-y-0 sm:scale-95">
-                        
-                        <div class="bg-amber-50 p-6 border-b border-amber-100 text-center">
-                            <div class="mx-auto flex items-center justify-center h-16 w-16 rounded-full bg-amber-100 mb-4">
-                                <svg class="h-8 w-8 text-amber-600 animate-pulse" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"/></svg>
-                            </div>
-                            <h3 class="text-xl font-extrabold text-amber-900">Message from System Admin</h3>
-                        </div>
-                        <div class="p-6 text-center">
-                            <p class="text-base font-medium text-slate-700 whitespace-pre-wrap break-words">{{ $alertWorkshop->alert_message }}</p>
-                        </div>
-                        <div class="p-4 bg-slate-50 border-t border-slate-100 flex justify-center">
-                            <button @click="openSystemAlert = false" type="button" class="px-6 py-2.5 bg-amber-600 hover:bg-amber-700 text-white font-bold rounded-xl shadow-sm transition-colors w-full sm:w-auto">
-                                I Understand
-                            </button>
-                        </div>
-                    </div>
+        <!-- Right Side: Sidebar & Fast Actions (Col-Span-4) -->
+        <div class="lg:col-span-4 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-1 gap-5 lg:space-y-5 lg:gap-0">
+            
+            <!-- Quick Actions Panel -->
+            <div class="glass-card space-y-4 md:col-span-2 lg:col-span-1">
+                <h3 class="text-sm font-bold text-slate-900 uppercase tracking-wider">Quick Actions</h3>
+                <div class="grid grid-cols-1 sm:grid-cols-3 lg:grid-cols-1 gap-3">
+                    <a href="http://127.0.0.1:8000/bills/create" class="btn-primary !justify-start !py-3 w-full shadow-sm text-sm">
+                        <svg class="w-4 h-4 mr-2 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"/></svg>
+                        <span class="truncate">Create New Invoice</span>
+                    </a>
+                    <a href="http://127.0.0.1:8000/work-orders/create" class="btn-secondary !justify-start !py-3 w-full text-sm">
+                        <svg class="w-4 h-4 mr-2 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2"/></svg>
+                        <span class="truncate">Log Repair Order</span>
+                    </a>
+                    <a href="http://127.0.0.1:8000/customers/create" class="btn-secondary !justify-start !py-3 w-full text-sm">
+                        <svg class="w-4 h-4 mr-2 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M18 9v3m0 0v3m0-3h3m-3 0h-3m-2-5a4 4 0 11-8 0 4 4 0 018 0zM3 20a6 6 0 0112 0v1H3v-1z"/></svg>
+                        <span class="truncate">New Customer</span>
+                    </a>
                 </div>
             </div>
-            @endif
-        @endif
-        @endauth
+
+            <!-- Low Stock Alerts -->
+            <div class="glass-card">
+                <div class="flex items-center justify-between mb-4">
+                    <h3 class="text-sm font-bold text-slate-900 uppercase tracking-wider">Low Stock Alerts</h3>
+                    <span class="badge badge-danger">0</span>
+                </div>
+                                <p class="text-sm text-slate-500 text-center py-4 font-semibold">All inventory levels healthy ✓</p>
+                            </div>
+
+            <!-- Subscription & Trial (Moved back to Right Sidebar) -->
+                        <div>
+                <div class="glass-card">
+                <h3 class="text-sm font-bold text-slate-900 uppercase tracking-wider mb-4 flex items-center justify-between">
+                    <span>Subscription &amp; Trial</span>
+                    <span class="badge uppercase text-[10px]" :class="status === 'active' || status === 'fix' || status === 'fixed' ? 'badge-success' : 'badge-danger'" x-text="status"></span>
+                </h3>
+                <div class="space-y-3">
+                                            <div class="flex justify-between items-center text-xs pb-1.5 border-b border-slate-100">
+                            <span class="text-slate-500 font-semibold">Account Status</span>
+                            <span class="font-bold uppercase tracking-wider text-xs" :class="status === 'active' || status === 'fix' || status === 'fixed' ? 'text-emerald-600' : 'text-rose-600'" x-text="status"></span>
+                        </div>
+
+                        <div class="flex justify-between items-center text-xs pb-1.5 border-b border-slate-100">
+                            <span class="text-slate-500 font-semibold">Expiration Date</span>
+                            <span class="font-bold text-slate-700" x-text="expiry"></span>
+                        </div>
+
+                        <div class="flex justify-between items-center text-xs pb-1.5 border-b border-slate-100">
+                            <span class="text-slate-500 font-semibold">Time Remaining</span>
+                            <span x-show="isExpired" class="text-rose-600 font-bold bg-rose-50 px-2 py-0.5 rounded border border-rose-100 animate-pulse">Expired</span>
+                            <span x-show="!isExpired" class="text-slate-700 font-bold bg-blue-50 text-blue-700 px-2 py-0.5 rounded border border-blue-100">
+                                <span x-text="hasExpiry ? daysRemaining + ' Days Left' : 'Active &amp; Unlimited'"></span>
+                            </span>
+                        </div>
+                        <div class="flex justify-between items-center text-xs pb-1.5 border-b border-slate-100">
+                            <span class="text-slate-500 font-semibold">Total Duration</span>
+                            <span class="font-bold text-slate-700" x-text="totalDuration + ' Days'"></span>
+                        </div>
+
+                        <div class="flex justify-between items-center text-xs pb-1.5 border-b border-slate-100">
+                            <span class="text-slate-500 font-semibold">Operating Time</span>
+                            <span class="font-bold text-slate-700" x-text="'Day ' + subscriptionDay"></span>
+                        </div>
+
+                                                <div class="mt-4 p-3 rounded-xl text-center text-xs bg-red-50 border border-red-100">
+                                                            <p class="font-bold text-red-700">Please contact Suhaim Soft at 8891479505 for an active key.</p>
+                                                    </div>
+                        
+                                    </div>
+                </div> <!-- End of glass-card -->
+            </div>
+                    </div>
+    </div>
+</div>
 
 
+    </div>
+</div>
 
-
-
-        {{-- Page Content --}}
-        <main class="{{ Auth::check() ? 'p-4 sm:p-6 lg:p-8' : '' }}">
-
-            @yield('content')
         </main>
     </div>
 
-    {{-- Sidebar Toggle Script --}}
+    
     <script>
         function toggleSidebar() {
             const sidebar = document.getElementById('sidebar');
@@ -1202,7 +1115,7 @@
         }
         setInterval(updateClock, 1000);
     </script>
-    {{-- PWA Service Worker Registration & Custom Install Banner --}}
+    
     <script>
         let deferredAppPrompt;
         const installAppContainer = document.getElementById('pwa-install-container');
@@ -1255,7 +1168,7 @@
         });
     </script>
 
-    {{-- Global Toast Notifications --}}
+    
     <div x-data="globalToastManager()" x-init="init()" class="fixed top-4 right-4 z-[9999] flex flex-col gap-2 max-w-sm w-full pointer-events-none" x-cloak>
         <template x-for="t in toasts" :key="t.id">
             <div x-show="t.show"
@@ -1291,15 +1204,7 @@
             return {
                 toasts: [],
                 init() {
-                    @if(session('success'))
-                        this.add('success', 'Success', "{{ session('success') }}");
-                    @endif
-                    @if(session('error'))
-                        @if(session('error') !== 'Incorrect activation key. Please enter a valid product key.')
-                            this.add('error', 'Error', "{{ session('error') }}");
-                        @endif
-                    @endif
-                    
+                                                            
                     window.addEventListener('toast', (e) => {
                         this.add(e.detail.type, e.detail.title, e.detail.message);
                     });
@@ -1343,7 +1248,19 @@
             }
         };
     </script>
-    @stack('modals')
-    @stack('scripts')
+        <script>
+    function subscriptionManager(initialData) {
+        return {
+            status: initialData.status,
+            expiry: initialData.expiry,
+            daysRemaining: initialData.daysRemaining,
+            totalDuration: initialData.totalDuration,
+            subscriptionDay: initialData.subscriptionDay,
+            isExpired: initialData.isExpired,
+            hasExpiry: initialData.hasExpiry,
+            keys: initialData.keys || []
+        }
+    }
+</script>
 </body>
 </html>

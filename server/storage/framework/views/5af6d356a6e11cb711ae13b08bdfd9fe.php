@@ -876,27 +876,53 @@
                 : ($trialEnds->isTomorrow() 
                     ? 'Tomorrow, ' . $trialEnds->format('h:i A') 
                     : $trialEnds->format('d M Y, h:i A'));
+            
+            // Prefill unused key if it exists
+            $unusedKey = \App\Models\ProductKey::where('status', 'unused')->first()?->key ?? '';
         ?>
         <div x-data="{ 
             openLicenseActivationModal: <?php echo e(session('error') ? 'true' : 'false'); ?>,
             hideSessionError: false,
-            productKey: '',
+            productKey: '<?php echo e($unusedKey); ?>',
             validationError: '',
             submitting: false,
             formatKey() {
                 this.hideSessionError = true;
-                var raw = this.productKey.replace(/[^A-Za-z0-9]/g, '').toUpperCase().slice(0, 16);
-                var fmt = '';
-                for (var i = 0; i < raw.length; i++) {
-                    if (i > 0 && i % 4 === 0) fmt += '-';
-                    fmt += raw[i];
+                var raw = this.productKey.replace(/[^A-Za-z0-9]/g, '').toUpperCase();
+                if (raw.startsWith('SUHAIM')) {
+                    var rest = raw.slice(6, 22);
+                    var fmt = 'SUHAIM';
+                    if (rest.length > 0) {
+                        fmt += '-';
+                        for (var i = 0; i < rest.length; i++) {
+                            if (i > 0 && i % 4 === 0) fmt += '-';
+                            fmt += rest[i];
+                        }
+                    }
+                    this.productKey = fmt;
+                } else {
+                    var clean = raw.slice(0, 16);
+                    var fmt = '';
+                    for (var i = 0; i < clean.length; i++) {
+                        if (i > 0 && i % 4 === 0) fmt += '-';
+                        fmt += clean[i];
+                    }
+                    this.productKey = fmt;
                 }
-                this.productKey = fmt;
                 this.validationError = '';
             },
             validate() {
                 if (!this.productKey.trim()) {
                     this.validationError = 'Please enter a product key.';
+                    return false;
+                }
+                var raw = this.productKey.replace(/[^A-Za-z0-9]/g, '');
+                var expected = raw.startsWith('SUHAIM') ? 22 : 16;
+                if (raw.length < expected) {
+                    this.validationError = raw.startsWith('SUHAIM') 
+                        ? 'Please enter a complete 22-character license key (including SUHAIM prefix).'
+                        : 'Please enter a complete 16-character license key.';
+                    this.submitting = false;
                     return false;
                 }
                 this.submitting = true;
@@ -1029,8 +1055,7 @@
 
                             
                             <div>
-                                <label class="block text-sm font-semibold text-slate-700 mb-2">License Key <span class="text-red-500">*</span></label>
-                                <input type="text" name="product_key" x-model="productKey" @input="formatKey()" required autocomplete="off" spellcheck="false" maxlength="19" class="w-full px-4 py-3 bg-white border rounded-xl font-mono text-base tracking-[0.1em] text-slate-900 placeholder-slate-400 focus:outline-none focus:ring-1 transition-colors" :class="validationError ? 'border-red-500 focus:border-red-500 focus:ring-red-500' : 'border-slate-300 focus:border-blue-500 focus:ring-blue-500'" placeholder="XXXX-XXXX-XXXX-XXXX">
+                                <input type="text" name="product_key" x-model="productKey" @input="formatKey()" required autocomplete="off" spellcheck="false" maxlength="27" class="w-full px-4 py-3 bg-white border rounded-xl font-mono text-base tracking-[0.1em] text-slate-900 placeholder-slate-400 focus:outline-none focus:ring-1 transition-colors" :class="validationError ? 'border-red-500 focus:border-red-500 focus:ring-red-500' : 'border-slate-300 focus:border-blue-500 focus:ring-blue-500'" placeholder="SUHAIM-XXXX-XXXX-XXXX-XXXX">
                                 <div x-show="validationError" x-text="validationError" class="mt-2 text-sm font-medium text-red-600" x-cloak></div>
                             </div>
                         </div>

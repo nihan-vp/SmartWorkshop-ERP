@@ -404,13 +404,21 @@
                             <span class="font-bold text-slate-700" x-text="'Day ' + subscriptionDay"></span>
                         </div>
 
-                        <div class="mt-4 p-3 bg-red-50 border border-red-100 rounded-xl text-center text-xs">
-                            <p class="font-bold text-red-700">Please contact Suhaim Soft at 8891479505 for an active key.</p>
+                        <?php
+                            $unusedKey = \App\Models\ProductKey::where('status', 'unused')->first();
+                        ?>
+                        <div class="mt-4 p-3 rounded-xl text-center text-xs <?php echo e($unusedKey ? 'bg-emerald-50 border border-emerald-100' : 'bg-red-50 border border-red-100'); ?>">
+                            <?php if($unusedKey): ?>
+                                <p class="font-bold text-emerald-800">
+                                    Your activation key is ready: <br>
+                                    <span class="font-mono bg-white px-2 py-0.5 rounded border border-emerald-200 select-all font-extrabold tracking-wider text-sm block my-1.5"><?php echo e($unusedKey->key); ?></span>
+                                    <span class="text-[10px] text-emerald-600 font-semibold block mt-1">Copy this key, then click "Activate Subscription" at the top to paste and activate.</span>
+                                </p>
+                            <?php else: ?>
+                                <p class="font-bold text-red-700">Please contact Suhaim Soft at 8891479505 for an active key.</p>
+                            <?php endif; ?>
                         </div>
                         
-                        <button @click="showModal = true" class="mt-3 w-full bg-primary-600 hover:bg-primary-700 text-white font-semibold py-2 px-4 rounded-xl transition-colors text-sm">
-                            Activate License
-                        </button>
                     <?php endif; ?>
                 </div>
                 </div> <!-- End of glass-card -->
@@ -420,75 +428,7 @@
     </div>
 </div>
 
-<?php if($workshop): ?>
-<!-- Activation Modal -->
-<div x-show="showModal" class="fixed inset-0 z-[100] overflow-y-auto" x-cloak>
-    <div class="flex items-end justify-center min-h-screen pt-4 px-4 pb-20 text-center sm:block sm:p-0">
-        <div x-show="showModal" x-transition.opacity class="fixed inset-0 transition-opacity" aria-hidden="true" @click="showModal = false">
-            <div class="absolute inset-0 bg-slate-900 opacity-75"></div>
-        </div>
-        <span class="hidden sm:inline-block sm:align-middle sm:h-screen" aria-hidden="true">&#8203;</span>
-        <div x-show="showModal" x-transition class="inline-block align-bottom bg-white rounded-2xl text-left overflow-hidden shadow-xl transform transition-all sm:my-8 sm:align-middle sm:max-w-lg sm:w-full">
-            <form id="dashboard-modal-logout-form" action="<?php echo e(route('logout')); ?>" method="POST" class="hidden">
-                <?php echo csrf_field(); ?>
-            </form>
-            <div class="bg-white px-4 pt-5 pb-4 sm:p-6 sm:pb-4">
-                <div class="sm:flex sm:items-start">
-                    <div class="mt-3 text-center sm:mt-0 sm:text-left w-full">
-                        <h3 class="text-lg leading-6 font-bold text-slate-900 font-outfit" id="modal-title">
-                            Activate License
-                        </h3>
-                        <div class="mt-2">
-                            <p class="text-sm text-slate-500 mb-4">
-                                Redeem your product key to activate or extend subscription
-                            </p>
-                            
-                            <div x-show="serverError" class="mb-5 bg-red-50 border border-red-200 rounded-lg p-3 flex items-start gap-2" x-cloak>
-                                <svg class="w-5 h-5 text-red-500 shrink-0 mt-0.5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M12 8v4m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
-                                <div>
-                                    <h4 class="text-sm font-bold text-red-800">Activation Error</h4>
-                                    <span class="text-sm font-medium text-red-700" x-text="serverError"></span>
-                                </div>
-                            </div>
 
-                            <div class="space-y-4">
-                                <div>
-                                    <label class="block text-sm font-semibold text-slate-700 mb-2">License Key <span class="text-red-500">*</span></label>
-                                    <input type="text" x-model="productKey" @input="formatKey()" required autocomplete="off" spellcheck="false" maxlength="19" class="w-full px-4 py-3 bg-white border border-slate-300 rounded-xl font-mono text-base tracking-[0.1em] text-slate-900 placeholder-slate-400 focus:outline-none focus:border-blue-500 focus:ring-1 focus:ring-blue-500 transition-colors" placeholder="XXXX-XXXX-XXXX-XXXX">
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-            <div class="bg-white px-6 py-4 sm:px-8 sm:pb-8 flex flex-col-reverse sm:flex-row sm:items-center justify-between gap-4 rounded-b-2xl">
-                <div class="text-sm text-slate-500 text-center sm:text-left">
-                    Need a key? Contact Suhaim Soft<br>
-                    <a href="tel:8891479505" class="text-blue-500 font-semibold hover:underline">8891479505</a> or 
-                    <a href="tel:7736708566" class="text-blue-500 font-semibold hover:underline">7736708566</a>
-                </div>
-                <div class="flex flex-col sm:flex-row items-stretch sm:items-center justify-end gap-3 w-full sm:w-auto">
-                    <button type="button" onclick="document.getElementById('dashboard-modal-logout-form').submit();"
-                            class="px-5 py-2.5 w-full sm:w-auto rounded-xl border border-rose-200 bg-rose-50 hover:bg-rose-100 text-sm font-semibold text-rose-600 transition-colors flex items-center justify-center gap-2 focus:outline-none focus:ring-2 focus:ring-rose-200"
-                            title="Sign Out">
-                        <svg class="w-4 h-4 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1"/></svg>
-                        Sign Out
-                    </button>
-                    <button type="button" @click="showModal = false" class="px-5 py-2.5 w-full sm:w-auto rounded-xl border border-slate-300 bg-white text-sm font-semibold text-slate-700 hover:bg-slate-50 transition-colors focus:outline-none focus:ring-2 focus:ring-slate-200">
-                        Cancel
-                    </button>
-                    <button type="button" @click="redeemKey()" :disabled="submitting || !productKey.trim()" class="px-5 py-2.5 w-full sm:w-auto rounded-xl bg-blue-500 hover:bg-blue-600 text-white text-sm font-semibold transition-colors flex items-center justify-center gap-2 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-1 disabled:opacity-50 disabled:cursor-not-allowed">
-                        <span x-show="!submitting">Activate License</span>
-                        <div x-show="submitting" class="w-4 h-4 border-2 border-white/30 border-t-white rounded-full animate-spin"></div>
-                        <span x-show="submitting">Activating...</span>
-                    </button>
-                </div>
-            </div>
-        </div>
-    </div>
-</div>
-</div>
-<?php endif; ?>
     </div>
 </div>
 
@@ -498,10 +438,6 @@
 <script>
     function subscriptionManager(initialData) {
         return {
-            showModal: false,
-            submitting: false,
-            productKey: '',
-            serverError: '',
             status: initialData.status,
             expiry: initialData.expiry,
             daysRemaining: initialData.daysRemaining,
@@ -509,78 +445,7 @@
             subscriptionDay: initialData.subscriptionDay,
             isExpired: initialData.isExpired,
             hasExpiry: initialData.hasExpiry,
-            keys: initialData.keys || [],
-            
-            formatKey() {
-                this.serverError = '';
-                var raw = this.productKey.replace(/[^A-Za-z0-9]/g, '').toUpperCase().slice(0, 16);
-                var fmt = '';
-                for (var i = 0; i < raw.length; i++) {
-                    if (i > 0 && i % 4 === 0) fmt += '-';
-                    fmt += raw[i];
-                }
-                this.productKey = fmt;
-            },
-            
-            redeemKey() {
-                this.serverError = '';
-                if (!this.productKey.trim()) {
-                    this.validationError = 'Please enter a product key.';
-                    return;
-                }
-                
-                this.submitting = true;
-                
-                axios.post('<?php echo e(route('activate_license')); ?>', {
-                    product_key: this.productKey
-                }, {
-                    headers: {
-                        'Accept': 'application/json'
-                    }
-                })
-                .then(response => {
-                    const data = response.data;
-                    if (data.success) {
-                        this.status = data.workshop.subscription_status;
-                        this.expiry = data.workshop.trial_ends_at;
-                        this.daysRemaining = data.workshop.days_remaining;
-                        this.totalDuration = data.workshop.total_duration;
-                        this.subscriptionDay = data.workshop.subscription_day;
-                        this.isExpired = data.workshop.is_expired;
-                        this.hasExpiry = data.workshop.has_expiry;
-                        this.keys = data.redeemed_keys.map(k => ({
-                            key: k.key,
-                            duration: k.duration_days,
-                            used_at: k.used_at
-                        }));
-                        this.productKey = '';
-                        
-                        window.dispatchEvent(new CustomEvent('toast', {
-                            detail: {
-                                type: 'success',
-                                title: 'Success',
-                                message: data.message || 'Subscription updated successfully!'
-                            }
-                        }));
-                        
-                        setTimeout(() => {
-                            this.showModal = false;
-                        }, 1000);
-                    }
-                })
-                .catch(error => {
-                    let errorMsg = 'Failed to activate subscription. Please try again.';
-                    if (error.response && error.response.data && error.response.data.error) {
-                        errorMsg = error.response.data.error;
-                    } else if (error.response && error.response.data && error.response.data.message) {
-                        errorMsg = error.response.data.message;
-                    }
-                    this.serverError = errorMsg;
-                })
-                .finally(() => {
-                    this.submitting = false;
-                });
-            }
+            keys: initialData.keys || []
         }
     }
 </script>
