@@ -880,7 +880,7 @@
             $unusedKey = \App\Models\ProductKey::where('status', 'unused')->first()?->key ?? '';
         @endphp
         <div x-data="{ 
-            openLicenseActivationModal: {{ session('error') ? 'true' : 'false' }},
+            openLicenseActivationModal: {{ (session('error') || $workshop->isTrialExpired()) ? 'true' : 'false' }},
             hideSessionError: false,
             productKey: '{{ $unusedKey }}',
             validationError: '',
@@ -927,7 +927,7 @@
                 this.submitting = true;
                 return true;
             }
-        }">
+        }" @trial-expired.window="openLicenseActivationModal = true">
             <div class="bg-amber-50 border-b border-amber-200 px-4 py-3 sm:px-6 lg:px-8 no-print shadow-sm">
                 <div class="flex items-center justify-between gap-4">
                     <div class="flex items-center gap-3">
@@ -947,7 +947,11 @@
                             @endif
                         </div>
                     </div>
-
+                    <div class="shrink-0">
+                        <button @click="openLicenseActivationModal = true" class="inline-flex items-center justify-center px-4 py-1.5 text-xs font-bold text-amber-900 bg-amber-100 hover:bg-amber-200/80 border border-amber-300 rounded-lg transition-all active:scale-95 shadow-sm">
+                            Activate License
+                        </button>
+                    </div>
                 </div>
             </div>
 
@@ -979,6 +983,7 @@
                     if (diff <= 0) {
                         countdownEl.textContent = 'Expired';
                         countdownEl.style.color = '#be123c';
+                        window.dispatchEvent(new CustomEvent('trial-expired'));
                         return;
                     }
 
