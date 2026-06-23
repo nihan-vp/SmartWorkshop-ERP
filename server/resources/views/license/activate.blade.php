@@ -137,7 +137,6 @@
                             autocomplete="off"
                             spellcheck="false"
                             maxlength="27"
-                            value="{{ \App\Models\ProductKey::where('status', 'unused')->first()?->key ?? '' }}"
                             class="w-full px-4 py-3 bg-white border border-slate-300 rounded-xl font-mono text-base tracking-[0.1em] text-slate-900 placeholder-slate-400 focus:outline-none focus:ring-1 focus:border-blue-500 focus:ring-blue-500 transition-colors"
                             placeholder="SUHAIM-XXXX-XXXX-XXXX-XXXX"
                         >

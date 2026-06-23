@@ -523,7 +523,6 @@
                     <div class="input-row">
                         <input type="text" name="product_key" required
                                class="act-input"
-                               value="{{ \App\Models\ProductKey::where('status', 'unused')->first()?->key ?? '' }}"
                                placeholder="SUHAIM-XXXX-XXXX-XXXX-XXXX">
                         <button type="submit" class="btn-activate">Register</button>
                     </div>

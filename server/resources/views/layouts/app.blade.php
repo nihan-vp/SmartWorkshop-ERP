@@ -861,23 +861,30 @@
                 $layoutWorkshop = auth()->user()->workshop;
             }
         @endphp
-        @if($layoutWorkshop && in_array($layoutWorkshop->subscription_status, ['trial', 'training', 'active']))
+        @if($layoutWorkshop)
         @php
             $workshop = $layoutWorkshop;
-            $trialEnds = \Carbon\Carbon::parse($workshop->trial_ends_at);
-            // Calculate days left, making sure it shows 0 if it expires today
-            $daysLeftDisplay = max(0, floor(now()->startOfDay()->diffInDays($trialEnds->copy()->startOfDay(), false)));
-            $isTraining = $workshop->subscription_status === 'training';
+            $showCountdownBanner = in_array($workshop->subscription_status, ['trial', 'training']);
+            $showAlertBanner = $workshop->alert_message && !$workshop->alert_dismissed && (!$workshop->alert_expires_at || now()->lessThan($workshop->alert_expires_at));
+            
+            $unusedKey = '';
+            
+            $trialEnds = null;
+            $daysLeftDisplay = 0;
+            $isTraining = false;
             $isActive = $workshop->subscription_status === 'active';
+            $formattedExpiryDate = '';
             
-            $formattedExpiryDate = $trialEnds->isToday() 
-                ? 'Today, ' . $trialEnds->format('h:i A') 
-                : ($trialEnds->isTomorrow() 
-                    ? 'Tomorrow, ' . $trialEnds->format('h:i A') 
-                    : $trialEnds->format('d M Y, h:i A'));
-            
-            // Prefill unused key if it exists
-            $unusedKey = \App\Models\ProductKey::where('status', 'unused')->first()?->key ?? '';
+            if ($showCountdownBanner && $workshop->trial_ends_at) {
+                $trialEnds = \Carbon\Carbon::parse($workshop->trial_ends_at);
+                $daysLeftDisplay = max(0, floor(now()->startOfDay()->diffInDays($trialEnds->copy()->startOfDay(), false)));
+                $isTraining = $workshop->subscription_status === 'training';
+                $formattedExpiryDate = $trialEnds->isToday() 
+                    ? 'Today, ' . $trialEnds->format('h:i A') 
+                    : ($trialEnds->isTomorrow() 
+                        ? 'Tomorrow, ' . $trialEnds->format('h:i A') 
+                        : $trialEnds->format('d M Y, h:i A'));
+            }
         @endphp
         <div x-data="{ 
             openLicenseActivationModal: {{ (session('error') || $workshop->isTrialExpired()) ? 'true' : 'false' }},
@@ -928,44 +935,48 @@
                 return true;
             }
         }" @trial-expired.window="openLicenseActivationModal = true">
+            @if($showCountdownBanner || $showAlertBanner)
             <div class="bg-amber-50 border-b border-amber-200 px-4 py-3 sm:px-6 lg:px-8 no-print shadow-sm">
                 <div class="flex items-center justify-between gap-4">
                     <div class="flex items-center gap-3">
                         <svg class="w-5 h-5 text-amber-600 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"/></svg>
-                        <div class="text-sm font-semibold text-amber-800 flex flex-col sm:flex-row sm:items-center gap-1 sm:gap-2">
-                            <div>
-                                {{ $isActive ? 'Subscription' : ($isTraining ? 'Training' : 'Trial') }} Status:
-                                <span id="trial-countdown" class="font-bold">Loading...</span>
-                            </div>
-                            <div class="text-xs text-amber-700 font-medium">
-                                (Expires: <span id="trial-expiry-display"></span>)
-                            </div>
-                            @if($workshop->isTrialExpired() && $workshop->restrict_features_on_expiry)
-                                <div class="mt-1 sm:mt-0">
-                                    <span class="text-rose-700 bg-rose-100/80 px-2 py-0.5 rounded border border-rose-200 text-xs font-bold whitespace-nowrap">Write actions restricted</span>
+                        <div class="text-sm font-semibold text-amber-800">
+                            @if($showAlertBanner)
+                                <span>{{ $workshop->alert_message }}</span>
+                            @else
+                                <div class="flex flex-col sm:flex-row sm:items-center gap-1 sm:gap-2">
+                                    <div>
+                                        {{ $isTraining ? 'Training' : 'Trial' }} Status:
+                                        <span id="trial-countdown" class="font-bold">Loading...</span>
+                                    </div>
+                                    <div class="text-xs text-amber-700 font-medium">
+                                        (Expires: <span id="trial-expiry-display"></span>)
+                                    </div>
+                                    @if($workshop->isTrialExpired() && $workshop->restrict_features_on_expiry)
+                                        <div class="mt-1 sm:mt-0">
+                                            <span class="text-rose-700 bg-rose-100/80 px-2 py-0.5 rounded border border-rose-200 text-xs font-bold whitespace-nowrap">Write actions restricted</span>
+                                        </div>
+                                    @endif
                                 </div>
                             @endif
                         </div>
                     </div>
+                    @if($showCountdownBanner)
                     <div class="shrink-0">
                         <button @click="openLicenseActivationModal = true" class="inline-flex items-center justify-center px-4 py-1.5 text-xs font-bold text-amber-900 bg-amber-100 hover:bg-amber-200/80 border border-amber-300 rounded-lg transition-all active:scale-95 shadow-sm">
                             Activate License
                         </button>
                     </div>
+                    @endif
                 </div>
             </div>
 
+            @if($showCountdownBanner && $trialEnds)
             <script>
             (function() {
-                // Expiry from server — ISO string WITHOUT timezone, so JS parses it as local time
                 var expiryISO = '{{ $trialEnds->format("Y-m-d\TH:i:s") }}';
                 var expiryDate = new Date(expiryISO);
-                
-                // Formatted string exactly as it appears in dashboard (server-rendered)
                 var formattedExpiryStr = '{{ $formattedExpiryDate }}';
-                
-                var isTraining = {{ $isTraining ? 'true' : 'false' }};
-                var label = isTraining ? 'Training' : 'Trial';
 
                 function pad(n) { return String(n).padStart(2, '0'); }
 
@@ -1012,6 +1023,8 @@
                 setInterval(updateCountdown, 1000);
             })();
             </script>
+            @endif
+            @endif
 
             {{-- ══ Activation Modal (Admin Side) — New UI ══ --}}
             <div x-show="openLicenseActivationModal" x-cloak
